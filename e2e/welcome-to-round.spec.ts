@@ -24,6 +24,15 @@ test('a Player walks from Welcome through Settings to a Round', async ({ page })
   await expect(page.getByTestId('play-area')).toContainText('Постав стрілки · Перевірка · 5 хв')
 
   await page.getByRole('button', { name: 'Вийти' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Покинути раунд?' })
+  await dialog.getByRole('button', { name: 'Грати далі' }).click()
+  await expect(dialog).toBeHidden()
+  await expect(page).toHaveURL(/\/round$/)
+
+  await page.goBack()
+  await expect(dialog).toBeVisible()
+  await expect(page).toHaveURL(/\/round$/)
+  await dialog.getByRole('button', { name: 'Вийти' }).click()
   await expect(page).toHaveURL(/\/settings$/)
 })
 

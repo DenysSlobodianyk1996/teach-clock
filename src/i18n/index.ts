@@ -1,13 +1,14 @@
 import { createI18n } from 'vue-i18n'
 import uk from './uk'
+import en from './en'
 
 export type MessageSchema = typeof uk
 
 export function createAppI18n() {
-  return createI18n<[MessageSchema], 'uk'>({
+  return createI18n<[MessageSchema], 'uk' | 'en'>({
     legacy: false,
     locale: 'uk',
     fallbackLocale: 'uk',
-    messages: { uk },
+    messages: { uk, en },
   })
 }
