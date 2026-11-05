@@ -51,7 +51,9 @@ Rules shared by Drag Arrows and Set Time:
 - The short Hour Hand moves gradually between numbers as minutes pass, like a real clock.
 - Dragging the long Minute Hand changes minutes and snaps to the Level step. Passing 12 rolls the
   hour forward or back.
-- Dragging the Hour Hand changes only the hour.
+- Dragging the Hour Hand changes only the hour. It jumps to the hour whose position (with the
+  current minutes) is nearest the finger. At 1:30 the Hour Hand is between 1 and 2, whichever
+  hand was set first.
 - Hands start at 12:00 for every Task. 12:00 is never a target, so an untouched submit is wrong.
 
 ### Set Time: input
