@@ -1,0 +1,152 @@
+@import '@fontsource/nunito/600.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/800.css';
+@import '@fontsource/nunito/900.css';
+@import './theme.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 4px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Shared parts from the design. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 0 34px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font:
+    900 22px 'Nunito',
+    sans-serif;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: default;
+}
+.btn-soft {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field {
+  height: 64px;
+  width: 100%;
+  padding: 0 22px;
+  border-radius: 20px;
+  border: 3px solid var(--accent);
+  background: var(--face);
+  color: var(--num);
+  font:
+    800 26px 'Nunito',
+    sans-serif;
+}
+.field::placeholder {
+  color: rgba(42, 38, 51, 0.45);
+}
+
+/* Clock parts, shared by every SVG clock. */
+.c-face {
+  fill: var(--face);
+  stroke: var(--rim);
+  stroke-width: 7;
+}
+.c-tick {
+  fill: none;
+  stroke: var(--tick);
+  stroke-width: 4;
+  opacity: 0.45;
+}
+.c-tick5 {
+  fill: none;
+  stroke: var(--tick);
+  stroke-width: 9;
+}
+.c-num {
+  fill: var(--num);
+  font:
+    900 19px 'Nunito',
+    sans-serif;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.c-hour {
+  stroke: var(--hour);
+  stroke-width: 11;
+  stroke-linecap: round;
+}
+.c-min {
+  stroke: var(--minute);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.c-pin {
+  fill: var(--pin);
+  stroke: var(--face);
+  stroke-width: 3;
+}
+.c-grip {
+  fill: var(--face);
+  stroke-width: 4;
+  stroke: var(--minute);
+}
+.c-slot {
+  fill: none;
+  stroke: var(--slot);
+  stroke-width: 2.5;
+  stroke-dasharray: 4 4;
+}
+.c-tile {
+  fill: var(--accent);
+}
+.c-tile-num {
+  fill: var(--accent-ink);
+  font:
+    900 17px 'Nunito',
+    sans-serif;
+  text-anchor: middle;
+  dominant-baseline: central;
+}

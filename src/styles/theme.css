@@ -1,0 +1,34 @@
+/* Theme tokens from the approved design (docs/design/project/theme.css).
+   "middle" is the default; dark and light arrive with ticket 10. */
+:root {
+  --bg: #1d4b5c;
+  --bg-deep: #163b49;
+  --surface: #27606f;
+  --surface-2: #2f6e7e;
+  --line: rgba(253, 246, 233, 0.22);
+  --text: #fdf6e9;
+  --muted: #cfe2e3;
+  --face: #fff3dd;
+  --rim: #f2b84b;
+  --tick: #6b5a49;
+  --num: #2a2633;
+  --hour: #e5604b;
+  --minute: #157f86;
+  --pin: #2a2633;
+  --accent: #f2b84b;
+  --accent-ink: #2a2214;
+  --tile: #fff3dd;
+  --tile-ink: #2a2633;
+  --slot: rgba(42, 38, 51, 0.35);
+  --good: #7fd49a;
+  --help: #f5cf5a;
+  --bad: #c2453f;
+  --todo: rgba(253, 246, 233, 0.28);
+  --scrim: rgba(10, 30, 38, 0.62);
+  --pop: #fffaf0;
+  --pop-ink: #2a2633;
+  --shadow: 0 10px 0 rgba(0, 0, 0, 0.14), 0 18px 40px rgba(0, 0, 0, 0.22);
+
+  --header-height: 72px;
+  --stage-max: 1024px;
+}
