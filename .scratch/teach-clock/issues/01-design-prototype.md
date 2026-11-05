@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** awaiting-approval
+**Status:** approved (2026-11-05)
 
 **Gate:** no application code (tickets 02–11) starts until the user explicitly approves this design for **all** features. Approval is recorded in this ticket.
 
@@ -29,8 +29,19 @@
 - [x] Themes: middle (default), dark, light, with readable contrast
 - [x] Layouts: phone portrait (clock above answer area), tablet landscape, desktop capped at ~1024 px
 - [x] Ukrainian copy for all screens (English can follow the same layout)
-- [ ] User approves the full design
-- [ ] After approval: review tickets 02–11, the brief, glossary and ADRs; update any ticket whose behaviour or scope changed during design, and note the changes here
+- [x] User approves the full design (2026-11-05, all 10 design choices below accepted)
+- [x] After approval: review tickets 02–11, the brief, glossary and ADRs; update any ticket whose behaviour or scope changed during design, and note the changes here
+
+## Changes made to tickets after approval
+
+- 02: Ukrainian names and labels (#1); header is brand + Home only, switches wait for 10; Nunito bundled locally; Settings defaults; reload warning during a Round.
+- 03: Leave Round dialog buttons (#9); English text added with each ticket from here on, plus a test that `uk` and `en` have the same keys.
+- 04, 06: teaching line in the wrong-Answer popup (#4); "Правильно! Далі…" toast and green rim (#5).
+- 05: round grips on the hand tips, mustard while dragged (#10).
+- 07, 08: neutral "placed" dots in Drag Numbers Test, "Готово" Submit (#2, #3).
+- 09: "Потренуймо ще" Wrong group with "Перша спроба" / "Твоя відповідь" captions (#7); perfect-Round message (#8).
+- 10: phone theme button cycles middle → dark → light (#6); English for 02's text only, later tickets bring their own.
+- 04–11: English text written in each ticket alongside Ukrainian.
 
 ## Design choices to confirm
 

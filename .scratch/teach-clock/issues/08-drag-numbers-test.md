@@ -8,7 +8,8 @@
 
 - [ ] Any number can be dropped on any slot, with no feedback
 - [ ] Dropping on a taken slot swaps the two numbers; placed numbers can be moved again
-- [ ] Submit appears only when all 12 slots are filled
-- [ ] Each number counts as one Task (12 dots, green/red after Submit)
+- [ ] Submit, labelled "Готово", appears only when all 12 slots are filled
+- [ ] Each number counts as one Task: 12 dots, neutral "placed" before Submit (green/red would give answers away), green/red after Submit
 - [ ] Summary shows the Player's face next to the correct face, misplaced numbers marked
 - [ ] Rules-module tests: swaps, Submit only when complete, scoring per number
+- [ ] English text for everything this ticket adds

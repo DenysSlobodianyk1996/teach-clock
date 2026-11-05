@@ -10,3 +10,4 @@
 - [ ] App name "Teach Clock" and original icons
 - [ ] Works fully offline after the first visit
 - [ ] Playwright offline check
+- [ ] English text for everything this ticket adds

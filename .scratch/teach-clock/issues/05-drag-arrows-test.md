@@ -14,3 +14,5 @@
 - [ ] One Clock Time drives both hands, so they never disagree
 - [ ] Submit always enabled; untouched hands are just a wrong Answer
 - [ ] Rules-module tests: snapping per Level, rollover both ways, hour-only drag with the nearest-position cases from the spec; component test: clock face emits drags from pointer events
+- [ ] Round grips at the tips of both hands; the dragged hand's grip turns mustard
+- [ ] English text for everything this ticket adds

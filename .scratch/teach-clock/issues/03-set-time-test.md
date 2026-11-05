@@ -16,3 +16,5 @@
 - [ ] Leave Round from the header with confirmation → back to Settings, Round discarded
 - [ ] Basic Summary: "N of 10 right", Right and Wrong lists as text
 - [ ] Vitest tests for the rules above; component tests for clock face, number pad, dots
+- [ ] Leave Round dialog: "Покинути раунд?" with "Грати далі" (primary) and "Вийти"
+- [ ] English text for everything this ticket adds, plus a Vitest check that `uk` and `en` have the same keys (English shows once ticket 10 adds the switch)
