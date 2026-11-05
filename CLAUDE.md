@@ -5,10 +5,16 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design agreed, no code yet. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Design approved (ticket 01). App skeleton in place (ticket 02): Welcome → Settings → empty Round. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
 
-**Design gate:** do not write any application code until ticket 01 (design prototype) is approved by the user for all features. After approval, update tickets 02–11 if the design changed anything important.
+## Commands
+
+- `npm run dev`: dev server
+- `npm run type-check`, `npm run lint`, `npm run format`
+- `npx vitest run [file]`: unit and component tests
+- `npx playwright test`: browser flows (desktop + phone)
+- `npm run build`: type-check and build
 
 ## Where things are
 
@@ -16,6 +22,7 @@ Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, w
 - `docs/product-brief.md` — screens, the three Games, Teach/Test rules, look. Read this first.
 - `docs/tech-stack.md` — libraries and what was rejected.
 - `docs/adr/` — decisions that are hard to reverse.
+- `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).
 - `docs/design/` — ticket 01 design prototype: open `gallery.html` locally; `project/theme.css` has the theme tokens.
 - `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
 

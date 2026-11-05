@@ -13,3 +13,6 @@
 - [ ] Dots: green = right first time, yellow = needed help
 - [ ] A helped Task counts as wrong in the Summary; the Player's first Answer is kept
 - [ ] Rules-module tests for the Teach flow (wrong → Hint → help → right ⇒ helped); component test: Hint panel only after a wrong try
+- [ ] Wrong-Answer popup adds one teaching line from a short rule-based message per mistake type (wrong hour, wrong minutes, hands swapped…), e.g. "Коротка стрілка ще не дійшла до 8 — отже, зараз 7 годин."
+- [ ] Right Answer in Teach: short green "Правильно! Далі…" toast and a green rim on the clock before the next Task
+- [ ] English text for everything this ticket adds

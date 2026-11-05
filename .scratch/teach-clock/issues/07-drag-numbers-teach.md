@@ -12,3 +12,4 @@
 - [ ] A wrong drop sends the number straight back to the tray with "N goes between N-1 and N+1"; 12 sits between 11 and 1, 1 between 12 and 2
 - [ ] 12 progress dots; the Round ends when all 12 are placed, then Summary
 - [ ] Rules-module tests: rejection, neighbour hints including the 12/1 wrap, Round end
+- [ ] English text for everything this ticket adds
