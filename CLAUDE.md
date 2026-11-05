@@ -5,7 +5,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). Set Time playable in Test (ticket 03): Welcome → Settings → Round → text Summary; other Games still show a placeholder Round. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Design approved (ticket 01). App skeleton in place (ticket 02). Set Time playable in Test and Teach (tickets 03–04): Welcome → Settings → Round → text Summary; other Games still show a placeholder Round. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
 
 ## Commands
@@ -32,3 +32,4 @@ Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, w
 - No accounts, no stored results, no backend (ADR 0002). Only Preferences and the last name live in `localStorage`.
 - Keep clock maths in plain TypeScript, separate from Vue and SVG (ADR 0001).
 - Art must be original SVG.
+- Tests never hardcode interface text: look it up by key with `t` from `src/test/i18n.ts` (Vitest) or `e2e/i18n.ts` (Playwright). Player names and other test data stay literal.

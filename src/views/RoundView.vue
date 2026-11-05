@@ -1,23 +1,46 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import ClockFace from '@/components/ClockFace.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
+import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
+import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
 import type { ClockTime } from '@/game/clockTime'
-import { currentTask } from '@/game/round'
+import { describeMistake, type Mistake } from '@/game/mistakes'
+import { currentTask, hint } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
 const { t } = useI18n()
 const router = useRouter()
 const play = usePlayStore()
 
+/** How long a right Answer in Teach shows "Right! Next…" before the next Task. */
+const RIGHT_PAUSE_MS = 1200
+
 // The router opens this screen with an unfinished Round. The Round goes away when the Player
 // leaves, and has no current Task while the Summary loads; the screen draws nothing then.
 const round = computed(() => play.round)
-const task = computed(() => round.value && currentTask(round.value))
+
+/** Teach: the Task just answered right, kept on screen with the toast before moving on. */
+const rightTask = ref<number | null>(null)
+/** Teach: the wrong-Answer popup. */
+const wrongAnswer = ref<{ answer: ClockTime; mistake: Mistake } | null>(null)
+
+const shownIndex = computed(() => rightTask.value ?? round.value?.current ?? 0)
+const task = computed(() => round.value?.tasks[shownIndex.value] ?? null)
+const taskHint = computed(() =>
+  round.value && rightTask.value === null ? hint(round.value) : null,
+)
+const busy = computed(
+  () => play.askingToLeave || wrongAnswer.value !== null || rightTask.value !== null,
+)
+
+const answerPanel = ref<InstanceType<typeof SetTimeAnswer>>()
+let pause: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => clearTimeout(pause))
 
 const details = computed(() => {
   if (!round.value) return ''
@@ -27,8 +50,25 @@ const details = computed(() => {
 })
 
 function submit(time: ClockTime) {
-  // Teach's feedback arrives with ticket 04; for now every Answer moves on.
-  if (play.submitAnswer(time).finished) router.push({ name: 'summary' })
+  const played = round.value && currentTask(round.value)
+  if (!played || busy.value) return
+  const index = round.value!.current
+  const outcome = play.submitAnswer(time)
+  if (!outcome.movedOn) {
+    wrongAnswer.value = { answer: played.answer, mistake: describeMistake(played.answer, time) }
+  } else if (outcome.right && round.value!.mode === 'teach') {
+    rightTask.value = index
+    pause = setTimeout(() => {
+      rightTask.value = null
+      if (outcome.finished && play.round) router.push({ name: 'summary' })
+    }, RIGHT_PAUSE_MS)
+  } else if (outcome.finished) {
+    router.push({ name: 'summary' })
+  }
+}
+
+function setCorrectAnswer() {
+  if (taskHint.value) answerPanel.value?.fill(taskHint.value)
 }
 
 // A reload would lose the Round, so ask the browser to confirm. Browsers show their own text.
@@ -41,20 +81,50 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
 <template>
   <div v-if="round && task" class="round">
     <div class="progress">
-      <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="round.current" />
+      <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />
       <div class="task-no">
-        {{ t('round.progress', { n: round.current + 1, total: round.tasks.length }) }} ·
+        {{ t('round.progress', { n: shownIndex + 1, total: round.tasks.length }) }} ·
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section v-if="round.game === 'setTime'" class="set-time">
+    <section v-if="round.game === 'setTime'" class="set-time" :class="{ 'has-hint': taskHint }">
       <div class="clock-side">
-        <ClockFace class="clock" :time="task.answer" />
+        <div class="clock-wrap">
+          <ClockFace
+            class="clock"
+            :time="task.answer"
+            :rim="rightTask !== null ? 'good' : undefined"
+          />
+          <!-- Always in the page, so screen readers announce the text when it appears. -->
+          <p class="toast-status" role="status">
+            <span v-if="rightTask !== null" class="toast">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12.5l4.5 4.5L19 7" />
+              </svg>
+              {{ t('teach.right') }}
+            </span>
+          </p>
+        </div>
+        <HintPanel v-if="taskHint" :hint="taskHint" @help="setCorrectAnswer" />
       </div>
       <div class="answer-side">
         <h1>{{ t('round.question') }}</h1>
-        <SetTimeAnswer :key="round.current" :disabled="play.askingToLeave" @submit="submit" />
+        <SetTimeAnswer ref="answerPanel" :key="shownIndex" :disabled="busy" @submit="submit" />
       </div>
+      <WrongAnswerPopup
+        v-if="wrongAnswer"
+        :answer="wrongAnswer.answer"
+        :mistake="wrongAnswer.mistake"
+        @close="wrongAnswer = null"
+      />
     </section>
     <section v-else class="play-area" data-testid="play-area">
       <p class="placeholder">{{ t('round.comingSoon') }}</p>
@@ -91,7 +161,43 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
 }
 .clock-side {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.clock-wrap {
+  position: relative;
+  display: flex;
   justify-content: center;
+  width: 100%;
+}
+.toast-status {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--pop);
+  color: var(--pop-ink);
+  font-size: 20px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+}
+.toast svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  color: var(--good);
+  stroke: currentColor;
 }
 .clock {
   width: min(100%, 41cqi);
@@ -144,6 +250,13 @@ h1 {
   }
   .clock {
     width: min(236px, 60vw);
+  }
+  /* Make room for the Hint panel so Submit stays on screen. */
+  .has-hint .clock {
+    width: min(170px, 44vw);
+  }
+  .clock-side {
+    gap: 10px;
   }
   /* No room for the question on a phone; keep it for screen readers. */
   .answer-side h1 {

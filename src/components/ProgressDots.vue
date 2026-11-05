@@ -7,7 +7,12 @@ defineProps<{ statuses: readonly TaskStatus[]; current: number }>()
 
 const { t } = useI18n()
 
-const STATUS_CLASS: Record<TaskStatus, string | null> = { pending: null, right: 'ok', wrong: 'bad' }
+const STATUS_CLASS: Record<TaskStatus, string | null> = {
+  pending: null,
+  right: 'ok',
+  helped: 'help',
+  wrong: 'bad',
+}
 </script>
 
 <template>
@@ -46,6 +51,9 @@ const STATUS_CLASS: Record<TaskStatus, string | null> = { pending: null, right: 
 }
 .dot.ok {
   background: var(--good);
+}
+.dot.help {
+  background: var(--help);
 }
 .dot.bad {
   background: var(--bad);

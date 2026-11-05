@@ -3,6 +3,7 @@ import SettingsView from '../SettingsView.vue'
 import { mountScreen } from '@/test/mountScreen'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
+import { t } from '@/test/i18n'
 
 type Screen = Awaited<ReturnType<typeof mountScreen>>['wrapper']
 
@@ -26,34 +27,34 @@ describe('Settings screen', () => {
 
   it('greets the Player by name', async () => {
     const { wrapper } = await open()
-    expect(wrapper.find('h1').text()).toBe('Оля, у що граємо?')
+    expect(wrapper.find('h1').text()).toBe(t('settings.greeting', { name: 'Оля' }))
   })
 
   it('shows the selected Game, Mode and Level as checked', async () => {
     const { wrapper } = await open()
-    expect(choice(wrapper, 'Який час?').element.checked).toBe(true)
-    expect(choice(wrapper, 'Навчання').element.checked).toBe(true)
-    expect(choice(wrapper, '15 хв').element.checked).toBe(true)
-    expect(choice(wrapper, 'Перевірка').element.checked).toBe(false)
+    expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('modes.teach.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('levels.15.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
   })
 
   it('hides the Level for Drag Numbers and shows it again for other Games', async () => {
     const { wrapper } = await open()
-    expect(wrapper.text()).toContain('Крок хвилин')
+    expect(wrapper.text()).toContain(t('settings.level'))
 
-    await choice(wrapper, 'Розстав числа').setValue(true)
-    expect(wrapper.text()).not.toContain('Крок хвилин')
-    expect(wrapper.text()).not.toContain('30 хв')
+    await choice(wrapper, t('games.dragNumbers.name')).setValue(true)
+    expect(wrapper.text()).not.toContain(t('settings.level'))
+    expect(wrapper.text()).not.toContain(t('levels.30.name'))
 
-    await choice(wrapper, 'Постав стрілки').setValue(true)
-    expect(wrapper.text()).toContain('Крок хвилин')
+    await choice(wrapper, t('games.dragArrows.name')).setValue(true)
+    expect(wrapper.text()).toContain(t('settings.level'))
   })
 
   it('starts a Round with the chosen Settings and opens it', async () => {
     const { wrapper, router } = await open()
-    await choice(wrapper, 'Перевірка').setValue(true)
-    await choice(wrapper, '5 хв').setValue(true)
-    await button(wrapper, 'Грати').trigger('click')
+    await choice(wrapper, t('modes.test.name')).setValue(true)
+    await choice(wrapper, t('levels.5.name')).setValue(true)
+    await button(wrapper, t('settings.play')).trigger('click')
 
     expect(usePlayStore().round).toMatchObject({ game: 'setTime', mode: 'test', level: 5 })
     expect(usePlayStore().round?.tasks).toHaveLength(10)
@@ -62,7 +63,7 @@ describe('Settings screen', () => {
 
   it('goes back to Welcome', async () => {
     const { wrapper, router } = await open()
-    await button(wrapper, 'Назад').trigger('click')
+    await button(wrapper, t('settings.back')).trigger('click')
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('welcome'))
   })
 })

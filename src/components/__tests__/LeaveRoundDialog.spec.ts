@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import LeaveRoundDialog from '../LeaveRoundDialog.vue'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
@@ -12,8 +13,8 @@ describe('LeaveRoundDialog', () => {
     await wrapper.vm.$nextTick()
     const dialog = wrapper.get('[role="dialog"]')
     expect(dialog.attributes('aria-modal')).toBe('true')
-    expect(dialog.get('h2').text()).toBe('Покинути раунд?')
-    expect(document.activeElement?.textContent?.trim()).toBe('Грати далі')
+    expect(dialog.get('h2').text()).toBe(t('leave.title'))
+    expect(document.activeElement?.textContent?.trim()).toBe(t('leave.stay'))
   })
 
   it('emits stay or leave', async () => {

@@ -3,11 +3,13 @@ import {
   canSubmit,
   clearBox,
   EMPTY_ENTRY,
+  entryFor,
   pressDigit,
   readEntry,
   selectBox,
   type TimeEntry,
 } from '../timeEntry'
+import { clockTime } from '../clockTime'
 
 function type(entry: TimeEntry, digits: string): TimeEntry {
   return [...digits].reduce((e, d) => pressDigit(e, Number(d)), entry)
@@ -69,5 +71,18 @@ describe('time entry', () => {
 
   it('reports an incomplete entry as missing boxes', () => {
     expect(readEntry(type(EMPTY_ENTRY, '7'))).toEqual({ errors: ['minute'] })
+  })
+})
+
+describe('entryFor (Set correct answer)', () => {
+  it('fills both boxes with the Clock Time, minutes as two digits', () => {
+    const entry = entryFor(clockTime(7, 5))
+    expect(entry).toMatchObject({ hour: '7', minute: '05' })
+    expect(canSubmit(entry)).toBe(true)
+    expect(readEntry(entry)).toEqual({ time: clockTime(7, 5) })
+  })
+
+  it('selects the minutes, so a typed digit does not change the hour', () => {
+    expect(pressDigit(entryFor(clockTime(12, 30)), 4)).toMatchObject({ hour: '12', minute: '30' })
   })
 })

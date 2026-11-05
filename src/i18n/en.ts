@@ -58,6 +58,24 @@ export default {
       minute: 'Minutes go from 00 to 59',
     },
   },
+  teach: {
+    wrongTitle: 'Almost! Here’s how it is:',
+    gotIt: 'Got it',
+    setCorrect: 'Set correct answer',
+    hint: 'Hint:',
+    right: 'Right! Next…',
+    mistakes: {
+      hourAhead: 'The short hand hasn’t reached {next} yet — so the hour is still {hour}.',
+      hourOn: 'The short hand points at {hour} — so the hour is {hour}.',
+      hourBetween: 'The short hand is between {hour} and {next} — so the hour is {hour}.',
+      minuteZero: 'The long hand points at 12 — so it’s {time} exactly.',
+      minuteOn: 'The long hand points at {number}. Count in fives: that’s {minute} minutes.',
+      minuteBetween:
+        'The long hand is just past {number}. Count the small marks — that’s {minute} minutes.',
+      swapped: 'Don’t mix up the hands: the short one shows the hours, the long one the minutes.',
+      both: 'The short hand shows the hours ({hour}) and the long hand the minutes ({minute}).',
+    },
+  },
   leave: {
     title: 'Leave this Round?',
     body: 'This Round won’t be saved. You’ll go back to choosing a game.',
