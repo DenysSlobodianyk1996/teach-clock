@@ -271,7 +271,8 @@ How it works:
 ## Further Notes
 
 - The 2019 thesis and screenshots in `docs/original/` show the original mechanics only. Their stack, code, palette and art are not to be reused; all art is original SVG.
-- Suggested build order: the rules module first (it is most of the logic and fully testable), then
+- A design prototype of every screen and Game comes before any code, and needs the user's approval for all features. If the design changes anything important, update this spec and the tickets before building.
+- Suggested build order after design approval: the rules module first (it is most of the logic and fully testable), then
   1. Set Time,
   2. Drag Arrows,
   3. Drag Numbers,

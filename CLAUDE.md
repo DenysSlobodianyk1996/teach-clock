@@ -6,6 +6,9 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 ## Status
 
 Design agreed, no code yet. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
+
+**Design gate:** do not write any application code until ticket 01 (design prototype) is approved by the user for all features. After approval, update tickets 02–11 if the design changed anything important.
 
 ## Where things are
 
