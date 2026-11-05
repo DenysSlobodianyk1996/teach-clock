@@ -2,12 +2,13 @@ import { describe, expect, it } from 'vitest'
 import ClockFace from '../ClockFace.vue'
 import { clockTime } from '@/game/clockTime'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 describe('ClockFace', () => {
   it('names the Clock Time it shows', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
     expect(wrapper.attributes('role')).toBe('img')
-    expect(wrapper.attributes('aria-label')).toBe('Годинник показує 7:45')
+    expect(wrapper.attributes('aria-label')).toBe(t('app.clockShows', { time: '7:45' }))
   })
 
   it('draws the numbers 1–12', () => {

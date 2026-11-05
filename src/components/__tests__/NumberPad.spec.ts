@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import NumberPad from '../NumberPad.vue'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 describe('NumberPad', () => {
   it('has the digits 0–9 and a clear key', () => {
@@ -16,7 +17,7 @@ describe('NumberPad', () => {
       '8',
       '9',
       '0',
-      'Стерти',
+      t('round.clear'),
     ])
   })
 

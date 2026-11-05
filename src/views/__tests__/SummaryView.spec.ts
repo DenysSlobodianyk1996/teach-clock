@@ -6,6 +6,7 @@ import { usePlayStore } from '@/stores/play'
 import { clockTime, formatClockTime } from '@/game/clockTime'
 import { currentTask } from '@/game/round'
 import { seededRandom } from '@/game/tasks'
+import { t } from '@/test/i18n'
 
 /** Plays a Set Time Test Round, getting the first two Tasks wrong with 12:59. */
 function playRound() {
@@ -23,21 +24,26 @@ describe('Summary screen', () => {
   it('shows how many were right and lists Right and Wrong with the first Answer', async () => {
     const { wrapper } = await mountScreen(SummaryView, '/summary', playRound)
     const tasks = usePlayStore().round!.tasks
-    expect(wrapper.get('h1').text()).toBe('8 з 10 правильно')
+    expect(wrapper.get('h1').text()).toBe(t('summary.headline', { right: 8, total: 10 }))
 
     const wrong = wrapper.findAll('[aria-labelledby="wrong-title"] li').map((li) => li.text())
     expect(wrong).toEqual(
-      tasks.slice(0, 2).map((t) => `${formatClockTime(t.answer)} — твоя відповідь 12:59`),
+      tasks
+        .slice(0, 2)
+        .map(
+          (task) =>
+            `${formatClockTime(task.answer)} — ${t('summary.yourAnswer', { time: '12:59' })}`,
+        ),
     )
     const right = wrapper.findAll('[aria-labelledby="right-title"] li').map((li) => li.text())
-    expect(right).toEqual(tasks.slice(2).map((t) => formatClockTime(t.answer)))
+    expect(right).toEqual(tasks.slice(2).map((task) => formatClockTime(task.answer)))
   })
 
   it('plays again with the same Settings', async () => {
     const { wrapper, router } = await mountScreen(SummaryView, '/summary', playRound)
     await wrapper
       .findAll('button')
-      .find((b) => b.text() === 'Грати ще')!
+      .find((b) => b.text() === t('summary.playAgain'))!
       .trigger('click')
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('round'))
     expect(usePlayStore().round).toMatchObject({ game: 'setTime', mode: 'test', current: 0 })
@@ -47,7 +53,7 @@ describe('Summary screen', () => {
     const { wrapper, router } = await mountScreen(SummaryView, '/summary', playRound)
     await wrapper
       .findAll('button')
-      .find((b) => b.text() === 'До вибору гри')!
+      .find((b) => b.text() === t('summary.toSettings'))!
       .trigger('click')
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('settings'))
     expect(usePlayStore().round).toBeNull()

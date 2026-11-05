@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import ProgressDots from '../ProgressDots.vue'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 describe('ProgressDots', () => {
   it('colours done Tasks green, red or yellow (needed help) and rings the current one', () => {
@@ -22,6 +23,6 @@ describe('ProgressDots', () => {
       statuses: Array(10).fill('pending'),
       current: 0,
     })
-    expect(wrapper.attributes('aria-label')).toBe('Прогрес: завдання 1 з 10')
+    expect(wrapper.attributes('aria-label')).toBe(t('round.progressLabel', { n: 1, total: 10 }))
   })
 })

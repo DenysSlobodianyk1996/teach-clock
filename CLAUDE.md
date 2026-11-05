@@ -32,3 +32,4 @@ Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, w
 - No accounts, no stored results, no backend (ADR 0002). Only Preferences and the last name live in `localStorage`.
 - Keep clock maths in plain TypeScript, separate from Vue and SVG (ADR 0001).
 - Art must be original SVG.
+- Tests never hardcode interface text: look it up by key with `t` from `src/test/i18n.ts` (Vitest) or `e2e/i18n.ts` (Playwright). Player names and other test data stay literal.

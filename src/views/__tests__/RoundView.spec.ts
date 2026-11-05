@@ -5,6 +5,9 @@ import { mountScreen } from '@/test/mountScreen'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 import { seededRandom } from '@/game/tasks'
+import { clockTime } from '@/game/clockTime'
+import { describeMistake } from '@/game/mistakes'
+import { t } from '@/test/i18n'
 
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
@@ -28,19 +31,23 @@ async function answer(time: string) {
     await pad[d === '0' ? 9 : Number(d) - 1]!.trigger('click')
   await wrapper
     .findAll('button')
-    .find((b) => b.text() === 'Перевірити')!
+    .find((b) => b.text() === t('round.submit'))!
     .trigger('click')
 }
 
 const clockLabel = () => wrapper.get('.clock-side svg.clock').attributes('aria-label')!
-const shownTime = () => clockLabel().replace('Годинник показує ', '')
+const CLOCK_SHOWS = t('app.clockShows', { time: '' })
+const shownTime = () => clockLabel().replace(CLOCK_SHOWS, '')
 
 describe('Round screen, Set Time', () => {
   it('shows a clock and asks what time it is', async () => {
     await open()
-    expect(wrapper.get('h1').text()).toBe('Котра година?')
-    expect(clockLabel()).toMatch(/^Годинник показує \d{1,2}:\d{2}$/)
-    expect(wrapper.text()).toContain('Завдання 1 з 10 · Перевірка')
+    expect(wrapper.get('h1').text()).toBe(t('round.question'))
+    expect(clockLabel()).toBe(`${CLOCK_SHOWS}${shownTime()}`)
+    expect(shownTime()).toMatch(/^\d{1,2}:\d{2}$/)
+    expect(wrapper.text()).toContain(
+      `${t('round.progress', { n: 1, total: 10 })} · ${t('modes.test.name')}`,
+    )
   })
 
   it('moves on after every Answer and colours the dots', async () => {
@@ -56,7 +63,7 @@ describe('Round screen, Set Time', () => {
         .slice(0, 3)
         .map((d) => d.classes()[1]),
     ).toEqual(['ok', 'bad', 'now'])
-    expect(wrapper.text()).toContain('Завдання 3 з 10')
+    expect(wrapper.text()).toContain(t('round.progress', { n: 3, total: 10 }))
   })
 
   it('opens the Summary after the 10th Answer', async () => {
@@ -72,12 +79,12 @@ describe('Round screen, Set Time', () => {
     await wrapper.vm.$nextTick()
     window.dispatchEvent(new KeyboardEvent('keydown', { key: '7' }))
     await wrapper.vm.$nextTick()
-    expect(wrapper.get('[aria-label="Години"]').text()).toBe('')
+    expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe('')
   })
 
   it('keeps the placeholder for Games that are not built yet', async () => {
     await open('dragArrows')
-    expect(wrapper.get('[data-testid="play-area"]').text()).toContain('Тут скоро буде гра')
+    expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
   })
 })
 
@@ -92,7 +99,7 @@ describe('Round screen, Set Time in Teach', () => {
 
   it('shows no Hint before a wrong try', async () => {
     await open('setTime', 'teach')
-    expect(wrapper.text()).not.toContain('Постав правильну відповідь')
+    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
   })
 
   it('after a wrong Answer, shows the correct time with a teaching line and keeps the digits', async () => {
@@ -100,47 +107,49 @@ describe('Round screen, Set Time in Teach', () => {
     const correct = shownTime()
     await answer(WRONG)
     const popup = wrapper.get('[role="dialog"]')
-    expect(popup.get('h2').text()).toBe('Майже! Правильно так:')
+    expect(popup.get('h2').text()).toBe(t('teach.wrongTitle'))
     expect(popup.get('.big-time').text()).toBe(correct)
-    expect(popup.get('#wrong-why').text()).toMatch(/стрілк/)
+    const [h, m] = correct.split(':').map(Number) as [number, number]
+    const mistake = describeMistake(clockTime(h, m), clockTime(12, 1))
+    expect(popup.get('#wrong-why').text()).toBe(t(`teach.mistakes.${mistake.kind}`, mistake.params))
 
-    await button('Зрозуміло')!.trigger('click')
+    await button(t('teach.gotIt'))!.trigger('click')
     expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
-    expect(wrapper.get('[aria-label="Години"]').text()).toBe('12')
-    expect(wrapper.get('[aria-label="Хвилини"]').text()).toBe('01')
-    expect(wrapper.text()).toContain('Завдання 1 з 10')
-    expect(wrapper.get('.hint-panel').text()).toContain(`Підказка: ${correct}`)
+    expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe('12')
+    expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe('01')
+    expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
+    expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
   })
 
   it('Set correct answer fills the digits; after Submit the Task ends helped (yellow)', async () => {
     await open('setTime', 'teach')
     const correct = shownTime()
     await answer(WRONG)
-    await button('Зрозуміло')!.trigger('click')
-    await button('Постав правильну відповідь')!.trigger('click')
+    await button(t('teach.gotIt'))!.trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
     const [hour, minute] = correct.split(':')
-    expect(wrapper.get('[aria-label="Години"]').text()).toBe(hour)
-    expect(wrapper.get('[aria-label="Хвилини"]').text()).toBe(minute)
+    expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe(hour)
+    expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe(minute)
     // Still on the Task until the Player presses Submit.
-    expect(wrapper.text()).toContain('Завдання 1 з 10')
+    expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
 
-    await button('Перевірити')!.trigger('click')
-    expect(wrapper.get('[role="status"]').text()).toBe('Правильно! Далі…')
+    await button(t('round.submit'))!.trigger('click')
+    expect(wrapper.get('[role="status"]').text()).toBe(t('teach.right'))
     expect(wrapper.get('.clock-side svg.clock').classes()).toContain('rim-good')
     expect(shownTime()).toBe(correct)
 
     vi.runAllTimers()
     await wrapper.vm.$nextTick()
     expect(wrapper.get('[role="status"]').text()).toBe('')
-    expect(wrapper.text()).toContain('Завдання 2 з 10')
-    expect(wrapper.text()).not.toContain('Постав правильну відповідь')
+    expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
+    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
     expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
   })
 
   it('a right first try turns the dot green after the toast', async () => {
     await open('setTime', 'teach')
     await answer(shownTime())
-    expect(wrapper.get('[role="status"]').text()).toBe('Правильно! Далі…')
+    expect(wrapper.get('[role="status"]').text()).toBe(t('teach.right'))
     vi.runAllTimers()
     await wrapper.vm.$nextTick()
     expect(dotClasses().slice(0, 2)).toEqual(['ok', 'now'])
@@ -150,9 +159,9 @@ describe('Round screen, Set Time in Teach', () => {
     const { router } = await open('setTime', 'teach')
     const helped = shownTime()
     await answer(WRONG)
-    await button('Зрозуміло')!.trigger('click')
-    await button('Постав правильну відповідь')!.trigger('click')
-    await button('Перевірити')!.trigger('click')
+    await button(t('teach.gotIt'))!.trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    await button(t('round.submit'))!.trigger('click')
     for (let i = 0; i < 10; i++) {
       if (i > 0) await answer(shownTime())
       vi.runAllTimers()
