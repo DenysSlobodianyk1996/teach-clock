@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import BrandMark from './BrandMark.vue'
+import LeaveRoundDialog from './LeaveRoundDialog.vue'
 import { usePlayStore } from '@/stores/play'
 
 const { t } = useI18n()
@@ -13,11 +14,17 @@ const play = usePlayStore()
 const inRound = computed(() => route.name === 'round')
 const showHome = computed(() => route.name === 'settings')
 
-// Ticket 03 puts the "Leave this Round?" confirmation in front of this.
-async function leaveRound() {
-  // Leave the screen first so it never renders without a Round.
-  await router.push({ name: 'settings' })
+const leaveButton = ref<HTMLButtonElement>()
+
+async function stay() {
+  play.askingToLeave = false
+  await nextTick()
+  leaveButton.value?.focus()
+}
+
+function leaveRound() {
   play.leaveRound()
+  router.push({ name: 'settings' })
 }
 </script>
 
@@ -47,7 +54,13 @@ async function leaveRound() {
           <path d="M5 10v10h14V10" />
         </svg>
       </RouterLink>
-      <button v-if="inRound" class="icon-btn" type="button" @click="leaveRound">
+      <button
+        v-if="inRound"
+        ref="leaveButton"
+        class="icon-btn"
+        type="button"
+        @click="play.askingToLeave = true"
+      >
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -64,6 +77,7 @@ async function leaveRound() {
         {{ t('header.leave') }}
       </button>
     </div>
+    <LeaveRoundDialog v-if="inRound && play.askingToLeave" @stay="stay" @leave="leaveRound" />
   </header>
 </template>
 

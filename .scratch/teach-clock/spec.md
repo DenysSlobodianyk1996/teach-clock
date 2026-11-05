@@ -99,8 +99,8 @@ How it works:
 45. As a Player, I want a big on-screen number pad with digits and delete, so that a phone keyboard doesn't cover the clock.
 46. As a Player on desktop, I want to type with my physical keyboard too, so that it feels natural.
 47. As a Player, I want hour and minute boxes (`H : MM`), so that I know where each part goes.
-48. As a Player, I want impossible values (hour 0 or 13+, minute 60+) to be impossible to enter, so that I only make meaningful mistakes.
-49. As a Player, I want Submit enabled only when both boxes are filled, so that I don't submit by accident.
+48. As a Player, I want an impossible value (hour 0 or 13+, minute 60+) to show an error when I press Submit and not count as an Answer, so that a typo never costs me a Task.
+49. As a Player, I want Submit enabled only when both boxes have a digit, so that I don't submit by accident.
 50. As a Player, I want minutes shown with two digits ("4:05"), so that I learn the usual way to write time.
 
 ### Teach Mode (Drag Arrows, Set Time)
@@ -158,7 +158,7 @@ How it works:
     - Given the current Clock Time, a pointer angle and the Level step, return the new Clock Time for a Minute Hand drag: snapped to the step, rolling the hour forward or back when crossing 12, based on the previous minute.
     - For an Hour Hand drag, change only the hour and keep the minutes. The hand never sits exactly on a number unless the minutes are 00: at 1:30 it is halfway between 1 and 2, whichever hand was dragged first.
     - **Which hour an Hour Hand drag picks: the nearest drawn position.** With minutes `m`, hour `h` draws the hand at `h × 30° + m × 0.5°`. The new hour is the one whose drawn hand is closest to the pointer: `round((pointerAngle − m × 0.5°) / 30°)`, wrapped into 1–12 (0 becomes 12). An exact tie goes to the later hour. So the hand jumps in 30° steps, never moves away from the finger, and pointing right at a number with minutes 30 gives that number's hour (pointer on 1 at :30 → 1:30, hand between 1 and 2).
-  - **Time entry** (Set Time number pad): given the current hour and minute boxes and a key (digit or delete), return the new boxes. Keys that would make an impossible value are rejected. Also reports whether the entry is complete.
+  - **Time entry** (Set Time number pad): the hour and minute boxes (up to two digits each) and which one is selected. Actions: type a digit into the selected box (a full hour box hands over to the minutes), clear the selected box, select a box. Reports whether both boxes have a digit, and reads the entry as a Clock Time (one digit reads as 0X) or says which boxes hold an impossible value.
   - **Task generation**:
     - Given the Game, Level, count and a random source, return unique Clock Times on the Level step with hours 1–12.
     - Drag Arrows never uses 12:00.
@@ -244,7 +244,7 @@ How it works:
     - minutes 30, pointer 350° → 11:30 (wraps without crossing into 12).
     - minutes 45, pointer 100° → 3:45 (hand at 112.5°, nearest to the pointer).
     - set 1:30 either way: hour to 1 then minutes to 30, or minutes to 30 then hour to 1, ends with the same Clock Time and hand angles (hour hand 45°).
-  - **Time entry:** blocks impossible keys.
+  - **Time entry:** box selection, clearing, and reporting impossible values instead of a Clock Time.
   - **Task generation:** uniqueness, the Level step, no 12:00 in Drag Arrows, reproducible with a seeded random source.
   - **Teach flow:** wrong, then Hint, then help used, then right, with the Task ending as "helped".
   - **Test flow:** a wrong Answer moves on.

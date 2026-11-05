@@ -4,6 +4,7 @@ import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '..'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
+import { currentTask } from '@/game/round'
 
 async function open(path: string) {
   const router = createAppRouter(createMemoryHistory())
@@ -43,6 +44,41 @@ describe('screen guards', () => {
     usePlayerStore().setName('Оля')
     usePlayStore().startRound()
     expect(await open('/round')).toBe('round')
+  })
+
+  it('sends Summary to Settings when no Round is in memory', async () => {
+    usePlayerStore().setName('Оля')
+    expect(await open('/summary')).toBe('settings')
+  })
+
+  it('sends Summary back to the Round while the Round is still being played', async () => {
+    usePlayerStore().setName('Оля')
+    usePlayStore().startRound()
+    expect(await open('/summary')).toBe('round')
+  })
+
+  it('sends a finished Round to its Summary', async () => {
+    usePlayerStore().setName('Оля')
+    const play = usePlayStore()
+    play.startRound()
+    while (play.round && currentTask(play.round)) play.submitAnswer(currentTask(play.round)!.answer)
+    expect(await open('/round')).toBe('summary')
+    expect(await open('/summary')).toBe('summary')
+  })
+
+  it('asks to confirm instead of leaving a Round in play (browser Back)', async () => {
+    usePlayerStore().setName('Оля')
+    const play = usePlayStore()
+    play.startRound()
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/round')
+    await router.push('/settings')
+    expect(router.currentRoute.value.name).toBe('round')
+    expect(play.askingToLeave).toBe(true)
+
+    play.leaveRound()
+    await router.push('/settings')
+    expect(router.currentRoute.value.name).toBe('settings')
   })
 
   it('sends unknown paths to Welcome', async () => {

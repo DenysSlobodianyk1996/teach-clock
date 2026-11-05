@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { usePlayStore } from '../play'
+import { clockTime } from '@/game/clockTime'
+import { currentTask } from '@/game/round'
+import { seededRandom } from '@/game/tasks'
 
 describe('play store', () => {
   beforeEach(() => {
@@ -21,14 +24,16 @@ describe('play store', () => {
     play.settings.mode = 'test'
     play.settings.level = 5
     play.startRound()
-    expect(play.round).toEqual({ game: 'dragArrows', mode: 'test', level: 5, taskCount: 10 })
+    expect(play.round).toMatchObject({ game: 'dragArrows', mode: 'test', level: 5, current: 0 })
+    expect(play.round?.tasks).toHaveLength(10)
   })
 
   it('starts Drag Numbers with 12 Tasks and no Level', () => {
     const play = usePlayStore()
     play.settings.game = 'dragNumbers'
     play.startRound()
-    expect(play.round).toEqual({ game: 'dragNumbers', mode: 'teach', level: null, taskCount: 12 })
+    expect(play.round).toMatchObject({ game: 'dragNumbers', mode: 'teach', level: null })
+    expect(play.round?.tasks).toHaveLength(12)
   })
 
   it('keeps the chosen Level while Drag Numbers is picked', () => {
@@ -46,10 +51,24 @@ describe('play store', () => {
     expect(play.round?.mode).toBe('teach')
   })
 
-  it('leaving a Round throws it away', () => {
+  it('leaving a Round throws it away and stops asking', () => {
     const play = usePlayStore()
     play.startRound()
+    play.askingToLeave = true
     play.leaveRound()
     expect(play.round).toBeNull()
+    expect(play.askingToLeave).toBe(false)
+  })
+
+  it('submits Answers to the current Round and builds the Summary when it finishes', () => {
+    const play = usePlayStore()
+    play.settings.mode = 'test'
+    play.startRound(seededRandom(3))
+    expect(play.summary).toBeNull()
+
+    expect(play.submitAnswer(clockTime(12, 59))).toEqual({ right: false, finished: false })
+    for (let i = 1; i < 10; i++) play.submitAnswer(currentTask(play.round!)!.answer)
+
+    expect(play.summary).toMatchObject({ rightCount: 9, total: 10 })
   })
 })

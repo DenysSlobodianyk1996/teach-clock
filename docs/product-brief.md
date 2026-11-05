@@ -58,9 +58,13 @@ Rules shared by Drag Arrows and Set Time:
 
 ### Set Time: input
 
-- On-screen number pad (0–9, delete). A physical keyboard also works.
-- Impossible values can't be entered (hour 1–12, minute 00–59). Submit is enabled only when
-  both boxes are filled.
+- Hour and minute boxes, up to two digits each. The Player taps a box to select it; the hour box
+  hands over to the minutes after its second digit. One digit reads with a leading zero
+  (`1` → 01, `5` minutes → 05).
+- On-screen number pad (0–9, clear). Clear empties the whole selected box. A physical keyboard
+  also works: digits, Backspace/Delete to clear, ←/→ or Tab to switch boxes, Enter to submit.
+- Submit is enabled once both boxes have a digit. An impossible value (hour outside 1–12, minute
+  outside 00–59) shows an error under the boxes and is not submitted; the Player fixes it first.
 
 ## Modes
 

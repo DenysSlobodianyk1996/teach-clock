@@ -55,7 +55,8 @@ describe('Settings screen', () => {
     await choice(wrapper, '5 хв').setValue(true)
     await button(wrapper, 'Грати').trigger('click')
 
-    expect(usePlayStore().round).toEqual({ game: 'setTime', mode: 'test', level: 5, taskCount: 10 })
+    expect(usePlayStore().round).toMatchObject({ game: 'setTime', mode: 'test', level: 5 })
+    expect(usePlayStore().round?.tasks).toHaveLength(10)
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('round'))
   })
 
