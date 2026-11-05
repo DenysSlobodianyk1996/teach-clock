@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Темна тема: Підсумок</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc dark" style="width: 1024px; height: 768px; display: flex; flex-direction: column">
+  <svg class="confetti" aria-hidden="true" viewBox="0 0 1024 220" style="position: absolute; left: 0; top: 60px; width: 1024px; height: 220px">
+    <rect x="120" y="30" width="14" height="22" rx="4" transform="rotate(25 127 41)" style="fill: #f2b84b"></rect>
+    <circle cx="210" cy="120" r="7" style="fill: #e5604b"></circle>
+    <rect x="300" y="60" width="12" height="20" rx="4" transform="rotate(-30 306 70)" style="fill: #7fd49a"></rect>
+    <circle cx="700" cy="40" r="8" style="fill: #fff3dd"></circle>
+    <rect x="780" y="110" width="14" height="22" rx="4" transform="rotate(40 787 121)" style="fill: #e5604b"></rect>
+    <rect x="880" y="40" width="12" height="20" rx="4" transform="rotate(-15 886 50)" style="fill: #f2b84b"></rect>
+    <circle cx="930" cy="150" r="6" style="fill: #7fd49a"></circle>
+    <circle cx="80" cy="150" r="6" style="fill: #fff3dd"></circle>
+    <rect x="620" y="140" width="10" height="16" rx="3" transform="rotate(60 625 148)" style="fill: #f2b84b"></rect>
+  </svg>
+  <header class="hdr" style="position: relative">
+    <div class="brand"><svg viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>Вчимо годинник</div>
+    <div class="hdr-tools">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="false" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="true" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+      <a class="icon-btn" href="Welcome.dc.html" aria-label="Додому"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg></a>
+    </div>
+  </header>
+
+  <main style="position: relative; flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 0 44px 28px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+      <div style="font-size: 20px; color: var(--muted); font-weight: 800">Молодець, Оля! · Який час? · Перевірка · 15 хв</div>
+      <h1 style="margin: 0; font-size: 52px; font-weight: 900; line-height: 1">7 з 10 правильно</h1>
+      <div class="dots"><span class="dot ok"></span><span class="dot bad"></span><span class="dot ok"></span><span class="dot ok"></span><span class="dot bad"></span><span class="dot ok"></span><span class="dot ok"></span><span class="dot bad"></span><span class="dot ok"></span><span class="dot ok"></span></div>
+    </div>
+
+    <div style="flex-grow: 1; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 22px; min-height: 0">
+      <section class="card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 10px"><span class="dot ok"></span>Правильно · 7</h2>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 8px">
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="4:15" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(127.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(90)"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">4:15</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="1:00" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(30)"></line><line class="c-min" y1="14" y2="-70"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">1:00</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="9:30" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(285)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(180)"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">9:30</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="3:45" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(112.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(270)"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">3:45</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="10:00" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(300)"></line><line class="c-min" y1="14" y2="-70"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">10:00</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="5:15" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(157.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(90)"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">5:15</figcaption></figure>
+          <figure style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px"><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="12:30" style="width: 64px; height: 64px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(15)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(180)"></line><circle class="c-pin" r="9"></circle></svg><figcaption style="font-weight: 900">12:30</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; background: transparent; border: 3px solid var(--surface)">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 10px"><span class="dot bad"></span>Потренуймо ще · 3</h2>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div class="pair" style="padding: 10px 14px; align-items: center">
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Твоя відповідь 8:45" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(262.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(270)"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px; width: 120px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Твоя відповідь</span><span class="t" style="text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: var(--bad)">8:45</span></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 26px; height: 26px; color: var(--muted)"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Правильно 7:45" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(232.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(270)"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Правильно</span><span class="t" style="color: var(--good)">7:45</span></div>
+          </div>
+          <div class="pair" style="padding: 10px 14px; align-items: center">
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Твоя відповідь 6:00" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(180)"></line><line class="c-min" y1="14" y2="-70"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px; width: 120px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Твоя відповідь</span><span class="t" style="text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: var(--bad)">6:00</span></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 26px; height: 26px; color: var(--muted)"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Правильно 2:30" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(75)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(180)"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Правильно</span><span class="t" style="color: var(--good)">2:30</span></div>
+          </div>
+          <div class="pair" style="padding: 10px 14px; align-items: center">
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Твоя відповідь 12:15" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(7.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(90)"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px; width: 120px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Твоя відповідь</span><span class="t" style="text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: var(--bad)">12:15</span></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 26px; height: 26px; color: var(--muted)"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            <figure><svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Правильно 11:15" style="width: 70px; height: 70px"><circle class="c-face" r="94"></circle><circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle><line class="c-hour" y1="10" y2="-45" transform="rotate(337.5)"></line><line class="c-min" y1="14" y2="-70" transform="rotate(90)"></line><circle class="c-pin" r="9"></circle></svg></figure>
+            <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: var(--muted); font-weight: 800">Правильно</span><span class="t" style="color: var(--good)">11:15</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 16px">
+      <a class="btn" href="SetTimeTest.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8"></path><path d="M4 4v4h4"></path></svg>Грати ще</a>
+      <a class="btn btn-soft" href="Settings.dc.html">До вибору гри</a>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

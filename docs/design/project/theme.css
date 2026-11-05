@@ -1,0 +1,180 @@
+/* Teach Clock design prototype: shared tokens and parts.
+   Themes: .tc (middle, default), .tc.dark, .tc.light. */
+
+.tc {
+  --bg: #1d4b5c;
+  --bg-deep: #163b49;
+  --surface: #27606f;
+  --surface-2: #2f6e7e;
+  --line: rgba(253, 246, 233, 0.22);
+  --text: #fdf6e9;
+  --muted: #cfe2e3;
+  --face: #fff3dd;
+  --rim: #f2b84b;
+  --tick: #6b5a49;
+  --num: #2a2633;
+  --hour: #e5604b;
+  --minute: #157f86;
+  --pin: #2a2633;
+  --accent: #f2b84b;
+  --accent-ink: #2a2214;
+  --tile: #fff3dd;
+  --tile-ink: #2a2633;
+  --slot: rgba(42, 38, 51, 0.35);
+  --good: #7fd49a;
+  --help: #f5cf5a;
+  --bad: #c2453f;
+  --todo: rgba(253, 246, 233, 0.28);
+  --scrim: rgba(10, 30, 38, 0.62);
+  --pop: #fffaf0;
+  --pop-ink: #2a2633;
+  --shadow: 0 10px 0 rgba(0, 0, 0, 0.14), 0 18px 40px rgba(0, 0, 0, 0.22);
+
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Nunito", system-ui, sans-serif;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+}
+.tc *, .tc *::before, .tc *::after { box-sizing: border-box; }
+
+.tc.dark {
+  --bg: #121a24;
+  --bg-deep: #0c121a;
+  --surface: #1c2633;
+  --surface-2: #253142;
+  --line: rgba(238, 242, 246, 0.16);
+  --text: #eef2f6;
+  --muted: #b3c0cd;
+  --face: #f1e6cf;
+  --rim: #d9a441;
+  --accent: #f0b444;
+  --todo: rgba(238, 242, 246, 0.24);
+  --scrim: rgba(4, 8, 12, 0.7);
+  --pop: #1f2a37;
+  --pop-ink: #eef2f6;
+  --tile: #f1e6cf;
+}
+
+.tc.light {
+  --bg: #f5efe3;
+  --bg-deep: #ebe2d1;
+  --surface: #ffffff;
+  --surface-2: #fbf6ec;
+  --line: rgba(31, 45, 58, 0.14);
+  --text: #1f2d3a;
+  --muted: #4c5b69;
+  --face: #fffaf0;
+  --rim: #1d4b5c;
+  --minute: #11727a;
+  --accent: #f2b84b;
+  --good: #3f9e5e;
+  --help: #e9b928;
+  --bad: #c2453f;
+  --todo: rgba(31, 45, 58, 0.18);
+  --scrim: rgba(31, 45, 58, 0.45);
+  --tile: #ffffff;
+  --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
+}
+
+/* ---------- header ---------- */
+.hdr { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 72px; padding: 0 20px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; letter-spacing: 0.2px; }
+.brand svg { width: 36px; height: 36px; }
+.hdr-tools { display: flex; align-items: center; gap: 10px; }
+.seg { display: flex; padding: 4px; gap: 2px; border-radius: 999px; background: var(--bg-deep); }
+.seg button { min-width: 48px; height: 40px; padding: 0 10px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 800 15px "Nunito", sans-serif; }
+.seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+.swatch { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); vertical-align: middle; }
+.sw-middle { background: linear-gradient(135deg, #1d4b5c 50%, #fff3dd 50%); }
+.sw-dark { background: linear-gradient(135deg, #121a24 50%, #f1e6cf 50%); }
+.sw-light { background: linear-gradient(135deg, #f5efe3 50%, #1d4b5c 50%); }
+.icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; min-width: 48px; padding: 0 16px; border: 2px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 800 16px "Nunito", sans-serif; }
+.icon-btn svg { width: 22px; height: 22px; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; padding: 0 34px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: 900 22px "Nunito", sans-serif; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18); text-decoration: none; }
+.btn[disabled] { opacity: 0.45; box-shadow: none; }
+.btn-soft { background: var(--surface-2); color: var(--text); }
+.btn-help { background: var(--pop); color: var(--pop-ink); border: 3px dashed var(--accent); box-shadow: none; }
+.btn svg { width: 24px; height: 24px; }
+
+/* ---------- progress dots ---------- */
+.dots { display: flex; gap: 10px; align-items: center; justify-content: center; }
+.dot { width: 18px; height: 18px; border-radius: 50%; background: var(--todo); }
+.dot.ok { background: var(--good); }
+.dot.help { background: var(--help); }
+.dot.bad { background: var(--bad); }
+.dot.now { width: 22px; height: 22px; background: transparent; border: 4px solid var(--accent); }
+.task-no { font-size: 15px; color: var(--muted); font-weight: 700; }
+
+/* ---------- clock ---------- */
+.clock { display: block; overflow: visible; filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.14)); }
+.c-face { fill: var(--face); stroke: var(--rim); stroke-width: 7; }
+.c-tick { fill: none; stroke: var(--tick); stroke-width: 4; opacity: 0.45; }
+.c-tick5 { fill: none; stroke: var(--tick); stroke-width: 9; }
+.c-num { fill: var(--num); font: 900 19px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
+.c-hour { stroke: var(--hour); stroke-width: 11; stroke-linecap: round; }
+.c-min { stroke: var(--minute); stroke-width: 7; stroke-linecap: round; }
+.c-pin { fill: var(--pin); stroke: var(--face); stroke-width: 3; }
+.c-grip { fill: var(--face); stroke-width: 4; }
+.c-grip.h { stroke: var(--hour); }
+.c-grip.m { stroke: var(--minute); }
+.c-slot { fill: none; stroke: var(--slot); stroke-width: 2.5; stroke-dasharray: 4 4; }
+.c-slot.target { stroke: var(--accent); stroke-width: 4; stroke-dasharray: none; fill: rgba(242, 184, 75, 0.18); }
+.c-tile { fill: var(--accent); }
+.c-tile-num { fill: var(--accent-ink); font: 900 17px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
+.c-miss { fill: none; stroke: var(--bad); stroke-width: 3.5; }
+
+/* ---------- number tiles (tray) ---------- */
+.tray { display: grid; gap: 12px; padding: 18px; border-radius: 28px; background: var(--bg-deep); }
+.tile { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--tile); color: var(--tile-ink); font: 900 28px "Nunito", sans-serif; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.16); border: 0; }
+.tile.ghost { background: transparent; box-shadow: none; border: 3px dashed var(--line); }
+.tile.lifted { transform: rotate(-8deg) scale(1.12); box-shadow: 0 14px 0 rgba(0, 0, 0, 0.12), 0 22px 30px rgba(0, 0, 0, 0.3); background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- Set Time entry ---------- */
+.timebox-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.timebox { display: flex; align-items: center; justify-content: center; height: 96px; border-radius: 22px; background: var(--face); color: var(--num); font: 900 58px "Nunito", sans-serif; border: 4px solid transparent; }
+.timebox.h { width: 92px; }
+.timebox.mm { width: 150px; }
+.timebox.focus { border-color: var(--accent); }
+.timebox.empty { color: rgba(42, 38, 51, 0.28); }
+.colon { font: 900 58px "Nunito", sans-serif; color: var(--text); }
+.pad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.key { height: 64px; border: 0; border-radius: 20px; background: var(--surface-2); color: var(--text); font: 900 30px "Nunito", sans-serif; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.16); display: flex; align-items: center; justify-content: center; }
+.key[disabled] { opacity: 0.35; box-shadow: none; }
+.key svg { width: 30px; height: 30px; }
+
+/* ---------- cards, choices ---------- */
+.card { border-radius: 28px; background: var(--surface); }
+.choice { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 22px; border: 3px solid transparent; background: var(--surface); color: var(--text); text-align: left; font-family: "Nunito", sans-serif; min-height: 48px; }
+.choice b { font-weight: 900; font-size: 19px; }
+.choice span { font-size: 14px; font-weight: 600; color: var(--muted); line-height: 1.3; }
+.choice[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); }
+.label { font-size: 14px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.field { height: 64px; width: 100%; padding: 0 22px; border-radius: 20px; border: 3px solid var(--accent); background: var(--face); color: var(--num); font: 800 26px "Nunito", sans-serif; }
+
+/* ---------- popups ---------- */
+.scrim { position: absolute; inset: 0; background: var(--scrim); display: flex; align-items: center; justify-content: center; }
+.popup { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 32px 40px; border-radius: 32px; background: var(--pop); color: var(--pop-ink); box-shadow: var(--shadow); text-align: center; }
+.popup h2 { margin: 0; font-size: 28px; font-weight: 900; }
+.popup p { margin: 0; font-size: 17px; }
+.big-time { font: 900 64px "Nunito", sans-serif; line-height: 1; }
+.toast { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 999px; background: var(--pop); color: var(--pop-ink); font-size: 20px; font-weight: 800; box-shadow: var(--shadow); }
+.toast svg { width: 26px; height: 26px; flex: none; }
+
+/* ---------- Summary ---------- */
+.pair { display: flex; gap: 14px; align-items: flex-end; padding: 14px; border-radius: 22px; background: var(--surface); }
+.pair figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pair figcaption { font-size: 13px; font-weight: 800; color: var(--muted); }
+.pair .t { font-size: 18px; font-weight: 900; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--surface); font-weight: 900; font-size: 17px; }
+.chip .dot { width: 14px; height: 14px; }
+.confetti rect, .confetti circle { opacity: 0.95; }
+
+/* ---------- stage (desktop) ---------- */
+.stage-wrap { display: flex; justify-content: center; align-items: flex-start; padding: 20px 0 0; }
+.stage { width: 1024px; height: 768px; border-radius: 32px; overflow: hidden; position: relative; box-shadow: var(--shadow); }

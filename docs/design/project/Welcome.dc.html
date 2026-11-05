@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Вітання</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 1024px; height: 768px; display: flex; flex-direction: column">
+  <header class="hdr">
+    <div class="brand"><svg viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>Вчимо годинник</div>
+    <div class="hdr-tools">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+    </div>
+  </header>
+
+  <main style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; align-items: center; padding: 0 64px 40px">
+    <div style="display: flex; flex-direction: column; gap: 22px">
+      <h1 style="margin: 0; font-size: 48px; font-weight: 900; line-height: 1.08">Привіт! Навчимося читати годинник</h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.45; color: var(--muted)">Три короткі ігри: розстав числа на циферблаті, постав стрілки на потрібний час і прочитай, котру годину показує годинник. Без реєстрації — просто грай.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px">
+        <label class="label" for="name">Як тебе звати?</label>
+        <input class="field" id="name" type="text" value="Оля" placeholder="Твоє ім’я">
+      </div>
+      <div><a class="btn" href="Settings.dc.html">Почати<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a></div>
+    </div>
+
+    <div style="display: flex; justify-content: center; position: relative">
+      <svg aria-hidden="true" viewBox="0 0 400 400" style="position: absolute; width: 440px; height: 440px; top: -20px">
+        <circle cx="60" cy="70" r="10" style="fill: #f2b84b"></circle>
+        <circle cx="352" cy="110" r="7" style="fill: #e5604b"></circle>
+        <rect x="330" y="300" width="18" height="18" rx="5" transform="rotate(20 339 309)" style="fill: #7fd49a"></rect>
+        <rect x="40" y="300" width="14" height="14" rx="4" transform="rotate(-15 47 307)" style="fill: #fff3dd"></rect>
+      </svg>
+      <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 10:10" style="width: 380px; height: 380px">
+        <circle class="c-face" r="94"></circle>
+        <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
+        <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+        <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33">4</text><text class="c-num" x="33" y="57.2">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-57.2" y="33">8</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
+        <line class="c-hour" y1="10" y2="-45" transform="rotate(305)"></line>
+        <line class="c-min" y1="14" y2="-70" transform="rotate(60)"></line>
+        <circle class="c-pin" r="7"></circle>
+      </svg>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

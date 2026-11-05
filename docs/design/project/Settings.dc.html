@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Налаштування</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 1024px; height: 768px; display: flex; flex-direction: column">
+  <header class="hdr">
+    <div class="brand"><svg viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>Вчимо годинник</div>
+    <div class="hdr-tools">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+      <a class="icon-btn" href="Welcome.dc.html" aria-label="Додому"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg></a>
+    </div>
+  </header>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 4px 48px 32px">
+    <h1 style="margin: 0; font-size: 36px; font-weight: 900">Оля, у що граємо?</h1>
+
+    <div class="label">Гра</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+      <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
+        <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><circle class="c-slot" cx="0" cy="-62" r="16"></circle><circle class="c-slot" cx="62" cy="0" r="16"></circle><circle class="c-slot" cx="0" cy="62" r="16"></circle><circle class="c-tile" cx="-62" cy="0" r="18"></circle><text class="c-tile-num" x="-62" y="0">9</text></svg>
+        <div style="display: flex; flex-direction: column; gap: 4px"><b>Розстав числа</b><span>Перетягни числа 1–12 на їхні місця.</span></div>
+      </button>
+      <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
+        <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(120)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(0)"></line><circle class="c-grip m" cx="0" cy="-64" r="14"></circle><circle class="c-pin" r="9"></circle></svg>
+        <div style="display: flex; flex-direction: column; gap: 4px"><b>Постав стрілки</b><span>Покажи на годиннику заданий час.</span></div>
+      </button>
+      <button class="choice" type="button" aria-pressed="true" style="flex-direction: row; align-items: center; gap: 14px">
+        <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><text class="c-num" x="0" y="2" style="font-size: 54px">4:15</text></svg>
+        <div style="display: flex; flex-direction: column; gap: 4px"><b>Який час?</b><span>Подивись на годинник і введи час.</span></div>
+      </button>
+    </div>
+
+    <div class="label" style="margin-top: 6px">Режим</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+      <button class="choice" type="button" aria-pressed="true"><b>Навчання</b><span>Помилився — покажемо, як правильно, і допоможемо виправити.</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>Перевірка</b><span>Без підказок. Що вийшло — побачиш у кінці.</span></button>
+    </div>
+
+    <div class="label" style="margin-top: 6px">Крок хвилин</div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
+      <button class="choice" type="button" aria-pressed="false"><b>30 хв</b><span>:00 і :30</span></button>
+      <button class="choice" type="button" aria-pressed="true"><b>15 хв</b><span>:00, :15, :30, :45</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>5 хв</b><span>Кожні 5 хвилин</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>1 хв</b><span>Будь-яка хвилина</span></button>
+    </div>
+
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a class="btn btn-soft" href="Welcome.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Назад</a>
+      <a class="btn" href="SetTimeTest.dc.html">Грати<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></a>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-05T10:07:21Z" },
+  "title": "Teach Clock design",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1024, "h": 768, "title": "Стиль: кольори, годинник, елементи" },
+
+    "Welcome.dc.html": { "x": 0, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вітання" },
+    "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?)" },
+    "SettingsDragNumbers.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Розстав числа, без кроку)" },
+    "LeaveRound.dc.html": { "x": 3312, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вийти з раунду?" },
+
+    "SetTimeTest.dc.html": { "x": 0, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Перевірка" },
+    "SetTimeTeachWrong.dc.html": { "x": 1104, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Навчання: помилка" },
+    "SetTimeTeachHint.dc.html": { "x": 2208, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Навчання: підказка" },
+
+    "DragArrowsTest.dc.html": { "x": 0, "y": 3504, "w": 1024, "h": 768, "title": "Планшет · Постав стрілки · Перевірка" },
+    "DragArrowsTeachWrong.dc.html": { "x": 1104, "y": 3504, "w": 1024, "h": 768, "title": "Планшет · Постав стрілки · Навчання: помилка" },
+    "DragArrowsTeachHint.dc.html": { "x": 2208, "y": 3504, "w": 1024, "h": 768, "title": "Планшет · Постав стрілки · Навчання: підказка" },
+
+    "DragNumbersDrag.dc.html": { "x": 0, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · перетягування" },
+    "DragNumbersTeachHint.dc.html": { "x": 1104, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · Навчання: підказка" },
+    "DragNumbersTestSubmit.dc.html": { "x": 2208, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · Перевірка: усі 12" },
+
+    "Summary.dc.html": { "x": 0, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок" },
+    "SummaryDragNumbers.dc.html": { "x": 1104, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав числа" },
+
+    "PhoneWelcome.dc.html": { "x": 0, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Вітання" },
+    "PhoneSettings.dc.html": { "x": 470, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Налаштування" },
+    "PhoneSetTime.dc.html": { "x": 940, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Який час?" },
+    "PhoneDragArrows.dc.html": { "x": 1410, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Постав стрілки" },
+    "PhoneDragNumbers.dc.html": { "x": 1880, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Розстав числа" },
+    "PhoneSummary.dc.html": { "x": 2350, "y": 7008, "w": 390, "h": 844, "title": "Телефон · Підсумок" },
+
+    "DesktopWelcome.dc.html": { "x": 0, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Вітання" },
+    "DesktopSettings.dc.html": { "x": 1520, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Налаштування" },
+    "DesktopSetTime.dc.html": { "x": 3040, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Який час?" },
+    "DesktopDragArrows.dc.html": { "x": 4560, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Постав стрілки" },
+    "DesktopDragNumbers.dc.html": { "x": 6080, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Розстав числа" },
+    "DesktopSummary.dc.html": { "x": 7600, "y": 8252, "w": 1440, "h": 900, "title": "Комп’ютер · Підсумок" },
+
+    "DarkSettings.dc.html": { "x": 0, "y": 9552, "w": 1024, "h": 768, "title": "Темна тема · Налаштування" },
+    "DarkSetTime.dc.html": { "x": 1104, "y": 9552, "w": 1024, "h": 768, "title": "Темна тема · Який час?" },
+    "DarkSummary.dc.html": { "x": 2208, "y": 9552, "w": 1024, "h": 768, "title": "Темна тема · Підсумок" },
+    "LightSettings.dc.html": { "x": 3312, "y": 9552, "w": 1024, "h": 768, "title": "Світла тема · Налаштування" },
+    "LightDragArrows.dc.html": { "x": 4416, "y": 9552, "w": 1024, "h": 768, "title": "Світла тема · Постав стрілки" },
+    "LightSummary.dc.html": { "x": 5520, "y": 9552, "w": 1024, "h": 768, "title": "Світла тема · Підсумок" }
+  },
+  "order": [
+    "Main.dc.html",
+    "Welcome.dc.html", "Settings.dc.html", "SettingsDragNumbers.dc.html", "LeaveRound.dc.html",
+    "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "SetTimeTeachHint.dc.html",
+    "DragArrowsTest.dc.html", "DragArrowsTeachWrong.dc.html", "DragArrowsTeachHint.dc.html",
+    "DragNumbersDrag.dc.html", "DragNumbersTeachHint.dc.html", "DragNumbersTestSubmit.dc.html",
+    "Summary.dc.html", "SummaryDragNumbers.dc.html",
+    "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragNumbers.dc.html", "PhoneSummary.dc.html",
+    "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragNumbers.dc.html", "DesktopSummary.dc.html",
+    "DarkSettings.dc.html", "DarkSetTime.dc.html", "DarkSummary.dc.html", "LightSettings.dc.html", "LightDragArrows.dc.html", "LightSummary.dc.html"
+  ],
+  "notes": {
+    "rowStyle": { "x": 0, "y": -260, "text": "Стиль і елементи", "kind": "title1", "maxW": 1024 },
+    "rowEntry": { "x": 0, "y": 908, "text": "Вітання і налаштування", "kind": "title1", "maxW": 4336 },
+    "rowSetTime": { "x": 0, "y": 2076, "text": "Який час? (Set Time)", "kind": "title1", "maxW": 3232 },
+    "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
+    "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав числа (Drag Numbers)", "kind": "title1", "maxW": 3232 },
+    "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 2128 },
+    "rowPhone": { "x": 0, "y": 6748, "text": "Телефон, вертикально", "kind": "title1", "maxW": 2740 },
+    "rowDesktop": { "x": 0, "y": 7992, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 9040 },
+    "rowThemes": { "x": 0, "y": 9292, "text": "Темна і світла теми", "kind": "title1", "maxW": 6544 }
+  },
+  "designSystems": []
+}
