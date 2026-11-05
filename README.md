@@ -7,3 +7,4 @@ A browser game that teaches children to read and set an analogue clock. Three ga
 - [Glossary](GLOSSARY.md)
 - [Tech stack](docs/tech-stack.md)
 - [Decisions](docs/adr/)
+- Design prototype: [online canvas](https://claude.ai/artifact/7EUG95X5c8toe1Nb1TbGEu) (private) · [local gallery](docs/design/gallery.html) (open the file in a browser)
