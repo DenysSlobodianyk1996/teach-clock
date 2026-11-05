@@ -1,0 +1,3 @@
+# Drop the "say the time in a language" game
+
+The 2019 thesis presented a fourth game, LanguageTime, as its main novelty: the Player builds a sentence such as "It's ten minutes to five" from word tiles. The rebuild drops it. Teach Clock focuses on reading and setting the clock itself, and languages are used only for the interface (Ukrainian, English). This keeps the scope to three Games. It also avoids per-language time-telling rules ("quarter to", «за чверть п'ята»), which would need their own design and testing. If it comes back, it is a new Game with its own rules module, not a change to the existing three.

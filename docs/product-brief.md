@@ -1,75 +1,96 @@
-# Time Teacher — product brief
+# Teach Clock — product brief
 
-Distilled from the 2019 master's thesis and its defence deck (`docs/original/`, both in Ukrainian).
-Only the idea, game rules and screens carry over. The 2019 stack (ASP.NET Core 2.1 + Angular 7 + MySQL)
-and the code listings in the thesis appendix are **not** a reference for the rebuild.
+A browser game (installable PWA) that teaches children to read and set an analogue clock.
+Rebuild of the 2019 thesis project "Time Teacher" (`docs/original/`, in Ukrainian). From 2019 only the
+idea and game mechanics carry over. The old stack, code, accounts, results tracking and the
+"say the time in English" game are dropped.
 
-## Idea
+Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/adr/`](adr/).
 
-A browser game that teaches children (target age 6–10) to read an analogue clock, and to say the time
-in a foreign language (English first). Usable at home and in classrooms. Short, timed rounds with a
-score keep it playful; results are stored so progress can be tracked.
+## Principles
 
-The thesis compared three existing apps, each covering one skill, and combined all of them plus a new
-"say the time in a language" mode.
-
-## Game modes
-
-Shared rules for every mode: a round has a countdown (screens show **90 s**), the player answers as many
-tasks as possible, presses **Next (ДАЛІ >>)** to check the answer and get a new task. A correct answer
-adds to the score (screens show **+10** per answer). The thesis also mentions a limited number of
-mistakes per round. The round ends when time runs out or mistakes are used up; the result is saved.
-
-| # | Mode (2019 name) | Player sees | Player does | Screenshot |
-|---|---|---|---|---|
-| 1 | Drag Numbers (`DragNumbers`) | A clock face (smiling mascot face) with 12 empty slots, and 12 shuffled number balls beside it | Drags each number 1–12 onto its slot | `screenshots/mode-1-drag-numbers.png` |
-| 2 | Read the Clock (`TimeArrow`) | A clock showing a random time | Types the time into `HH : MM` boxes | `screenshots/mode-2-time-arrow.png` |
-| 3 | Set the Clock (`ArrowManipulation`) | A target time `HH : MM` and a clock | Drags/rotates the hour and minute hands to that time | `screenshots/mode-3-arrow-manipulation.png` |
-| 4 | Say the Time (`LanguageTime`) | A clock with a random time, a language picker, shuffled word tiles (`it's`, `ten`, `to`, `five`, `minutes`…) | Drags tiles into order to build the sentence ("It's ten minutes to five") | `screenshots/mode-4-language-time.png` |
+- **Teaching first.** A wrong Answer is a moment to show what's right, not a penalty.
+- **No accounts, nothing stored about the Player.** The name is typed in only for greetings (ADR 0002).
+- **No timer, no sound.** Animations are welcome.
+- **Works everywhere.** Phone, tablet, desktop; touch and mouse; offline.
 
 ## Screens
 
-- **Account page** — sign in / sign up.
-- **Main page** (`screenshots/main-page-wireframe.png`) — header (title, UI language switch, Exit),
-  left menu "Choose game mode" with the four modes plus **Results**, and a play area that shows the
-  rules until a mode is picked.
-- **Mode screen** — per mode, always contains: player name + one-line rules, the clock, the answer
-  area, remaining time, score, Next button.
-- **Results / statistics** — progress charts per mode, visible to the player and to admins.
+1. **Welcome**: a short description of what the app teaches, a name field, Start.
+2. **Settings**: choose the Game, Mode and Level (no Level for Drag Numbers). Each option has a
+   one-line description. Back returns to Welcome.
+3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward.
+   Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
+4. **Summary**: read-only. Tasks grouped into **Right** and **Wrong**. Each wrong Task shows the
+   Player's first Answer next to the correct one, both drawn as clocks. Buttons: Play again,
+   back to Settings.
 
-## Other functionality in the 2019 design
+A small header on every screen holds the Preferences: interface language (Ukrainian first,
+English second) and theme (middle by default, dark, light). The device remembers Preferences and
+the last name typed.
 
-- Accounts with login/password; roles (user, admin).
-- Admin area: manage users, view their results.
-- Results e-mailed to the address given at sign-up after each round.
-- UI language switch.
+## Games
 
-## Visual style (2019)
+| Game | Player sees | Player does | Round | Levels |
+|---|---|---|---|---|
+| **Drag Numbers** | An empty clock face with 12 slots and a tray of shuffled numbers | Drags each number 1–12 onto its slot | All 12 numbers | — |
+| **Drag Arrows** | A target Clock Time `H:MM` and a clock with hands at 12:00 | Drags the hands to show the target, presses Submit | 10 Tasks | 30 / 15 / 5 / 1 min |
+| **Set Time** | A clock showing a Clock Time | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks | 30 / 15 / 5 / 1 min |
 
-- Background: light parchment texture, base `#E5D88E`; text dark grey `#2D2D2F`; inputs and buttons
-  light grey `#F5F5F5`.
-- Clock: green outer ring, yellow ring, red inner ring, peach face, bold red numerals, blue and green
-  arrow hands, orange centre pin. Clock takes about a third of the play area.
-- Minimal elements per screen, because the users are children.
+2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
+only, not for look).
 
-## Data model (2019, for reference)
+Rules shared by Drag Arrows and Set Time:
 
-`User`, `Role`, `UserRole`, `TaskType` (name, description, priority = difficulty), `Task`,
-`Result` (one round), `TaskAnswer` (per task: correct?, time to answer).
-The useful idea: store every answer with its time, so statistics can show accuracy and speed per mode.
+- A Clock Time has hours 1–12 and minutes 00–59. No seconds, no 24-hour times, no AM/PM.
+- Minutes are multiples of the Level step. A Round never repeats a Clock Time.
 
-## Gaps and open questions for the rebuild
+### Drag Arrows: how the hands move
 
-- **Hand realism.** In the 2019 screens the hour hand sits exactly on the hour (e.g. at 12 for 12:15).
-  A real clock moves the hour hand between numbers; children should learn that.
-- **Difficulty levels.** Only hinted at (`TaskType.priority`). Natural ladder: o'clock → half past →
-  quarters → 5-minute steps → any minute; 12 h vs 24 h.
-- **Attempts / feedback.** What happens on a wrong answer: show the correct answer, retry, lose a life?
-- **Accounts for children.** E-mail + password is a poor fit for 6-year-olds. Options: local profiles
-  with avatars, or a parent/teacher account that owns child profiles.
-- **Admin + e-mail results.** Needed for an MVP, or later (teacher dashboard)?
-- **Languages.** Which time-telling languages beyond English (Ukrainian?) and which UI languages.
-- **Devices.** Touch-first for tablets/phones vs desktop mouse.
-- **New ideas worth discussing:** voice-over (read the time aloud), sound effects and rewards,
-  a free-play "explore the clock" mode, offline play (PWA), a "time of day" context (morning/night).
-- **Art.** The mascot face and number balls need new original art (SVG).
+- One Clock Time drives both hands, so the hands can never disagree.
+- The short Hour Hand moves gradually between numbers as minutes pass, like a real clock.
+- Dragging the long Minute Hand changes minutes and snaps to the Level step. Passing 12 rolls the
+  hour forward or back.
+- Dragging the Hour Hand changes only the hour.
+- Hands start at 12:00 for every Task. 12:00 is never a target, so an untouched submit is wrong.
+
+### Set Time: input
+
+- On-screen number pad (0–9, delete). A physical keyboard also works.
+- Impossible values can't be entered (hour 1–12, minute 00–59). Submit is enabled only when
+  both boxes are filled.
+
+## Modes
+
+### Teach
+
+- Wrong Answer → a popup shows the correct Answer (digits plus a small clock). The Player's hands or
+  digits stay where they were.
+- After the first wrong try a **Set correct answer** button appears, with the Hint (the correct
+  Answer) under it. Pressing it fills in the Answer (digits appear or hands animate); the Player
+  still presses Submit.
+- The Round moves on only after a right Answer. Dots: green = right first time, yellow = needed help.
+  A Task that needed help is listed under **Wrong** in the Summary.
+- Drag Numbers: a number dropped on the wrong slot goes straight back to the tray with a hint
+  "7 goes between 6 and 8".
+
+### Test
+
+- No feedback during the Round. Every Submit moves on; dots turn green or red.
+- Drag Numbers: numbers can be placed and swapped freely, with no feedback. Submit becomes available
+  when all 12 are placed. The Summary shows the Player's face next to the correct one.
+
+## Look
+
+- Mid-tone, soft but saturated palette as the default "middle" theme (for example deep teal/navy
+  background, warm cream clock face, coral Hour Hand, teal Minute Hand, mustard highlights,
+  softened green/red for right/wrong). Dark and light themes as alternatives.
+- Text meets WCAG AA contrast. Touch targets at least 48 px.
+- The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
+  desktop. On a phone held upright, the clock sits above the answer area.
+- All art is original SVG. The 2019 palette and images are not reused.
+
+## Out of scope
+
+Accounts, admin, stored results and statistics, e-mail, timers, sound, telling the time in a
+foreign language.
