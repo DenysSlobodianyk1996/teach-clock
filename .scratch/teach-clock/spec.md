@@ -156,7 +156,8 @@ How it works:
     - equality.
   - **Hand dragging**:
     - Given the current Clock Time, a pointer angle and the Level step, return the new Clock Time for a Minute Hand drag: snapped to the step, rolling the hour forward or back when crossing 12, based on the previous minute.
-    - For an Hour Hand drag, change only the hour and keep the minutes.
+    - For an Hour Hand drag, change only the hour and keep the minutes. The hand never sits exactly on a number unless the minutes are 00: at 1:30 it is halfway between 1 and 2, whichever hand was dragged first.
+    - **Which hour an Hour Hand drag picks: the nearest drawn position.** With minutes `m`, hour `h` draws the hand at `h × 30° + m × 0.5°`. The new hour is the one whose drawn hand is closest to the pointer: `round((pointerAngle − m × 0.5°) / 30°)`, wrapped into 1–12 (0 becomes 12). An exact tie goes to the later hour. So the hand jumps in 30° steps, never moves away from the finger, and pointing right at a number with minutes 30 gives that number's hour (pointer on 1 at :30 → 1:30, hand between 1 and 2).
   - **Time entry** (Set Time number pad): given the current hour and minute boxes and a key (digit or delete), return the new boxes. Keys that would make an impossible value are rejected. Also reports whether the entry is complete.
   - **Task generation**:
     - Given the Game, Level, count and a random source, return unique Clock Times on the Level step with hours 1–12.
@@ -236,7 +237,13 @@ How it works:
 - **Rules module (Vitest), most tests, written test-first:**
   - **Clock Time:** angle maths, including how far the hour hand creeps.
   - **Minute Hand drag:** snapping at each Level, plus hour rollover both ways across 12.
-  - **Hour Hand drag:** changes only the hour.
+  - **Hour Hand drag:** changes only the hour, picking the nearest drawn position. Cases:
+    - minutes 00, pointer 30° → 1:00; pointer 44° → 1:00; pointer 46° → 2:00.
+    - minutes 30, pointer 30° (on the 1, a tie between 12:30 and 1:30) → 1:30.
+    - minutes 30, pointer 0° (on the 12, a tie between 11:30 and 12:30) → 12:30.
+    - minutes 30, pointer 350° → 11:30 (wraps without crossing into 12).
+    - minutes 45, pointer 100° → 3:45 (hand at 112.5°, nearest to the pointer).
+    - set 1:30 either way: hour to 1 then minutes to 30, or minutes to 30 then hour to 1, ends with the same Clock Time and hand angles (hour hand 45°).
   - **Time entry:** blocks impossible keys.
   - **Task generation:** uniqueness, the Level step, no 12:00 in Drag Arrows, reproducible with a seeded random source.
   - **Teach flow:** wrong, then Hint, then help used, then right, with the Task ending as "helped".

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Підсумок: Розстав числа</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 1024px; height: 768px; display: flex; flex-direction: column">
+  <svg class="confetti" aria-hidden="true" viewBox="0 0 1024 220" style="position: absolute; left: 0; top: 60px; width: 1024px; height: 220px">
+    <rect x="120" y="30" width="14" height="22" rx="4" transform="rotate(25 127 41)" style="fill: #f2b84b"></rect>
+    <circle cx="210" cy="120" r="7" style="fill: #e5604b"></circle>
+    <rect x="300" y="60" width="12" height="20" rx="4" transform="rotate(-30 306 70)" style="fill: #7fd49a"></rect>
+    <circle cx="700" cy="40" r="8" style="fill: #fff3dd"></circle>
+    <rect x="780" y="110" width="14" height="22" rx="4" transform="rotate(40 787 121)" style="fill: #e5604b"></rect>
+    <rect x="880" y="40" width="12" height="20" rx="4" transform="rotate(-15 886 50)" style="fill: #f2b84b"></rect>
+    <circle cx="930" cy="150" r="6" style="fill: #7fd49a"></circle>
+    <circle cx="80" cy="150" r="6" style="fill: #fff3dd"></circle>
+  </svg>
+  <header class="hdr" style="position: relative">
+    <div class="brand"><svg viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>Вчимо годинник</div>
+    <div class="hdr-tools">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+      <a class="icon-btn" href="Welcome.dc.html" aria-label="Додому"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg></a>
+    </div>
+  </header>
+
+  <main style="position: relative; flex-grow: 1; display: flex; flex-direction: column; gap: 18px; padding: 0 44px 28px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+      <div style="font-size: 20px; color: var(--muted); font-weight: 800">Чудова робота, Оля! · Розстав числа · Перевірка</div>
+      <h1 style="margin: 0; font-size: 52px; font-weight: 900; line-height: 1">10 з 12 на своїх місцях</h1>
+    </div>
+
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px">
+      <figure class="card" style="margin: 0; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+        <figcaption style="font-size: 20px; font-weight: 900">Твій циферблат</figcaption>
+        <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Твій циферблат: 4 і 5 помінялися місцями" style="width: 330px; height: 330px">
+          <circle class="c-face" r="94"></circle>
+          <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+          <circle class="c-tile" cx="0" cy="-66" r="15"></circle><text class="c-tile-num" x="0" y="-66">12</text>
+          <circle class="c-tile" cx="33" cy="-57.2" r="15"></circle><text class="c-tile-num" x="33" y="-57.2">1</text>
+          <circle class="c-tile" cx="57.2" cy="-33" r="15"></circle><text class="c-tile-num" x="57.2" y="-33">2</text>
+          <circle class="c-tile" cx="66" cy="0" r="15"></circle><text class="c-tile-num" x="66" y="0">3</text>
+          <circle class="c-tile" cx="57.2" cy="33" r="15" style="fill: var(--face)"></circle><text class="c-tile-num" x="57.2" y="33">5</text><circle class="c-miss" cx="57.2" cy="33" r="18"></circle>
+          <circle class="c-tile" cx="33" cy="57.2" r="15" style="fill: var(--face)"></circle><text class="c-tile-num" x="33" y="57.2">4</text><circle class="c-miss" cx="33" cy="57.2" r="18"></circle>
+          <circle class="c-tile" cx="0" cy="66" r="15"></circle><text class="c-tile-num" x="0" y="66">6</text>
+          <circle class="c-tile" cx="-33" cy="57.2" r="15"></circle><text class="c-tile-num" x="-33" y="57.2">7</text>
+          <circle class="c-tile" cx="-57.2" cy="33" r="15"></circle><text class="c-tile-num" x="-57.2" y="33">8</text>
+          <circle class="c-tile" cx="-66" cy="0" r="15"></circle><text class="c-tile-num" x="-66" y="0">9</text>
+          <circle class="c-tile" cx="-57.2" cy="-33" r="15"></circle><text class="c-tile-num" x="-57.2" y="-33">10</text>
+          <circle class="c-tile" cx="-33" cy="-57.2" r="15"></circle><text class="c-tile-num" x="-33" y="-57.2">11</text>
+          <circle class="c-pin" r="7"></circle>
+        </svg>
+        <div style="font-size: 16px; color: var(--muted)">Обведені — не на своєму місці</div>
+      </figure>
+      <figure class="card" style="margin: 0; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+        <figcaption style="font-size: 20px; font-weight: 900">Правильний</figcaption>
+        <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Правильний циферблат" style="width: 330px; height: 330px">
+          <circle class="c-face" r="94"></circle>
+          <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+          <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33" style="fill: var(--good)">4</text><text class="c-num" x="33" y="57.2" style="fill: var(--good)">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-57.2" y="33">8</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
+          <circle class="c-pin" r="7"></circle>
+        </svg>
+        <div style="font-size: 16px; color: var(--muted)">4 стоїть між 3 і 5</div>
+      </figure>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 16px">
+      <a class="btn" href="DragNumbersDrag.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8"></path><path d="M4 4v4h4"></path></svg>Грати ще</a>
+      <a class="btn btn-soft" href="SettingsDragNumbers.dc.html">До вибору гри</a>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

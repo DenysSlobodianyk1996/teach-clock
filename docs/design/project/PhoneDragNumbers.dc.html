@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Телефон: Розстав числа</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 390px; height: 844px; display: flex; flex-direction: column">
+  <header class="hdr" style="height: 64px; padding: 0 14px">
+    <div class="brand"><svg viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg></div>
+    <div class="hdr-tools" style="gap: 8px">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" type="button" aria-label="Тема: середня. Змінити" style="padding: 0; width: 48px"><span class="swatch sw-middle" style="width: 26px; height: 26px"></span></button>
+      <button class="icon-btn" type="button" aria-label="Вийти з раунду" style="padding: 0; width: 48px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5v16h-5"></path><path d="M9 8l-4 4 4 4"></path><path d="M5 12h11"></path></svg></button>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+    <div class="dots" style="gap: 6px" aria-label="Прогрес: 4 з 12 чисел на місці">
+      <span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot help" style="width: 16px; height: 16px"></span><span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot now" style="width: 18px; height: 18px; border-width: 3px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span>
+    </div>
+    <div class="task-no">4 з 12 на місці</div>
+  </div>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 12px 16px 20px">
+    <div class="toast" role="status" style="font-size: 17px; padding: 10px 18px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--hour)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>7 стоїть між 6 і 8</div>
+    <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат: на місцях 12, 3, 6 і 9" style="width: 330px; height: 330px">
+      <circle class="c-face" r="94"></circle>
+      <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+      <circle class="c-slot" cx="33" cy="-57.2" r="14"></circle><circle class="c-slot" cx="57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="57.2" cy="33" r="14"></circle><circle class="c-slot" cx="33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-57.2" cy="33" r="14"></circle><circle class="c-slot" cx="-57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="-33" cy="-57.2" r="14"></circle>
+      <circle class="c-tile" cx="0" cy="-66" r="15"></circle><text class="c-tile-num" x="0" y="-66">12</text>
+      <circle class="c-tile" cx="66" cy="0" r="15"></circle><text class="c-tile-num" x="66" y="0">3</text>
+      <circle class="c-tile" cx="0" cy="66" r="15"></circle><text class="c-tile-num" x="0" y="66">6</text>
+      <circle class="c-tile" cx="-66" cy="0" r="15"></circle><text class="c-tile-num" x="-66" y="0">9</text>
+      <circle class="c-pin" r="7"></circle>
+    </svg>
+    <div style="flex-grow: 1"></div>
+    <div class="tray" style="width: 100%; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; padding: 12px; justify-items: center" aria-label="Числа">
+      <button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px; outline: 3px solid var(--hour); outline-offset: 2px">7</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">2</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">11</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">4</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">10</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">1</button>
+      <button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">8</button><button class="tile" type="button" style="width: 48px; height: 48px; font-size: 22px">5</button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

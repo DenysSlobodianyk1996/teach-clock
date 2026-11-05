@@ -16,6 +16,7 @@ Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, w
 - `docs/product-brief.md` — screens, the three Games, Teach/Test rules, look. Read this first.
 - `docs/tech-stack.md` — libraries and what was rejected.
 - `docs/adr/` — decisions that are hard to reverse.
+- `docs/design/` — ticket 01 design prototype: open `gallery.html` locally; `project/theme.css` has the theme tokens.
 - `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
 
 ## Rules

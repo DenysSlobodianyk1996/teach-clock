@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teach Clock design</title>
+<style>
+  :root { --bg: #0f2a33; --text: #fdf6e9; --muted: #b9d0d2; --card: #163b49; --accent: #f2b84b; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, sans-serif; }
+  header { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 12px 16px; background: rgba(15, 42, 51, 0.95); border-bottom: 1px solid rgba(255,255,255,.1); }
+  header h1 { margin: 0; font-size: 18px; }
+  header a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  header label { margin-left: auto; color: var(--muted); }
+  main { padding: 8px 16px 48px; max-width: 2000px; margin: 0 auto; }
+  h2 { margin: 32px 0 12px; font-size: 22px; }
+  .row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  figcaption { color: var(--muted); font-size: 13px; }
+  figcaption a { color: var(--accent); }
+  .frame { overflow: hidden; border-radius: 12px; background: var(--card); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .frame iframe { border: 0; transform-origin: 0 0; display: block; pointer-events: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Teach Clock: design prototype</h1>
+  <span style="color: var(--muted)">Local copy of the canvas. Click a caption to open one screen at full size.</span>
+  <label>Scale <select id="scale"><option value="0.3">30%</option><option value="0.45" selected>45%</option><option value="0.6">60%</option><option value="1">100%</option></select></label>
+</header>
+<main id="out"></main>
+<script>
+  // Same boards and groups as project/canvas.json (kept inline so the page works from file://).
+  const groups = [
+    ["Стиль і елементи", [["Main", 1024, 768, "Стиль: кольори, годинник, елементи"]]],
+    ["Вітання і налаштування", [["Welcome", 1024, 768, "Вітання"], ["Settings", 1024, 768, "Налаштування (Який час?)"], ["SettingsDragNumbers", 1024, 768, "Налаштування (Розстав числа, без кроку)"], ["LeaveRound", 1024, 768, "Вийти з раунду?"]]],
+    ["Який час? (Set Time)", [["SetTimeTest", 1024, 768, "Перевірка"], ["SetTimeTeachWrong", 1024, 768, "Навчання: помилка"], ["SetTimeTeachHint", 1024, 768, "Навчання: підказка"]]],
+    ["Постав стрілки (Drag Arrows)", [["DragArrowsTest", 1024, 768, "Перевірка"], ["DragArrowsTeachWrong", 1024, 768, "Навчання: помилка"], ["DragArrowsTeachHint", 1024, 768, "Навчання: підказка"]]],
+    ["Розстав числа (Drag Numbers)", [["DragNumbersDrag", 1024, 768, "Перетягування"], ["DragNumbersTeachHint", 1024, 768, "Навчання: підказка"], ["DragNumbersTestSubmit", 1024, 768, "Перевірка: усі 12"]]],
+    ["Підсумок (Summary)", [["Summary", 1024, 768, "Підсумок"], ["SummaryDragNumbers", 1024, 768, "Підсумок: Розстав числа"]]],
+    ["Телефон, вертикально", [["PhoneWelcome", 390, 844, "Вітання"], ["PhoneSettings", 390, 844, "Налаштування"], ["PhoneSetTime", 390, 844, "Який час?"], ["PhoneDragArrows", 390, 844, "Постав стрілки"], ["PhoneDragNumbers", 390, 844, "Розстав числа"], ["PhoneSummary", 390, 844, "Підсумок"]]],
+    ["Комп’ютер: ігрова зона до 1024 px", [["DesktopWelcome", 1440, 900, "Вітання"], ["DesktopSettings", 1440, 900, "Налаштування"], ["DesktopSetTime", 1440, 900, "Який час?"], ["DesktopDragArrows", 1440, 900, "Постав стрілки"], ["DesktopDragNumbers", 1440, 900, "Розстав числа"], ["DesktopSummary", 1440, 900, "Підсумок"]]],
+    ["Темна і світла теми", [["DarkSettings", 1024, 768, "Темна · Налаштування"], ["DarkSetTime", 1024, 768, "Темна · Який час?"], ["DarkSummary", 1024, 768, "Темна · Підсумок"], ["LightSettings", 1024, 768, "Світла · Налаштування"], ["LightDragArrows", 1024, 768, "Світла · Постав стрілки"], ["LightSummary", 1024, 768, "Світла · Підсумок"]]]
+  ];
+
+  const out = document.getElementById("out");
+  const scaleSelect = document.getElementById("scale");
+
+  function render() {
+    const s = parseFloat(scaleSelect.value);
+    out.textContent = "";
+    for (const [title, boards] of groups) {
+      const h2 = document.createElement("h2");
+      h2.textContent = title;
+      const row = document.createElement("div");
+      row.className = "row";
+      for (const [file, w, h, label] of boards) {
+        const src = "project/" + file + ".dc.html";
+        const fig = document.createElement("figure");
+        const frame = document.createElement("div");
+        frame.className = "frame";
+        frame.style.width = Math.round(w * s) + "px";
+        frame.style.height = Math.round(h * s) + "px";
+        const iframe = document.createElement("iframe");
+        iframe.src = src;
+        iframe.width = w;
+        iframe.height = h;
+        iframe.loading = "lazy";
+        iframe.title = label;
+        iframe.style.transform = "scale(" + s + ")";
+        frame.append(iframe);
+        const cap = document.createElement("figcaption");
+        const a = document.createElement("a");
+        a.href = src;
+        a.target = "_blank";
+        a.textContent = label;
+        cap.append(a, " · " + w + "×" + h);
+        fig.append(frame, cap);
+        row.append(fig);
+      }
+      out.append(h2, row);
+    }
+  }
+
+  try { scaleSelect.value = localStorage.getItem("tc-gallery-scale") || scaleSelect.value; } catch (e) {}
+  scaleSelect.addEventListener("change", () => {
+    try { localStorage.setItem("tc-gallery-scale", scaleSelect.value); } catch (e) {}
+    render();
+  });
+  render();
+</script>
+</body>
+</html>

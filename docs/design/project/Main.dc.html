@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Стиль Teach Clock</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 1024px; height: 768px; padding: 36px 44px; display: flex; flex-direction: column; gap: 26px">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <div class="brand" style="font-size: 30px">
+      <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 48px; height: 48px"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>
+      Вчимо годинник
+    </div>
+    <div class="label">Teach Clock · стиль і елементи</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; flex-grow: 1">
+    <div style="display: flex; flex-direction: column; gap: 22px">
+      <div class="label">Годинник</div>
+      <div style="display: flex; gap: 28px; align-items: center">
+        <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 4:15" style="width: 250px; height: 250px">
+          <circle class="c-face" r="94"></circle>
+          <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
+          <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+          <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33">4</text><text class="c-num" x="33" y="57.2">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-57.2" y="33">8</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
+          <line class="c-hour" y1="10" y2="-45" transform="rotate(127.5)"></line>
+          <line class="c-min" y1="14" y2="-70" transform="rotate(90)"></line>
+          <circle class="c-pin" r="7"></circle>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 16px">
+          <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 80 20" aria-hidden="true" style="width: 80px; height: 20px"><line class="c-hour" x1="8" y1="10" x2="56" y2="10"></line></svg><span><b>Годинна</b> — коротка, коралова</span></div>
+          <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 80 20" aria-hidden="true" style="width: 80px; height: 20px"><line class="c-min" x1="6" y1="10" x2="76" y2="10"></line></svg><span><b>Хвилинна</b> — довга, бірюзова</span></div>
+          <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="-20 -20 40 40" aria-hidden="true" style="width: 40px; height: 40px"><circle class="c-grip m" r="13"></circle></svg><span>Ручка для пальця на кінці стрілки</span></div>
+          <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="-20 -20 40 40" aria-hidden="true" style="width: 40px; height: 40px"><circle r="16" style="fill: #fff3dd"></circle><circle class="c-slot" r="14"></circle></svg><span>Порожнє місце для числа</span></div>
+          <div style="display: flex; align-items: center; gap: 12px"><div class="tile" style="width: 44px; height: 44px; font-size: 20px">7</div><span>Плитка з числом</span></div>
+        </div>
+      </div>
+
+      <div class="label">Прогрес</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <span class="chip"><span class="dot ok"></span>правильно</span>
+        <span class="chip"><span class="dot help"></span>з підказкою</span>
+        <span class="chip"><span class="dot bad"></span>помилка</span>
+        <span class="chip"><span class="dot now" style="width: 16px; height: 16px; border-width: 3px"></span>зараз</span>
+        <span class="chip"><span class="dot"></span>попереду</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 22px">
+      <div class="label">Теми</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+        <div style="border-radius: 22px; padding: 14px; background: #1d4b5c; color: #fdf6e9; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(253,246,233,.22)">
+          <b style="font-size: 16px">Середня</b><span style="font-size: 13px">за замовчуванням</span>
+          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #fff3dd"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f2b84b"></span></div>
+        </div>
+        <div style="border-radius: 22px; padding: 14px; background: #121a24; color: #eef2f6; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(238,242,246,.16)">
+          <b style="font-size: 16px">Темна</b><span style="font-size: 13px">для вечора</span>
+          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #f1e6cf"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f0b444"></span></div>
+        </div>
+        <div style="border-radius: 22px; padding: 14px; background: #f5efe3; color: #1f2d3a; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(31,45,58,.14)">
+          <b style="font-size: 16px">Світла</b><span style="font-size: 13px">для яскравого дня</span>
+          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #fffaf0"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #11727a"></span><span class="swatch" style="background: #1d4b5c"></span></div>
+        </div>
+      </div>
+
+      <div class="label">Шрифт</div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="font-size: 40px; font-weight: 900; line-height: 1.1">Котра година?</div>
+        <div style="font-size: 18px; color: var(--muted)">Nunito 600–900: округлий, з повною кирилицею.</div>
+      </div>
+
+      <div class="label">Кнопки (мін. 48 px)</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
+        <button class="btn" type="button">Перевірити</button>
+        <button class="btn btn-soft" type="button">Назад</button>
+        <button class="btn" type="button" disabled>Перевірити</button>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: center">
+        <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+        <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
