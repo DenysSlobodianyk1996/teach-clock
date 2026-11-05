@@ -1,5 +1,9 @@
-# Time Teacher
+# Teach Clock
 
-An HTML5 game that teaches children to read an analogue clock and to say the time in English (and other languages).
+A browser game that teaches children to read and set an analogue clock. Three games
+(Drag Numbers, Drag Arrows, Set Time), each in Teach or Test mode. Works offline as a PWA.
 
-See [`docs/product-brief.md`](docs/product-brief.md) for the idea and game modes, and [`docs/tech-stack.md`](docs/tech-stack.md) for the proposed stack.
+- [Product brief](docs/product-brief.md): screens, games, rules
+- [Glossary](GLOSSARY.md)
+- [Tech stack](docs/tech-stack.md)
+- [Decisions](docs/adr/)

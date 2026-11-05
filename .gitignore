@@ -12,3 +12,5 @@ coverage/
 !.vscode/extensions.json
 playwright-report/
 test-results/
+.claude/settings.local.json
+.claude/worktrees/

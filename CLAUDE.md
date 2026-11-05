@@ -1,21 +1,23 @@
-# Time Teacher (tech-clock)
+# Teach Clock
 
-Browser game that teaches children (6–10) to read an analogue clock and to say the time in a foreign language.
-Rebuild of a 2019 master's-thesis project as an HTML5 game.
+Browser game (offline PWA) that teaches children to read and set an analogue clock.
+Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Pre-code. No app scaffold yet; the stack is a proposal in `docs/tech-stack.md` (Vue 3 + Vite + TypeScript + SVG is the leading option).
+Design agreed, no code yet. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 
 ## Where things are
 
-- `docs/product-brief.md` — the idea, four game modes, screens, open questions. Read this first.
-- `docs/tech-stack.md` — stack proposal and alternatives.
-- `docs/screenshots/` — 2019 screens of each mode and the main-page wireframe.
-- `docs/original/` — the 2019 thesis (PDF) and defence deck (PPTX), in Ukrainian. Large; prefer the brief.
+- `GLOSSARY.md` — the project's terms (Player, Game, Mode, Level, Round, Task, Hint, Summary…). Use them in code and docs.
+- `docs/product-brief.md` — screens, the three Games, Teach/Test rules, look. Read this first.
+- `docs/tech-stack.md` — libraries and what was rejected.
+- `docs/adr/` — decisions that are hard to reverse.
+- `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
 
 ## Rules
 
-- Use the 2019 docs only for the idea, game rules and screens. Their stack (ASP.NET Core, Angular, MySQL) and code listings are not a reference.
-- Don't use Unity or other non-web engines.
-- Art must be original; don't copy the 2019 images.
+- Use the 2019 docs only for game mechanics. Their stack (ASP.NET Core, Angular, MySQL), code, palette and images are not a reference.
+- No accounts, no stored results, no backend (ADR 0002). Only Preferences and the last name live in `localStorage`.
+- Keep clock maths in plain TypeScript, separate from Vue and SVG (ADR 0001).
+- Art must be original SVG.
