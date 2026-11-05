@@ -4,8 +4,11 @@ import { useI18n } from 'vue-i18n'
 import { numberPositions } from '@/game/clockFace'
 import { formatClockTime, handAngles, type ClockTime } from '@/game/clockTime'
 
-/** A read-only analogue clock showing a Clock Time. Draggable hands and empty slots come later. */
-const props = defineProps<{ time: ClockTime }>()
+/**
+ * A read-only analogue clock showing a Clock Time. `rim="good"` turns the rim green, as after a
+ * right Answer in Teach. Draggable hands and empty slots come later.
+ */
+const props = defineProps<{ time: ClockTime; rim?: 'good' }>()
 
 const { t } = useI18n()
 
@@ -23,6 +26,7 @@ const angles = computed(() => handAngles(props.time))
 <template>
   <svg
     class="clock"
+    :class="rim && `rim-${rim}`"
     viewBox="-100 -100 200 200"
     role="img"
     :aria-label="t('app.clockShows', { time: formatClockTime(time) })"
@@ -58,5 +62,11 @@ const angles = computed(() => handAngles(props.time))
   display: block;
   overflow: visible;
   filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.14));
+}
+.c-face {
+  transition: stroke 0.2s;
+}
+.rim-good .c-face {
+  stroke: var(--good);
 }
 </style>

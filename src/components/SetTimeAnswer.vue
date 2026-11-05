@@ -8,6 +8,7 @@ import {
   canSubmit,
   clearBox,
   EMPTY_ENTRY,
+  entryFor,
   pressDigit,
   readEntry,
   selectBox,
@@ -18,6 +19,7 @@ import {
 /**
  * Hour and minute boxes, the number pad and Submit. Mount a fresh one per Task (`:key`).
  * Emits only a possible Clock Time; an impossible one shows an error and waits for a fix.
+ * `disabled` ignores every key and button; `fill(time)` puts a Clock Time in the boxes.
  */
 const props = defineProps<{ disabled?: boolean }>()
 const emit = defineEmits<{ submit: [time: ClockTime] }>()
@@ -46,8 +48,15 @@ function shown(box: Box): string {
   return value
 }
 
+/** Fills the boxes with a Clock Time ("Set correct answer"); the Player still submits. */
+function fill(time: ClockTime) {
+  edit(entryFor(time))
+}
+
+defineExpose({ fill })
+
 function submit() {
-  if (!ready.value) return
+  if (!ready.value || props.disabled) return
   const result = readEntry(entry.value)
   if ('errors' in result) errors.value = result.errors
   else emit('submit', result.time)
@@ -65,6 +74,8 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   } else if (event.key === 'ArrowRight') {
     select('minute')
   } else if (event.key === 'Enter') {
+    // A held Enter would close the wrong-Answer popup and resubmit the same Answer over and over.
+    if (event.repeat) return
     // Enter on a button elsewhere (the header) keeps its own meaning; in this panel it submits.
     if (event.target instanceof HTMLButtonElement && !root.value?.contains(event.target)) return
     submit()
@@ -100,10 +111,11 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     </p>
     <NumberPad
       class="pad"
+      :disabled="disabled"
       @digit="(d) => edit(pressDigit(entry, d))"
       @clear="edit(clearBox(entry))"
     />
-    <button class="btn submit" type="button" :disabled="!ready" @click="submit">
+    <button class="btn submit" type="button" :disabled="!ready || disabled" @click="submit">
       {{ t('round.submit') }}
     </button>
   </div>

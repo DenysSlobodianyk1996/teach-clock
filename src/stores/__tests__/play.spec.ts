@@ -66,7 +66,11 @@ describe('play store', () => {
     play.startRound(seededRandom(3))
     expect(play.summary).toBeNull()
 
-    expect(play.submitAnswer(clockTime(12, 59))).toEqual({ right: false, finished: false })
+    expect(play.submitAnswer(clockTime(12, 59))).toEqual({
+      right: false,
+      movedOn: true,
+      finished: false,
+    })
     for (let i = 1; i < 10; i++) play.submitAnswer(currentTask(play.round!)!.answer)
 
     expect(play.summary).toMatchObject({ rightCount: 9, total: 10 })

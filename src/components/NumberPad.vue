@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 
 /** On-screen digits 0–9 and a clear key. Only forwards presses. */
+defineProps<{ disabled?: boolean }>()
 const emit = defineEmits<{ digit: [digit: number]; clear: [] }>()
 
 const { t } = useI18n()
@@ -9,11 +10,24 @@ const { t } = useI18n()
 
 <template>
   <div class="pad">
-    <button v-for="d in 9" :key="d" class="key" type="button" @click="emit('digit', d)">
+    <button
+      v-for="d in 9"
+      :key="d"
+      class="key"
+      type="button"
+      :disabled="disabled"
+      @click="emit('digit', d)"
+    >
       {{ d }}
     </button>
-    <button class="key zero" type="button" @click="emit('digit', 0)">0</button>
-    <button class="key" type="button" :aria-label="t('round.clear')" @click="emit('clear')">
+    <button class="key zero" type="button" :disabled="disabled" @click="emit('digit', 0)">0</button>
+    <button
+      class="key"
+      type="button"
+      :disabled="disabled"
+      :aria-label="t('round.clear')"
+      @click="emit('clear')"
+    >
       <svg
         viewBox="0 0 24 24"
         fill="none"

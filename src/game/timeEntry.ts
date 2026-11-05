@@ -48,3 +48,12 @@ export function readEntry(entry: TimeEntry): { time: ClockTime } | { errors: Box
   if (!isValidMinute(minute)) errors.push('minute')
   return errors.length ? { errors } : { time: clockTime(hour, minute) }
 }
+
+/** The boxes filled in with a Clock Time, as "Set correct answer" does. The minutes stay selected. */
+export function entryFor({ hour, minute }: ClockTime): TimeEntry {
+  return {
+    hour: String(hour),
+    minute: String(minute).padStart(MAX_DIGITS, '0'),
+    selected: 'minute',
+  }
+}

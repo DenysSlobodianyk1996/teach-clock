@@ -7,8 +7,8 @@ let wrapper: VueWrapper
 
 afterEach(() => wrapper?.unmount())
 
-function open() {
-  wrapper = mountComponent(SetTimeAnswer)
+function open(props: Record<string, unknown> = {}) {
+  wrapper = mountComponent(SetTimeAnswer, props)
   return wrapper
 }
 
@@ -104,5 +104,14 @@ describe('SetTimeAnswer', () => {
     ;(key.element as HTMLButtonElement).focus()
     key.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     expect(wrapper.emitted('submit')).toEqual([[{ hour: 7, minute: 3 }]])
+  })
+
+  it('ignores the pad and Submit while disabled', async () => {
+    open()
+    await tap('0', '7', '3', '0')
+    await wrapper.setProps({ disabled: true })
+    await tap('5')
+    expect(box('Хвилини').text()).toBe('30')
+    expect(submit().attributes('disabled')).toBeDefined()
   })
 })

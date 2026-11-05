@@ -3,15 +3,15 @@ import ProgressDots from '../ProgressDots.vue'
 import { mountComponent } from '@/test/mountComponent'
 
 describe('ProgressDots', () => {
-  it('colours done Tasks by result and rings the current one', () => {
+  it('colours done Tasks green, red or yellow (needed help) and rings the current one', () => {
     const wrapper = mountComponent(ProgressDots, {
-      statuses: ['right', 'wrong', 'right', 'pending', 'pending'],
+      statuses: ['right', 'wrong', 'helped', 'pending', 'pending'],
       current: 3,
     })
     expect(wrapper.findAll('.dot').map((d) => d.classes().filter((c) => c !== 'dot'))).toEqual([
       ['ok'],
       ['bad'],
-      ['ok'],
+      ['help'],
       ['now'],
       [],
     ])

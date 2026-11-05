@@ -81,6 +81,17 @@ describe('screen guards', () => {
     expect(router.currentRoute.value.name).toBe('settings')
   })
 
+  it('sends Back from a just-finished Round to its Summary (Teach "Right! Next…" pause)', async () => {
+    usePlayerStore().setName('Оля')
+    const play = usePlayStore()
+    play.startRound()
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/round')
+    while (play.round && currentTask(play.round)) play.submitAnswer(currentTask(play.round)!.answer)
+    await router.push('/settings')
+    expect(router.currentRoute.value.name).toBe('summary')
+  })
+
   it('sends unknown paths to Welcome', async () => {
     expect(await open('/nope')).toBe('welcome')
   })

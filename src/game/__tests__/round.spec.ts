@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clockTime, type ClockTime } from '../clockTime'
-import { currentTask, isFinished, startRound, submitAnswer, type Round } from '../round'
+import { currentTask, hint, isFinished, startRound, submitAnswer, type Round } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 
@@ -42,7 +42,7 @@ describe('Round', () => {
     const round = startRound(SET_TIME_TEST, seededRandom(1))
     const answer = currentTask(round)!.answer
     const { round: next, outcome } = submitAnswer(round, answer)
-    expect(outcome).toEqual({ right: true, finished: false })
+    expect(outcome).toEqual({ right: true, movedOn: true, finished: false })
     expect(next.tasks[0]).toMatchObject({ status: 'right', firstAnswer: answer })
     expect(next.current).toBe(1)
   })
@@ -51,7 +51,7 @@ describe('Round', () => {
     const round = startRound(SET_TIME_TEST, seededRandom(1))
     const answer = wrong(currentTask(round)!.answer)
     const { round: next, outcome } = submitAnswer(round, answer)
-    expect(outcome).toEqual({ right: false, finished: false })
+    expect(outcome).toEqual({ right: false, movedOn: true, finished: false })
     expect(next.tasks[0]).toMatchObject({ status: 'wrong', firstAnswer: answer })
     expect(next.current).toBe(1)
   })
@@ -70,10 +70,58 @@ describe('Round', () => {
       last = submitAnswer(round, currentTask(round)!.answer)
       round = last.round
     }
-    expect(last!.outcome).toEqual({ right: true, finished: true })
+    expect(last!.outcome).toEqual({ right: true, movedOn: true, finished: true })
     expect(isFinished(round)).toBe(true)
     expect(currentTask(round)).toBeNull()
     expect(() => submitAnswer(round, clockTime(1, 0))).toThrow('already finished')
+  })
+})
+
+const SET_TIME_TEACH = { game: 'setTime', mode: 'teach', level: 15 } as const
+
+describe('Round in Teach', () => {
+  it('stays on the Task after a wrong Answer and keeps it as the first Answer', () => {
+    const round = startRound(SET_TIME_TEACH, seededRandom(1))
+    const given = wrong(currentTask(round)!.answer)
+    const { round: next, outcome } = submitAnswer(round, given)
+    expect(outcome).toEqual({ right: false, movedOn: false, finished: false })
+    expect(next.current).toBe(0)
+    expect(next.tasks[0]).toMatchObject({ status: 'pending', firstAnswer: given })
+  })
+
+  it('wrong, then Hint, then help used, then right: the Task ends as helped', () => {
+    let round = startRound(SET_TIME_TEACH, seededRandom(1))
+    const correct = currentTask(round)!.answer
+    expect(hint(round)).toBeNull()
+
+    const firstTry = wrong(correct)
+    round = submitAnswer(round, firstTry).round
+    expect(hint(round)).toEqual(correct)
+
+    // More wrong tries are allowed and do not replace the first Answer.
+    round = submitAnswer(round, wrong(firstTry)).round
+    expect(round.current).toBe(0)
+
+    const { round: next, outcome } = submitAnswer(round, hint(round)!)
+    expect(outcome).toEqual({ right: true, movedOn: true, finished: false })
+    expect(next.tasks[0]).toMatchObject({ status: 'helped', firstAnswer: firstTry })
+    expect(next.current).toBe(1)
+    expect(hint(next)).toBeNull()
+  })
+
+  it('marks a right first try right', () => {
+    const round = startRound(SET_TIME_TEACH, seededRandom(1))
+    const { round: next } = submitAnswer(round, currentTask(round)!.answer)
+    expect(next.tasks[0]!.status).toBe('right')
+  })
+})
+
+describe('Round in Test', () => {
+  it('never gives a Hint', () => {
+    const round = startRound(SET_TIME_TEST, seededRandom(1))
+    expect(hint(round)).toBeNull()
+    const next = submitAnswer(round, wrong(currentTask(round)!.answer)).round
+    expect(hint(next)).toBeNull()
   })
 })
 
@@ -90,6 +138,17 @@ describe('Summary', () => {
         firstAnswer: wrong(round.tasks[i]!.answer),
       })),
     )
+  })
+
+  it('lists a helped Task under Wrong with the first Answer', () => {
+    let round = startRound(SET_TIME_TEACH, seededRandom(3))
+    const helped = currentTask(round)!.answer
+    round = submitAnswer(round, wrong(helped)).round
+    round = answerAll(round, () => true)
+    const summary = summarize(round)
+    expect(summary.rightCount).toBe(9)
+    expect(summary.wrong).toEqual([{ answer: helped, firstAnswer: wrong(helped) }])
+    expect(summary.right).not.toContainEqual(helped)
   })
 
   it('cannot be built before the Round finishes', () => {

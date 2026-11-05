@@ -42,7 +42,9 @@ export function createAppRouter(
     // Leaving a Round in play (browser Back, a typed URL) asks first, like the Leave button.
     // The Leave button throws the Round away before navigating, so it passes.
     const play = usePlayStore()
-    if (from.name === 'round' && play.round && !play.summary && to.name !== 'round') {
+    if (from.name === 'round' && play.round && to.name !== 'round') {
+      // A finished Round (still on screen during Teach's "Right! Next…") always ends on its Summary.
+      if (play.summary) return to.name === 'summary' || { name: 'summary' }
       play.askingToLeave = true
       return false
     }
