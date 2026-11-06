@@ -87,7 +87,7 @@ describe('Round screen, Set Time', () => {
 
 const button = (text: string) => wrapper.findAll('button').find((b) => b.text() === text)
 const dotClasses = () => wrapper.findAll('.dot').map((d) => d.classes()[1])
-/** Off the 30-minute Level step, so never the right Answer. */
+/** Off every Level step, so never the right Answer. */
 const WRONG = '12:01'
 
 describe('Round screen, Set Time in Teach', () => {
