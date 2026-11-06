@@ -39,43 +39,28 @@ const HAND_STYLE = {
   minute: { line: 'c-min', tail: 14, head: { length: 18, half: 3.5 }, grip: 'm', gripSize: 11 },
 } as const
 const REACH = 24
-const HANDS = Object.fromEntries(
-  (['hour', 'minute'] as const).map((hand) => {
-    const { tip, grip } = HAND_GEOMETRY[hand]
-    const { head, ...style } = HAND_STYLE[hand]
-    const base = -tip + head.length
-    return [
-      hand,
-      {
-        ...style,
-        // The line's round cap ends where the taper starts; the tip's square back covers the cap's
-        // corners, so the hand narrows to a point without a bump.
-        lineEnd: base + head.half,
-        head: [
-          [0, -tip],
-          [head.half, base],
-          [head.half, base + head.half],
-          [-head.half, base + head.half],
-          [-head.half, base],
-        ]
-          .map((p) => p.join(','))
-          .join(' '),
-        gripAt: -grip,
-      },
-    ]
-  }),
-) as Record<
-  Hand,
-  {
-    line: string
-    tail: number
-    lineEnd: number
-    head: string
-    grip: string
-    gripSize: number
-    gripAt: number
+/** How one hand is drawn, from its style and its lengths in `HAND_GEOMETRY`. */
+function handShape(hand: Hand) {
+  const { tip, grip } = HAND_GEOMETRY[hand]
+  const { head, ...style } = HAND_STYLE[hand]
+  const base = -tip + head.length
+  const points = [
+    [0, -tip],
+    [head.half, base],
+    [head.half, base + head.half],
+    [-head.half, base + head.half],
+    [-head.half, base],
+  ]
+  return {
+    ...style,
+    // The line's round cap ends where the taper starts; the tip's square back covers the cap's
+    // corners, so the hand narrows to a point without a bump.
+    lineEnd: base + head.half,
+    head: points.map((p) => p.join(',')).join(' '),
+    gripAt: -grip,
   }
->
+}
+const HANDS = { hour: handShape('hour'), minute: handShape('minute') }
 /** Near the pin the pointer's direction swings wildly, so moves this close (in clock units) are ignored. */
 const DEAD_ZONE = 20
 const HAND_ORDER = ['hour', 'minute'] as const
