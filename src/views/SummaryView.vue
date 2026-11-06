@@ -418,7 +418,7 @@ s.time {
   text-decoration-color: var(--bad);
 }
 .good {
-  color: var(--good);
+  color: var(--good-text);
 }
 .arrow {
   flex: none;

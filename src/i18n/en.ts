@@ -1,6 +1,6 @@
-import type { MessageSchema } from '.'
+import type uk from './uk.ts'
 
-/** English interface text. Same keys as `uk.ts`; the language switch arrives with ticket 10. */
+/** English interface text. Same keys as `uk.ts`. */
 export default {
   app: {
     name: 'Teach Clock',
@@ -10,7 +10,17 @@ export default {
   header: {
     home: 'Home',
     leave: 'Leave',
+    language: 'Language',
+    theme: 'Theme',
+    nextTheme: {
+      middle: 'Theme: middle. Change',
+      dark: 'Theme: dark. Change',
+      light: 'Theme: light. Change',
+    },
   },
+  languages: { uk: 'Українська', en: 'English' },
+  languageCodes: { uk: 'УК', en: 'EN' },
+  themes: { middle: 'Middle theme', dark: 'Dark theme', light: 'Light theme' },
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
@@ -123,4 +133,4 @@ export default {
     yourFaceLabel: 'Your clock face, in the wrong place: {numbers}',
     correctFaceLabel: 'The correct clock face',
   },
-} satisfies MessageSchema
+} satisfies typeof uk

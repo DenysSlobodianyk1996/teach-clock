@@ -9,6 +9,17 @@
     <meta name="theme-color" content="#1d4b5c" />
     <meta name="description" content="Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками." />
     <title>Вчимо годинник</title>
+    <script>
+      // Paint the remembered theme before the app loads. src/stores/preferences.ts owns the key;
+      // the colours are each theme's --bg in src/styles/theme.css.
+      try {
+        var bg = { dark: '#121a24', light: '#f5efe3' }[localStorage.getItem('teach-clock.theme')]
+        if (bg) {
+          document.documentElement.dataset.theme = localStorage.getItem('teach-clock.theme')
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', bg)
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="app"></div>
