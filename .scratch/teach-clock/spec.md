@@ -28,7 +28,7 @@ Each Game runs in one of two Modes:
 - **Test**: every Answer moves on with no feedback until the Summary.
 
 How it works:
-- The Player types a name and picks a Game, Mode and Level (minute step 30/15/5/1).
+- The Player types a name and picks a Game, Mode and Level (minute step 15/5/1).
 - A Round is 10 Tasks, or the 12 numbers in Drag Numbers.
 - The Round ends with a read-only Summary of what was right and what was wrong.
 - Nothing is stored except Preferences (language, theme) and the last name.
@@ -44,7 +44,7 @@ How it works:
 5. As a Player, I want to choose one of three Games on the Settings screen, so that I can practise the skill I need.
 6. As a Player, I want a one-line description under each Game, so that I know what it asks me to do.
 7. As a Player, I want to choose Teach or Test, with a one-line description of each, so that I can choose between learning with help and checking myself.
-8. As a Player, I want to choose a Level (30, 15, 5 or 1 minute) for Drag Arrows and Set Time, so that I can start easy and make it harder.
+8. As a Player, I want to choose a Level (15, 5 or 1 minute) for Drag Arrows and Set Time, so that I can start easy and make it harder.
 9. As a Player, I want the Level choice hidden for Drag Numbers, so that I'm not confused by an option that doesn't apply.
 10. As a Player, I want to go back from Settings to Welcome, so that I can change my name.
 

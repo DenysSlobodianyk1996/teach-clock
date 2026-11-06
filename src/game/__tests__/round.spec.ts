@@ -3,6 +3,7 @@ import { clockTime, type ClockTime } from '../clockTime'
 import { currentTask, hint, isFinished, startRound, submitAnswer, type ClockRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
+import type { Level } from '../settings'
 
 const SET_TIME_TEST = { game: 'setTime', mode: 'test', level: 15 } as const
 
@@ -159,9 +160,8 @@ describe('Summary', () => {
   })
 
   it('tells a perfect Round to try the next smaller Level, if there is one', () => {
-    const perfect = (level: 30 | 15 | 5 | 1) =>
+    const perfect = (level: Level) =>
       summarize(answerAll(startRound({ ...SET_TIME_TEST, level }, seededRandom(2)), () => true))
-    expect(perfect(30).nudge).toEqual({ level: 15 })
     expect(perfect(15).nudge).toEqual({ level: 5 })
     expect(perfect(5).nudge).toEqual({ level: 1 })
     expect(perfect(1).nudge).toEqual({ level: null })

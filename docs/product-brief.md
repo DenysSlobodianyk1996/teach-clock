@@ -34,8 +34,8 @@ the last name typed.
 | Game | Player sees | Player does | Round | Levels |
 |---|---|---|---|---|
 | **Drag Numbers** | An empty clock face with 12 slots and a tray of shuffled numbers | Drags each number 1–12 onto its slot | All 12 numbers | — |
-| **Drag Arrows** | A target Clock Time `H:MM` and a clock with hands at 12:00 | Drags the hands to show the target, presses Submit | 10 Tasks | 30 / 15 / 5 / 1 min |
-| **Set Time** | A clock showing a Clock Time | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks | 30 / 15 / 5 / 1 min |
+| **Drag Arrows** | A target Clock Time `H:MM` and a clock with hands at 12:00 | Drags the hands to show the target, presses Submit | 10 Tasks | 15 / 5 / 1 min |
+| **Set Time** | A clock showing a Clock Time | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks | 15 / 5 / 1 min |
 
 2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
 only, not for look).

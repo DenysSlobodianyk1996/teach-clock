@@ -152,7 +152,7 @@ h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .levels {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .spacer {
   flex-grow: 1;

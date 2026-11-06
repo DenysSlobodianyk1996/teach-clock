@@ -56,7 +56,7 @@ export function summarize(round: Round): Summary {
   return { game: round.game, level: round.level, ...group(round) }
 }
 
-/** The next smaller Level (30 → 15 → 5 → 1), or null at 1 minute and for Drag Numbers. */
+/** The next smaller Level (15 → 5 → 1), or null at 1 minute and for Drag Numbers. */
 function smallerLevel(level: Level | null): Level | null {
   return level === null ? null : (LEVELS[LEVELS.indexOf(level) + 1] ?? null)
 }

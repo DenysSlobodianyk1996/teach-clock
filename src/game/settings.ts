@@ -7,7 +7,7 @@ export const MODES = ['teach', 'test'] as const
 export type Mode = (typeof MODES)[number]
 
 /** The minute step Clock Times snap to. */
-export const LEVELS = [30, 15, 5, 1] as const
+export const LEVELS = [15, 5, 1] as const
 export type Level = (typeof LEVELS)[number]
 
 export interface Settings {
