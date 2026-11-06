@@ -46,7 +46,6 @@ export default {
   round: {
     progress: 'Завдання {n} з {total}',
     progressLabel: 'Прогрес: завдання {n} з {total}',
-    comingSoon: 'Тут скоро буде гра',
     question: 'Котра година?',
     setHands: 'Постав стрілки на',
     hourHand: 'Коротка — години',
@@ -84,6 +83,13 @@ export default {
     progressLabel: 'Прогрес: на місці {n} з {total} чисел',
     face: 'Циферблат, на місці {n} з 12 чисел',
     slot: 'Місце {n}',
+    placedTile: '{number} на місці {n}',
+    placedCount: 'Розставлено {n} з {total}',
+    placedLabel: 'Розставлено {n} з {total} чисел',
+    testHelp:
+      'Залишилось: {n}. Число на циферблаті можна перетягнути на інше місце — вони поміняються.',
+    allPlaced: 'Усі числа на циферблаті. Перевір і натисни «Готово».',
+    submit: 'Готово',
     tray: 'Числа',
     help: 'Перетягни число на його місце або торкнись числа, а потім місця.',
     between: '{number} стоїть між {before} і {after}',
@@ -110,5 +116,10 @@ export default {
     tryOther: 'Спробуй іншу гру чи режим!',
     playAgain: 'Грати ще',
     toSettings: 'До вибору гри',
+    yourFace: 'Твій циферблат',
+    correctFace: 'Правильний',
+    misplacedNote: 'Обведені — не на своєму місці',
+    yourFaceLabel: 'Твій циферблат, не на своїх місцях: {numbers}',
+    correctFaceLabel: 'Правильний циферблат',
   },
 }

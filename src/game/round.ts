@@ -15,7 +15,11 @@ export type TaskStatus = 'pending' | 'right' | 'helped' | 'wrong'
  */
 export interface Task<A = ClockTime> {
   readonly answer: A
-  /** Set on the first try. In Teach it is set while the Task is still pending after a wrong try. */
+  /**
+   * The Player's first Answer, set on the first try. In Teach it is set while the Task is still
+   * pending after a wrong try. In Drag Numbers Test it is the slot the number is on at Submit:
+   * moves before then are not Answers, so that is the first and only one.
+   */
   readonly firstAnswer: A | null
   readonly status: TaskStatus
 }

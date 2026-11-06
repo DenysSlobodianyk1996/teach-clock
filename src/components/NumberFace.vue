@@ -10,9 +10,11 @@ withDefaults(
     /** What each slot holds: index N−1 is the slot where N belongs. */
     slots: readonly (number | null)[]
     marked?: readonly number[]
+    /** Numbers drawn in green, as the misplaced ones on the correct face. */
+    good?: readonly number[]
     label: string
   }>(),
-  { marked: () => [] },
+  { marked: () => [], good: () => [] },
 )
 
 const places = numberPositions(SLOT_RADIUS)
@@ -28,7 +30,11 @@ const places = numberPositions(SLOT_RADIUS)
     <circle class="c-face" r="94" />
     <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
     <template v-for="{ n, x, y } in places" :key="n">
-      <g v-if="slots[n - 1] !== null" :data-slot="n" :class="{ marked: marked.includes(n) }">
+      <g
+        v-if="slots[n - 1] !== null"
+        :data-slot="n"
+        :class="{ marked: marked.includes(n), good: good.includes(slots[n - 1]!) }"
+      >
         <circle class="c-tile" :cx="x" :cy="y" r="15" />
         <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
       </g>
@@ -42,6 +48,9 @@ const places = numberPositions(SLOT_RADIUS)
 .number-face {
   display: block;
   overflow: visible;
+}
+.good .c-tile {
+  fill: var(--good);
 }
 .marked .c-tile {
   stroke: var(--bad);

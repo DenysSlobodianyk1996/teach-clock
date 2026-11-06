@@ -26,6 +26,18 @@ function playRound(mode: Mode, wrong: number, level: Level = 15) {
   }
 }
 
+/** Drag Numbers in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
+function submitDragNumbers(swap: boolean) {
+  return () => {
+    usePlayerStore().setName('Оля')
+    const play = usePlayStore()
+    Object.assign(play.settings, { game: 'dragNumbers', mode: 'test' })
+    play.startRound(seededRandom(9))
+    for (let n = 1; n <= 12; n++) play.dropNumber(n, swap && n === 4 ? 5 : swap && n === 5 ? 4 : n)
+    play.submitPlacements()
+  }
+}
+
 /** Places every number, the first `wrong` of them after a drop on the slot two along. */
 function playDragNumbers(wrong: number) {
   return () => {
@@ -132,6 +144,32 @@ describe('Summary screen', () => {
     )
     expect(pair.findAll('[data-slot="3"]')).toHaveLength(1)
     expect(pair.findAll('[data-slot="1"]')).toHaveLength(1)
+  })
+
+  it('for Drag Numbers in Test, shows the Player’s face next to the correct one', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragNumbers(true))
+    expect(wrapper.get('h1').text()).toBe(t('summary.numbersHeadline', { right: 10, total: 12 }))
+    const [mine, correct] = wrapper.findAll('.face-card')
+    expect(mine!.get('svg').attributes('aria-label')).toBe(
+      t('summary.yourFaceLabel', { numbers: '4, 5' }),
+    )
+    expect(mine!.get('[data-slot="4"]').text()).toBe('5')
+    expect(mine!.findAll('.marked').map((g) => g.attributes('data-slot'))).toEqual(['4', '5'])
+    expect(correct!.get('[data-slot="4"]').text()).toBe('4')
+    expect(correct!.findAll('.good').map((g) => g.text())).toEqual(['4', '5'])
+    expect(correct!.findAll('li').map((li) => li.text())).toEqual([
+      t('numbers.between', { number: 4, before: 3, after: 5 }),
+      t('numbers.between', { number: 5, before: 4, after: 6 }),
+    ])
+    expect(wrapper.find('[aria-labelledby="wrong-title"]').exists()).toBe(false)
+  })
+
+  it('for a perfect Drag Numbers Test, says so under the two faces', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragNumbers(false))
+    expect(wrapper.find('.marked').exists()).toBe(false)
+    expect(wrapper.get('.perfect-note').text()).toBe(
+      `${t('summary.perfect')} ${t('summary.tryOther')}`,
+    )
   })
 
   it('plays again with the same Settings', async () => {

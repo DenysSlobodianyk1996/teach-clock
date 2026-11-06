@@ -6,7 +6,8 @@ import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/
 /**
  * Drag Numbers: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
  * tile onto a slot with a finger or the mouse, or tap a tile and then a slot (also by keyboard).
- * The board only reports `drop`; the parent decides what the drop does.
+ * With `movable` (Test), numbers on the face can be picked up too: dropped on another slot, or
+ * back on the tray. The board only reports `drop` and `toTray`; the parent decides what they do.
  */
 const props = defineProps<{
   /** What each slot holds: index N−1 is the slot where N belongs. */
@@ -14,9 +15,11 @@ const props = defineProps<{
   tray: readonly number[]
   /** A tray number to ring, as after a wrong drop in Teach. */
   marked?: number | null
+  /** Numbers on the face can be moved, and dropped on a taken slot. */
+  movable?: boolean
   disabled?: boolean
 }>()
-const emit = defineEmits<{ drop: [number: number, slot: number] }>()
+const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
 
 const { t } = useI18n()
 
@@ -25,11 +28,14 @@ const places = numberPositions(SLOT_RADIUS)
 const TAP_SLOP = 6
 
 const face = ref<SVGSVGElement>()
+const trayBox = ref<HTMLElement>()
 /** Tapped tile waiting for a slot. */
 const selected = ref<number | null>(null)
 /** The tile being dragged, where the pointer is, and the slot under it. */
 const held = ref<{
   number: number
+  /** The slot it was picked up from, or null from the tray. */
+  from: number | null
   pointerId: number
   startX: number
   startY: number
@@ -44,7 +50,15 @@ let dragged = false
 const placed = computed(() => props.slots.filter((n) => n !== null).length)
 const faceLabel = computed(() => t('numbers.face', { n: placed.value }))
 
-function slotUnder(clientX: number, clientY: number): number | null {
+/** Where N sits on the face, or null when it is on the tray. */
+const slotOf = (number: number) => props.slots.indexOf(number) + 1 || null
+
+/** A slot `number` can be dropped on: a free one, or in Test any other. */
+function takes(slot: number, number: number) {
+  return props.slots[slot - 1] === null || (props.movable && slotOf(number) !== slot)
+}
+
+function slotUnder(number: number, clientX: number, clientY: number): number | null {
   if (!face.value) return null
   const box = face.value.getBoundingClientRect()
   const scale = VIEW / box.width
@@ -52,7 +66,18 @@ function slotUnder(clientX: number, clientY: number): number | null {
     (clientX - (box.left + box.width / 2)) * scale,
     (clientY - (box.top + box.height / 2)) * scale,
   )
-  return slot !== null && props.slots[slot - 1] === null ? slot : null
+  return slot !== null && takes(slot, number) ? slot : null
+}
+
+function overTray(clientX: number, clientY: number) {
+  const box = trayBox.value?.getBoundingClientRect()
+  return (
+    !!box &&
+    clientX >= box.left &&
+    clientX <= box.right &&
+    clientY >= box.top &&
+    clientY <= box.bottom
+  )
 }
 
 function press(number: number, event: PointerEvent) {
@@ -61,6 +86,7 @@ function press(number: number, event: PointerEvent) {
   if (props.disabled || event.button !== 0) return
   held.value = {
     number,
+    from: slotOf(number),
     pointerId: event.pointerId,
     startX: event.clientX,
     startY: event.clientY,
@@ -81,7 +107,7 @@ function move(event: PointerEvent) {
   if (Math.hypot(h.x - h.startX, h.y - h.startY) > TAP_SLOP) h.moved = true
   if (h.moved) {
     selected.value = null
-    h.slot = slotUnder(h.x, h.y)
+    h.slot = slotUnder(h.number, h.x, h.y)
   }
 }
 
@@ -91,9 +117,11 @@ function release(event: PointerEvent) {
   held.value = null
   if (!h.moved) return
   dragged = true
-  // Lifting the finger anywhere but a free slot puts the tile back on the tray.
-  const slot = slotUnder(event.clientX, event.clientY)
-  if (slot !== null && !props.disabled) emit('drop', h.number, slot)
+  if (props.disabled) return
+  // Lifting the finger anywhere but a slot that takes it puts the tile back where it was.
+  const slot = slotUnder(h.number, event.clientX, event.clientY)
+  if (slot !== null) emit('drop', h.number, slot)
+  else if (h.from !== null && overTray(event.clientX, event.clientY)) emit('toTray', h.number)
 }
 
 function cancel(event: PointerEvent) {
@@ -101,7 +129,7 @@ function cancel(event: PointerEvent) {
 }
 
 /** A tap (or Enter/Space) on a tray tile picks it up, or puts it down again. */
-function tapTile(number: number, event: MouseEvent) {
+function tapTile(number: number, event: UIEvent) {
   const afterDrag = dragged
   dragged = false
   // Enter and Space click with `detail` 0; only a pointer click can be the tail of a drag.
@@ -111,10 +139,65 @@ function tapTile(number: number, event: MouseEvent) {
 }
 
 function tapSlot(slot: number) {
-  if (props.disabled || selected.value === null || props.slots[slot - 1] !== null) return
   const number = selected.value
+  if (props.disabled || number === null || !takes(slot, number)) return
   selected.value = null
   emit('drop', number, slot)
+}
+
+/** Test: a number on the face can be picked up and moved. */
+const canHold = (slot: number) => !!props.movable && props.slots[slot - 1] !== null
+/** Empty slots take numbers; in Test the numbers on the face can be picked up too. */
+const interactive = (slot: number) => props.slots[slot - 1] === null || canHold(slot)
+
+function slotClasses(slot: number) {
+  const number = props.slots[slot - 1]
+  if (number === null)
+    return ['slot', { target: held.value?.slot === slot, ready: selected.value !== null }]
+  return [
+    'placed',
+    {
+      movable: canHold(slot),
+      selected: selected.value === number,
+      ghost: held.value?.moved && held.value.number === number,
+      target: held.value?.slot === slot,
+    },
+  ]
+}
+
+function slotLabel(slot: number) {
+  const number = props.slots[slot - 1]
+  if (number === null) return t('numbers.slot', { n: slot })
+  return canHold(slot) ? t('numbers.placedTile', { number, n: slot }) : undefined
+}
+
+/** A tap, Enter or Space on a slot. */
+function activate(slot: number, event: UIEvent) {
+  const number = props.slots[slot - 1]
+  if (number == null) tapSlot(slot)
+  else if (canHold(slot)) tapPlaced(number, slot, event)
+}
+
+/** Test: Delete or Backspace on a number on the face takes it back to the tray. */
+function sendBack(slot: number) {
+  const number = props.slots[slot - 1]
+  if (props.disabled || !canHold(slot) || number == null) return
+  selected.value = null
+  emit('toTray', number)
+}
+
+/** Test: a tap on a number on the face takes the picked-up one there, or picks this one up. */
+function tapPlaced(number: number, slot: number, event: UIEvent) {
+  if (selected.value !== null && selected.value !== number && !dragged) tapSlot(slot)
+  else tapTile(number, event)
+}
+
+/** Test: a tap on the tray's free space takes a picked-up face number back there. */
+function tapTray() {
+  const number = selected.value
+  if (props.disabled || number === null || slotOf(number) === null) return
+  selected.value = null
+  emit('toTray', number)
 }
 </script>
 
@@ -127,33 +210,48 @@ function tapSlot(slot: number) {
         <svg
           ref="face"
           class="clock number-face"
+          :class="{ movable }"
           :viewBox="`${-VIEW / 2} ${-VIEW / 2} ${VIEW} ${VIEW}`"
           role="group"
           :aria-label="faceLabel"
         >
           <circle class="c-face" r="94" />
           <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
-          <template v-for="{ n, x, y } in places" :key="n">
-            <g v-if="slots[n - 1] !== null" class="placed" :data-slot="n">
+          <!-- One element per slot, whatever it holds, so keyboard focus stays put through a move. -->
+          <g
+            v-for="{ n, x, y } in places"
+            :key="n"
+            :class="slotClasses(n)"
+            :data-slot="n"
+            :role="interactive(n) ? 'button' : undefined"
+            :tabindex="interactive(n) ? (disabled ? -1 : 0) : undefined"
+            :aria-label="slotLabel(n)"
+            :aria-pressed="canHold(n) ? selected === slots[n - 1] : undefined"
+            :aria-keyshortcuts="canHold(n) ? 'Delete' : undefined"
+            @pointerdown="canHold(n) && press(slots[n - 1]!, $event)"
+            @pointermove="move"
+            @pointerup="release"
+            @pointercancel="cancel"
+            @lostpointercapture="cancel"
+            @click="activate(n, $event)"
+            @keydown.enter.prevent="activate(n, $event)"
+            @keydown.space.prevent="activate(n, $event)"
+            @keydown.delete.prevent="sendBack(n)"
+          >
+            <circle v-if="interactive(n)" class="hit" :cx="x" :cy="y" r="20" />
+            <template v-if="slots[n - 1] !== null">
               <circle class="c-tile" :cx="x" :cy="y" r="15" />
               <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
-            </g>
-            <g
+            </template>
+            <circle
               v-else
-              class="slot"
-              :class="{ target: held?.slot === n, ready: selected !== null }"
-              :data-slot="n"
-              role="button"
-              :tabindex="disabled ? -1 : 0"
-              :aria-label="t('numbers.slot', { n })"
-              @click="tapSlot(n)"
-              @keydown.enter.prevent="tapSlot(n)"
-              @keydown.space.prevent="tapSlot(n)"
-            >
-              <circle class="hit" :cx="x" :cy="y" r="20" />
-              <circle class="c-slot" :class="{ target: held?.slot === n }" :cx="x" :cy="y" r="14" />
-            </g>
-          </template>
+              class="c-slot"
+              :class="{ target: held?.slot === n }"
+              :cx="x"
+              :cy="y"
+              r="14"
+            />
+          </g>
           <circle class="c-pin" r="7" />
         </svg>
       </div>
@@ -161,7 +259,14 @@ function tapSlot(slot: number) {
     <div class="tray-side">
       <slot name="heading" />
 
-      <div class="tray" role="group" :aria-label="t('numbers.tray')">
+      <div
+        ref="trayBox"
+        class="tray"
+        :class="{ empty: !tray.length }"
+        role="group"
+        :aria-label="t('numbers.tray')"
+        @click.self="tapTray"
+      >
         <!-- The held tile stays in the tray as a ghost: it keeps the pointer while the copy follows. -->
         <button
           v-for="n in tray"
@@ -288,6 +393,34 @@ function tapSlot(slot: number) {
   background: var(--accent);
   color: var(--accent-ink);
   transform: translateY(-4px);
+}
+.placed.movable {
+  cursor: grab;
+  outline: none;
+}
+.placed .hit {
+  fill: transparent;
+}
+.placed.selected .c-tile,
+.placed:focus-visible .c-tile {
+  stroke: var(--text);
+  stroke-width: 3;
+}
+.placed.target .c-tile {
+  stroke: var(--accent-ink);
+  stroke-width: 3;
+}
+.placed.ghost {
+  opacity: 0.3;
+}
+.movable {
+  touch-action: none;
+  user-select: none;
+}
+/* An empty tray stays a drop target in Test. */
+.tray.empty {
+  min-width: 200px;
+  min-height: 64px;
 }
 .tile.marked {
   outline: 4px solid var(--hour);
