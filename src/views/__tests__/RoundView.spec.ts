@@ -96,7 +96,7 @@ describe('Round screen, Set Time in Teach', () => {
 
   it('shows no Hint before a wrong try', async () => {
     await open('setTime', 'teach')
-    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
   })
 
   it('after a wrong Answer, shows the correct time with a teaching line and keeps the digits', async () => {
@@ -116,6 +116,7 @@ describe('Round screen, Set Time in Teach', () => {
     expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe('01')
     expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
     expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
+    expect(wrapper.get('.hint-panel').classes()).not.toContain('waiting')
   })
 
   it('Set correct answer fills the digits; after Submit the Task ends helped (yellow)', async () => {
@@ -139,7 +140,7 @@ describe('Round screen, Set Time in Teach', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.get('[role="status"]').text()).toBe('')
     expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
-    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
     expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
   })
 
@@ -245,7 +246,7 @@ describe('Round screen, Drag Arrows in Teach', () => {
     await open('dragArrows', 'teach')
     expect(wrapper.get('h1').text()).toBe(t('round.setHands'))
     expect(handsLabel()).toBe(CLOCK_DRAG)
-    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
   })
 
   it('after a wrong Answer, shows the correct time with a teaching line; the hands stay', async () => {
@@ -266,6 +267,7 @@ describe('Round screen, Drag Arrows in Teach', () => {
     expect(handsLabel()).toBe(handsAt(wrong))
     expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
     expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
+    expect(wrapper.get('.hint-panel').classes()).not.toContain('waiting')
   })
 
   it('Set correct answer turns the hands to the Hint; after Submit the Task ends helped (yellow)', async () => {
@@ -287,7 +289,7 @@ describe('Round screen, Drag Arrows in Teach', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
     expect(handsLabel()).toBe(CLOCK_DRAG)
-    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
     expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
   })
 

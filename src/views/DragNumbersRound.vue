@@ -155,14 +155,18 @@ h1 {
   color: var(--muted);
   text-align: center;
 }
-/* Keeps its height when empty, so the face does not jump when a hint comes and goes. */
+/* A fixed height that fits the hint, so the face does not jump when a hint comes and goes. */
 .toast-status {
-  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
   margin: 0;
 }
 .toast {
   display: inline-block;
   padding: 12px 22px;
+  line-height: 24px;
   border-radius: 999px;
   background: var(--pop);
   color: var(--pop-ink);
@@ -182,10 +186,11 @@ h1 {
     font-size: 15px;
   }
   .toast-status {
-    min-height: 42px;
+    height: 42px;
   }
   .toast {
     font-size: 17px;
+    line-height: 22px;
     padding: 10px 18px;
   }
 }

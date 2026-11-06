@@ -47,6 +47,16 @@ describe('NumberBoard', () => {
     expect(wrapper.emitted('drop')).toEqual([[7, 3]])
   })
 
+  it('drops on the highlighted slot even when the finger slips off it as it lifts', async () => {
+    mountBoard()
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    await pointer(tile(7), 'pointermove', ...AT_3)
+    expect(slot(3).find('.c-slot.target').exists()).toBe(true)
+    // 30 units right of slot 3: past its reach, the way a lifting finger can slide.
+    await pointer(tile(7), 'pointerup', 206, 110)
+    expect(wrapper.emitted('drop')).toEqual([[7, 3]])
+  })
+
   it('drops nothing when let go away from a slot', async () => {
     mountBoard()
     await pointer(tile(7), 'pointerdown', 300, 100)
@@ -136,6 +146,15 @@ describe('NumberBoard in Test (movable)', () => {
     await tile(12).trigger('click')
     await slot(9).trigger('click')
     expect(wrapper.emitted('drop')).toEqual([[12, 9]])
+  })
+
+  it('drops a moved face number on the highlighted slot even when the release slips', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await pointer(slot(3), 'pointerdown', ...AT_3)
+    await pointer(slot(3), 'pointermove', 100, 110)
+    await pointer(slot(3), 'pointermove', ...AT_9)
+    await pointer(slot(3), 'pointerup', 14, 110)
+    expect(wrapper.emitted('drop')).toEqual([[3, 9]])
   })
 
   it('takes a placed number back when it is let go over the tray', async () => {

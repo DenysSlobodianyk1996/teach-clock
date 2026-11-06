@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
 
@@ -24,10 +25,17 @@ const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number
 const { t } = useI18n()
 
 const places = numberPositions(SLOT_RADIUS)
+/** A placed number's radius in face units. Tray and dragged numbers are drawn the same size. */
+const TILE_RADIUS = 15
 /** A press that moves less than this (px) is a tap, not a drag. */
 const TAP_SLOP = 6
 
 const face = ref<SVGSVGElement>()
+// Every number is as big as a placed one, so it follows the clock: smaller on a phone.
+const { width: faceWidth } = useElementSize(face)
+const numberSize = computed(() =>
+  faceWidth.value ? { '--number-size': `${(faceWidth.value * 2 * TILE_RADIUS) / VIEW}px` } : {},
+)
 const trayBox = ref<HTMLElement>()
 /** Tapped tile waiting for a slot. */
 const selected = ref<number | null>(null)
@@ -118,8 +126,10 @@ function release(event: PointerEvent) {
   if (!h.moved) return
   dragged = true
   if (props.disabled) return
-  // Lifting the finger anywhere but a slot that takes it puts the tile back where it was.
-  const slot = slotUnder(h.number, event.clientX, event.clientY)
+  // The drop lands on the slot highlighted by the last move, not one worked out again from where
+  // the finger lifts: a small slip as it lifts must not lose the drop. With no slot highlighted,
+  // the tile goes back where it came from, or to the tray when let go over it.
+  const slot = h.slot !== null && takes(h.slot, h.number) ? h.slot : null
   if (slot !== null) emit('drop', h.number, slot)
   else if (h.from !== null && overTray(event.clientX, event.clientY)) emit('toTray', h.number)
 }
@@ -202,7 +212,7 @@ function tapTray() {
 </script>
 
 <template>
-  <section class="board">
+  <section class="board" :style="numberSize">
     <div class="clock-side">
       <!-- Above the face: the parent's toast. -->
       <slot name="clock" />
@@ -240,7 +250,7 @@ function tapTray() {
           >
             <circle v-if="interactive(n)" class="hit" :cx="x" :cy="y" r="20" />
             <template v-if="slots[n - 1] !== null">
-              <circle class="c-tile" :cx="x" :cy="y" r="15" />
+              <circle class="c-tile" :cx="x" :cy="y" :r="TILE_RADIUS" />
               <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
             </template>
             <circle
@@ -288,7 +298,8 @@ function tapTray() {
           @lostpointercapture="cancel"
           @click="tapTile(n, $event)"
         >
-          {{ n }}
+          <!-- The button is the 48 px tap area; the disc inside is the number's visible size. -->
+          <span class="disc">{{ n }}</span>
         </button>
       </div>
       <slot />
@@ -298,9 +309,9 @@ function tapTray() {
   <Teleport to="body">
     <div
       v-if="held?.moved"
-      class="tile lifted"
+      class="disc lifted"
       aria-hidden="true"
-      :style="{ left: `${held.x}px`, top: `${held.y}px` }"
+      :style="[numberSize, { left: `${held.x}px`, top: `${held.y}px` }]"
     >
       {{ held.number }}
     </div>
@@ -358,38 +369,52 @@ function tapTray() {
 }
 .tray {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, max-content);
   gap: 12px;
   padding: 18px;
   border-radius: 28px;
   background: var(--bg-deep);
 }
+/* The tap area: at least 48 px square, whatever size the number is drawn. */
 .tile {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: max(48px, var(--number-size, 48px));
+  height: max(48px, var(--number-size, 48px));
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--tile);
-  color: var(--tile-ink);
-  font:
-    900 28px 'Nunito',
-    sans-serif;
-  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.16);
+  background: none;
   cursor: grab;
   touch-action: none;
   user-select: none;
 }
-.tile.ghost {
+/* The number as seen: the same size on the tray, under the pointer and on the face. */
+.disc {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--number-size, 48px);
+  height: var(--number-size, 48px);
+  border-radius: 50%;
+  background: var(--tile);
+  color: var(--tile-ink);
+  /* As in a placed number: 17 face units of text on a 30-unit tile. */
+  font:
+    900 calc(var(--number-size, 48px) * 0.57) 'Nunito',
+    sans-serif;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.16);
+}
+.tile.ghost .disc {
   color: transparent;
   background: transparent;
   box-shadow: none;
   border: 3px dashed var(--line);
 }
-.tile.selected {
+.tile.selected .disc {
   background: var(--accent);
   color: var(--accent-ink);
   transform: translateY(-4px);
@@ -422,21 +447,21 @@ function tapTray() {
   min-width: 200px;
   min-height: 64px;
 }
-.tile.marked {
+.tile.marked .disc {
   outline: 4px solid var(--hour);
   outline-offset: 3px;
 }
 .tile:disabled {
   cursor: default;
 }
-.tile.lifted {
+.disc.lifted {
   position: fixed;
   z-index: 10;
   translate: -50% -50%;
   pointer-events: none;
   background: var(--accent);
   color: var(--accent-ink);
-  transform: rotate(-8deg) scale(1.12);
+  transform: rotate(-8deg);
   box-shadow:
     0 14px 0 rgba(0, 0, 0, 0.12),
     0 22px 30px rgba(0, 0, 0, 0.3);
@@ -452,15 +477,11 @@ function tapTray() {
   .number-face {
     width: min(260px, 64vw);
   }
+  /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 8px;
-    padding: 12px;
-  }
-  .tile {
-    width: 46px;
-    height: 46px;
-    font-size: 22px;
+    grid-template-columns: repeat(6, max-content);
+    gap: 2px;
+    padding: 8px;
   }
 }
 @media (max-height: 500px) and (min-width: 601px) {
