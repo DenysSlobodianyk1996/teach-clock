@@ -23,7 +23,9 @@ function playRound() {
 describe('Summary screen', () => {
   it('shows how many were right and lists Right and Wrong with the first Answer', async () => {
     const { wrapper } = await mountScreen(SummaryView, '/summary', playRound)
-    const tasks = usePlayStore().round!.tasks
+    const round = usePlayStore().round!
+    if (round.game === 'dragNumbers') throw new Error('Expected a Set Time Round')
+    const tasks = round.tasks
     expect(wrapper.get('h1').text()).toBe(t('summary.headline', { right: 8, total: 10 }))
 
     const wrong = wrapper.findAll('[aria-labelledby="wrong-title"] li').map((li) => li.text())

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { formatClockTime } from '@/game/clockTime'
+import { formatClockTime, type ClockTime } from '@/game/clockTime'
 import { usePlayStore } from '@/stores/play'
 
 /** Read-only Summary as text. Clocks and the celebration come with ticket 09. */
@@ -12,6 +12,14 @@ const play = usePlayStore()
 // The router only opens this screen for a finished Round. A Summary never changes, so keep this
 // one even while "Play again" replaces the Round under it.
 const summary = play.summary
+
+/** A Clock Time, or a Drag Numbers number. */
+const show = (answer: ClockTime | number) =>
+  typeof answer === 'number' ? String(answer) : formatClockTime(answer)
+const first = (answer: ClockTime | number) =>
+  typeof answer === 'number'
+    ? t('summary.firstSlot', { slot: answer })
+    : t('summary.yourAnswer', { time: formatClockTime(answer) })
 
 function playAgain() {
   play.startRound()
@@ -31,8 +39,8 @@ function toSettings() {
       <section class="list" aria-labelledby="right-title">
         <h2 id="right-title"><span class="dot ok" />{{ t('summary.right') }}</h2>
         <ul v-if="summary.right.length">
-          <li v-for="time in summary.right" :key="formatClockTime(time)">
-            <b>{{ formatClockTime(time) }}</b>
+          <li v-for="answer in summary.right" :key="show(answer)">
+            <b>{{ show(answer) }}</b>
           </li>
         </ul>
         <p v-else class="none">{{ t('summary.none') }}</p>
@@ -40,9 +48,8 @@ function toSettings() {
       <section class="list" aria-labelledby="wrong-title">
         <h2 id="wrong-title"><span class="dot bad" />{{ t('summary.wrong') }}</h2>
         <ul v-if="summary.wrong.length">
-          <li v-for="{ answer, firstAnswer } in summary.wrong" :key="formatClockTime(answer)">
-            <b>{{ formatClockTime(answer) }}</b> —
-            {{ t('summary.yourAnswer', { time: formatClockTime(firstAnswer) }) }}
+          <li v-for="{ answer, firstAnswer } in summary.wrong" :key="show(answer)">
+            <b>{{ show(answer) }}</b> — {{ first(firstAnswer) }}
           </li>
         </ul>
         <p v-else class="none">{{ t('summary.none') }}</p>

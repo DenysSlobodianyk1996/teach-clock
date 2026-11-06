@@ -52,7 +52,7 @@ test('Drag Numbers hides the Level and plays 12 numbers', async ({ page }) => {
   await page.getByRole('button', { name: t('settings.play') }).click()
 
   await expect(
-    page.getByRole('img', { name: t('round.progressLabel', { n: 1, total: 12 }) }),
+    page.getByRole('img', { name: t('numbers.progressLabel', { n: 0, total: 12 }) }),
   ).toBeVisible()
 })
 

@@ -17,3 +17,20 @@ export function angleAt(x: number, y: number): number {
   const angle = (Math.atan2(x, -y) * 180) / Math.PI
   return angle < 0 ? angle + 360 : angle
 }
+
+/** The Drag Numbers face's viewBox is this many units across. */
+export const FACE_VIEW = 220
+
+/** Where the number slots sit, and how near (in clock units) a dropped tile must land to take one. */
+export const SLOT_RADIUS = 66
+const SLOT_REACH = 26
+
+/** The Drag Numbers slot under the point (x, y), or null when none is close enough. */
+export function slotAt(x: number, y: number): number | null {
+  let best: { n: number; distance: number } | null = null
+  for (const { n, ...p } of numberPositions(SLOT_RADIUS)) {
+    const distance = Math.hypot(x - p.x, y - p.y)
+    if (distance <= SLOT_REACH && (!best || distance < best.distance)) best = { n, distance }
+  }
+  return best?.n ?? null
+}

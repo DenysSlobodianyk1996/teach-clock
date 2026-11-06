@@ -33,6 +33,18 @@ export function generateClockTimes(
   return all.slice(0, count)
 }
 
+/** The numbers 1–12 in a shuffled order, for the Drag Numbers tray. Never already in order. */
+export function shuffledNumbers(random: Random): number[] {
+  const numbers = Array.from({ length: 12 }, (_, i) => i + 1)
+  for (let i = numbers.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1))
+    ;[numbers[i], numbers[j]] = [numbers[j]!, numbers[i]!]
+  }
+  // A shuffle that changed nothing would show the answer: swap the first two.
+  if (numbers.every((n, i) => n === i + 1)) [numbers[0], numbers[1]] = [2, 1]
+  return numbers
+}
+
 /** A small reproducible random source (mulberry32), for tests and replays. */
 export function seededRandom(seed: number): Random {
   let a = seed >>> 0
