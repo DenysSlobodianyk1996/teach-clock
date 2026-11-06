@@ -145,6 +145,21 @@ input {
   stroke-width: 7;
   stroke-linecap: round;
 }
+/* The tick a dragged hand will land on: a mustard ring in the hand's colour around it. */
+.c-target {
+  pointer-events: none;
+}
+.c-target circle {
+  fill: var(--accent);
+  fill-opacity: 0.6;
+  stroke-width: 3;
+}
+.c-target.hour circle {
+  stroke: var(--hour);
+}
+.c-target.minute circle {
+  stroke: var(--minute);
+}
 .c-pin {
   fill: var(--pin);
   stroke: var(--face);

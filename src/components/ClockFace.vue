@@ -9,7 +9,8 @@ export type Hand = 'hour' | 'minute'
 /**
  * An analogue clock showing a Clock Time. `rim="good"` turns the rim green, as after a right Answer
  * in Teach. `draggable` adds a grip to each hand tip: grabbing a hand and moving the pointer emits
- * `drag` with the pointer's angle, and the parent decides the new Clock Time.
+ * `drag` with the pointer's angle, and the parent decides the new Clock Time. While a hand is
+ * dragged, a ring lights up the tick it lands on.
  */
 const props = defineProps<{
   time: ClockTime
@@ -68,6 +69,13 @@ const label = computed(() =>
 const svg = ref<SVGSVGElement>()
 /** The drag in progress, with the clock's box measured once when the grip was grabbed. */
 const dragging = ref<{ hand: Hand; pointerId: number; box: DOMRect } | null>(null)
+/** The tick the dragged hand lands on: the snapped minute, or the hour's number (not the hand). */
+const target = computed(() => {
+  const hand = dragging.value?.hand
+  if (!hand) return null
+  const angle = hand === 'minute' ? props.time.minute * 6 : (props.time.hour % 12) * 30
+  return { hand, style: { transform: `rotate(${angle}deg)` } }
+})
 
 /** Only a grip starts a drag: a press on the line past the pin would turn the hand half a circle. */
 function grab(hand: Hand, event: PointerEvent) {
@@ -147,6 +155,10 @@ function release(event: PointerEvent) {
         />
       </g>
     </template>
+    <!-- Over the hands, so the hand's own grip never hides the tick it lands on. -->
+    <g v-if="target" class="c-target" :class="target.hand" data-target-tick :style="target.style">
+      <circle :cy="-TICK_RADIUS" r="8" />
+    </g>
     <circle class="c-pin" r="7" />
   </svg>
 </template>

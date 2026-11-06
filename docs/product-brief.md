@@ -54,6 +54,8 @@ Rules shared by Drag Arrows and Set Time:
 - Dragging the Hour Hand changes only the hour. It jumps to the hour whose position (with the
   current minutes) is nearest the finger. At 1:30 the Hour Hand is between 1 and 2, whichever
   hand was set first.
+- While a hand is dragged, a ring lights up the tick it will land on: the snapped minute, or the
+  hour's number.
 - Hands start at 12:00 for every Task. 12:00 is never a target, so an untouched submit is wrong.
 
 ### Set Time: input
