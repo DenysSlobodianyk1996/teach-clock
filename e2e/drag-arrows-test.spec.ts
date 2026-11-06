@@ -1,6 +1,6 @@
 import { t, startingWith } from './i18n.ts'
 import { expect, test } from '@playwright/test'
-import { drag, handsAt, HOUR_GRIP, setHands } from './hands.ts'
+import { drag, handsAt, HOUR_TIP, setHands } from './hands.ts'
 
 test('a Drag Arrows Test Round ends on a Summary that lists the wrong Answer', async ({ page }) => {
   await page.goto('/')
@@ -21,7 +21,7 @@ test('a Drag Arrows Test Round ends on a Summary that lists the wrong Answer', a
   // The hour after the target's, on the hour: never the target.
   const wrongHour = (Number(first.split(':')[0]) % 12) + 1
   const wrong = `${wrongHour}:00`
-  await drag(page, HOUR_GRIP, 0, [15, wrongHour * 30])
+  await drag(page, HOUR_TIP, 0, [15, wrongHour * 30])
   await expect(page.locator(handsAt(wrong))).toBeVisible()
   await submit.click()
   await expect(page.getByText(t('round.progress', { n: 2, total: 10 }))).toBeVisible()

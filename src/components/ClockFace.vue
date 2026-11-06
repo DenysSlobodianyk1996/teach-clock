@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { angleAt, HAND_GEOMETRY, numberPositions } from '@/game/clockFace'
+import { angleAt, numberPositions } from '@/game/clockFace'
 import { formatClockTime, handAngles, minutesBetween, type ClockTime } from '@/game/clockTime'
 
 export type Hand = 'hour' | 'minute'
 
 /**
  * An analogue clock showing a Clock Time. `rim="good"` turns the rim green, as after a right Answer
- * in Teach. Each hand tapers to a point at its exact spot. `draggable` adds a grip behind each
- * tip: grabbing a hand and moving the pointer emits `drag` with the pointer's angle, and the
- * parent decides the new Clock Time. While a hand is dragged, the tick it lands on lights up.
+ * in Teach. `draggable` adds a grip to each hand tip: grabbing a hand and moving the pointer emits
+ * `drag` with the pointer's angle, and the parent decides the new Clock Time. While a hand is
+ * dragged, a ring lights up the tick it lands on.
  */
 const props = defineProps<{
   time: ClockTime
@@ -31,36 +31,12 @@ const circumference = 2 * Math.PI * TICK_RADIUS
 const tick = { dash: 1.2, gap: circumference / 60 - 1.2 }
 const tick5 = { dash: 3, gap: circumference / 12 - 3 }
 
-// Each hand, drawn pointing at 12: its line (tail past the pin), a tip that tapers the hand to a
-// point at its exact spot (as wide as the hand, so hand and tip read as one spear), its grip, and a
-// bigger see-through circle around the grip, 48 units across: about 48 px to touch on a phone.
-const HAND_STYLE = {
-  hour: { line: 'c-hour', tail: 10, head: { length: 16, half: 5.5 }, grip: 'h', gripSize: 9 },
-  minute: { line: 'c-min', tail: 14, head: { length: 18, half: 3.5 }, grip: 'm', gripSize: 11 },
+// Each hand: its line (tail past the pin to tip), its grip at the tip, and a bigger see-through
+// circle around the grip, 48 units across: about 48 px to touch on a phone-sized clock.
+const HANDS = {
+  hour: { line: 'c-hour', tail: 10, tip: -45, grip: 'h', gripSize: 9, reach: 24 },
+  minute: { line: 'c-min', tail: 14, tip: -70, grip: 'm', gripSize: 11, reach: 24 },
 } as const
-const REACH = 24
-/** How one hand is drawn, from its style and its lengths in `HAND_GEOMETRY`. */
-function handShape(hand: Hand) {
-  const { tip, grip } = HAND_GEOMETRY[hand]
-  const { head, ...style } = HAND_STYLE[hand]
-  const base = -tip + head.length
-  const points = [
-    [0, -tip],
-    [head.half, base],
-    [head.half, base + head.half],
-    [-head.half, base + head.half],
-    [-head.half, base],
-  ]
-  return {
-    ...style,
-    // The line's round cap ends where the taper starts; the tip's square back covers the cap's
-    // corners, so the hand narrows to a point without a bump.
-    lineEnd: base + head.half,
-    head: points.map((p) => p.join(',')).join(' '),
-    gripAt: -grip,
-  }
-}
-const HANDS = { hour: handShape('hour'), minute: handShape('minute') }
 /** Near the pin the pointer's direction swings wildly, so moves this close (in clock units) are ignored. */
 const DEAD_ZONE = 20
 const HAND_ORDER = ['hour', 'minute'] as const
@@ -86,7 +62,6 @@ watch(
   },
 )
 const turn = (hand: Hand) => ({ transform: `rotate(${angles.value[hand]}deg)` })
-
 const label = computed(() =>
   t(props.draggable ? 'app.clockDrag' : 'app.clockShows', { time: formatClockTime(props.time) }),
 )
@@ -155,13 +130,10 @@ function release(event: PointerEvent) {
       :stroke-dasharray="`${tick5.dash} ${tick5.gap}`"
       :stroke-dashoffset="tick5.dash / 2"
     />
-    <g v-if="target" class="c-target" :class="target.hand" data-target-tick :style="target.style">
-      <circle :cy="-TICK_RADIUS - 1" r="7" />
-    </g>
     <text v-for="{ n, x, y } in numbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
     <!-- The Minute Hand comes second, so it is on top where the hands cross. -->
     <g v-for="hand in HAND_ORDER" :key="hand" :data-hand="hand" :style="turn(hand)">
-      <line :class="HANDS[hand].line" :y1="HANDS[hand].tail" :y2="HANDS[hand].lineEnd" />
+      <line :class="HANDS[hand].line" :y1="HANDS[hand].tail" :y2="HANDS[hand].tip" />
     </g>
     <!-- Grips go over both hands, so the Hour Hand's grip stays reachable when the hands overlap. -->
     <template v-if="draggable">
@@ -174,18 +146,18 @@ function release(event: PointerEvent) {
         :style="turn(hand)"
         @pointerdown="grab(hand, $event)"
       >
-        <circle class="hit" :cy="HANDS[hand].gripAt" :r="REACH" />
+        <circle class="hit" :cy="HANDS[hand].tip" :r="HANDS[hand].reach" />
         <circle
           class="c-grip"
           :class="HANDS[hand].grip"
-          :cy="HANDS[hand].gripAt"
+          :cy="HANDS[hand].tip"
           :r="HANDS[hand].gripSize"
         />
       </g>
     </template>
-    <!-- Arrowheads go over the grips, so each grip sits behind its arrowhead. -->
-    <g v-for="hand in HAND_ORDER" :key="hand" :data-head="hand" :style="turn(hand)">
-      <polygon class="c-head" :class="hand" :points="HANDS[hand].head" />
+    <!-- Over the hands, so the hand's own grip never hides the tick it lands on. -->
+    <g v-if="target" class="c-target" :class="target.hand" data-target-tick :style="target.style">
+      <circle :cy="-TICK_RADIUS" r="8" />
     </g>
     <circle class="c-pin" r="7" />
   </svg>
@@ -215,22 +187,17 @@ function release(event: PointerEvent) {
   cursor: grabbing;
 }
 .animate [data-hand],
-.animate [data-head],
 .animate .grip {
   transition: transform var(--wind, 0.8s) ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .animate [data-hand],
-  .animate [data-head],
   .animate .grip {
     transition: none;
   }
 }
 .hit {
   fill: transparent;
-}
-[data-head] {
-  pointer-events: none;
 }
 .c-grip.h {
   stroke: var(--hour);

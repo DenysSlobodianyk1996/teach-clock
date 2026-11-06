@@ -3,7 +3,6 @@ import { nextTick } from 'vue'
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils'
 import ClockFace from '../ClockFace.vue'
 import { clockTime } from '@/game/clockTime'
-import { HAND_GEOMETRY } from '@/game/clockFace'
 import { mountComponent } from '@/test/mountComponent'
 import { t } from '@/test/i18n'
 
@@ -77,21 +76,6 @@ describe('ClockFace', () => {
     await wrapper.setProps({ time: clockTime(12, 5) })
     expect(turn(wrapper, 'minute')).toBe('rotate(30deg)')
     expect(turn(wrapper, 'hour')).toBe('rotate(2.5deg)')
-  })
-
-  it("ends each hand in an arrowhead whose tip is the hand's exact spot", () => {
-    const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
-    for (const hand of ['hour', 'minute'] as const) {
-      const head = wrapper.get(`[data-head="${hand}"] .c-head`)
-      // Drawn pointing at 12 and turned with the hand, so the tip is straight up at the hand's reach.
-      expect(wrapper.get(`[data-head="${hand}"]`).attributes('style')).toBe(
-        wrapper.get(`[data-hand="${hand}"]`).attributes('style'),
-      )
-      expect(head.attributes('points')?.split(' ')[0]).toBe(`0,${-HAND_GEOMETRY[hand].tip}`)
-    }
-    // The Minute Hand reaches the minute ticks; the Hour Hand stops short of the numbers.
-    expect(HAND_GEOMETRY.minute.tip).toBe(82)
-    expect(HAND_GEOMETRY.hour.tip).toBeLessThan(56)
   })
 
   it('lights no tick on a clock that is not being dragged', () => {
@@ -182,22 +166,6 @@ describe('ClockFace with draggable hands', () => {
     expect(wrapper.find('[data-grip="minute"]').classes()).not.toContain('dragging')
     await pointer(wrapper, 'pointermove', 200, 100)
     expect(wrapper.emitted('drag')).toBeUndefined()
-  })
-
-  it('keeps a 48-unit grip just behind each arrowhead, nearer the centre than the tip', () => {
-    const wrapper = draggable()
-    for (const hand of ['hour', 'minute'] as const) {
-      const { tip, grip } = HAND_GEOMETRY[hand]
-      expect(wrapper.get(`[data-grip="${hand}"] .hit`).attributes('r')).toBe('24')
-      expect(wrapper.get(`[data-grip="${hand}"] .hit`).attributes('cy')).toBe(String(-grip))
-      expect(tip - grip).toBeGreaterThan(10)
-    }
-    // The arrowheads are drawn over the grips and never catch the pointer.
-    const heads = wrapper.findAll('.c-head')
-    const grips = wrapper.findAll('.grip')
-    expect(
-      grips.every((g) => heads.every((h) => g.element.compareDocumentPosition(h.element) & 4)),
-    ).toBe(true)
   })
 
   it('lights the tick for the minute the Minute Hand lands on while it is dragged', async () => {

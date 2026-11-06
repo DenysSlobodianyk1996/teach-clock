@@ -1,6 +1,6 @@
 import { t, startingWith } from './i18n.ts'
 import { expect, test } from '@playwright/test'
-import { drag, handsAt, HOUR_GRIP, setHands } from './hands.ts'
+import { drag, handsAt, HOUR_TIP, setHands } from './hands.ts'
 
 test('a Drag Arrows Teach Round teaches a wrong Answer and lists it under Wrong', async ({
   page,
@@ -25,7 +25,7 @@ test('a Drag Arrows Teach Round teaches a wrong Answer and lists it under Wrong'
   const first = await target()
   const wrongHour = (Number(first.split(':')[0]) % 11) + 1
   const wrong = `${wrongHour}:00`
-  await drag(page, HOUR_GRIP, 0, [15, wrongHour * 30])
+  await drag(page, HOUR_TIP, 0, [15, wrongHour * 30])
   await submit.click()
   const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
   await expect(popup.locator('.big-time')).toHaveText(first)

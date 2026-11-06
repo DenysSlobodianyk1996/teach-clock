@@ -145,14 +145,10 @@ input {
   stroke-width: 7;
   stroke-linecap: round;
 }
-/* Arrowheads: the point is exactly where the hand points. */
-.c-head.hour {
-  fill: var(--hour);
-}
-.c-head.minute {
-  fill: var(--minute);
-}
 /* The tick a dragged hand will land on: a mustard ring in the hand's colour around it. */
+.c-target {
+  pointer-events: none;
+}
 .c-target circle {
   fill: var(--accent);
   fill-opacity: 0.6;
