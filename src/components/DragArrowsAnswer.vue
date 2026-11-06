@@ -17,13 +17,15 @@ const { t } = useI18n()
   <ul class="legend">
     <li>
       <svg viewBox="0 0 60 20" aria-hidden="true">
-        <line class="c-hour" x1="8" y1="10" x2="40" y2="10" />
+        <line class="c-hour" x1="8" y1="10" x2="32.5" y2="10" />
+        <polygon class="c-head hour" points="50,10 38,4.5 32.5,4.5 32.5,15.5 38,15.5" />
       </svg>
       {{ t('round.hourHand') }}
     </li>
     <li>
       <svg viewBox="0 0 60 20" aria-hidden="true">
-        <line class="c-min" x1="6" y1="10" x2="56" y2="10" />
+        <line class="c-min" x1="6" y1="10" x2="42.5" y2="10" />
+        <polygon class="c-head minute" points="58,10 46,6.5 42.5,6.5 42.5,13.5 46,13.5" />
       </svg>
       {{ t('round.minuteHand') }}
     </li>

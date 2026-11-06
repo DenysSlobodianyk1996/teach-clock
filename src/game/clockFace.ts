@@ -34,3 +34,14 @@ export function slotAt(x: number, y: number): number | null {
   }
   return best?.n ?? null
 }
+
+/**
+ * Hand lengths on the 200-unit clock: `tip` is where the arrowhead's point sits, `grip` the centre
+ * of the circle a Player grabs, a little nearer the pin so it sits behind the arrowhead. The Minute
+ * Hand reaches the minute ticks (their inner edge is at 82); the Hour Hand stops just short of the
+ * numbers, which start at about 56.
+ */
+export const HAND_GEOMETRY = {
+  hour: { tip: 54, grip: 39 },
+  minute: { tip: 82, grip: 64 },
+} as const
