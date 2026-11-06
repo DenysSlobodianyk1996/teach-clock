@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-import ClockFace from '@/components/ClockFace.vue'
+import ClockFace, { type Hand } from '@/components/ClockFace.vue'
+import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
 import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
-import type { ClockTime } from '@/game/clockTime'
+import { clockTime, type ClockTime } from '@/game/clockTime'
+import { dragHourHand, dragMinuteHand } from '@/game/handDrag'
 import { describeMistake, type Mistake } from '@/game/mistakes'
 import { currentTask, hint } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
@@ -37,6 +39,18 @@ const taskHint = computed(() =>
 const busy = computed(
   () => play.askingToLeave || wrongAnswer.value !== null || rightTask.value !== null,
 )
+
+/** Drag Arrows: the Clock Time both hands show. Every Task starts at 12:00. */
+const START = clockTime(12, 0)
+const hands = ref<ClockTime>(START)
+watch(shownIndex, () => (hands.value = START))
+
+function dragHand({ hand, angle }: { hand: Hand; angle: number }) {
+  const level = round.value?.level
+  if (busy.value || !level) return
+  hands.value =
+    hand === 'minute' ? dragMinuteHand(hands.value, angle, level) : dragHourHand(hands.value, angle)
+}
 
 const answerPanel = ref<InstanceType<typeof SetTimeAnswer>>()
 let pause: ReturnType<typeof setTimeout> | undefined
@@ -87,7 +101,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section v-if="round.game === 'setTime'" class="set-time" :class="{ 'has-hint': taskHint }">
+    <section v-if="round.game === 'setTime'" class="play" :class="{ 'has-hint': taskHint }">
       <div class="clock-side">
         <div class="clock-wrap">
           <ClockFace
@@ -126,6 +140,19 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         @close="wrongAnswer = null"
       />
     </section>
+    <!-- Drag Arrows Teach arrives with ticket 06. -->
+    <section v-else-if="round.game === 'dragArrows' && round.mode === 'test'" class="play">
+      <div class="clock-side">
+        <div class="clock-wrap">
+          <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
+          <ClockFace :key="shownIndex" class="clock" :time="hands" draggable @drag="dragHand" />
+        </div>
+      </div>
+      <div class="answer-side">
+        <h1>{{ t('round.setHands') }}</h1>
+        <DragArrowsAnswer :target="task.answer" :disabled="busy" @submit="submit(hands)" />
+      </div>
+    </section>
     <section v-else class="play-area" data-testid="play-area">
       <p class="placeholder">{{ t('round.comingSoon') }}</p>
       <p class="details">{{ details }}</p>
@@ -152,7 +179,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
   font-weight: 700;
   color: var(--muted);
 }
-.set-time {
+.play {
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -242,7 +269,7 @@ h1 {
   .round {
     padding: 4px 20px 20px;
   }
-  .set-time {
+  .play {
     grid-template-columns: 1fr;
     justify-items: center;
     gap: 14px;
@@ -269,7 +296,7 @@ h1 {
   }
 }
 @media (max-height: 500px) and (min-width: 601px) {
-  .set-time {
+  .play {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

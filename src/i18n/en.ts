@@ -5,6 +5,7 @@ export default {
   app: {
     name: 'Teach Clock',
     clockShows: 'The clock shows {time}',
+    clockDrag: 'Clock with the hands at {time}. Drag the hands.',
   },
   header: {
     home: 'Home',
@@ -49,6 +50,9 @@ export default {
     progressLabel: 'Progress: task {n} of {total}',
     comingSoon: 'The game is coming soon',
     question: 'What time is it?',
+    setHands: 'Set the hands to',
+    hourHand: 'Short — hours',
+    minuteHand: 'Long — minutes',
     hours: 'Hours',
     minutes: 'Minutes',
     clear: 'Clear',

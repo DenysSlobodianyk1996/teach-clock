@@ -3,6 +3,7 @@ export default {
   app: {
     name: 'Вчимо годинник',
     clockShows: 'Годинник показує {time}',
+    clockDrag: 'Годинник зі стрілками на {time}. Перетягни стрілки.',
   },
   header: {
     home: 'Додому',
@@ -47,6 +48,9 @@ export default {
     progressLabel: 'Прогрес: завдання {n} з {total}',
     comingSoon: 'Тут скоро буде гра',
     question: 'Котра година?',
+    setHands: 'Постав стрілки на',
+    hourHand: 'Коротка — години',
+    minuteHand: 'Довга — хвилини',
     hours: 'Години',
     minutes: 'Хвилини',
     clear: 'Стерти',

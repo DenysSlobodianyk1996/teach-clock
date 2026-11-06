@@ -11,3 +11,9 @@ export function pointAt(angle: number, radius: number): { x: number; y: number }
 export function numberPositions(radius: number): { n: number; x: number; y: number }[] {
   return Array.from({ length: 12 }, (_, i) => ({ n: i + 1, ...pointAt((i + 1) * 30, radius) }))
 }
+
+/** The direction of the point (x, y) from the centre, in degrees 0–360: 0° at 12, clockwise. */
+export function angleAt(x: number, y: number): number {
+  const angle = (Math.atan2(x, -y) * 180) / Math.PI
+  return angle < 0 ? angle + 360 : angle
+}

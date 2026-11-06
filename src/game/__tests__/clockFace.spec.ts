@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { numberPositions } from '../clockFace'
+import { angleAt, numberPositions } from '../clockFace'
 
 describe('clock face layout', () => {
   it('places 1–12 clockwise from the top at the given radius', () => {
@@ -9,5 +9,18 @@ describe('clock face layout', () => {
     expect(positions[5]).toEqual({ n: 6, x: 0, y: 66 })
     expect(positions[11]).toEqual({ n: 12, x: 0, y: -66 })
     expect(positions[0]).toEqual({ n: 1, x: 33, y: -57.2 })
+  })
+})
+
+describe('angleAt', () => {
+  it.each([
+    [0, -10, 0],
+    [10, -10, 45],
+    [10, 0, 90],
+    [0, 10, 180],
+    [-10, 0, 270],
+    [-5, -8.66, 330],
+  ])('turns the point (%d, %d) into %i°, 0° at 12, clockwise', (x, y, angle) => {
+    expect(angleAt(x, y)).toBeCloseTo(angle, 0)
   })
 })

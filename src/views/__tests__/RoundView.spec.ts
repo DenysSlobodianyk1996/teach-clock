@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import RoundView from '../RoundView.vue'
+import ClockFace from '@/components/ClockFace.vue'
 import { mountScreen } from '@/test/mountScreen'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
@@ -83,7 +84,7 @@ describe('Round screen, Set Time', () => {
   })
 
   it('keeps the placeholder for Games that are not built yet', async () => {
-    await open('dragArrows')
+    await open('dragArrows', 'teach')
     expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
   })
 })
@@ -173,5 +174,60 @@ describe('Round screen, Set Time in Teach', () => {
       rightCount: 9,
       wrong: [{ answer: { hour, minute }, firstAnswer: { hour: 12, minute: 1 } }],
     })
+  })
+})
+
+describe('Round screen, Drag Arrows in Test', () => {
+  const CLOCK_DRAG = t('app.clockDrag', { time: '12:00' })
+  const target = () => wrapper.get('.target').text()
+  const handsLabel = () => wrapper.get('.clock-side svg.clock').attributes('aria-label')
+
+  /** Drags the Minute Hand to the target's minutes, then the Hour Hand to its hour. */
+  async function setHands(time: string) {
+    const [hour, minute] = time.split(':').map(Number) as [number, number]
+    const clock = wrapper.findComponent(ClockFace)
+    clock.vm.$emit('drag', { hand: 'minute', angle: minute * 6 })
+    clock.vm.$emit('drag', { hand: 'hour', angle: hour * 30 + minute * 0.5 })
+    await wrapper.vm.$nextTick()
+  }
+
+  const submit = () => button(t('round.submit'))!.trigger('click')
+
+  it('asks for a Clock Time and starts the hands at 12:00', async () => {
+    await open('dragArrows')
+    expect(wrapper.get('h1').text()).toBe(t('round.setHands'))
+    expect(target()).toMatch(/^\d{1,2}:\d{2}$/)
+    expect(target()).not.toBe('12:00')
+    expect(handsLabel()).toBe(CLOCK_DRAG)
+    expect(button(t('round.submit'))!.attributes('disabled')).toBeUndefined()
+  })
+
+  it('the dragged hands show the time, and a right Answer turns the dot green', async () => {
+    await open('dragArrows')
+    const first = target()
+    await setHands(first)
+    expect(handsLabel()).toBe(t('app.clockDrag', { time: first }))
+    await submit()
+    expect(dotClasses().slice(0, 2)).toEqual(['ok', 'now'])
+    expect(target()).not.toBe(first)
+    expect(handsLabel()).toBe(CLOCK_DRAG)
+  })
+
+  it('an untouched clock is a wrong Answer that still moves on', async () => {
+    await open('dragArrows')
+    await submit()
+    expect(dotClasses().slice(0, 2)).toEqual(['bad', 'now'])
+    expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
+  })
+
+  it('opens the Summary after the 10th Answer', async () => {
+    const { router } = await open('dragArrows')
+    await submit()
+    for (let i = 1; i < 10; i++) {
+      await setHands(target())
+      await submit()
+    }
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    expect(usePlayStore().summary).toMatchObject({ rightCount: 9 })
   })
 })

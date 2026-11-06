@@ -5,7 +5,7 @@ import { generateClockTimes, seededRandom } from '../tasks'
 
 describe('Task generation', () => {
   it.each(LEVELS)('gives 10 unique Clock Times on the %i-minute step', (level) => {
-    const times = generateClockTimes(level, 10, seededRandom(level))
+    const times = generateClockTimes('setTime', level, 10, seededRandom(level))
     expect(times).toHaveLength(10)
     expect(new Set(times.map(formatClockTime)).size).toBe(10)
     for (const { hour, minute } of times) {
@@ -16,19 +16,38 @@ describe('Task generation', () => {
   })
 
   it('uses only :00 and :30 on the 30-minute step', () => {
-    const minutes = new Set(generateClockTimes(30, 10, seededRandom(1)).map((t) => t.minute))
+    const minutes = new Set(
+      generateClockTimes('setTime', 30, 10, seededRandom(1)).map((t) => t.minute),
+    )
     expect([...minutes].every((m) => m === 0 || m === 30)).toBe(true)
   })
 
   it('refuses to make more Clock Times than the step allows', () => {
-    expect(() => generateClockTimes(30, 25, seededRandom(1))).toThrow('Only 24 Clock Times')
+    expect(() => generateClockTimes('setTime', 30, 25, seededRandom(1))).toThrow(
+      'Only 24 Clock Times',
+    )
   })
 
   it('gives the same Clock Times for the same random source', () => {
-    const a = generateClockTimes(5, 10, seededRandom(42)).map(formatClockTime)
-    const b = generateClockTimes(5, 10, seededRandom(42)).map(formatClockTime)
-    const c = generateClockTimes(5, 10, seededRandom(43)).map(formatClockTime)
+    const a = generateClockTimes('setTime', 5, 10, seededRandom(42)).map(formatClockTime)
+    const b = generateClockTimes('setTime', 5, 10, seededRandom(42)).map(formatClockTime)
+    const c = generateClockTimes('setTime', 5, 10, seededRandom(43)).map(formatClockTime)
     expect(a).toEqual(b)
     expect(a).not.toEqual(c)
+  })
+
+  it('never uses 12:00 in Drag Arrows, where the hands start at 12:00', () => {
+    // All 24 Clock Times on the 30-minute step but one: only 12:00 is left out.
+    const times = generateClockTimes('dragArrows', 30, 23, seededRandom(7)).map(formatClockTime)
+    expect(times).toHaveLength(23)
+    expect(times).not.toContain('12:00')
+    expect(() => generateClockTimes('dragArrows', 30, 24, seededRandom(7))).toThrow(
+      'Only 23 Clock Times',
+    )
+  })
+
+  it('may use 12:00 in Set Time', () => {
+    const times = generateClockTimes('setTime', 30, 24, seededRandom(7)).map(formatClockTime)
+    expect(times).toContain('12:00')
   })
 })
