@@ -461,7 +461,9 @@ function tapTray() {
   pointer-events: none;
   background: var(--accent);
   color: var(--accent-ink);
-  transform: rotate(-8deg);
+  /* `rotate`, not `transform: rotate()`: the production CSS minifier folds `translate` into a
+     later `transform` and drops it, which left the number off-centre under the pointer. */
+  rotate: -8deg;
   box-shadow:
     0 14px 0 rgba(0, 0, 0, 0.12),
     0 22px 30px rgba(0, 0, 0, 0.3);

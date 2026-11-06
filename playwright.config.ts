@@ -21,9 +21,10 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'] }, testIgnore: /offline\.spec/ },
     { name: 'phone', use: { ...devices['Pixel 7'] }, testIgnore: /offline\.spec/ },
     {
+      // The built app: the offline check, and checks that minified CSS has broken before.
       name: 'offline',
       use: { ...devices['Pixel 7'], baseURL: `http://localhost:${offlinePort}` },
-      testMatch: /offline\.spec/,
+      testMatch: /offline\.spec|dragged-number\.spec/,
     },
   ],
   webServer: [
