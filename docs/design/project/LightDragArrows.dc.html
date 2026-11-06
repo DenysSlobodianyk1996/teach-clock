@@ -33,8 +33,8 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
   </div>
 
   <main style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: center; padding: 0 48px 28px">
-    <div style="display: flex; justify-content: center">
-      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Стрілки переїжджають з 3:15 на 4:15" style="width: 470px; height: 470px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Стрілки переїжджають з 3:15 на 4:15" style="width: 420px; height: 420px">
         <circle class="c-face" r="94"></circle>
         <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
         <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
@@ -45,12 +45,11 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <g transform="rotate(90)"><line class="c-min" y1="14" y2="-70"></line><circle class="c-grip m" cx="0" cy="-74" r="11"></circle></g>
         <circle class="c-pin" r="7"></circle>
       </svg>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px"><button class="btn btn-help" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>Постав правильну відповідь</button><div style="font-size: 18px; color: var(--muted)">Підказка: <b style="color: var(--text); font-weight: 900">4:15</b></div></div>
     </div>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px">
       <h1 style="margin: 0; font-size: 32px; font-weight: 900">Постав стрілки на</h1>
       <div class="card" style="padding: 18px 46px; background: var(--face); color: var(--num)"><div class="big-time" style="font-size: 96px">4:15</div></div>
-      <button class="btn btn-help" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>Постав правильну відповідь</button>
-      <div style="font-size: 18px; color: var(--muted); text-align: center; max-width: 380px">Підказка: <b style="color: var(--text); font-weight: 900">4:15</b>. Стрілки переїдуть самі, а «Перевірити» натиснеш ти.</div>
       <button class="btn" type="button" style="width: 340px">Перевірити</button>
     </div>
   </main>

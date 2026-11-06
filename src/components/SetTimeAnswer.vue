@@ -106,7 +106,8 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         </button>
       </template>
     </div>
-    <p v-if="errors.length" class="error" role="alert">
+    <!-- Always in the page with room for both lines, so nothing moves when an error appears. -->
+    <p class="error" role="alert">
       <span v-for="box in errors" :key="box">{{ t(`round.errors.${box}`) }}</span>
     </p>
     <NumberPad
@@ -174,6 +175,9 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   align-items: center;
   gap: 2px;
   margin: -6px 0 0;
+  line-height: 1.4;
+  /* Two lines of 1.4em and the gap between them. */
+  min-height: calc(2.8em + 2px);
   font-weight: 800;
   color: var(--text);
 }
@@ -194,6 +198,10 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   .answer {
     gap: 14px;
     width: 100%;
+  }
+  /* On a phone the answer sits under the clock, so a growing error moves nothing above it. */
+  .error:empty {
+    display: none;
   }
   .timebox {
     height: 76px;

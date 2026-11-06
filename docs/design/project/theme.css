@@ -135,9 +135,10 @@
 
 /* ---------- number tiles (tray) ---------- */
 .tray { display: grid; gap: 12px; padding: 18px; border-radius: 28px; background: var(--bg-deep); }
-.tile { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--tile); color: var(--tile-ink); font: 900 28px "Nunito", sans-serif; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.16); border: 0; }
+/* --number-size matches a placed number: the clock's width × 30 / 220. The tap area stays 48 px or more. */
+.tile { display: flex; align-items: center; justify-content: center; width: var(--number-size, 64px); height: var(--number-size, 64px); border-radius: 50%; background: var(--tile); color: var(--tile-ink); font: 900 calc(var(--number-size, 64px) * 0.57) "Nunito", sans-serif; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.16); border: 0; }
 .tile.ghost { background: transparent; box-shadow: none; border: 3px dashed var(--line); }
-.tile.lifted { transform: rotate(-8deg) scale(1.12); box-shadow: 0 14px 0 rgba(0, 0, 0, 0.12), 0 22px 30px rgba(0, 0, 0, 0.3); background: var(--accent); color: var(--accent-ink); }
+.tile.lifted { transform: rotate(-8deg); box-shadow: 0 14px 0 rgba(0, 0, 0, 0.12), 0 22px 30px rgba(0, 0, 0, 0.3); background: var(--accent); color: var(--accent-ink); }
 
 /* ---------- Set Time entry ---------- */
 .timebox-row { display: flex; align-items: center; justify-content: center; gap: 10px; }

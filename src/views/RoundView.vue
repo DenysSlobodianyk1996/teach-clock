@@ -112,7 +112,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section class="play" :class="{ 'has-hint': taskHint }">
+    <section class="play" :class="round.mode">
       <div class="clock-side">
         <div class="clock-wrap">
           <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
@@ -145,7 +145,14 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             </span>
           </p>
         </div>
-        <HintPanel v-if="taskHint" :hint="taskHint" @help="setCorrectAnswer" />
+        <!-- Teach keeps the Hint's space from the first Task, so the clock never moves when it
+             appears. Until then it is hidden, so it is neither seen nor read out. -->
+        <HintPanel
+          v-if="round.mode === 'teach'"
+          :class="{ waiting: !taskHint }"
+          :hint="taskHint ?? START"
+          @help="setCorrectAnswer"
+        />
       </div>
       <div class="answer-side">
         <h1>{{ t(round.game === 'setTime' ? 'round.question' : 'round.setHands') }}</h1>
@@ -239,6 +246,9 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
   height: auto;
   aspect-ratio: 1;
 }
+.waiting {
+  visibility: hidden;
+}
 .answer-side {
   display: flex;
   flex-direction: column;
@@ -265,8 +275,8 @@ h1 {
   .clock {
     width: min(236px, 60vw);
   }
-  /* Make room for the Hint panel so Submit stays on screen. */
-  .has-hint .clock {
+  /* Teach keeps room for the Hint panel from the start, so Submit stays on screen. */
+  .teach .clock {
     width: min(170px, 44vw);
   }
   .clock-side {
