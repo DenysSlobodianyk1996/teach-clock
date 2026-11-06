@@ -59,7 +59,16 @@ test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', a
   await expect(
     page.getByRole('heading', { name: t('summary.headline', { right: 9, total: 10 }) }),
   ).toBeVisible()
-  await expect(page.getByRole('region', { name: t('summary.wrong') })).toContainText(
-    `${first} — ${t('summary.yourAnswer', { time: '12:01' })}`,
-  )
+  await expect(
+    page
+      .getByRole('region', { name: t('summary.wrong') })
+      .getByRole('listitem')
+      .filter({
+        hasText: t('summary.pair', {
+          caption: t('summary.firstTry'),
+          first: '12:01',
+          answer: first,
+        }),
+      }),
+  ).toBeVisible()
 })
