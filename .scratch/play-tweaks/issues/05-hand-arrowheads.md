@@ -11,3 +11,4 @@
 - [ ] While dragging, the tick for the snapped minute (Minute Hand) or hour (Hour Hand) is highlighted; it clears on release
 - [ ] Highlight and arrowheads read clearly in all three themes
 - [ ] Clock face component tests cover the arrowheads and the highlight
+- [ ] Product brief (Drag Arrows: how the hands move) says the hands end in arrowheads and the target tick lights up while dragging

@@ -11,3 +11,4 @@
 - [ ] Drag Numbers, Test: the clock stays in place as the tray empties and Submit appears
 - [ ] Set Time: the clock stays in place when the error under the time boxes appears
 - [ ] Playwright measures the clock's position before and after each case, on desktop and phone
+- [ ] Product brief (Look) says the clock never moves during a Round
