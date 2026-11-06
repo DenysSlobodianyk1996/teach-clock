@@ -1,15 +1,26 @@
 /** Task generation. The random source is passed in so Rounds can be reproduced. Plain TypeScript, no Vue. */
 import { clockTime, type ClockTime } from './clockTime'
-import type { Level } from './settings'
+import type { Game, Level } from './settings'
 
 /** Returns a number in [0, 1), like Math.random. */
 export type Random = () => number
 
-/** `count` different Clock Times whose minutes are multiples of the Level step. */
-export function generateClockTimes(level: Level, count: number, random: Random): ClockTime[] {
+/**
+ * `count` different Clock Times whose minutes are multiples of the Level step. Drag Arrows never
+ * uses 12:00: its hands start there, so an untouched clock is never a right Answer.
+ */
+export function generateClockTimes(
+  game: Game,
+  level: Level,
+  count: number,
+  random: Random,
+): ClockTime[] {
   const all: ClockTime[] = []
   for (let hour = 1; hour <= 12; hour++) {
-    for (let minute = 0; minute < 60; minute += level) all.push(clockTime(hour, minute))
+    for (let minute = 0; minute < 60; minute += level) {
+      if (game === 'dragArrows' && hour === 12 && minute === 0) continue
+      all.push(clockTime(hour, minute))
+    }
   }
   if (count > all.length) {
     throw new RangeError(`Only ${all.length} Clock Times on the ${level}-minute step, not ${count}`)

@@ -35,7 +35,7 @@ export interface Outcome {
 
 export function startRound({ game, mode, level }: Settings, random: Random): Round {
   // Drag Numbers gets its own Tasks (numbers, not Clock Times) in ticket 07.
-  const tasks = generateClockTimes(level, taskCount(game), random).map((answer): Task => ({
+  const tasks = generateClockTimes(game, level, taskCount(game), random).map((answer): Task => ({
     answer,
     firstAnswer: null,
     status: 'pending',

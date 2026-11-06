@@ -1,8 +1,24 @@
 import { describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
+import type { DOMWrapper, VueWrapper } from '@vue/test-utils'
 import ClockFace from '../ClockFace.vue'
 import { clockTime } from '@/game/clockTime'
 import { mountComponent } from '@/test/mountComponent'
 import { t } from '@/test/i18n'
+
+/** Fires a pointer event at a spot on the page, the way a finger or mouse would. */
+async function pointer(
+  target: DOMWrapper<Element> | VueWrapper,
+  type: 'pointerdown' | 'pointermove' | 'pointerup',
+  clientX = 0,
+  clientY = 0,
+  init: PointerEventInit = {},
+) {
+  target.element.dispatchEvent(
+    new PointerEvent(type, { pointerId: 1, clientX, clientY, bubbles: true, ...init }),
+  )
+  await nextTick()
+}
 
 describe('ClockFace', () => {
   it('names the Clock Time it shows', () => {
@@ -33,5 +49,92 @@ describe('ClockFace', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
     expect(wrapper.find('[data-hand="hour"]').attributes('transform')).toBe('rotate(232.5)')
     expect(wrapper.find('[data-hand="minute"]').attributes('transform')).toBe('rotate(270)')
+  })
+
+  it('has no grips and emits nothing when read-only', async () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(3, 0) })
+    expect(wrapper.find('.c-grip').exists()).toBe(false)
+    await pointer(wrapper.find('[data-hand="minute"]'), 'pointerdown')
+    await pointer(wrapper, 'pointermove', 200, 100)
+    expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+})
+
+describe('ClockFace with draggable hands', () => {
+  /** A draggable clock drawn 200 px square at the page's top-left, so its centre is (100, 100). */
+  function draggable() {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(12, 0), draggable: true })
+    wrapper.element.getBoundingClientRect = () => DOMRect.fromRect({ width: 200, height: 200 })
+    return wrapper
+  }
+
+  it('says the hands can be dragged', () => {
+    expect(draggable().attributes('aria-label')).toBe(t('app.clockDrag', { time: '12:00' }))
+  })
+
+  it('emits the pointer angle for the grabbed hand while it is dragged', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
+    await pointer(wrapper, 'pointermove', 200, 100)
+    await pointer(wrapper, 'pointermove', 100, 200)
+    expect(wrapper.emitted('drag')).toEqual([
+      [{ hand: 'minute', angle: 90 }],
+      [{ hand: 'minute', angle: 180 }],
+    ])
+  })
+
+  it('drags the Hour Hand when its grip is grabbed', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="hour"] .c-grip'), 'pointerdown')
+    await pointer(wrapper, 'pointermove', 0, 100)
+    expect(wrapper.emitted('drag')).toEqual([[{ hand: 'hour', angle: 270 }]])
+  })
+
+  it('only a grip starts a drag, so pressing the tail past the pin cannot flip a hand', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-hand="minute"]'), 'pointerdown')
+    await pointer(wrapper, 'pointermove', 100, 200)
+    expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+
+  it('ignores moves close to the pin, where the direction swings wildly', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
+    await pointer(wrapper, 'pointermove', 105, 108)
+    await pointer(wrapper, 'pointermove', 100, 140)
+    expect(wrapper.emitted('drag')).toEqual([[{ hand: 'minute', angle: 180 }]])
+  })
+
+  it('ends the drag when a mouse moves with no button pressed', async () => {
+    const wrapper = draggable()
+    const mouse = { pointerType: 'mouse' }
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown', 0, 0, mouse)
+    await pointer(wrapper, 'pointermove', 200, 100, { ...mouse, buttons: 0 })
+    await pointer(wrapper, 'pointermove', 100, 200, { ...mouse, buttons: 1 })
+    expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+
+  it('ignores a right-click on a grip', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown', 0, 0, { button: 2 })
+    await pointer(wrapper, 'pointermove', 200, 100)
+    expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+
+  it('marks the dragged hand and stops on release', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
+    expect(wrapper.find('[data-grip="minute"]').classes()).toContain('dragging')
+    expect(wrapper.find('[data-grip="hour"]').classes()).not.toContain('dragging')
+    await pointer(wrapper, 'pointerup')
+    expect(wrapper.find('[data-grip="minute"]').classes()).not.toContain('dragging')
+    await pointer(wrapper, 'pointermove', 200, 100)
+    expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+
+  it('ignores moves that are not part of a drag', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper, 'pointermove', 200, 100)
+    expect(wrapper.emitted('drag')).toBeUndefined()
   })
 })
