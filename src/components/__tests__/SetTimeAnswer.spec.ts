@@ -75,7 +75,7 @@ describe('SetTimeAnswer', () => {
     expect(wrapper.get('[role="alert"]').text()).toContain(t('round.errors.minute'))
 
     await tap(t('round.clear'))
-    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+    expect(wrapper.get('[role="alert"]').text()).toBe('')
   })
 
   it('works with a physical keyboard', async () => {

@@ -33,8 +33,10 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
   </div>
 
   <main style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: center; padding: 0 48px 28px">
-    <div style="display: flex; justify-content: center">
-      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат: на місцях 12, 3 і 6" style="width: 440px; height: 440px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
+      <!-- The hint's space is kept above the face, so the face never moves when a hint appears. -->
+      <div class="toast" aria-hidden="true" style="visibility: hidden"><svg viewBox="0 0 24 24" fill="none" stroke="var(--hour)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>7 стоїть між 6 і 8</div>
+      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат: на місцях 12, 3 і 6" style="width: 400px; height: 400px">
         <circle class="c-face" r="94"></circle>
         <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
         <circle class="c-slot" cx="33" cy="-57.2" r="14"></circle><circle class="c-slot" cx="57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="57.2" cy="33" r="14"></circle><circle class="c-slot" cx="33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-57.2" cy="33" r="14"></circle><circle class="c-slot target" cx="-66" cy="0" r="16"></circle><circle class="c-slot" cx="-57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="-33" cy="-57.2" r="14"></circle>
@@ -47,7 +49,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div style="display: flex; flex-direction: column; align-items: center; gap: 18px">
       <h1 style="margin: 0; font-size: 32px; font-weight: 900">Розстав числа по місцях</h1>
-      <div class="tray" style="--number-size: 60px; grid-template-columns: repeat(3, minmax(0, 1fr))" aria-label="Числа">
+      <div class="tray" style="--number-size: 54.5px; grid-template-columns: repeat(3, minmax(0, 1fr))" aria-label="Числа">
         <button class="tile" type="button">7</button><button class="tile" type="button">2</button><button class="tile" type="button">11</button>
         <div class="tile ghost" aria-hidden="true"></div><button class="tile" type="button">4</button><button class="tile" type="button">10</button>
         <button class="tile" type="button">1</button><button class="tile" type="button">8</button><button class="tile" type="button">5</button>
@@ -56,7 +58,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
     </div>
   </main>
 
-  <div class="tile lifted" aria-hidden="true" style="--number-size: 60px; position: absolute; left: 176px; top: 352px">9</div>
+  <div class="tile lifted" aria-hidden="true" style="--number-size: 54.5px; position: absolute; left: 176px; top: 352px">9</div>
   <svg aria-hidden="true" viewBox="0 0 24 24" style="position: absolute; left: 214px; top: 392px; width: 40px; height: 40px"><path d="M5 3l14 8-6 2 4 7-3 1.5-4-7-5 4z" style="fill: #fffaf0; stroke: #2a2633; stroke-width: 1.5; stroke-linejoin: round"></path></svg>
 </div>
 </x-dc>
