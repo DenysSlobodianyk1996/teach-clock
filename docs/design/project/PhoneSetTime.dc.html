@@ -29,11 +29,11 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
     <div class="dots" style="gap: 8px" aria-label="Прогрес: завдання 4 з 10">
       <span class="dot ok"></span><span class="dot help"></span><span class="dot ok"></span><span class="dot now"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
-    <div class="task-no">Завдання 4 з 10</div>
+    <div class="task-no">Завдання 4 з 10 · Навчання</div>
   </div>
 
-  <main style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 10px 20px 20px">
-    <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 7:45" style="width: 236px; height: 236px">
+  <main style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 20px 20px">
+    <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 7:45" style="width: 350px; height: 350px">
       <circle class="c-face" r="94"></circle>
       <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
       <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
@@ -42,19 +42,21 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
       <line class="c-min" y1="14" y2="-70" transform="rotate(270)"></line>
       <circle class="c-pin" r="7"></circle>
     </svg>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
     <div class="timebox-row">
-      <div class="timebox h" style="height: 76px; width: 76px; font-size: 46px" aria-label="Години">7</div>
-      <span class="colon" style="font-size: 46px">:</span>
-      <div class="timebox mm focus" style="height: 76px; width: 120px; font-size: 46px" aria-label="Хвилини">45</div>
+      <div class="timebox h" style="height: 60px; width: 76px; font-size: 38px" aria-label="Години">7</div>
+      <span class="colon" style="font-size: 38px">:</span>
+      <div class="timebox mm focus" style="height: 60px; width: 120px; font-size: 38px" aria-label="Хвилини">45</div>
     </div>
-    <div class="pad" style="width: 100%; gap: 8px">
-      <button class="key" type="button" style="height: 54px">1</button><button class="key" type="button" style="height: 54px">2</button><button class="key" type="button" style="height: 54px">3</button>
-      <button class="key" type="button" style="height: 54px">4</button><button class="key" type="button" style="height: 54px">5</button><button class="key" type="button" style="height: 54px">6</button>
-      <button class="key" type="button" style="height: 54px">7</button><button class="key" type="button" style="height: 54px">8</button><button class="key" type="button" style="height: 54px">9</button>
-      <button class="key" type="button" style="height: 54px; grid-column: span 2">0</button>
-      <button class="key" type="button" style="height: 54px" aria-label="Стерти"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12v14H8l-6-7z"></path><path d="M12 9l5 6M17 9l-5 6"></path></svg></button>
+    <div class="pad" style="width: 230px; gap: 6px">
+      <button class="key" type="button" style="height: 48px">1</button><button class="key" type="button" style="height: 48px">2</button><button class="key" type="button" style="height: 48px">3</button>
+      <button class="key" type="button" style="height: 48px">4</button><button class="key" type="button" style="height: 48px">5</button><button class="key" type="button" style="height: 48px">6</button>
+      <button class="key" type="button" style="height: 48px">7</button><button class="key" type="button" style="height: 48px">8</button><button class="key" type="button" style="height: 48px">9</button>
+      <button class="key" type="button" style="height: 48px; grid-column: span 2">0</button>
+      <button class="key" type="button" style="height: 48px" aria-label="Стерти"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12v14H8l-6-7z"></path><path d="M12 9l5 6M17 9l-5 6"></path></svg></button>
     </div>
-    <button class="btn" type="button" style="width: 100%">Перевірити</button>
+    <button class="btn" type="button" style="width: 230px; min-height: 52px">Перевірити</button>
+    </div>
   </main>
 </div>
 </x-dc>
