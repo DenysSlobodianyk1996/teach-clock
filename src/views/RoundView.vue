@@ -5,6 +5,7 @@ import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import ClockFace, { type Hand } from '@/components/ClockFace.vue'
 import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
+import DragNumbersRound from './DragNumbersRound.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
@@ -24,7 +25,9 @@ const RIGHT_PAUSE_MS = 1200
 
 // The router opens this screen with an unfinished Round. The Round goes away when the Player
 // leaves, and has no current Task while the Summary loads; the screen draws nothing then.
-const round = computed(() => play.round)
+// Drag Numbers has its own screen part; the rest of this file plays the Clock Time Games.
+const numbersRound = computed(() => (play.round?.game === 'dragNumbers' ? play.round : null))
+const round = computed(() => (play.round?.game !== 'dragNumbers' ? play.round : null))
 
 /** Teach: the Task just answered right, kept on screen with the toast before moving on. */
 const rightTask = ref<number | null>(null)
@@ -64,13 +67,6 @@ const answerPanel = ref<InstanceType<typeof SetTimeAnswer>>()
 let pause: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(pause))
 
-const details = computed(() => {
-  if (!round.value) return ''
-  const parts = [t(`games.${round.value.game}.name`), t(`modes.${round.value.mode}.name`)]
-  if (round.value.level !== null) parts.push(t(`levels.${round.value.level}.name`))
-  return parts.join(' · ')
-})
-
 function submit(time: ClockTime) {
   const played = round.value && currentTask(round.value)
   if (!played || busy.value) return
@@ -107,7 +103,8 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
 </script>
 
 <template>
-  <div v-if="round && task" class="round">
+  <DragNumbersRound v-if="numbersRound" :round="numbersRound" />
+  <div v-else-if="round && task" class="round">
     <div class="progress">
       <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />
       <div class="task-no">
@@ -115,8 +112,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <!-- Drag Numbers arrives with tickets 07–08. -->
-    <section v-if="round.game !== 'dragNumbers'" class="play" :class="{ 'has-hint': taskHint }">
+    <section class="play" :class="{ 'has-hint': taskHint }">
       <div class="clock-side">
         <div class="clock-wrap">
           <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
@@ -168,10 +164,6 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         :mistake="wrongAnswer.mistake"
         @close="wrongAnswer = null"
       />
-    </section>
-    <section v-else class="play-area" data-testid="play-area">
-      <p class="placeholder">{{ t('round.comingSoon') }}</p>
-      <p class="details">{{ details }}</p>
     </section>
   </div>
 </template>
@@ -257,27 +249,6 @@ h1 {
   margin: 0;
   font-size: 32px;
   font-weight: 900;
-}
-.play-area {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-  border: 3px dashed var(--line);
-  border-radius: 28px;
-  text-align: center;
-}
-.placeholder {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 900;
-}
-.details {
-  margin: 0;
-  color: var(--muted);
 }
 
 /* Phone upright: the clock sits above the answer. */

@@ -3,28 +3,51 @@
  * the Round passed in is never changed. Plain TypeScript, no Vue.
  */
 import { sameClockTime, type ClockTime } from './clockTime'
-import { hasLevel, taskCount, type Settings } from './settings'
-import { generateClockTimes, type Random } from './tasks'
+import { taskCount, type Game, type Settings } from './settings'
+import { generateClockTimes, shuffledNumbers, type Random } from './tasks'
 
 /** `helped`: right only after a wrong try in Teach. It counts as wrong in the Summary. */
 export type TaskStatus = 'pending' | 'right' | 'helped' | 'wrong'
 
-export interface Task {
-  /** The correct Answer. */
-  readonly answer: ClockTime
-  /** Set on the first submit. In Teach it is set while the Task is still pending after a wrong try. */
-  readonly firstAnswer: ClockTime | null
+/**
+ * A Task with its correct Answer: a Clock Time, or in Drag Numbers the slot a number belongs on
+ * (number N belongs on slot N).
+ */
+export interface Task<A = ClockTime> {
+  readonly answer: A
+  /** Set on the first try. In Teach it is set while the Task is still pending after a wrong try. */
+  readonly firstAnswer: A | null
   readonly status: TaskStatus
 }
 
-export interface Round {
-  readonly game: Settings['game']
+export type ClockGame = Exclude<Game, 'dragNumbers'>
+
+/** A Round of a Game played on Clock Times, one Task after another. */
+export interface ClockRound {
+  readonly game: ClockGame
   readonly mode: Settings['mode']
-  readonly level: Settings['level'] | null
+  readonly level: Settings['level']
   readonly tasks: readonly Task[]
   /** Index of the Task being played; equals `tasks.length` once the Round is finished. */
   readonly current: number
 }
+
+/** A Round of Drag Numbers: one Task per number, all on the face at once. */
+export interface NumbersRound {
+  readonly game: 'dragNumbers'
+  readonly mode: Settings['mode']
+  readonly level: null
+  /** Task N−1 is the number N. */
+  readonly tasks: readonly Task<number>[]
+  /** What each slot holds: index N−1 is the slot where N belongs. */
+  readonly slots: readonly (number | null)[]
+  /** The numbers not on the face, in tray order. */
+  readonly tray: readonly number[]
+  /** Test: the Player pressed Submit. */
+  readonly submitted: boolean
+}
+
+export type Round = ClockRound | NumbersRound
 
 export interface Outcome {
   right: boolean
@@ -33,30 +56,58 @@ export interface Outcome {
   finished: boolean
 }
 
+export function startRound(settings: Settings & { game: ClockGame }, random: Random): ClockRound
+export function startRound(
+  settings: Settings & { game: 'dragNumbers' },
+  random: Random,
+): NumbersRound
+export function startRound(settings: Settings, random: Random): Round
 export function startRound({ game, mode, level }: Settings, random: Random): Round {
-  // Drag Numbers gets its own Tasks (numbers, not Clock Times) in ticket 07.
+  if (game === 'dragNumbers') {
+    const tasks = Array.from({ length: taskCount(game) }, (_, i): Task<number> => ({
+      answer: i + 1,
+      firstAnswer: null,
+      status: 'pending',
+    }))
+    const slots = tasks.map(() => null)
+    return {
+      game,
+      mode,
+      level: null,
+      tasks,
+      slots,
+      tray: shuffledNumbers(random),
+      submitted: false,
+    }
+  }
   const tasks = generateClockTimes(game, level, taskCount(game), random).map((answer): Task => ({
     answer,
     firstAnswer: null,
     status: 'pending',
   }))
-  return { game, mode, level: hasLevel(game) ? level : null, tasks, current: 0 }
+  return { game, mode, level, tasks, current: 0 }
 }
 
 export function isFinished(round: Round): boolean {
-  return round.current >= round.tasks.length
+  if (round.game !== 'dragNumbers') return round.current >= round.tasks.length
+  return round.mode === 'test' ? round.submitted : round.tasks.every((t) => t.status !== 'pending')
 }
 
+/** The Clock Time Task being played; none in Drag Numbers, where every number is on screen. */
 export function currentTask(round: Round): Task | null {
-  return round.tasks[round.current] ?? null
+  return round.game === 'dragNumbers' ? null : (round.tasks[round.current] ?? null)
 }
 
 /**
  * Checks an Answer to the current Task. A right Answer moves on. A wrong one moves on in Test;
  * in Teach the Player stays on the Task until they get it right, and the Task ends as helped.
  */
-export function submitAnswer(round: Round, time: ClockTime): { round: Round; outcome: Outcome } {
+export function submitAnswer(
+  round: Round,
+  time: ClockTime,
+): { round: ClockRound; outcome: Outcome } {
   const task = currentTask(round)
+  if (round.game === 'dragNumbers') throw new Error('Drag Numbers has no Clock Time Answers')
   if (!task) throw new Error('The Round is already finished')
   const right = sameClockTime(task.answer, time)
   let status: TaskStatus

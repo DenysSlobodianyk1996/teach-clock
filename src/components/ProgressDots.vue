@@ -2,8 +2,15 @@
 import { useI18n } from 'vue-i18n'
 import type { TaskStatus } from '@/game/round'
 
-/** One dot per Task, coloured by its status; `current` is the 0-based Task being played. */
-defineProps<{ statuses: readonly TaskStatus[]; current: number }>()
+/**
+ * One dot per Task, coloured by its status. `current` is the 0-based Task being played; Drag
+ * Numbers has none and passes its own `label`.
+ */
+defineProps<
+  { statuses: readonly TaskStatus[] } & (
+    { current: number; label?: never } | { current?: never; label: string }
+  )
+>()
 
 const { t } = useI18n()
 
@@ -20,8 +27,9 @@ const STATUS_CLASS: Record<TaskStatus, string | null> = {
     class="dots"
     role="img"
     :aria-label="
+      label ??
       t('round.progressLabel', {
-        n: current + 1,
+        n: (current ?? 0) + 1,
         total: statuses.length,
       })
     "

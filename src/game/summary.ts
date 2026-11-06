@@ -1,26 +1,57 @@
 /** Summary of a finished Round. Plain TypeScript, no Vue. */
 import type { ClockTime } from './clockTime'
-import { isFinished, type Round } from './round'
+import {
+  isFinished,
+  type ClockGame,
+  type ClockRound,
+  type NumbersRound,
+  type Round,
+  type Task,
+} from './round'
 
-export interface WrongTask {
-  answer: ClockTime
-  firstAnswer: ClockTime
+/** A Task that was wrong or helped: its correct Answer and the Player's first one. */
+export interface WrongTask<A = ClockTime> {
+  answer: A
+  firstAnswer: A
 }
 
-export interface Summary {
+interface Grouped<A> {
   rightCount: number
   total: number
-  right: ClockTime[]
-  wrong: WrongTask[]
+  right: A[]
+  wrong: WrongTask<A>[]
 }
 
+export interface ClockSummary extends Grouped<ClockTime> {
+  game: ClockGame
+}
+
+/** Drag Numbers: Answers are slots, and the face as the Player left it. */
+export interface NumbersSummary extends Grouped<number> {
+  game: 'dragNumbers'
+  /** What each slot held at the end: index N−1 is the slot where N belongs. */
+  placements: (number | null)[]
+}
+
+export type Summary = ClockSummary | NumbersSummary
+
+export function summarize(round: ClockRound): ClockSummary
+export function summarize(round: NumbersRound): NumbersSummary
+export function summarize(round: Round): Summary
 export function summarize(round: Round): Summary {
   if (!isFinished(round)) throw new Error('The Round is not finished')
-  const right: ClockTime[] = []
-  const wrong: WrongTask[] = []
-  for (const { answer, firstAnswer, status } of round.tasks) {
+  if (round.game === 'dragNumbers') {
+    return { game: round.game, ...group(round.tasks), placements: [...round.slots] }
+  }
+  return { game: round.game, ...group(round.tasks) }
+}
+
+function group<A>(tasks: readonly Task<A>[]): Grouped<A> {
+  const right: A[] = []
+  const wrong: WrongTask<A>[] = []
+  for (const { answer, firstAnswer, status } of tasks) {
     if (status === 'right') right.push(answer)
     else wrong.push({ answer, firstAnswer: firstAnswer! })
   }
-  return { rightCount: right.length, total: round.tasks.length, right, wrong }
+  return { rightCount: right.length, total: tasks.length, right, wrong }
 }

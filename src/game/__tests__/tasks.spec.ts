@@ -1,7 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { LEVELS } from '../settings'
 import { formatClockTime } from '../clockTime'
-import { generateClockTimes, seededRandom } from '../tasks'
+import { generateClockTimes, seededRandom, shuffledNumbers } from '../tasks'
+
+describe('shuffledNumbers', () => {
+  it('never leaves the tray in order, even with a stuck random source', () => {
+    for (const stuck of [0, 0.5, 0.99]) {
+      const tray = shuffledNumbers(() => stuck)
+      expect([...tray].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+      expect(tray).not.toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+    }
+  })
+})
 
 describe('Task generation', () => {
   it.each(LEVELS)('gives 10 unique Clock Times on the %i-minute step', (level) => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clockTime, type ClockTime } from '../clockTime'
-import { currentTask, hint, isFinished, startRound, submitAnswer, type Round } from '../round'
+import { currentTask, hint, isFinished, startRound, submitAnswer, type ClockRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 
@@ -11,7 +11,7 @@ function wrong(time: ClockTime): ClockTime {
   return clockTime((time.hour % 12) + 1, time.minute)
 }
 
-function answerAll(round: Round, rightAt: (i: number) => boolean): Round {
+function answerAll(round: ClockRound, rightAt: (i: number) => boolean): ClockRound {
   for (let i = 0; !isFinished(round); i++) {
     const correct = currentTask(round)!.answer
     round = submitAnswer(round, rightAt(i) ? correct : wrong(correct)).round

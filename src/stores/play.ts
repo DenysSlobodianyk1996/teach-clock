@@ -8,6 +8,7 @@ import {
   submitAnswer as submit,
   type Round,
 } from '@/game/round'
+import { dropNumber as drop } from '@/game/dragNumbers'
 import { summarize } from '@/game/summary'
 import type { Random } from '@/game/tasks'
 
@@ -34,11 +35,28 @@ export const usePlayStore = defineStore('play', () => {
     return result.outcome
   }
 
+  /** Drag Numbers: drops a tray number on a slot. */
+  function dropNumber(number: number, slot: number) {
+    if (round.value?.game !== 'dragNumbers') throw new Error('No Drag Numbers Round in play')
+    const result = drop(round.value, number, slot)
+    round.value = result.round
+    return result.outcome
+  }
+
   /** Throws the Round away. Screens that need a Round step aside on their own. */
   function leaveRound() {
     round.value = null
     askingToLeave.value = false
   }
 
-  return { settings, round, summary, askingToLeave, startRound, submitAnswer, leaveRound }
+  return {
+    settings,
+    round,
+    summary,
+    askingToLeave,
+    startRound,
+    submitAnswer,
+    dropNumber,
+    leaveRound,
+  }
 })

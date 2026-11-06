@@ -83,11 +83,6 @@ describe('Round screen, Set Time', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe('')
   })
-
-  it('keeps the placeholder for Games that are not built yet', async () => {
-    await open('dragNumbers', 'teach')
-    expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
-  })
 })
 
 const button = (text: string) => wrapper.findAll('button').find((b) => b.text() === text)
@@ -337,5 +332,64 @@ describe('Round screen, Drag Arrows in Teach', () => {
       rightCount: 9,
       wrong: [{ answer: { hour, minute }, firstAnswer: { hour: 12, minute: 0 } }],
     })
+  })
+})
+
+/** Taps a tray number, then a slot. */
+async function place(number: number, slot: number) {
+  await wrapper.get(`.tray [data-number="${number}"]`).trigger('click')
+  await wrapper.get(`[data-slot="${slot}"]`).trigger('click')
+}
+
+describe('Round screen, Drag Numbers in Teach', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  it('keeps the placeholder for Test until it is built', async () => {
+    await open('dragNumbers', 'test')
+    expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
+  })
+
+  it('shows an empty face, the tray of 1–12 and 12 grey dots', async () => {
+    await open('dragNumbers', 'teach')
+    expect(wrapper.get('h1').text()).toBe(t('numbers.heading'))
+    const tray = wrapper.findAll('.tray .tile').map((b) => Number(b.text()))
+    expect([...tray].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+    expect(wrapper.findAll('[data-slot] .c-slot')).toHaveLength(12)
+    expect(dotClasses()).toEqual(Array(12).fill(undefined))
+    expect(wrapper.text()).toContain(
+      `${t('numbers.progress', { n: 0, total: 12 })} · ${t('modes.teach.name')}`,
+    )
+  })
+
+  it('sends a wrong drop back to the tray with the neighbour hint', async () => {
+    await open('dragNumbers', 'teach')
+    await place(12, 4)
+    expect(wrapper.get('[role="status"]').text()).toBe(
+      t('numbers.between', { number: 12, before: 11, after: 1 }),
+    )
+    expect(wrapper.get('.tray [data-number="12"]').classes()).toContain('marked')
+    expect(wrapper.find('[data-slot="4"] .c-slot').exists()).toBe(true)
+  })
+
+  it('locks a right drop on the face, clears the hint and colours its dot', async () => {
+    await open('dragNumbers', 'teach')
+    await place(7, 4)
+    await place(7, 7)
+    await place(3, 3)
+    expect(wrapper.get('[data-slot="7"]').text()).toBe('7')
+    expect(wrapper.find('.tray [data-number="7"]').exists()).toBe(false)
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(dotClasses()[6]).toBe('help')
+    expect(dotClasses()[2]).toBe('ok')
+    expect(wrapper.text()).toContain(t('numbers.progress', { n: 2, total: 12 }))
+  })
+
+  it('opens the Summary once all 12 are placed', async () => {
+    const { router } = await open('dragNumbers', 'teach')
+    for (let n = 1; n <= 12; n++) await place(n, n)
+    expect(router.currentRoute.value.name).toBe('round')
+    vi.runAllTimers()
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
   })
 })

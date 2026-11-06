@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { angleAt, numberPositions } from '../clockFace'
+import { angleAt, numberPositions, slotAt } from '../clockFace'
 
 describe('clock face layout', () => {
   it('places 1–12 clockwise from the top at the given radius', () => {
@@ -22,5 +22,18 @@ describe('angleAt', () => {
     [-5, -8.66, 330],
   ])('turns the point (%d, %d) into %i°, 0° at 12, clockwise', (x, y, angle) => {
     expect(angleAt(x, y)).toBeCloseTo(angle, 0)
+  })
+})
+
+describe('slotAt', () => {
+  it('finds the slot under a point near it', () => {
+    expect(slotAt(0, -66)).toBe(12)
+    expect(slotAt(66, 0)).toBe(3)
+    expect(slotAt(-50, 40)).toBe(8)
+  })
+
+  it('finds no slot at the centre or outside the clock', () => {
+    expect(slotAt(0, 0)).toBeNull()
+    expect(slotAt(0, -130)).toBeNull()
   })
 })
