@@ -4,9 +4,9 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Settings shows the Levels 1 / 5 / 15 min, with 1 selected by default
-- [ ] Tasks are never generated on a 30-minute step
-- [ ] Product brief and the first-version spec list 1 / 5 / 15 (and the glossary)
-- [ ] Tests that used the 30-minute Level use another Level or are removed
+- [x] Settings shows the Levels 1 / 5 / 15 min, with 1 selected by default
+- [x] Tasks are never generated on a 30-minute step
+- [x] Product brief and the first-version spec list 1 / 5 / 15 (and the glossary)
+- [x] Tests that used the 30-minute Level use another Level or are removed

@@ -7,7 +7,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 First version (done): spec `.scratch/teach-clock/spec.md`, tickets `.scratch/teach-clock/issues/`.
-Current work: `.scratch/play-tweaks/issues/` (tweaks after the first version). Each batch of work gets its own `.scratch/<feature>/issues/` folder numbered from 01, worked in number order respecting "Blocked by".
+Play tweaks (done): `.scratch/play-tweaks/issues/` (Levels 1 / 5 / 15, lit target tick, Drag Numbers drops and sizes, the clock staying put). Each batch of work gets its own `.scratch/<feature>/issues/` folder numbered from 01, worked in number order respecting "Blocked by".
 
 ## Commands
 
