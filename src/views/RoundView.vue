@@ -269,7 +269,7 @@ h1 {
   .play {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 14px;
+    gap: 8px;
     align-content: start;
   }
   .clock {
@@ -280,7 +280,7 @@ h1 {
     width: min(170px, 44vw);
   }
   .clock-side {
-    gap: 10px;
+    gap: 6px;
   }
   /* No room for the question on a phone; keep it for screen readers. */
   .answer-side h1 {

@@ -180,8 +180,11 @@ h1 {
     padding: 12px 6px;
     text-align: center;
   }
-  .actions .btn:last-child {
-    flex-grow: 1;
+  /* Back and Play share the row equally, so both fit a 360 px phone. */
+  .actions .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 16px;
   }
 }
 </style>

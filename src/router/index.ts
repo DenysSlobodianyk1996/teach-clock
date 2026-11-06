@@ -14,6 +14,8 @@ export function createAppRouter(
 ) {
   const router = createRouter({
     history,
+    // Every screen opens at the top: a Round must not start scrolled past its header.
+    scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
     routes: [
       { path: '/', name: 'welcome', component: () => import('@/views/WelcomeView.vue') },
       {

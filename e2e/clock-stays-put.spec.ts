@@ -19,6 +19,8 @@ async function start(
   }
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByText(t(`modes.${mode}.name`), { exact: false }).first()).toBeVisible()
+  // The Round opens scrolled to the top; measure only once it is there.
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0)
 }
 
 /** Where the clock is on the page. */
