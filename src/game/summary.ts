@@ -58,7 +58,9 @@ export function summarize(round: Round): Summary {
 
 /** The next smaller Level (15 → 5 → 1), or null at 1 minute and for Drag Numbers. */
 function smallerLevel(level: Level | null): Level | null {
-  return level === null ? null : (LEVELS[LEVELS.indexOf(level) + 1] ?? null)
+  if (level === null) return null
+  const smaller = LEVELS.filter((step) => step < level)
+  return smaller.length ? (Math.max(...smaller) as Level) : null
 }
 
 function group<A>(round: {
