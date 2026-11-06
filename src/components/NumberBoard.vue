@@ -118,8 +118,10 @@ function release(event: PointerEvent) {
   if (!h.moved) return
   dragged = true
   if (props.disabled) return
-  // Lifting the finger anywhere but a slot that takes it puts the tile back where it was.
-  const slot = slotUnder(h.number, event.clientX, event.clientY)
+  // The drop lands on the slot highlighted by the last move, not one worked out again from where
+  // the finger lifts: a small slip as it lifts must not lose the drop. With no slot highlighted,
+  // the tile goes back where it came from, or to the tray when let go over it.
+  const slot = h.slot !== null && takes(h.slot, h.number) ? h.slot : null
   if (slot !== null) emit('drop', h.number, slot)
   else if (h.from !== null && overTray(event.clientX, event.clientY)) emit('toTray', h.number)
 }
