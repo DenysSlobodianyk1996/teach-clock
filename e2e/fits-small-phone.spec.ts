@@ -1,4 +1,7 @@
-/** On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view. */
+/**
+ * On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view, and the
+ * clock as big as the room left allows.
+ */
 import { t, startingWith } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 
@@ -40,6 +43,14 @@ for (const game of ['setTime', 'dragArrows'] as const) {
     await page.getByRole('button', { name: t('settings.play') }).click()
     const submit = page.getByRole('button', { name: t('round.submit') })
     await expect(submit).toBeVisible()
+    if (game === 'dragArrows') {
+      // The hands need room to be dragged: the clock takes nearly the full width.
+      expect(
+        await page
+          .locator('.clock-side svg.clock')
+          .evaluate((e) => e.getBoundingClientRect().width),
+      ).toBeGreaterThanOrEqual(300)
+    }
     // The Round opens at the top, whatever was scrolled on Settings.
     expect(await page.evaluate(() => scrollY)).toBe(0)
     expect(await bottomFromPageTop(submit), 'Submit fits without scrolling').toBeLessThanOrEqual(
@@ -61,3 +72,42 @@ for (const game of ['setTime', 'dragArrows'] as const) {
     )
   })
 }
+
+test('Drag Numbers Teach: a big face, and the tray stays on screen with a hint', async ({
+  page,
+}) => {
+  await toSettings(page)
+  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
+  await page.getByRole('button', { name: t('settings.play') }).click()
+  const face = page.locator('svg.number-face')
+  await expect(face).toBeVisible()
+  expect(await face.evaluate((e) => e.getBoundingClientRect().width)).toBeGreaterThanOrEqual(300)
+
+  // Tap a number, then the slot after its own: a wrong drop brings the hint.
+  const n = Number(await page.locator('.tray [data-number]').first().getAttribute('data-number'))
+  await page.locator(`.tray [data-number="${n}"]`).click()
+  await page.locator(`[data-slot="${(n % 12) + 1}"]`).click()
+  await expect(page.getByRole('status')).not.toHaveText('')
+  const height = page.viewportSize()!.height
+  expect(
+    await bottomFromPageTop(page.locator('.tray')),
+    'tray fits with the hint',
+  ).toBeLessThanOrEqual(height)
+})
+
+test('Drag Numbers Test: Готово fits once all 12 numbers are placed', async ({ page }) => {
+  await toSettings(page)
+  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('modes.test.name')) }).check()
+  await page.getByRole('button', { name: t('settings.play') }).click()
+  for (let n = 1; n <= 12; n++) {
+    await page.locator(`.tray [data-number="${n}"]`).click()
+    await page.locator(`[data-slot="${n}"]`).click()
+  }
+  const submit = page.getByRole('button', { name: t('numbers.submit') })
+  await expect(submit).toBeVisible()
+  expect(await bottomFromPageTop(submit), 'Submit fits').toBeLessThanOrEqual(
+    page.viewportSize()!.height,
+  )
+})

@@ -74,6 +74,7 @@ function submit() {
       <div class="task-no">{{ progress.text }} · {{ t(`modes.${round.mode}.name`) }}</div>
     </div>
     <NumberBoard
+      :hinted="hint !== null"
       :slots="round.slots"
       :tray="round.tray"
       :marked="hint?.number"
@@ -185,8 +186,9 @@ h1 {
   .help {
     font-size: 15px;
   }
+  /* A phone keeps no empty room for the hint: the face may move when a hint appears. */
   .toast-status {
-    height: 42px;
+    height: auto;
   }
   .toast {
     font-size: 17px;

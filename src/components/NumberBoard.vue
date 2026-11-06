@@ -19,6 +19,8 @@ const props = defineProps<{
   /** Numbers on the face can be moved, and dropped on a taken slot. */
   movable?: boolean
   disabled?: boolean
+  /** A hint shows above the face: on a phone the face shrinks to keep the tray on screen. */
+  hinted?: boolean
 }>()
 const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
 
@@ -212,7 +214,7 @@ function tapTray() {
 </script>
 
 <template>
-  <section class="board" :style="numberSize">
+  <section class="board" :class="{ test: movable, hinted }" :style="numberSize">
     <div class="clock-side">
       <!-- Above the face: the parent's toast. -->
       <slot name="clock" />
@@ -473,11 +475,26 @@ function tapTray() {
   .board {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 14px;
+    gap: 8px;
     align-content: start;
   }
+  .clock-side,
+  .tray-side {
+    gap: 8px;
+  }
+  /*
+   * The face takes the height the rest of the screen leaves, up to the full width. Each number is
+   * the height of everything else on a 360 × 720 phone (see RoundView); with a hint showing, or in
+   * Test where Submit can appear, the face leaves more room.
+   */
   .number-face {
-    width: min(260px, 64vw);
+    width: clamp(200px, 100svh - 346px, 100vw - 40px);
+  }
+  .board.test .number-face {
+    width: clamp(200px, 100svh - 366px, 100vw - 40px);
+  }
+  .board.hinted .number-face {
+    width: clamp(200px, 100svh - 388px, 100vw - 40px);
   }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {

@@ -96,8 +96,12 @@ Rules shared by Drag Arrows and Set Time:
 - Text meets WCAG AA contrast. Touch targets at least 48 px.
 - The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
   desktop. On a phone held upright, the clock sits above the answer area.
-- The clock never moves during a Round. Anything that can appear around it (the Hint, an error,
-  the Drag Numbers hint, Submit) has its space kept from the first Task, empty until needed.
+- On desktop and tablet the clock never moves during a Round. Anything that can appear around it
+  (the Hint, an error, the Drag Numbers hint, Submit) has its space kept from the first Task, empty
+  until needed.
+- On a phone the clock is as big as the screen allows: no empty space is kept, so the clock may
+  shrink or move only when a Hint, a hint note or Submit appears. Everything still fits a
+  360 × 720 screen without scrolling.
 - All art is original SVG. The 2019 palette and images are not reused.
 
 ## Out of scope

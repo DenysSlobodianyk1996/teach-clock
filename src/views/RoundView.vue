@@ -112,7 +112,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section class="play" :class="round.mode">
+    <section class="play" :class="[round.game, { 'has-hint': taskHint }]">
       <div class="clock-side">
         <div class="clock-wrap">
           <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
@@ -272,12 +272,26 @@ h1 {
     gap: 8px;
     align-content: start;
   }
-  .clock {
-    width: min(236px, 60vw);
+  /* A phone keeps no empty room for the Hint: the clock may move when the Hint appears. */
+  .waiting {
+    display: none;
   }
-  /* Teach keeps room for the Hint panel from the start, so Submit stays on screen. */
-  .teach .clock {
-    width: min(170px, 44vw);
+  /*
+   * The clock takes the height the rest of the screen leaves, up to the full width. Each number is
+   * the height of everything else (header, dots, answer area, gaps) on a 360 × 720 phone; the
+   * small-phone browser tests check it all fits. With the Hint showing, the clock shrinks to make room.
+   */
+  .setTime .clock {
+    width: clamp(150px, 100svh - 484px, 100vw - 40px);
+  }
+  .setTime.has-hint .clock {
+    width: clamp(150px, 100svh - 562px, 100vw - 40px);
+  }
+  .dragArrows .clock {
+    width: clamp(150px, 100svh - 360px, 100vw - 40px);
+  }
+  .dragArrows.has-hint .clock {
+    width: clamp(150px, 100svh - 438px, 100vw - 40px);
   }
   .clock-side {
     gap: 6px;
