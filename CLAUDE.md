@@ -11,7 +11,8 @@ Play tweaks (done): `.scratch/play-tweaks/issues/` (Levels 1 / 5 / 15, lit targe
 
 ## Commands
 
-- `npm run dev`: dev server
+- `npm run dev`: dev server on http://localhost:4200
+- Push to `main` deploys to GitHub Pages (`.github/workflows/deploy.yml`, `GITHUB_PAGES=1` sets base `/teach-clock/`): https://denysslobodianyk1996.github.io/teach-clock/
 - `npm run type-check`, `npm run lint`, `npm run format`
 - `npx vitest run [file]`: unit and component tests
 - `npx playwright test`: browser flows (desktop + phone, plus an offline check on a fresh build)
