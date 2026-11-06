@@ -27,7 +27,7 @@ The Mode where every Answer moves on, right or wrong, with no help, and the resu
 _Avoid_: Exam, challenge
 
 **Level**:
-The minute step that Clock Times in a Round snap to: 30, 15, 5 or 1 minute. Drag Numbers has no Level.
+The minute step that Clock Times in a Round snap to: 15, 5 or 1 minute. Drag Numbers has no Level.
 _Avoid_: Priority, difficulty
 
 **Round**:
@@ -42,7 +42,7 @@ _Avoid_: Question, puzzle
 The Player's response to a Task, submitted with a button and marked right or wrong.
 
 **Hint**:
-The correct Answer shown to a Player in Teach after a wrong try. A Task that needed a Hint counts as wrong.
+What a Player in Teach is shown after a wrong try: the correct Answer, or in Drag Numbers where the number goes ("7 goes between 6 and 8"). A Task that needed a Hint counts as wrong.
 _Avoid_: Tip, solution
 
 **Summary**:
