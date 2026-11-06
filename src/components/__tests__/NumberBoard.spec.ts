@@ -115,3 +115,72 @@ describe('NumberBoard', () => {
     expect(wrapper.emitted('drop')).toBeUndefined()
   })
 })
+
+describe('NumberBoard in Test (movable)', () => {
+  /** 3 on slot 3 and 7 on slot 9, 12 still on the tray. */
+  const SLOTS = [null, null, 3, null, null, null, null, null, 7, null, null, null]
+  /** Slot 9 sits 66 units left of the centre. */
+  const AT_9 = [44, 110] as const
+
+  it('drops a placed number dragged onto another one, for a swap', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await pointer(slot(3), 'pointerdown', ...AT_3)
+    await pointer(slot(3), 'pointermove', 100, 110)
+    await pointer(slot(3), 'pointermove', ...AT_9)
+    await pointer(slot(3), 'pointerup', ...AT_9)
+    expect(wrapper.emitted('drop')).toEqual([[3, 9]])
+  })
+
+  it('drops a tray number on a taken slot', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await tile(12).trigger('click')
+    await slot(9).trigger('click')
+    expect(wrapper.emitted('drop')).toEqual([[12, 9]])
+  })
+
+  it('takes a placed number back when it is let go over the tray', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    vi.spyOn(wrapper.get('.tray').element, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(300, 0, 200, 100),
+    )
+    await pointer(slot(3), 'pointerdown', ...AT_3)
+    await pointer(slot(3), 'pointermove', 400, 50)
+    await pointer(slot(3), 'pointerup', 400, 50)
+    expect(wrapper.emitted('toTray')).toEqual([[3]])
+    expect(wrapper.emitted('drop')).toBeUndefined()
+  })
+
+  it('moves a tapped placed number to the slot tapped next, or back to the tray', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await slot(3).trigger('click')
+    expect(slot(3).attributes('aria-pressed')).toBe('true')
+    await slot(9).trigger('click')
+    expect(wrapper.emitted('drop')).toEqual([[3, 9]])
+    await slot(9).trigger('keydown', { key: 'Enter' })
+    await wrapper.get('.tray').trigger('click')
+    expect(wrapper.emitted('toTray')).toEqual([[7]])
+  })
+
+  it('takes a picked-up face number back to the tray with Delete', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await slot(9).trigger('keydown', { key: 'Delete' })
+    expect(wrapper.emitted('toTray')).toEqual([[7]])
+  })
+
+  it('keeps keyboard focus on a slot when its number moves away', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    const before = slot(9).element
+    ;(before as SVGElement).focus()
+    await wrapper.setProps({ slots: [null, null, 3, null, null, 7, ...Array(6).fill(null)] })
+    expect(slot(9).element).toBe(before)
+    expect(document.activeElement).toBe(before)
+  })
+
+  it('in Teach, leaves placed numbers locked', async () => {
+    mountBoard({ slots: SLOTS, tray: [12] })
+    expect(slot(3).attributes('role')).toBeUndefined()
+    await tile(12).trigger('click')
+    await slot(9).trigger('click')
+    expect(wrapper.emitted('drop')).toBeUndefined()
+  })
+})

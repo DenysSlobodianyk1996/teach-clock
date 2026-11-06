@@ -68,6 +68,20 @@ function numberPair({ answer, firstAnswer }: WrongTask<number>) {
   return `${first}. ${t('numbers.between', { ...neighbours(answer) })}`
 }
 
+/** Drag Numbers in Test: the Player's face against the correct one. */
+const faces = computed(() => {
+  if (summary?.game !== 'dragNumbers' || summary.mode !== 'test') return null
+  const misplaced = summary.wrong.map((w) => w.answer)
+  return {
+    placements: summary.placements,
+    // The slots where a number does not belong.
+    marked: summary.wrong.map((w) => w.firstAnswer),
+    misplaced,
+    correct: Array.from({ length: 12 }, (_, i) => i + 1),
+    label: t('summary.yourFaceLabel', { numbers: misplaced.join(', ') }),
+  }
+})
+
 /** A face with one number on one slot. */
 function only(number: number, slot: number) {
   return Array.from({ length: 12 }, (_, i) => (i === slot - 1 ? number : null))
@@ -93,7 +107,37 @@ function toSettings() {
       <ProgressDots :statuses="summary.statuses" :label="headline" />
     </header>
 
-    <div class="groups" :class="{ perfect: !summary.wrong.length }">
+    <div v-if="faces" class="faces">
+      <figure class="card face-card">
+        <figcaption>{{ t('summary.yourFace') }}</figcaption>
+        <NumberFace
+          class="big-face"
+          :slots="faces.placements"
+          :marked="faces.marked"
+          :label="faces.misplaced.length ? faces.label : t('summary.yourFace')"
+        />
+        <p v-if="faces.misplaced.length" class="face-note">{{ t('summary.misplacedNote') }}</p>
+      </figure>
+      <figure class="card face-card">
+        <figcaption>{{ t('summary.correctFace') }}</figcaption>
+        <NumberFace
+          class="big-face"
+          :slots="faces.correct"
+          :good="faces.misplaced"
+          :label="t('summary.correctFaceLabel')"
+        />
+        <ul v-if="faces.misplaced.length" class="face-note">
+          <li v-for="n in faces.misplaced" :key="n">
+            {{ t('numbers.between', { ...neighbours(n) }) }}
+          </li>
+        </ul>
+      </figure>
+      <p v-if="!summary.wrong.length" class="perfect-note wide">
+        {{ t('summary.perfect') }} {{ nudge }}
+      </p>
+    </div>
+
+    <div v-else class="groups" :class="{ perfect: !summary.wrong.length }">
       <section class="card group" aria-labelledby="right-title">
         <h2 id="right-title">
           <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
@@ -212,6 +256,42 @@ h1 {
   font-size: clamp(32px, 5cqi, 52px);
   font-weight: 900;
   line-height: 1;
+}
+.faces {
+  position: relative;
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-content: start;
+}
+.face-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 18px;
+}
+.face-card figcaption {
+  font-size: 20px;
+  font-weight: 900;
+}
+.big-face {
+  width: min(100%, 330px);
+  height: auto;
+  aspect-ratio: 1;
+}
+.face-note {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  color: var(--muted);
+  text-align: center;
+  list-style: none;
+}
+.perfect-note.wide {
+  grid-column: 1 / -1;
 }
 .groups {
   position: relative;
@@ -384,7 +464,8 @@ s.time {
   .details {
     font-size: 15px;
   }
-  .groups {
+  .groups,
+  .faces {
     grid-template-columns: 1fr;
   }
   .pair {
