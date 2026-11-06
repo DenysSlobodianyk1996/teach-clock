@@ -2,10 +2,8 @@
  * Hand dragging in Drag Arrows. One Clock Time drives both hands, so a drag returns a new
  * Clock Time and the hands are drawn from it. Angles are degrees, 0° at 12, clockwise. Plain TypeScript.
  */
-import { clockTime, type ClockTime } from './clockTime'
+import { clockTime, mod, shorterWay, type ClockTime } from './clockTime'
 import type { Level } from './settings'
-
-const mod = (n: number, m: number) => ((n % m) + m) % m
 
 /** Wraps any whole hour into 1–12 (0 becomes 12). */
 const wrapHour = (hour: number) => mod(hour - 1, 12) + 1
@@ -18,7 +16,7 @@ const wrapHour = (hour: number) => mod(hour - 1, 12) + 1
 export function dragMinuteHand(time: ClockTime, pointerAngle: number, step: Level): ClockTime {
   const pointerMinute = mod(pointerAngle, 360) / 6
   // The shorter way from the previous minute to the pointer, in (−30, 30].
-  const delta = 30 - mod(30 - (pointerMinute - time.minute), 60)
+  const delta = shorterWay(pointerMinute - time.minute, 60)
   const snapped = Math.round((time.minute + delta) / step) * step
   return clockTime(wrapHour(time.hour + Math.floor(snapped / 60)), mod(snapped, 60))
 }

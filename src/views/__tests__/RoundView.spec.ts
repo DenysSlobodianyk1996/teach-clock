@@ -6,6 +6,7 @@ import { mountScreen } from '@/test/mountScreen'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 import { seededRandom } from '@/game/tasks'
+import type { Game, Mode } from '@/game/settings'
 import { clockTime } from '@/game/clockTime'
 import { describeMistake } from '@/game/mistakes'
 import { t } from '@/test/i18n'
@@ -13,7 +14,7 @@ import { t } from '@/test/i18n'
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
 
-async function open(game: 'setTime' | 'dragArrows' = 'setTime', mode: 'teach' | 'test' = 'test') {
+async function open(game: Game = 'setTime', mode: Mode = 'test') {
   const screen = await mountScreen(RoundView, '/round', () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
@@ -84,7 +85,7 @@ describe('Round screen, Set Time', () => {
   })
 
   it('keeps the placeholder for Games that are not built yet', async () => {
-    await open('dragArrows', 'teach')
+    await open('dragNumbers', 'teach')
     expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
   })
 })
@@ -177,21 +178,24 @@ describe('Round screen, Set Time in Teach', () => {
   })
 })
 
+const CLOCK_DRAG = t('app.clockDrag', { time: '12:00' })
+const target = () => wrapper.get('.target').text()
+const handsLabel = () => wrapper.get('.clock-side svg.clock').attributes('aria-label')
+const handsAt = (time: string) => t('app.clockDrag', { time })
+
+/** From 12:00, drags the Minute Hand to the minutes, then the Hour Hand to the hour. */
+async function setHands(time: string) {
+  const [hour, minute] = time.split(':').map(Number) as [number, number]
+  const clock = wrapper.findComponent(ClockFace)
+  clock.vm.$emit('drag', { hand: 'minute', angle: minute * 6 })
+  clock.vm.$emit('drag', { hand: 'hour', angle: hour * 30 + minute * 0.5 })
+  await wrapper.vm.$nextTick()
+}
+
+const submitHands = () => button(t('round.submit'))!.trigger('click')
+
 describe('Round screen, Drag Arrows in Test', () => {
-  const CLOCK_DRAG = t('app.clockDrag', { time: '12:00' })
-  const target = () => wrapper.get('.target').text()
-  const handsLabel = () => wrapper.get('.clock-side svg.clock').attributes('aria-label')
-
-  /** Drags the Minute Hand to the target's minutes, then the Hour Hand to its hour. */
-  async function setHands(time: string) {
-    const [hour, minute] = time.split(':').map(Number) as [number, number]
-    const clock = wrapper.findComponent(ClockFace)
-    clock.vm.$emit('drag', { hand: 'minute', angle: minute * 6 })
-    clock.vm.$emit('drag', { hand: 'hour', angle: hour * 30 + minute * 0.5 })
-    await wrapper.vm.$nextTick()
-  }
-
-  const submit = () => button(t('round.submit'))!.trigger('click')
+  const submit = submitHands
 
   it('asks for a Clock Time and starts the hands at 12:00', async () => {
     await open('dragArrows')
@@ -229,5 +233,109 @@ describe('Round screen, Drag Arrows in Test', () => {
     }
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
     expect(usePlayStore().summary).toMatchObject({ rightCount: 9 })
+  })
+})
+
+describe('Round screen, Drag Arrows in Teach', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  /**
+   * A wrong Answer for `correct`: another hour, on the hour. Never the right Answer, and never
+   * 12:00, where the hands start, so "the hands stay" can be told apart from a reset.
+   */
+  const wrongFor = (correct: string) => `${(Number(correct.split(':')[0]) % 11) + 1}:00`
+
+  it('shows no Hint before a wrong try', async () => {
+    await open('dragArrows', 'teach')
+    expect(wrapper.get('h1').text()).toBe(t('round.setHands'))
+    expect(handsLabel()).toBe(CLOCK_DRAG)
+    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+  })
+
+  it('after a wrong Answer, shows the correct time with a teaching line; the hands stay', async () => {
+    await open('dragArrows', 'teach')
+    const correct = target()
+    const wrong = wrongFor(correct)
+    await setHands(wrong)
+    await submitHands()
+    const popup = wrapper.get('[role="dialog"]')
+    expect(popup.get('.big-time').text()).toBe(correct)
+    const [h, m] = correct.split(':').map(Number) as [number, number]
+    const [wh] = wrong.split(':').map(Number) as [number]
+    const mistake = describeMistake(clockTime(h, m), clockTime(wh, 0))
+    expect(popup.get('#wrong-why').text()).toBe(t(`teach.mistakes.${mistake.kind}`, mistake.params))
+
+    await button(t('teach.gotIt'))!.trigger('click')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(handsLabel()).toBe(handsAt(wrong))
+    expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
+    expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
+  })
+
+  it('Set correct answer turns the hands to the Hint; after Submit the Task ends helped (yellow)', async () => {
+    await open('dragArrows', 'teach')
+    const correct = target()
+    await submitHands()
+    await button(t('teach.gotIt'))!.trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    expect(handsLabel()).toBe(handsAt(correct))
+    expect(wrapper.get('.clock-side svg.clock').classes()).toContain('animate')
+    expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
+
+    await submitHands()
+    expect(wrapper.get('[role="status"]').text()).toBe(t('teach.right'))
+    expect(wrapper.get('.clock-side svg.clock').classes()).toContain('rim-good')
+    expect(handsLabel()).toBe(handsAt(correct))
+
+    vi.runAllTimers()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
+    expect(handsLabel()).toBe(CLOCK_DRAG)
+    expect(wrapper.text()).not.toContain(t('teach.setCorrect'))
+    expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
+  })
+
+  it('dragging after Set correct answer moves the hands straight away, without the animation', async () => {
+    await open('dragArrows', 'teach')
+    await submitHands()
+    await button(t('teach.gotIt'))!.trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    wrapper.findComponent(ClockFace).vm.$emit('drag', { hand: 'hour', angle: 90 })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('.clock-side svg.clock').classes()).not.toContain('animate')
+  })
+
+  it('a right first try turns the dot green after the toast', async () => {
+    await open('dragArrows', 'teach')
+    await setHands(target())
+    await submitHands()
+    expect(wrapper.get('[role="status"]').text()).toBe(t('teach.right'))
+    vi.runAllTimers()
+    await wrapper.vm.$nextTick()
+    expect(dotClasses().slice(0, 2)).toEqual(['ok', 'now'])
+  })
+
+  it('opens the Summary after the 10th right Answer, listing a helped Task under Wrong', async () => {
+    const { router } = await open('dragArrows', 'teach')
+    const helped = target()
+    await submitHands()
+    await button(t('teach.gotIt'))!.trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    await submitHands()
+    for (let i = 0; i < 10; i++) {
+      vi.runAllTimers()
+      await wrapper.vm.$nextTick()
+      if (i < 9) {
+        await setHands(target())
+        await submitHands()
+      }
+    }
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    const [hour, minute] = helped.split(':').map(Number)
+    expect(usePlayStore().summary).toMatchObject({
+      rightCount: 9,
+      wrong: [{ answer: { hour, minute }, firstAnswer: { hour: 12, minute: 0 } }],
+    })
   })
 })

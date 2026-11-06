@@ -4,12 +4,12 @@
 
 **Blocked by:** 04, 05
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Wrong Answer → popup with the correct time (digits + small clock); hands stay
-- [ ] "Set correct answer" with Hint after the first wrong try; pressing it animates both hands to the correct Clock Time
-- [ ] The Player still presses Submit; green/yellow dots; helped counts as wrong in the Summary
-- [ ] Playwright: a Teach Round of Drag Arrows with one wrong try and one use of "Set correct answer"
-- [ ] Wrong-Answer popup adds one teaching line from a short rule-based message per mistake type (wrong hour, wrong minutes, hands swapped…), e.g. "Коротка стрілка ще не дійшла до 8 — отже, зараз 7 годин."
-- [ ] Right Answer in Teach: short green "Правильно! Далі…" toast and a green rim on the clock before the next Task
-- [ ] English text for everything this ticket adds
+- [x] Wrong Answer → popup with the correct time (digits + small clock); hands stay
+- [x] "Set correct answer" with Hint after the first wrong try; pressing it animates both hands to the correct Clock Time
+- [x] The Player still presses Submit; green/yellow dots; helped counts as wrong in the Summary
+- [x] Playwright: a Teach Round of Drag Arrows with one wrong try and one use of "Set correct answer"
+- [x] Wrong-Answer popup adds one teaching line from a short rule-based message per mistake type (wrong hour, wrong minutes, hands swapped…), e.g. "Коротка стрілка ще не дійшла до 8 — отже, зараз 7 годин."
+- [x] Right Answer in Teach: short green "Правильно! Далі…" toast and a green rim on the clock before the next Task
+- [x] English text for everything this ticket adds

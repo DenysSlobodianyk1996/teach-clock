@@ -36,6 +36,8 @@ const task = computed(() => round.value?.tasks[shownIndex.value] ?? null)
 const taskHint = computed(() =>
   round.value && rightTask.value === null ? hint(round.value) : null,
 )
+/** Teach: a green rim on the clock while "Right! Next…" shows. */
+const rim = computed(() => (rightTask.value !== null ? 'good' : undefined))
 const busy = computed(
   () => play.askingToLeave || wrongAnswer.value !== null || rightTask.value !== null,
 )
@@ -43,11 +45,17 @@ const busy = computed(
 /** Drag Arrows: the Clock Time both hands show. Every Task starts at 12:00. */
 const START = clockTime(12, 0)
 const hands = ref<ClockTime>(START)
-watch(shownIndex, () => (hands.value = START))
+/** Teach: "Set correct answer" is turning the hands; a drag stops the animation. */
+const helping = ref(false)
+watch(shownIndex, () => {
+  hands.value = START
+  helping.value = false
+})
 
 function dragHand({ hand, angle }: { hand: Hand; angle: number }) {
   const level = round.value?.level
   if (busy.value || !level) return
+  helping.value = false
   hands.value =
     hand === 'minute' ? dragMinuteHand(hands.value, angle, level) : dragHourHand(hands.value, angle)
 }
@@ -82,7 +90,13 @@ function submit(time: ClockTime) {
 }
 
 function setCorrectAnswer() {
-  if (taskHint.value) answerPanel.value?.fill(taskHint.value)
+  if (!taskHint.value || busy.value) return
+  if (round.value?.game === 'dragArrows') {
+    helping.value = true
+    hands.value = taskHint.value
+  } else {
+    answerPanel.value?.fill(taskHint.value)
+  }
 }
 
 // A reload would lose the Round, so ask the browser to confirm. Browsers show their own text.
@@ -101,13 +115,21 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         {{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section v-if="round.game === 'setTime'" class="play" :class="{ 'has-hint': taskHint }">
+    <!-- Drag Numbers arrives with tickets 07–08. -->
+    <section v-if="round.game !== 'dragNumbers'" class="play" :class="{ 'has-hint': taskHint }">
       <div class="clock-side">
         <div class="clock-wrap">
+          <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
+          <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
           <ClockFace
+            v-else
+            :key="shownIndex"
             class="clock"
-            :time="task.answer"
-            :rim="rightTask !== null ? 'good' : undefined"
+            :time="hands"
+            :rim="rim"
+            draggable
+            :animate="helping"
+            @drag="dragHand"
           />
           <!-- Always in the page, so screen readers announce the text when it appears. -->
           <p class="toast-status" role="status">
@@ -130,8 +152,15 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         <HintPanel v-if="taskHint" :hint="taskHint" @help="setCorrectAnswer" />
       </div>
       <div class="answer-side">
-        <h1>{{ t('round.question') }}</h1>
-        <SetTimeAnswer ref="answerPanel" :key="shownIndex" :disabled="busy" @submit="submit" />
+        <h1>{{ t(round.game === 'setTime' ? 'round.question' : 'round.setHands') }}</h1>
+        <SetTimeAnswer
+          v-if="round.game === 'setTime'"
+          ref="answerPanel"
+          :key="shownIndex"
+          :disabled="busy"
+          @submit="submit"
+        />
+        <DragArrowsAnswer v-else :target="task.answer" :disabled="busy" @submit="submit(hands)" />
       </div>
       <WrongAnswerPopup
         v-if="wrongAnswer"
@@ -139,19 +168,6 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         :mistake="wrongAnswer.mistake"
         @close="wrongAnswer = null"
       />
-    </section>
-    <!-- Drag Arrows Teach arrives with ticket 06. -->
-    <section v-else-if="round.game === 'dragArrows' && round.mode === 'test'" class="play">
-      <div class="clock-side">
-        <div class="clock-wrap">
-          <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
-          <ClockFace :key="shownIndex" class="clock" :time="hands" draggable @drag="dragHand" />
-        </div>
-      </div>
-      <div class="answer-side">
-        <h1>{{ t('round.setHands') }}</h1>
-        <DragArrowsAnswer :target="task.answer" :disabled="busy" @submit="submit(hands)" />
-      </div>
     </section>
     <section v-else class="play-area" data-testid="play-area">
       <p class="placeholder">{{ t('round.comingSoon') }}</p>

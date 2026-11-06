@@ -5,7 +5,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). Set Time playable in Test and Teach (tickets 03–04), Drag Arrows in Test (ticket 05): Welcome → Settings → Round → text Summary; other Games and Modes still show a placeholder Round. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Design approved (ticket 01). App skeleton in place (ticket 02). Set Time and Drag Arrows playable in Test and Teach (tickets 03–06): Welcome → Settings → Round → text Summary; Drag Numbers still shows a placeholder Round. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
 
 ## Commands

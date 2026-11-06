@@ -20,6 +20,10 @@ async function pointer(
   await nextTick()
 }
 
+/** The rotation a hand is drawn with. */
+const turn = (wrapper: VueWrapper, hand: 'hour' | 'minute') =>
+  (wrapper.get(`[data-hand="${hand}"]`).element as SVGElement).style.transform
+
 describe('ClockFace', () => {
   it('names the Clock Time it shows', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
@@ -47,8 +51,35 @@ describe('ClockFace', () => {
 
   it('turns the hands to the Clock Time, with the Hour Hand between numbers', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
-    expect(wrapper.find('[data-hand="hour"]').attributes('transform')).toBe('rotate(232.5)')
-    expect(wrapper.find('[data-hand="minute"]').attributes('transform')).toBe('rotate(270)')
+    expect(turn(wrapper, 'hour')).toBe('rotate(232.5deg)')
+    expect(turn(wrapper, 'minute')).toBe('rotate(270deg)')
+  })
+
+  it('winds both hands together the shorter way, forward across 12', async () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(11, 55), animate: true })
+    expect(wrapper.classes()).toContain('animate')
+    await wrapper.setProps({ time: clockTime(12, 5) })
+    expect(turn(wrapper, 'minute')).toBe('rotate(390deg)')
+    expect(turn(wrapper, 'hour')).toBe('rotate(362.5deg)')
+  })
+
+  it('never turns the hands in opposite directions', async () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(12, 0), animate: true })
+    // 6:30 is 5½ hours back: the Minute Hand winds back 5½ turns, the Hour Hand 165°.
+    await wrapper.setProps({ time: clockTime(6, 30) })
+    expect(turn(wrapper, 'minute')).toBe('rotate(-1980deg)')
+    expect(turn(wrapper, 'hour')).toBe('rotate(-165deg)')
+  })
+
+  it('jumps straight to the new time when not animating', async () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(11, 55) })
+    await wrapper.setProps({ time: clockTime(12, 5) })
+    expect(turn(wrapper, 'minute')).toBe('rotate(30deg)')
+    expect(turn(wrapper, 'hour')).toBe('rotate(2.5deg)')
+  })
+
+  it('only animates when asked', () => {
+    expect(mountComponent(ClockFace, { time: clockTime(3, 0) }).classes()).not.toContain('animate')
   })
 
   it('has no grips and emits nothing when read-only', async () => {

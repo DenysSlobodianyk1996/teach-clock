@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { angleAt, numberPositions } from '@/game/clockFace'
-import { formatClockTime, handAngles, type ClockTime } from '@/game/clockTime'
+import { formatClockTime, handAngles, minutesBetween, type ClockTime } from '@/game/clockTime'
 
 export type Hand = 'hour' | 'minute'
 
@@ -11,7 +11,13 @@ export type Hand = 'hour' | 'minute'
  * in Teach. `draggable` adds a grip to each hand tip: grabbing a hand and moving the pointer emits
  * `drag` with the pointer's angle, and the parent decides the new Clock Time.
  */
-const props = defineProps<{ time: ClockTime; rim?: 'good'; draggable?: boolean }>()
+const props = defineProps<{
+  time: ClockTime
+  rim?: 'good'
+  draggable?: boolean
+  /** The hands turn smoothly to a new time, as when "Set correct answer" moves them. */
+  animate?: boolean
+}>()
 const emit = defineEmits<{ drag: [{ hand: Hand; angle: number }] }>()
 
 const { t } = useI18n()
@@ -34,7 +40,27 @@ const HANDS = {
 const DEAD_ZONE = 20
 const HAND_ORDER = ['hour', 'minute'] as const
 
-const angles = computed(() => handAngles(props.time))
+// The angles the hands are drawn at. When animating they are not wrapped into 0–360: the clock
+// winds the shorter way, both hands together like a real clock (from :55 to :05 the Minute Hand
+// goes forward across 12), and a longer wind takes longer.
+const angles = ref(handAngles(props.time))
+const windSeconds = ref(0)
+watch(
+  () => props.time,
+  (time, previous) => {
+    if (!props.animate) {
+      angles.value = handAngles(time)
+      return
+    }
+    const minutes = minutesBetween(previous, time)
+    angles.value = {
+      hour: angles.value.hour + minutes * 0.5,
+      minute: angles.value.minute + minutes * 6,
+    }
+    windSeconds.value = Math.min(0.6 + Math.abs(minutes) / 240, 2)
+  },
+)
+const turn = (hand: Hand) => ({ transform: `rotate(${angles.value[hand]}deg)` })
 const label = computed(() =>
   t(props.draggable ? 'app.clockDrag' : 'app.clockShows', { time: formatClockTime(props.time) }),
 )
@@ -73,7 +99,8 @@ function release(event: PointerEvent) {
   <svg
     ref="svg"
     class="clock"
-    :class="[rim && `rim-${rim}`, { draggable }]"
+    :class="[rim && `rim-${rim}`, { draggable, animate }]"
+    :style="animate && { '--wind': `${windSeconds}s` }"
     viewBox="-100 -100 200 200"
     role="img"
     :aria-label="label"
@@ -97,12 +124,7 @@ function release(event: PointerEvent) {
     />
     <text v-for="{ n, x, y } in numbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
     <!-- The Minute Hand comes second, so it is on top where the hands cross. -->
-    <g
-      v-for="hand in HAND_ORDER"
-      :key="hand"
-      :data-hand="hand"
-      :transform="`rotate(${angles[hand]})`"
-    >
+    <g v-for="hand in HAND_ORDER" :key="hand" :data-hand="hand" :style="turn(hand)">
       <line :class="HANDS[hand].line" :y1="HANDS[hand].tail" :y2="HANDS[hand].tip" />
     </g>
     <!-- Grips go over both hands, so the Hour Hand's grip stays reachable when the hands overlap. -->
@@ -113,7 +135,7 @@ function release(event: PointerEvent) {
         class="grip"
         :class="{ dragging: dragging?.hand === hand }"
         :data-grip="hand"
-        :transform="`rotate(${angles[hand]})`"
+        :style="turn(hand)"
         @pointerdown="grab(hand, $event)"
       >
         <circle class="hit" :cy="HANDS[hand].tip" :r="HANDS[hand].reach" />
@@ -151,6 +173,16 @@ function release(event: PointerEvent) {
 .draggable:has(.dragging),
 .draggable:has(.dragging) * {
   cursor: grabbing;
+}
+.animate [data-hand],
+.animate .grip {
+  transition: transform var(--wind, 0.8s) ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate [data-hand],
+  .animate .grip {
+    transition: none;
+  }
 }
 .hit {
   fill: transparent;
