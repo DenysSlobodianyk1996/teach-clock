@@ -18,7 +18,7 @@ async function open(game: Game = 'setTime', mode: Mode = 'test') {
   const screen = await mountScreen(RoundView, '/round', () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    Object.assign(play.settings, { game, mode, level: 30 })
+    play.settings = { game, mode, level: 15 }
     play.startRound(seededRandom(5))
   })
   wrapper = screen.wrapper
