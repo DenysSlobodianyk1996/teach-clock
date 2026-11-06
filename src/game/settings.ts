@@ -6,8 +6,8 @@ export type Game = (typeof GAMES)[number]
 export const MODES = ['teach', 'test'] as const
 export type Mode = (typeof MODES)[number]
 
-/** The minute step Clock Times snap to. */
-export const LEVELS = [30, 15, 5, 1] as const
+/** The minute step Clock Times snap to, in the order Settings shows them. */
+export const LEVELS = [1, 5, 15] as const
 export type Level = (typeof LEVELS)[number]
 
 export interface Settings {
@@ -16,7 +16,7 @@ export interface Settings {
   level: Level
 }
 
-export const DEFAULT_SETTINGS: Settings = { game: 'setTime', mode: 'teach', level: 15 }
+export const DEFAULT_SETTINGS: Settings = { game: 'setTime', mode: 'teach', level: 1 }
 
 /** Drag Numbers places the numbers 1–12 and has no minute step. */
 export function hasLevel(game: Game): boolean {

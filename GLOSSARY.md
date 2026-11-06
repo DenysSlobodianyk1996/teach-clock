@@ -27,7 +27,7 @@ The Mode where every Answer moves on, right or wrong, with no help, and the resu
 _Avoid_: Exam, challenge
 
 **Level**:
-The minute step that Clock Times in a Round snap to: 15, 5 or 1 minute. Drag Numbers has no Level.
+The minute step that Clock Times in a Round snap to: 1, 5 or 15 minutes (1 by default). Drag Numbers has no Level.
 _Avoid_: Priority, difficulty
 
 **Round**:

@@ -25,16 +25,16 @@ describe('Task generation', () => {
     }
   })
 
-  it('uses only :00 and :30 on the 30-minute step', () => {
+  it('uses only :00, :15, :30 and :45 on the 15-minute step', () => {
     const minutes = new Set(
-      generateClockTimes('setTime', 30, 10, seededRandom(1)).map((t) => t.minute),
+      generateClockTimes('setTime', 15, 10, seededRandom(1)).map((t) => t.minute),
     )
-    expect([...minutes].every((m) => m === 0 || m === 30)).toBe(true)
+    expect([...minutes].every((m) => [0, 15, 30, 45].includes(m))).toBe(true)
   })
 
   it('refuses to make more Clock Times than the step allows', () => {
-    expect(() => generateClockTimes('setTime', 30, 25, seededRandom(1))).toThrow(
-      'Only 24 Clock Times',
+    expect(() => generateClockTimes('setTime', 15, 49, seededRandom(1))).toThrow(
+      'Only 48 Clock Times',
     )
   })
 
@@ -47,17 +47,17 @@ describe('Task generation', () => {
   })
 
   it('never uses 12:00 in Drag Arrows, where the hands start at 12:00', () => {
-    // All 24 Clock Times on the 30-minute step but one: only 12:00 is left out.
-    const times = generateClockTimes('dragArrows', 30, 23, seededRandom(7)).map(formatClockTime)
-    expect(times).toHaveLength(23)
+    // All 48 Clock Times on the 15-minute step but one: only 12:00 is left out.
+    const times = generateClockTimes('dragArrows', 15, 47, seededRandom(7)).map(formatClockTime)
+    expect(times).toHaveLength(47)
     expect(times).not.toContain('12:00')
-    expect(() => generateClockTimes('dragArrows', 30, 24, seededRandom(7))).toThrow(
-      'Only 23 Clock Times',
+    expect(() => generateClockTimes('dragArrows', 15, 48, seededRandom(7))).toThrow(
+      'Only 47 Clock Times',
     )
   })
 
   it('may use 12:00 in Set Time', () => {
-    const times = generateClockTimes('setTime', 30, 24, seededRandom(7)).map(formatClockTime)
+    const times = generateClockTimes('setTime', 15, 48, seededRandom(7)).map(formatClockTime)
     expect(times).toContain('12:00')
   })
 })

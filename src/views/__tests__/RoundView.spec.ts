@@ -18,7 +18,7 @@ async function open(game: Game = 'setTime', mode: Mode = 'test') {
   const screen = await mountScreen(RoundView, '/round', () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    Object.assign(play.settings, { game, mode, level: 30 })
+    play.settings = { game, mode, level: 15 }
     play.startRound(seededRandom(5))
   })
   wrapper = screen.wrapper
@@ -87,7 +87,7 @@ describe('Round screen, Set Time', () => {
 
 const button = (text: string) => wrapper.findAll('button').find((b) => b.text() === text)
 const dotClasses = () => wrapper.findAll('.dot').map((d) => d.classes()[1])
-/** Off the 30-minute Level step, so never the right Answer. */
+/** Off every Level step, so never the right Answer. */
 const WRONG = '12:01'
 
 describe('Round screen, Set Time in Teach', () => {

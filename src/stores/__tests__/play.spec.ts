@@ -10,8 +10,8 @@ describe('play store', () => {
     setActivePinia(createPinia())
   })
 
-  it('opens Settings on Set Time, Teach, 15 minutes', () => {
-    expect(usePlayStore().settings).toEqual({ game: 'setTime', mode: 'teach', level: 15 })
+  it('opens Settings on Set Time, Teach, 1 minute', () => {
+    expect(usePlayStore().settings).toEqual({ game: 'setTime', mode: 'teach', level: 1 })
   })
 
   it('has no Round until the Player starts one', () => {

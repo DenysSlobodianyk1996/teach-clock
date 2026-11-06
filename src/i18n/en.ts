@@ -50,7 +50,6 @@ export default {
     test: { name: 'Test', description: 'No hints. You’ll see how you did at the end.' },
   },
   levels: {
-    '30': { name: '30 min', description: ':00 and :30' },
     '15': { name: '15 min', description: ':00, :15, :30, :45' },
     '5': { name: '5 min', description: 'Every 5 minutes' },
     '1': { name: '1 min', description: 'Any minute' },

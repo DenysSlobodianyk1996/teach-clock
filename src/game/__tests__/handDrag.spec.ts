@@ -10,8 +10,7 @@ function minuteDrag(start: ClockTime, angles: number[], step: Level): string {
 
 describe('Minute Hand drag', () => {
   it.each<[Level, number, string]>([
-    [30, 80, '4:00'],
-    [30, 100, '4:30'],
+    [15, 40, '4:00'],
     [15, 100, '4:15'],
     [15, 170, '4:30'],
     [5, 100, '4:15'],
@@ -33,11 +32,6 @@ describe('Minute Hand drag', () => {
   it('wraps between 12 and 1 both ways', () => {
     expect(minuteDrag(clockTime(12, 55), [10], 5)).toBe('1:00')
     expect(minuteDrag(clockTime(1, 0), [354], 1)).toBe('12:59')
-  })
-
-  it('rolls over on the 30-minute step, where :30 and :00 are half a turn apart', () => {
-    expect(minuteDrag(clockTime(4, 30), [150, 300], 30)).toBe('5:00')
-    expect(minuteDrag(clockTime(4, 30), [210, 60, 300, 240], 30)).toBe('3:30')
   })
 
   it('does not roll over when the hand goes back the way it came', () => {
@@ -68,8 +62,8 @@ describe('Hour Hand drag', () => {
   })
 
   it('shows 1:30 the same whichever hand is set first', () => {
-    const hourFirst = dragMinuteHand(dragHourHand(clockTime(12, 0), 30), 180, 30)
-    const minutesFirst = dragHourHand(dragMinuteHand(clockTime(12, 0), 180, 30), 45)
+    const hourFirst = dragMinuteHand(dragHourHand(clockTime(12, 0), 30), 180, 15)
+    const minutesFirst = dragHourHand(dragMinuteHand(clockTime(12, 0), 180, 15), 45)
     expect(formatClockTime(hourFirst)).toBe('1:30')
     expect(formatClockTime(minutesFirst)).toBe('1:30')
   })

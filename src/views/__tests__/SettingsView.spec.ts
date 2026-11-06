@@ -34,8 +34,14 @@ describe('Settings screen', () => {
     const { wrapper } = await open()
     expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('modes.teach.name')).element.checked).toBe(true)
-    expect(choice(wrapper, t('levels.15.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('levels.1.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
+  })
+
+  it('offers the Levels 1, 5 and 15 minutes, smallest step first', async () => {
+    const { wrapper } = await open()
+    const levels = wrapper.findAll('.levels label.choice b').map((b) => b.text())
+    expect(levels).toEqual([t('levels.1.name'), t('levels.5.name'), t('levels.15.name')])
   })
 
   it('hides the Level for Drag Numbers and shows it again for other Games', async () => {
@@ -44,7 +50,7 @@ describe('Settings screen', () => {
 
     await choice(wrapper, t('games.dragNumbers.name')).setValue(true)
     expect(wrapper.text()).not.toContain(t('settings.level'))
-    expect(wrapper.text()).not.toContain(t('levels.30.name'))
+    expect(wrapper.text()).not.toContain(t('levels.15.name'))
 
     await choice(wrapper, t('games.dragArrows.name')).setValue(true)
     expect(wrapper.text()).toContain(t('settings.level'))

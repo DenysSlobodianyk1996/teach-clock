@@ -50,7 +50,6 @@ export default {
     test: { name: 'Перевірка', description: 'Без підказок. Що вийшло — побачиш у кінці.' },
   },
   levels: {
-    '30': { name: '30 хв', description: ':00 і :30' },
     '15': { name: '15 хв', description: ':00, :15, :30, :45' },
     '5': { name: '5 хв', description: 'Кожні 5 хвилин' },
     '1': { name: '1 хв', description: 'Будь-яка хвилина' },
