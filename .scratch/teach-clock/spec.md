@@ -1,6 +1,6 @@
 ---
 title: Teach Clock — first playable version
-status: ready-for-agent
+status: done
 ---
 
 # Teach Clock — first playable version
