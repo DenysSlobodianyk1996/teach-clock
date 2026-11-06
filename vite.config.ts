@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import process from 'node:process'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -8,8 +9,13 @@ import { VitePWA } from 'vite-plugin-pwa'
 /** The middle theme's background (--bg in src/styles/theme.css). */
 const themeColor = '#1d4b5c'
 
+/** GitHub Pages serves the app from /teach-clock/; everywhere else it lives at the root. */
+const base = process.env.GITHUB_PAGES ? '/teach-clock/' : '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
+  server: { port: 4200, strictPort: true },
   plugins: [
     vue(),
     vueDevTools(),
@@ -26,7 +32,8 @@ export default defineConfig({
         theme_color: themeColor,
         background_color: themeColor,
         display: 'standalone',
-        start_url: '/',
+        start_url: base,
+        scope: base,
         icons: [
           { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
