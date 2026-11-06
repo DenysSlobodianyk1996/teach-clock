@@ -13,6 +13,10 @@ async function start(
   await page.getByRole('button', { name: t('welcome.start') }).click()
   await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
   await page.getByRole('radio', { name: startingWith(t(`modes.${mode}.name`)) }).check()
+  // 15 minutes, so the wrong Answers typed below (12:01) can never be a Task.
+  if (game !== 'dragNumbers') {
+    await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
+  }
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByText(t(`modes.${mode}.name`), { exact: false }).first()).toBeVisible()
 }
