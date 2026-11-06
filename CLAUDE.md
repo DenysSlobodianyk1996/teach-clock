@@ -5,7 +5,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09), offline and installable (ticket 11): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
 
 ## Commands
@@ -13,8 +13,9 @@ Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, w
 - `npm run dev`: dev server
 - `npm run type-check`, `npm run lint`, `npm run format`
 - `npx vitest run [file]`: unit and component tests
-- `npx playwright test`: browser flows (desktop + phone)
-- `npm run build`: type-check and build
+- `npx playwright test`: browser flows (desktop + phone, plus an offline check on a fresh build)
+- `npm run build`: type-check and build (with the offline service worker)
+- `npm run generate-pwa-assets`: redraw the app icons in `public/` from `public/favicon.svg`
 
 ## Where things are
 

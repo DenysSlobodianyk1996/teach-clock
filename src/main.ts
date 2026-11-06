@@ -6,11 +6,15 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import { createAppRouter } from './router'
 import { createAppI18n } from './i18n'
+import { registerServiceWorker } from './pwa'
 
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(createAppRouter())
+const router = createAppRouter()
+app.use(router)
 app.use(createAppI18n())
 
 app.mount('#app')
+
+registerServiceWorker(router)
