@@ -5,7 +5,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09), English and themes (ticket 10): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
 Spec: `.scratch/teach-clock/spec.md`. Tickets: `.scratch/teach-clock/issues/`, worked in number order respecting "Blocked by".
 
 ## Commands
