@@ -4,10 +4,10 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] vite-plugin-pwa with all assets precached
-- [ ] App name "Teach Clock" and original icons
-- [ ] Works fully offline after the first visit
-- [ ] Playwright offline check
-- [ ] English text for everything this ticket adds
+- [x] vite-plugin-pwa with all assets precached
+- [x] App name "Teach Clock" and original icons
+- [x] Works fully offline after the first visit
+- [x] Playwright offline check
+- [x] English text for everything this ticket adds
