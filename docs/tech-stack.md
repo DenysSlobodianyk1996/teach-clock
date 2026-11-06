@@ -18,8 +18,8 @@ No physics, no game loop, no backend.
 | Clock | **Plain SVG** in Vue components | Hands are `transform: rotate()`. The same component draws the play clock and the small Summary clocks |
 | Clock maths | **Own TypeScript module**, no Vue imports | Clock Time ↔ hand angles, snapping to the Level step, hour rollover, Task generation. Fully unit-tested |
 | Dragging (numbers, hands) | **Pointer Events**, with **VueUse** helpers where useful | Hand rotation = angle from the clock centre to the pointer |
-| Animation | **CSS transitions**, plus **GSAP** if they're not enough | Shake, snap-back, hands animating to the correct Answer |
-| Confetti | **canvas-confetti** | Summary celebration |
+| Animation | **CSS transitions** and keyframes | Hands turning to the correct Answer, the green rim on a right Answer, the dragged number following the pointer |
+| Confetti | **Own SVG pieces** with a CSS drop (`SummaryConfetti.vue`) | Summary celebration; no library needed |
 | State | **Pinia** | Current Round, Settings, Preferences |
 | Routing | **Vue Router** | Welcome, Settings, Round, Summary |
 | Interface text | **vue-i18n** | `uk` default, `en` |

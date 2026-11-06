@@ -26,16 +26,16 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
   </header>
 
   <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-bottom: 6px">
-    <div class="dots" aria-label="Прогрес: 3 з 12 чисел на місці">
+    <div class="dots" aria-label="Прогрес: на місці 3 з 12 чисел">
       <span class="dot ok"></span><span class="dot ok"></span><span class="dot ok"></span><span class="dot now"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
-    <div class="task-no">3 з 12 на місці · Навчання</div>
+    <div class="task-no">На місці 3 з 12 · Навчання</div>
   </div>
 
   <main style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: center; padding: 0 48px 28px">
     <div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
       <!-- The hint's space is kept above the face, so the face never moves when a hint appears. -->
-      <div class="toast" aria-hidden="true" style="visibility: hidden"><svg viewBox="0 0 24 24" fill="none" stroke="var(--hour)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>7 стоїть між 6 і 8</div>
+      <div class="toast" aria-hidden="true" style="visibility: hidden">7 стоїть між 6 і 8</div>
       <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат: на місцях 12, 3 і 6" style="width: 400px; height: 400px">
         <circle class="c-face" r="94"></circle>
         <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
@@ -49,12 +49,12 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div style="display: flex; flex-direction: column; align-items: center; gap: 18px">
       <h1 style="margin: 0; font-size: 32px; font-weight: 900">Розстав числа по місцях</h1>
-      <div class="tray" style="--number-size: 54.5px; grid-template-columns: repeat(3, minmax(0, 1fr))" aria-label="Числа">
+      <div class="tray" style="--number-size: 54.5px; grid-template-columns: repeat(4, max-content)" aria-label="Числа">
         <button class="tile" type="button">7</button><button class="tile" type="button">2</button><button class="tile" type="button">11</button>
         <div class="tile ghost" aria-hidden="true"></div><button class="tile" type="button">4</button><button class="tile" type="button">10</button>
         <button class="tile" type="button">1</button><button class="tile" type="button">8</button><button class="tile" type="button">5</button>
       </div>
-      <p style="margin: 0; font-size: 17px; color: var(--muted); text-align: center; max-width: 340px">Візьми число і відпусти його над порожнім кружечком.</p>
+      <p style="margin: 0; font-size: 17px; color: var(--muted); text-align: center; max-width: 340px">Перетягни число на його місце або торкнись числа, а потім місця.</p>
     </div>
   </main>
 

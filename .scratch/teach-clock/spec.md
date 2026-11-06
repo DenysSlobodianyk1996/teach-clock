@@ -63,7 +63,7 @@ How it works:
 18. As a Player, I want to leave a Round from the header, after confirming, so that I can stop without losing my place by accident.
 19. As a Player who left a Round, I want to land back on Settings, so that I can pick something else.
 20. As a Player, I want no timer, so that I can think without pressure.
-21. As a Player, I want short animations (shake on wrong, snap, gentle celebrations), so that the game feels alive without sound.
+21. As a Player, I want short animations (hands turning to the right Answer, a green rim and "Right! Next…" on a right Answer, confetti on the Summary), so that the game feels alive without sound.
 
 ### Drag Numbers
 
@@ -147,7 +147,7 @@ How it works:
 
 ## Implementation Decisions
 
-- **Stack**: Vue 3 + TypeScript + Vite, Vue Router, Pinia, vue-i18n, VueUse, vite-plugin-pwa, canvas-confetti; CSS transitions for animation, GSAP only if needed. Everything is drawn as SVG (ADR 0001). No backend, no stored results (ADR 0002). There is no language game (ADR 0003).
+- **Stack**: Vue 3 + TypeScript + Vite, Vue Router, Pinia, vue-i18n, VueUse, vite-plugin-pwa; CSS transitions and keyframes for animation, and a few SVG confetti pieces drawn by the app (no confetti or animation library). Everything is drawn as SVG (ADR 0001). No backend, no stored results (ADR 0002). There is no language game (ADR 0003).
 
 - **Game rules module (deep module, no Vue, no DOM).** It owns all rules, and the UI only renders its state and forwards Player actions. Its public interface, in prose:
   - **Clock Time**: an hour 1–12 and a minute 0–59, with:
@@ -279,6 +279,7 @@ How it works:
 
 - The 2019 thesis and screenshots in `docs/original/` show the original mechanics only. Their stack, code, palette and art are not to be reused; all art is original SVG.
 - A design prototype of every screen and Game comes before any code, and needs the user's approval for all features. If the design changes anything important, update this spec and the tickets before building.
+- Changes after the first version (Levels 1 / 5 / 15, the lit target tick, Drag Numbers drops and sizes, the clock staying put) are in `.scratch/play-tweaks/issues/`; the product brief describes the result.
 - Suggested build order after design approval: the rules module first (it is most of the logic and fully testable), then
   1. Set Time,
   2. Drag Arrows,

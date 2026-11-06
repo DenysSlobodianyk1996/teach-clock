@@ -8,7 +8,7 @@
   --surface-2: #2f6e7e;
   --line: rgba(253, 246, 233, 0.22);
   --text: #fdf6e9;
-  --muted: #cfe2e3;
+  --muted: #dae9e9;
   --face: #fff3dd;
   --rim: #f2b84b;
   --tick: #6b5a49;
@@ -22,6 +22,8 @@
   --tile-ink: #2a2633;
   --slot: rgba(42, 38, 51, 0.35);
   --good: #7fd49a;
+  /* Green text, such as a right Answer in the Summary; --good is for dots and shapes. */
+  --good-text: #a2e0b5;
   --help: #f5cf5a;
   --bad: #c2453f;
   --todo: rgba(253, 246, 233, 0.28);
@@ -72,6 +74,7 @@
   --minute: #11727a;
   --accent: #f2b84b;
   --good: #3f9e5e;
+  --good-text: #34834e;
   --help: #e9b928;
   --bad: #c2453f;
   --todo: rgba(31, 45, 58, 0.18);

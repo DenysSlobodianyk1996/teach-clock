@@ -4,11 +4,11 @@
 
 **Blocked by:** 03 (the new tray size changes the layout this ticket pins)
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Drag Arrows and Set Time, Teach: the clock stays in place when the Hint panel appears
-- [ ] Drag Numbers, Teach: the clock stays in place when a Hint appears and goes
-- [ ] Drag Numbers, Test: the clock stays in place as the tray empties and Submit appears
-- [ ] Set Time: the clock stays in place when the error under the time boxes appears
-- [ ] Playwright measures the clock's position before and after each case, on desktop and phone
-- [ ] Product brief (Look) says the clock never moves during a Round
+- [x] Drag Arrows and Set Time, Teach: the clock stays in place when the Hint panel appears
+- [x] Drag Numbers, Teach: the clock stays in place when a Hint appears and goes
+- [x] Drag Numbers, Test: the clock stays in place as the tray empties and Submit appears
+- [x] Set Time: the clock stays in place when the error under the time boxes appears
+- [x] Playwright measures the clock's position before and after each case, on desktop and phone
+- [x] Product brief (Look) says the clock never moves during a Round
