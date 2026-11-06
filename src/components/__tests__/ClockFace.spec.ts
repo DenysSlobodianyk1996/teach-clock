@@ -78,6 +78,11 @@ describe('ClockFace', () => {
     expect(turn(wrapper, 'hour')).toBe('rotate(2.5deg)')
   })
 
+  it('lights no tick on a clock that is not being dragged', () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
+    expect(wrapper.find('[data-target-tick]').exists()).toBe(false)
+  })
+
   it('only animates when asked', () => {
     expect(mountComponent(ClockFace, { time: clockTime(3, 0) }).classes()).not.toContain('animate')
   })
@@ -161,6 +166,25 @@ describe('ClockFace with draggable hands', () => {
     expect(wrapper.find('[data-grip="minute"]').classes()).not.toContain('dragging')
     await pointer(wrapper, 'pointermove', 200, 100)
     expect(wrapper.emitted('drag')).toBeUndefined()
+  })
+
+  it('lights the tick for the minute the Minute Hand lands on while it is dragged', async () => {
+    const wrapper = draggable()
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
+    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(0deg)')
+    await wrapper.setProps({ time: clockTime(12, 20) })
+    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(120deg)')
+    await pointer(wrapper, 'pointerup')
+    expect(wrapper.find('[data-target-tick]').exists()).toBe(false)
+  })
+
+  it('lights the tick for the hour the Hour Hand lands on while it is dragged', async () => {
+    const wrapper = draggable()
+    await wrapper.setProps({ time: clockTime(4, 30) })
+    await pointer(wrapper.find('[data-grip="hour"] .c-grip'), 'pointerdown')
+    // On the 4, not where the hand sits halfway to 5.
+    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(120deg)')
+    expect(wrapper.get('[data-target-tick]').classes()).toContain('hour')
   })
 
   it('ignores moves that are not part of a drag', async () => {
