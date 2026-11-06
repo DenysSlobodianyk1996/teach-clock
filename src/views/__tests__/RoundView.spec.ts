@@ -345,11 +345,6 @@ describe('Round screen, Drag Numbers in Teach', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
   afterEach(() => vi.useRealTimers())
 
-  it('keeps the placeholder for Test until it is built', async () => {
-    await open('dragNumbers', 'test')
-    expect(wrapper.get('[data-testid="play-area"]').text()).toContain(t('round.comingSoon'))
-  })
-
   it('shows an empty face, the tray of 1–12 and 12 grey dots', async () => {
     await open('dragNumbers', 'teach')
     expect(wrapper.get('h1').text()).toBe(t('numbers.heading'))
@@ -391,5 +386,45 @@ describe('Round screen, Drag Numbers in Teach', () => {
     expect(router.currentRoute.value.name).toBe('round')
     vi.runAllTimers()
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+  })
+})
+
+const submitButton = () => button(t('numbers.submit'))
+const placedAt = (slot: number) => wrapper.get(`[data-slot="${slot}"]`).text()
+
+describe('Round screen, Drag Numbers in Test', () => {
+  it('takes a wrong drop with no hint, and counts placed numbers with neutral dots', async () => {
+    await open('dragNumbers', 'test')
+    await place(12, 4)
+    expect(placedAt(4)).toBe('12')
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(dotClasses()).toEqual(['placed', ...Array(11).fill(undefined)])
+    expect(wrapper.text()).toContain(
+      `${t('numbers.placedCount', { n: 1, total: 12 })} · ${t('modes.test.name')}`,
+    )
+  })
+
+  it('swaps two numbers on the face, and takes one back to the tray', async () => {
+    await open('dragNumbers', 'test')
+    await place(12, 4)
+    await place(3, 9)
+    await wrapper.get('[data-slot="4"]').trigger('click')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    expect(placedAt(4)).toBe('3')
+    expect(placedAt(9)).toBe('12')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    await wrapper.get('.tray').trigger('click')
+    expect(wrapper.find('.tray [data-number="12"]').exists()).toBe(true)
+    expect(placedAt(9)).toBe('')
+  })
+
+  it('shows Submit only once all 12 are placed, then opens the Summary', async () => {
+    const { router } = await open('dragNumbers', 'test')
+    for (let n = 1; n <= 11; n++) await place(n, n)
+    expect(submitButton()).toBeUndefined()
+    await place(12, 12)
+    await submitButton()!.trigger('click')
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    expect(usePlayStore().summary).toMatchObject({ rightCount: 12, total: 12 })
   })
 })

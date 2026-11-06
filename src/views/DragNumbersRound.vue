@@ -3,8 +3,8 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import NumberBoard from '@/components/NumberBoard.vue'
-import ProgressDots from '@/components/ProgressDots.vue'
-import type { Neighbours } from '@/game/dragNumbers'
+import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
+import { canSubmit, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
@@ -23,8 +23,21 @@ const hint = ref<Neighbours | null>(null)
 const done = ref(false)
 const busy = computed(() => play.askingToLeave || done.value)
 
+const test = computed(() => props.round.mode === 'test')
 const placed = computed(() => props.round.slots.filter((n) => n !== null).length)
 const total = computed(() => props.round.tasks.length)
+/** Test hides right and wrong until Submit: the dots only count the numbers on the face. */
+const dots = computed((): DotStatus[] =>
+  test.value
+    ? props.round.tasks.map((_, i) => (i < placed.value ? 'placed' : 'pending'))
+    : props.round.tasks.map((t) => t.status),
+)
+const progress = computed(() => {
+  const counts = { n: placed.value, total: total.value }
+  return test.value
+    ? { text: t('numbers.placedCount', counts), label: t('numbers.placedLabel', counts) }
+    : { text: t('numbers.progress', counts), label: t('numbers.progressLabel', counts) }
+})
 
 let pause: ReturnType<typeof setTimeout> | undefined
 onBeforeUnmount(() => clearTimeout(pause))
@@ -40,30 +53,34 @@ function drop(number: number, slot: number) {
     }, DONE_PAUSE_MS)
   }
 }
+
+function toTray(number: number) {
+  if (!busy.value) play.returnToTray(number)
+}
+
+/** Test: "Готово" scores the face and opens the Summary. */
+function submit() {
+  if (busy.value || !canSubmit(props.round)) return
+  done.value = true
+  play.submitPlacements()
+  router.push({ name: 'summary' })
+}
 </script>
 
 <template>
   <div class="round">
     <div class="progress">
-      <ProgressDots
-        :statuses="round.tasks.map((t) => t.status)"
-        :label="t('numbers.progressLabel', { n: placed, total })"
-      />
-      <div class="task-no">
-        {{ t('numbers.progress', { n: placed, total }) }} · {{ t(`modes.${round.mode}.name`) }}
-      </div>
+      <ProgressDots :statuses="dots" :label="progress.label" />
+      <div class="task-no">{{ progress.text }} · {{ t(`modes.${round.mode}.name`) }}</div>
     </div>
-    <!-- Drag Numbers in Test arrives with ticket 08. -->
-    <section v-if="round.mode === 'test'" class="play-area" data-testid="play-area">
-      <p class="placeholder">{{ t('round.comingSoon') }}</p>
-    </section>
     <NumberBoard
-      v-else
       :slots="round.slots"
       :tray="round.tray"
       :marked="hint?.number"
+      :movable="test"
       :disabled="busy"
       @drop="drop"
+      @to-tray="toTray"
     >
       <template #clock>
         <!-- Always in the page, so screen readers announce the text when it appears. -->
@@ -74,7 +91,31 @@ function drop(number: number, slot: number) {
       <template #heading>
         <h1>{{ t('numbers.heading') }}</h1>
       </template>
-      <p v-if="round.tray.length" class="help">{{ t('numbers.help') }}</p>
+      <template v-if="test">
+        <p class="help">
+          {{
+            round.tray.length
+              ? t('numbers.testHelp', { n: round.tray.length })
+              : t('numbers.allPlaced')
+          }}
+        </p>
+        <!-- Only with all 12 on the face, so half a clock can't be submitted. -->
+        <button v-if="canSubmit(round)" class="btn submit" type="button" @click="submit">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12.5l4.5 4.5L19 7" />
+          </svg>
+          {{ t('numbers.submit') }}
+        </button>
+      </template>
+      <p v-else-if="round.tray.length" class="help">{{ t('numbers.help') }}</p>
     </NumberBoard>
   </div>
 </template>
@@ -104,19 +145,8 @@ h1 {
   font-weight: 900;
   text-align: center;
 }
-.play-area {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 12px;
-  border: 3px dashed var(--line);
-  border-radius: 28px;
-}
-.placeholder {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 900;
+.submit {
+  width: min(300px, 100%);
 }
 .help {
   max-width: 360px;

@@ -8,7 +8,11 @@ import {
   submitAnswer as submit,
   type Round,
 } from '@/game/round'
-import { dropNumber as drop } from '@/game/dragNumbers'
+import {
+  dropNumber as drop,
+  returnToTray as toTray,
+  submitPlacements as submitFace,
+} from '@/game/dragNumbers'
 import { summarize } from '@/game/summary'
 import type { Random } from '@/game/tasks'
 
@@ -35,10 +39,26 @@ export const usePlayStore = defineStore('play', () => {
     return result.outcome
   }
 
-  /** Drag Numbers: drops a tray number on a slot. */
-  function dropNumber(number: number, slot: number) {
+  function numbersRound() {
     if (round.value?.game !== 'dragNumbers') throw new Error('No Drag Numbers Round in play')
-    const result = drop(round.value, number, slot)
+    return round.value
+  }
+
+  /** Drag Numbers: drops a number on a slot (in Test, also one already on the face). */
+  function dropNumber(number: number, slot: number) {
+    const result = drop(numbersRound(), number, slot)
+    round.value = result.round
+    return result.outcome
+  }
+
+  /** Drag Numbers in Test: takes a placed number back to the tray. */
+  function returnToTray(number: number) {
+    round.value = toTray(numbersRound(), number)
+  }
+
+  /** Drag Numbers in Test: Submit with all 12 placed. */
+  function submitPlacements() {
+    const result = submitFace(numbersRound())
     round.value = result.round
     return result.outcome
   }
@@ -57,6 +77,8 @@ export const usePlayStore = defineStore('play', () => {
     startRound,
     submitAnswer,
     dropNumber,
+    returnToTray,
+    submitPlacements,
     leaveRound,
   }
 })

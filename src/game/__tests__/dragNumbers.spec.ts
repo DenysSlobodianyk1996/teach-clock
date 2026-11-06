@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { dropNumber, neighbours } from '../dragNumbers'
+import { canSubmit, dropNumber, neighbours, returnToTray, submitPlacements } from '../dragNumbers'
+import type { NumbersRound } from '../round'
 import { isFinished, startRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 
 const TEACH = { game: 'dragNumbers', mode: 'teach', level: 15 } as const
+const TEST = { ...TEACH, mode: 'test' } as const
 const ONE_TO_TWELVE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 describe('Drag Numbers neighbour hint', () => {
@@ -89,17 +91,103 @@ describe('Drag Numbers in Teach', () => {
     )
   })
 
-  it('is Teach-only for now: Test gets its own rules in ticket 08', () => {
-    const round = startRound({ ...TEACH, mode: 'test' }, seededRandom(1))
-    expect(() => dropNumber(round, 7, 4)).toThrow()
-  })
-
   it('does not change the Round it was given', () => {
     const round = startRound(TEACH, seededRandom(1))
     const copy = structuredClone(round)
     dropNumber(round, 7, 4)
     dropNumber(round, 7, 7)
     expect(round).toEqual(copy)
+  })
+})
+
+/** Puts number N on slot `slotOf(N)` for every number. */
+function placeAll(round: NumbersRound, slotOf: (n: number) => number): NumbersRound {
+  for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, slotOf(n)).round
+  return round
+}
+
+describe('Drag Numbers in Test', () => {
+  it('takes any number on any slot, with no feedback', () => {
+    const round = startRound(TEST, seededRandom(1))
+    const { round: next, outcome } = dropNumber(round, 7, 4)
+    expect(outcome).toEqual({ placed: true, hint: null, finished: false })
+    expect(next.slots[3]).toBe(7)
+    expect(next.tray).not.toContain(7)
+    expect(next.tasks[6]).toMatchObject({ status: 'pending', firstAnswer: null })
+  })
+
+  it('moves a placed number to a free slot', () => {
+    let round = startRound(TEST, seededRandom(1))
+    round = dropNumber(round, 7, 4).round
+    round = dropNumber(round, 7, 9).round
+    expect(round.slots[3]).toBeNull()
+    expect(round.slots[8]).toBe(7)
+  })
+
+  it('swaps two placed numbers when one is dropped on the other', () => {
+    let round = startRound(TEST, seededRandom(1))
+    round = dropNumber(round, 7, 4).round
+    round = dropNumber(round, 2, 9).round
+    round = dropNumber(round, 7, 9).round
+    expect(round.slots[8]).toBe(7)
+    expect(round.slots[3]).toBe(2)
+  })
+
+  it('sends the number on a slot back to the tray when a tray number is dropped on it', () => {
+    let round = startRound(TEST, seededRandom(1))
+    round = dropNumber(round, 7, 4).round
+    round = dropNumber(round, 2, 4).round
+    expect(round.slots[3]).toBe(2)
+    expect(round.tray).toContain(7)
+    expect(round.tray).not.toContain(2)
+  })
+
+  it('takes a placed number back to the tray', () => {
+    let round = startRound(TEST, seededRandom(1))
+    round = dropNumber(round, 7, 4).round
+    round = returnToTray(round, 7)
+    expect(round.slots[3]).toBeNull()
+    expect(round.tray).toContain(7)
+    expect(round.tray).toHaveLength(12)
+  })
+
+  it('allows Submit only when all 12 slots are filled', () => {
+    let round = startRound(TEST, seededRandom(1))
+    for (const n of ONE_TO_TWELVE.slice(0, 11)) round = dropNumber(round, n, n).round
+    expect(canSubmit(round)).toBe(false)
+    expect(() => submitPlacements(round)).toThrow()
+    round = dropNumber(round, 12, 12).round
+    expect(canSubmit(round)).toBe(true)
+    expect(isFinished(round)).toBe(false)
+  })
+
+  it('scores each number by where it ended up, after any moves', () => {
+    // 4 and 5 swapped; 9 tried on slot 1 first, then moved home.
+    let round = startRound(TEST, seededRandom(1))
+    round = dropNumber(round, 9, 1).round
+    round = placeAll(round, (n) => (n === 4 ? 5 : n === 5 ? 4 : n))
+    const { round: done, outcome } = submitPlacements(round)
+    expect(outcome).toEqual({ placed: true, hint: null, finished: true })
+    expect(isFinished(done)).toBe(true)
+    expect(done.tasks.map((t) => t.status)).toEqual(
+      ONE_TO_TWELVE.map((n) => (n === 4 || n === 5 ? 'wrong' : 'right')),
+    )
+    expect(done.tasks[3]).toMatchObject({ answer: 4, firstAnswer: 5 })
+    expect(done.tasks[8]).toMatchObject({ answer: 9, firstAnswer: 9 })
+  })
+
+  it('ignores a drop on a slot that does not exist, or of a number that is not in play', () => {
+    const round = startRound(TEST, seededRandom(1))
+    expect(dropNumber(round, 7, 13).round).toBe(round)
+    expect(dropNumber(round, 7, 0).round).toBe(round)
+    expect(dropNumber(round, 13, 4).round).toBe(round)
+  })
+
+  it('does not let Teach use Test moves', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    round = dropNumber(round, 7, 7).round
+    expect(() => returnToTray(round, 7)).toThrow()
+    expect(() => submitPlacements(round)).toThrow()
   })
 })
 
@@ -111,6 +199,10 @@ describe('Drag Numbers Summary', () => {
     for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
     expect(summarize(round)).toEqual({
       game: 'dragNumbers',
+      mode: 'teach',
+      level: null,
+      statuses: ONE_TO_TWELVE.map((n) => (n === 4 || n === 9 ? 'helped' : 'right')),
+      nudge: null,
       rightCount: 10,
       total: 12,
       right: [1, 2, 3, 5, 6, 7, 8, 10, 11, 12],
@@ -120,5 +212,23 @@ describe('Drag Numbers Summary', () => {
       ],
       placements: ONE_TO_TWELVE,
     })
+  })
+
+  it('in Test, keeps the face as the Player left it', () => {
+    const swapped = (n: number) => (n === 4 ? 5 : n === 5 ? 4 : n)
+    const round = submitPlacements(placeAll(startRound(TEST, seededRandom(1)), swapped)).round
+    const summary = summarize(round)
+    expect(summary).toMatchObject({ mode: 'test', rightCount: 10, total: 12 })
+    expect(summary.wrong).toEqual([
+      { answer: 4, firstAnswer: 5 },
+      { answer: 5, firstAnswer: 4 },
+    ])
+    expect(summary.placements).toEqual([1, 2, 3, 5, 4, 6, 7, 8, 9, 10, 11, 12])
+  })
+
+  it('has no smaller Level to suggest after a perfect Round', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
+    expect(summarize(round).nudge).toEqual({ level: null })
   })
 })

@@ -25,4 +25,17 @@ describe('ProgressDots', () => {
     })
     expect(wrapper.attributes('aria-label')).toBe(t('round.progressLabel', { n: 1, total: 10 }))
   })
+
+  it('shows placed numbers in a neutral colour, with no current dot and its own label', () => {
+    const wrapper = mountComponent(ProgressDots, {
+      statuses: ['placed', 'placed', 'pending'],
+      label: t('numbers.placedLabel', { n: 2, total: 3 }),
+    })
+    expect(wrapper.findAll('.dot').map((d) => d.classes().filter((c) => c !== 'dot'))).toEqual([
+      ['placed'],
+      ['placed'],
+      [],
+    ])
+    expect(wrapper.attributes('aria-label')).toBe(t('numbers.placedLabel', { n: 2, total: 3 }))
+  })
 })

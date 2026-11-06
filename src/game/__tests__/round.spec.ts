@@ -151,6 +151,27 @@ describe('Summary', () => {
     expect(summary.right).not.toContainEqual(helped)
   })
 
+  it('keeps the Mode, the Level and every Task status for the dots', () => {
+    const round = answerAll(startRound(SET_TIME_TEST, seededRandom(7)), (i) => i % 3 !== 0)
+    const summary = summarize(round)
+    expect(summary).toMatchObject({ game: 'setTime', mode: 'test', level: 15 })
+    expect(summary.statuses).toEqual(round.tasks.map((t) => t.status))
+  })
+
+  it('tells a perfect Round to try the next smaller Level, if there is one', () => {
+    const perfect = (level: 30 | 15 | 5 | 1) =>
+      summarize(answerAll(startRound({ ...SET_TIME_TEST, level }, seededRandom(2)), () => true))
+    expect(perfect(30).nudge).toEqual({ level: 15 })
+    expect(perfect(15).nudge).toEqual({ level: 5 })
+    expect(perfect(5).nudge).toEqual({ level: 1 })
+    expect(perfect(1).nudge).toEqual({ level: null })
+  })
+
+  it('gives no nudge when something was wrong', () => {
+    const round = answerAll(startRound(SET_TIME_TEST, seededRandom(7)), (i) => i > 0)
+    expect(summarize(round).nudge).toBeNull()
+  })
+
   it('cannot be built before the Round finishes', () => {
     expect(() => summarize(startRound(SET_TIME_TEST, seededRandom(1)))).toThrow('not finished')
   })
