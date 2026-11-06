@@ -4,6 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import BrandMark from './BrandMark.vue'
 import LeaveRoundDialog from './LeaveRoundDialog.vue'
+import PreferenceSwitches from './PreferenceSwitches.vue'
 import { usePlayStore } from '@/stores/play'
 
 const { t } = useI18n()
@@ -32,9 +33,10 @@ function leaveRound() {
   <header class="hdr">
     <div class="brand">
       <BrandMark class="brand-mark" />
-      <span class="brand-name">{{ t('app.name') }}</span>
+      <span class="brand-name" :class="{ crowded: showHome || inRound }">{{ t('app.name') }}</span>
     </div>
     <div class="hdr-tools">
+      <PreferenceSwitches />
       <RouterLink
         v-if="showHome"
         class="icon-btn"
@@ -74,7 +76,7 @@ function leaveRound() {
           <path d="M9 8l-4 4 4 4" />
           <path d="M5 12h11" />
         </svg>
-        {{ t('header.leave') }}
+        <span class="leave-label">{{ t('header.leave') }}</span>
       </button>
     </div>
     <LeaveRoundDialog v-if="inRound && play.askingToLeave" @stay="stay" @leave="leaveRound" />
@@ -107,40 +109,48 @@ function leaveRound() {
   align-items: center;
   gap: 10px;
 }
-.icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 48px;
-  min-width: 48px;
-  padding: 0 16px;
-  border: 2px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text);
-  font:
-    800 16px 'Nunito',
-    sans-serif;
-  text-decoration: none;
-  cursor: pointer;
-}
-.icon-btn svg {
-  width: 22px;
-  height: 22px;
-}
 
 @media (min-width: 1100px) {
   .hdr {
     padding: 0 40px;
   }
 }
+/* Phones: room only for icons, as in the design. Names stay for screen readers. */
 @media (max-width: 600px), (max-height: 500px) {
   .hdr {
     padding: 0 14px;
   }
+  .hdr-tools {
+    gap: 8px;
+  }
   .brand {
     font-size: 18px;
+  }
+  .brand-name {
+    white-space: nowrap;
+  }
+  /* Next to Home or Leave, only the brand mark fits. */
+  .brand-name.crowded,
+  .leave-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .icon-btn {
+    padding: 0;
+    width: 48px;
+  }
+}
+/* Narrow phones: the Preferences alone leave room only for the brand mark. */
+@media (max-width: 430px) {
+  .brand-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }
 </style>

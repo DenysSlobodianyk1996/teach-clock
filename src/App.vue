@@ -1,6 +1,34 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import { RouterView } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import AppHeader from '@/components/AppHeader.vue'
+import { usePreferencesStore } from '@/stores/preferences'
+
+const { locale, t } = useI18n()
+const preferences = usePreferencesStore()
+
+// The Preferences drive the interface language and the theme on <html>.
+watch(
+  () => preferences.locale,
+  (value) => {
+    locale.value = value
+    document.documentElement.lang = value
+    document.title = t('app.name')
+  },
+  { immediate: true },
+)
+watch(
+  () => preferences.theme,
+  (value) => {
+    const root = document.documentElement
+    root.dataset.theme = value
+    // The browser bar takes the theme's background.
+    const bg = getComputedStyle(root).getPropertyValue('--bg').trim()
+    if (bg) document.querySelector('meta[name="theme-color"]')?.setAttribute('content', bg)
+  },
+  { immediate: true },
+)
 </script>
 
 <template>

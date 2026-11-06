@@ -1,5 +1,7 @@
 /* Theme tokens from the approved design (docs/design/project/theme.css).
-   "middle" is the default; dark and light arrive with ticket 10. */
+   "middle" is the default on :root; dark and light override it through
+   <html data-theme>, which the Preferences set. Text pairs meet WCAG AA
+   (checked in __tests__/theme.spec.ts). */
 :root {
   --bg: #1d4b5c;
   --bg-deep: #163b49;
@@ -7,7 +9,7 @@
   --surface-2: #2f6e7e;
   --line: rgba(253, 246, 233, 0.22);
   --text: #fdf6e9;
-  --muted: #cfe2e3;
+  --muted: #dae9e9;
   --face: #fff3dd;
   --rim: #f2b84b;
   --tick: #6b5a49;
@@ -21,6 +23,8 @@
   --tile-ink: #2a2633;
   --slot: rgba(42, 38, 51, 0.35);
   --good: #7fd49a;
+  /* Green text, such as a right Answer in the Summary; --good is for dots and shapes. */
+  --good-text: #a2e0b5;
   --help: #f5cf5a;
   --bad: #c2453f;
   --todo: rgba(253, 246, 233, 0.28);
@@ -29,6 +33,51 @@
   --pop-ink: #2a2633;
   --shadow: 0 10px 0 rgba(0, 0, 0, 0.14), 0 18px 40px rgba(0, 0, 0, 0.22);
 
+  /* Header swatches: each shows its own theme's background and clock face, in every theme. */
+  --swatch-middle: linear-gradient(135deg, #1d4b5c 50%, #fff3dd 50%);
+  --swatch-dark: linear-gradient(135deg, #121a24 50%, #f1e6cf 50%);
+  --swatch-light: linear-gradient(135deg, #f5efe3 50%, #1d4b5c 50%);
+
   --header-height: 72px;
   --stage-max: 1024px;
+}
+
+:root[data-theme='dark'] {
+  --bg: #121a24;
+  --bg-deep: #0c121a;
+  --surface: #1c2633;
+  --surface-2: #253142;
+  --line: rgba(238, 242, 246, 0.16);
+  --text: #eef2f6;
+  --muted: #b3c0cd;
+  --face: #f1e6cf;
+  --rim: #d9a441;
+  --accent: #f0b444;
+  --todo: rgba(238, 242, 246, 0.24);
+  --scrim: rgba(4, 8, 12, 0.7);
+  --pop: #1f2a37;
+  --pop-ink: #eef2f6;
+  --tile: #f1e6cf;
+}
+
+:root[data-theme='light'] {
+  --bg: #f5efe3;
+  --bg-deep: #ebe2d1;
+  --surface: #ffffff;
+  --surface-2: #fbf6ec;
+  --line: rgba(31, 45, 58, 0.14);
+  --text: #1f2d3a;
+  --muted: #4c5b69;
+  --face: #fffaf0;
+  --rim: #1d4b5c;
+  --minute: #11727a;
+  --accent: #f2b84b;
+  --good: #3f9e5e;
+  --good-text: #34834e;
+  --help: #e9b928;
+  --bad: #c2453f;
+  --todo: rgba(31, 45, 58, 0.18);
+  --scrim: rgba(31, 45, 58, 0.45);
+  --tile: #ffffff;
+  --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
 }
