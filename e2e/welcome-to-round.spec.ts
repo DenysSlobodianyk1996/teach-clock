@@ -74,6 +74,8 @@ test('screens without what they need redirect', async ({ page }) => {
   await page.getByRole('button', { name: t('welcome.start') }).click()
   await page.goto('/round')
   await expect(page).toHaveURL(/\/settings$/)
+  await page.goto('/summary')
+  await expect(page).toHaveURL(/\/settings$/)
 })
 
 test('closing the page during a Round asks the browser to confirm', async ({ page }) => {

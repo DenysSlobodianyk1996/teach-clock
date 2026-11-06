@@ -111,6 +111,10 @@ describe('Drag Numbers Summary', () => {
     for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
     expect(summarize(round)).toEqual({
       game: 'dragNumbers',
+      mode: 'teach',
+      level: null,
+      statuses: ONE_TO_TWELVE.map((n) => (n === 4 || n === 9 ? 'helped' : 'right')),
+      nudge: null,
       rightCount: 10,
       total: 12,
       right: [1, 2, 3, 5, 6, 7, 8, 10, 11, 12],
@@ -120,5 +124,11 @@ describe('Drag Numbers Summary', () => {
       ],
       placements: ONE_TO_TWELVE,
     })
+  })
+
+  it('has no smaller Level to suggest after a perfect Round', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
+    expect(summarize(round).nudge).toEqual({ level: null })
   })
 })

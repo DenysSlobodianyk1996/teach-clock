@@ -4,15 +4,15 @@
 
 **Blocked by:** 04
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Headline "N of M right"
-- [ ] Right and Wrong groups; helped Tasks listed under Wrong
-- [ ] Each wrong Task shows the Player's first Answer next to the correct one, both as small read-only clocks
-- [ ] Celebration (confetti) on arrival
-- [ ] "Play again" (same Settings) and "Back to Settings"
-- [ ] Opening Summary without a finished Round redirects to Settings
-- [ ] Rules-module tests for Summary grouping
-- [ ] Wrong group titled "Потренуймо ще"; the first Answer is captioned "Перша спроба" in Teach and "Твоя відповідь" in Test
-- [ ] Perfect Round: "Помилок немає" with a nudge to try a smaller Level, in place of the Wrong group
-- [ ] English text for everything this ticket adds
+- [x] Headline "N of M right"
+- [x] Right and Wrong groups; helped Tasks listed under Wrong
+- [x] Each wrong Task shows the Player's first Answer next to the correct one, both as small read-only clocks
+- [x] Celebration (confetti) on arrival
+- [x] "Play again" (same Settings) and "Back to Settings"
+- [x] Opening Summary without a finished Round redirects to Settings
+- [x] Rules-module tests for Summary grouping
+- [x] Wrong group titled "Потренуймо ще"; the first Answer is captioned "Перша спроба" in Teach and "Твоя відповідь" in Test
+- [x] Perfect Round: "Помилок немає" with a nudge to try a smaller Level, in place of the Wrong group
+- [x] English text for everything this ticket adds

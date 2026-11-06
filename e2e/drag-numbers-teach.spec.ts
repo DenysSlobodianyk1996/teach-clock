@@ -42,7 +42,14 @@ test('a Drag Numbers Teach Round rejects a wrong drop with a hint and ends on th
   await expect(
     page.getByRole('heading', { name: t('summary.headline', { right: 11, total: 12 }) }),
   ).toBeVisible()
-  await expect(page.getByRole('region', { name: t('summary.wrong') })).toContainText(
-    `12 — ${t('summary.firstSlot', { slot: 4 })}`,
-  )
+  const first = t('summary.numberFirst', { caption: t('summary.firstTry'), number: 12, slot: 4 })
+  const between = t('numbers.between', { number: 12, before: 11, after: 1 })
+  await expect(
+    page
+      .getByRole('region', { name: t('summary.wrong') })
+      .getByRole('listitem')
+      .filter({
+        hasText: `${first}. ${between}`,
+      }),
+  ).toBeVisible()
 })

@@ -45,7 +45,16 @@ test('a Drag Arrows Test Round ends on a Summary that lists the wrong Answer', a
   await expect(
     page.getByRole('heading', { name: t('summary.headline', { right: 9, total: 10 }) }),
   ).toBeVisible()
-  await expect(page.getByRole('region', { name: t('summary.wrong') })).toContainText(
-    `${first} — ${t('summary.yourAnswer', { time: wrong })}`,
-  )
+  await expect(
+    page
+      .getByRole('region', { name: t('summary.wrong') })
+      .getByRole('listitem')
+      .filter({
+        hasText: t('summary.pair', {
+          caption: t('summary.yourAnswer'),
+          first: wrong,
+          answer: first,
+        }),
+      }),
+  ).toBeVisible()
 })

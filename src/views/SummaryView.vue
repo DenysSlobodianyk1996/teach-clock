@@ -1,25 +1,77 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { formatClockTime, type ClockTime } from '@/game/clockTime'
+import ClockFace from '@/components/ClockFace.vue'
+import NumberFace from '@/components/NumberFace.vue'
+import ProgressDots from '@/components/ProgressDots.vue'
+import SummaryConfetti from '@/components/SummaryConfetti.vue'
+import { formatClockTime } from '@/game/clockTime'
+import { neighbours } from '@/game/dragNumbers'
+import type { WrongTask } from '@/game/summary'
+import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
-/** Read-only Summary as text. Clocks and the celebration come with ticket 09. */
+/** The read-only review at the end of a Round: what was right, and what to practise. */
 const { t } = useI18n()
 const router = useRouter()
 const play = usePlayStore()
+const player = usePlayerStore()
 
 // The router only opens this screen for a finished Round. A Summary never changes, so keep this
 // one even while "Play again" replaces the Round under it.
 const summary = play.summary
 
-/** A Clock Time, or a Drag Numbers number. */
-const show = (answer: ClockTime | number) =>
-  typeof answer === 'number' ? String(answer) : formatClockTime(answer)
-const first = (answer: ClockTime | number) =>
-  typeof answer === 'number'
-    ? t('summary.firstSlot', { slot: answer })
-    : t('summary.yourAnswer', { time: formatClockTime(answer) })
+const headline = computed(() => {
+  if (!summary) return ''
+  const counts = { right: summary.rightCount, total: summary.total }
+  // In Teach every number ends in its place, so "in their places" is only true of Test.
+  const numbersTest = summary.game === 'dragNumbers' && summary.mode === 'test'
+  return t(numbersTest ? 'summary.numbersHeadline' : 'summary.headline', counts)
+})
+
+const details = computed(() => {
+  if (!summary) return ''
+  const parts = [
+    t('summary.cheer', { name: player.name }),
+    t(`games.${summary.game}.name`),
+    t(`modes.${summary.mode}.name`),
+  ]
+  if (summary.level !== null) parts.push(t(`levels.${summary.level}.name`))
+  return parts.join(' · ')
+})
+
+/** "First try" in Teach, where the Player fixed it; "Your answer" in Test. */
+const caption = computed(() =>
+  t(summary?.mode === 'teach' ? 'summary.firstTry' : 'summary.yourAnswer'),
+)
+
+const nudge = computed(() => {
+  const level = summary?.nudge?.level
+  return level ? t('summary.tryLevel', { level: t(`levels.${level}.name`) }) : t('summary.tryOther')
+})
+
+function clockPair({ answer, firstAnswer }: WrongTask) {
+  return t('summary.pair', {
+    caption: caption.value,
+    first: formatClockTime(firstAnswer),
+    answer: formatClockTime(answer),
+  })
+}
+
+function numberPair({ answer, firstAnswer }: WrongTask<number>) {
+  const first = t('summary.numberFirst', {
+    caption: caption.value,
+    number: answer,
+    slot: firstAnswer,
+  })
+  return `${first}. ${t('numbers.between', { ...neighbours(answer) })}`
+}
+
+/** A face with one number on one slot. */
+function only(number: number, slot: number) {
+  return Array.from({ length: 12 }, (_, i) => (i === slot - 1 ? number : null))
+}
 
 function playAgain() {
   play.startRound()
@@ -34,67 +86,164 @@ function toSettings() {
 
 <template>
   <div v-if="summary" class="summary">
-    <h1>{{ t('summary.headline', { right: summary.rightCount, total: summary.total }) }}</h1>
-    <div class="lists">
-      <section class="list" aria-labelledby="right-title">
-        <h2 id="right-title"><span class="dot ok" />{{ t('summary.right') }}</h2>
-        <ul v-if="summary.right.length">
-          <li v-for="answer in summary.right" :key="show(answer)">
-            <b>{{ show(answer) }}</b>
+    <SummaryConfetti />
+    <header class="top">
+      <p class="details">{{ details }}</p>
+      <h1>{{ headline }}</h1>
+      <ProgressDots :statuses="summary.statuses" :label="headline" />
+    </header>
+
+    <div class="groups" :class="{ perfect: !summary.wrong.length }">
+      <section class="card group" aria-labelledby="right-title">
+        <h2 id="right-title">
+          <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
+        </h2>
+        <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
+        <ul v-else-if="summary.game === 'dragNumbers'" class="chips">
+          <li v-for="n in summary.right" :key="n" class="chip">{{ n }}</li>
+        </ul>
+        <ul v-else class="right-clocks">
+          <li v-for="time in summary.right" :key="formatClockTime(time)">
+            <ClockFace class="small" :time="time" aria-hidden="true" />
+            <span>{{ formatClockTime(time) }}</span>
           </li>
         </ul>
-        <p v-else class="none">{{ t('summary.none') }}</p>
       </section>
-      <section class="list" aria-labelledby="wrong-title">
-        <h2 id="wrong-title"><span class="dot bad" />{{ t('summary.wrong') }}</h2>
-        <ul v-if="summary.wrong.length">
-          <li v-for="{ answer, firstAnswer } in summary.wrong" :key="show(answer)">
-            <b>{{ show(answer) }}</b> — {{ first(firstAnswer) }}
+
+      <section v-if="summary.wrong.length" class="card group wrong" aria-labelledby="wrong-title">
+        <h2 id="wrong-title">
+          <span class="dot bad" />{{ t('summary.wrong') }} · {{ summary.wrong.length }}
+        </h2>
+        <ul v-if="summary.game === 'dragNumbers'" class="pairs">
+          <li v-for="task in summary.wrong" :key="task.answer" class="pair">
+            <!-- The pictures are hidden from screen readers; this says the same in words. -->
+            <span class="sr-only">{{ numberPair(task) }}</span>
+            <div class="side" aria-hidden="true">
+              <NumberFace
+                class="pair-clock"
+                :slots="only(task.answer, task.firstAnswer)"
+                :marked="[task.firstAnswer]"
+                label=""
+              />
+              <span class="caption">{{ caption }}</span>
+            </div>
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+            <div class="side" aria-hidden="true">
+              <NumberFace class="pair-clock" :slots="only(task.answer, task.answer)" label="" />
+              <span class="caption good">{{
+                t('numbers.between', { ...neighbours(task.answer) })
+              }}</span>
+            </div>
           </li>
         </ul>
-        <p v-else class="none">{{ t('summary.none') }}</p>
+        <ul v-else class="pairs">
+          <li v-for="task in summary.wrong" :key="formatClockTime(task.answer)" class="pair">
+            <span class="sr-only">{{ clockPair(task) }}</span>
+            <div class="side" aria-hidden="true">
+              <ClockFace class="pair-clock" :time="task.firstAnswer" />
+              <span class="caption">{{ caption }}</span>
+              <s class="time">{{ formatClockTime(task.firstAnswer) }}</s>
+            </div>
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+            <div class="side" aria-hidden="true">
+              <ClockFace class="pair-clock" :time="task.answer" />
+              <span class="caption">{{ t('summary.right') }}</span>
+              <b class="time good">{{ formatClockTime(task.answer) }}</b>
+            </div>
+          </li>
+        </ul>
       </section>
+
+      <p v-else class="perfect-note">{{ t('summary.perfect') }} {{ nudge }}</p>
     </div>
+
     <div class="actions">
+      <button class="btn" type="button" @click="playAgain">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 12a8 8 0 1 0 2.5-5.8" />
+          <path d="M4 4v4h4" />
+        </svg>
+        {{ t('summary.playAgain') }}
+      </button>
       <button class="btn btn-soft" type="button" @click="toSettings">
         {{ t('summary.toSettings') }}
       </button>
-      <button class="btn" type="button" @click="playAgain">{{ t('summary.playAgain') }}</button>
     </div>
   </div>
 </template>
 
 <style scoped>
 .summary {
+  position: relative;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 16px clamp(20px, 4.7cqi, 48px) 32px;
+  gap: 18px;
+  padding: 16px clamp(20px, 4.4cqi, 44px) 28px;
+}
+.top {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.details {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--muted);
 }
 h1 {
   margin: 0;
-  font-size: clamp(30px, 4cqi, 42px);
+  font-size: clamp(32px, 5cqi, 52px);
   font-weight: 900;
-  text-align: center;
+  line-height: 1;
 }
-.lists {
+.groups {
+  position: relative;
   flex-grow: 1;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 22px;
   align-items: start;
+  align-content: start;
 }
-.list {
-  padding: 18px 22px;
+.groups.perfect {
+  grid-template-columns: 1fr;
+}
+.card {
   border-radius: 28px;
   background: var(--surface);
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px;
+}
+.group.wrong {
+  background: transparent;
+  border: 3px solid var(--surface);
 }
 h2 {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 22px;
   font-weight: 900;
 }
@@ -110,35 +259,144 @@ h2 {
   background: var(--bad);
 }
 ul {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 18px;
 }
-b {
+.right-clocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 12px 8px;
+}
+.right-clocks li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
   font-weight: 900;
+}
+.small {
+  width: 64px;
+  height: 64px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 22px;
+  font-weight: 900;
+}
+.pairs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pair {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 22px;
+  background: var(--surface);
+}
+.side {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+}
+.pair-clock {
+  grid-row: span 2;
+  width: 70px;
+  height: 70px;
+}
+.caption {
+  align-self: end;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted);
+}
+.time {
+  align-self: start;
+  font-size: 18px;
+  font-weight: 900;
+}
+s.time {
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--bad);
+}
+.good {
+  color: var(--good);
+}
+.arrow {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .none {
   margin: 0;
   color: var(--muted);
 }
+.perfect-note {
+  margin: 0;
+  padding: 14px;
+  border: 3px dashed var(--line);
+  border-radius: 22px;
+  color: var(--muted);
+  font-size: 18px;
+  text-align: center;
+}
 .actions {
+  position: relative;
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
+  gap: 16px;
 }
 @media (max-width: 600px), (max-height: 500px) {
   .summary {
     padding: 8px 20px 24px;
   }
-  .lists {
+  .details {
+    font-size: 15px;
+  }
+  .groups {
     grid-template-columns: 1fr;
   }
+  .pair {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  .pair-clock {
+    width: 56px;
+    height: 56px;
+  }
   .actions {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 }
 </style>
