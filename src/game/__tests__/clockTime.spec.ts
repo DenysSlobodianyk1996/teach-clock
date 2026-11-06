@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clockTime, formatClockTime, handAngles, sameClockTime } from '../clockTime'
+import { clockTime, formatClockTime, handAngles, minutesBetween, sameClockTime } from '../clockTime'
 
 describe('Clock Time', () => {
   it('formats as H:MM with two-digit minutes', () => {
@@ -32,5 +32,20 @@ describe('Clock Time', () => {
     expect(sameClockTime(clockTime(4, 15), clockTime(4, 15))).toBe(true)
     expect(sameClockTime(clockTime(4, 15), clockTime(3, 15))).toBe(false)
     expect(sameClockTime(clockTime(4, 15), clockTime(4, 16))).toBe(false)
+  })
+})
+
+describe('minutesBetween', () => {
+  it.each<[string, string, number]>([
+    ['3:00', '3:00', 0],
+    ['12:00', '3:45', 225],
+    ['11:55', '12:05', 10],
+    ['12:05', '11:55', -10],
+    ['12:00', '6:30', -330],
+    ['12:00', '6:00', 360],
+    ['6:00', '12:00', 360],
+  ])('winds a clock from %s to %s the shorter way: %i minutes', (from, to, minutes) => {
+    const parse = (s: string) => clockTime(...(s.split(':').map(Number) as [number, number]))
+    expect(minutesBetween(parse(from), parse(to))).toBe(minutes)
   })
 })

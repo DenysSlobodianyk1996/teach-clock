@@ -16,7 +16,6 @@ test('a Player walks from Welcome through Settings to a Round', async ({ page })
   ).toBeVisible()
 
   await page.getByRole('radio', { name: startingWith(t('games.dragArrows.name')) }).check()
-  // Drag Arrows Teach is still a placeholder (ticket 06).
   await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('levels.5.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
@@ -25,9 +24,10 @@ test('a Player walks from Welcome through Settings to a Round', async ({ page })
   await expect(
     page.getByRole('img', { name: t('round.progressLabel', { n: 1, total: 10 }) }),
   ).toBeVisible()
-  await expect(page.getByTestId('play-area')).toContainText(
-    [t('games.dragArrows.name'), t('modes.teach.name'), t('levels.5.name')].join(' · '),
-  )
+  await expect(page.getByRole('heading', { name: t('round.setHands') })).toBeVisible()
+  await expect(
+    page.getByText(`${t('round.progress', { n: 1, total: 10 })} · ${t('modes.teach.name')}`),
+  ).toBeVisible()
 
   await page.getByRole('button', { name: t('header.leave') }).click()
   const dialog = page.getByRole('dialog', { name: t('leave.title') })

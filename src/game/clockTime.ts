@@ -37,3 +37,22 @@ export function sameClockTime(a: ClockTime, b: ClockTime): boolean {
 export function handAngles({ hour, minute }: ClockTime): { hour: number; minute: number } {
   return { hour: (hour % 12) * 30 + minute * 0.5, minute: minute * 6 }
 }
+
+/** `n` modulo `m`, never negative: mod(-1, 60) is 59. */
+export function mod(n: number, m: number): number {
+  return ((n % m) + m) % m
+}
+
+/** A change of `delta` around a dial of `period`, taken the shorter way: in (−period/2, period/2]. */
+export function shorterWay(delta: number, period: number): number {
+  return period / 2 - mod(period / 2 - delta, period)
+}
+
+/**
+ * How many minutes a clock winds to get from `from` to `to`, the shorter way round the 12 hours:
+ * negative winds back. Six hours either way winds forward.
+ */
+export function minutesBetween(from: ClockTime, to: ClockTime): number {
+  const minutes = ({ hour, minute }: ClockTime) => (hour % 12) * 60 + minute
+  return shorterWay(minutes(to) - minutes(from), 720)
+}
