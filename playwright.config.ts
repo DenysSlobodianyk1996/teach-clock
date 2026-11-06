@@ -18,8 +18,24 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] }, testIgnore: /offline\.spec/ },
-    { name: 'phone', use: { ...devices['Pixel 7'] }, testIgnore: /offline\.spec/ },
+    {
+      name: 'desktop',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /offline\.spec|small-phone/,
+    },
+    {
+      name: 'phone',
+      use: { ...devices['Pixel 7'] },
+      // On a phone the clock may move when a hint appears, so clock-stays-put is desktop only.
+      testIgnore: /offline\.spec|small-phone|clock-stays-put/,
+    },
+    {
+      // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when
+      // the game is installed. Checks that everything fits without scrolling.
+      name: 'small-phone',
+      use: { ...devices['Galaxy S8'], viewport: { width: 360, height: 720 } },
+      testMatch: /fits-small-phone\.spec|number-size\.spec/,
+    },
     {
       // The built app: the offline check, and checks that minified CSS has broken before.
       name: 'offline',

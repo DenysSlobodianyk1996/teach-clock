@@ -59,7 +59,7 @@ const { t } = useI18n()
 }
 @media (max-width: 600px), (max-height: 500px) {
   .hint-panel {
-    gap: 6px;
+    gap: 2px;
   }
   .btn-help {
     min-height: 48px;

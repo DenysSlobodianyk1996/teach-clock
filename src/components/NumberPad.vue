@@ -78,10 +78,11 @@ const { t } = useI18n()
 }
 @media (max-width: 600px), (max-height: 500px) {
   .pad {
-    gap: 8px;
+    gap: 6px;
   }
+  /* The smallest touch target allowed, so the whole answer fits a small phone. */
   .key {
-    height: 54px;
+    height: 48px;
   }
 }
 </style>
