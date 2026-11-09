@@ -113,6 +113,16 @@
 .dot.bad { background: var(--bad); }
 .dot.now { width: 22px; height: 22px; background: transparent; border: 4px solid var(--accent); }
 .task-no { font-size: 15px; color: var(--muted); font-weight: 700; }
+.task-no .mode-icon { width: 1.3em; height: 1.3em; margin-right: 0.25em; vertical-align: -0.3em; }
+
+/* ---------- Mode icons: a lightbulb for Teach, a check mark in a circle for Test ---------- */
+/* Rays and base take the text colour around the icon, so they read on cards and on the page. */
+.m-rays line { stroke: currentColor; stroke-width: 9; stroke-linecap: round; }
+.m-bulb { fill: var(--help); }
+.m-filament { fill: none; stroke: var(--accent-ink); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.m-base { fill: currentColor; }
+.m-badge { fill: var(--good); }
+.m-check { fill: none; stroke: var(--accent-ink); stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- clock ---------- */
 .clock { display: block; overflow: visible; filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.14)); }
