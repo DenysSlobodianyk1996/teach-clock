@@ -1,5 +1,7 @@
 # 01: Remove the 30-minute Level
 
+Covers: A2
+
 **What to build:** Drag Arrows and Set Time offer only three Levels: 1, 5 and 15 minutes, in that order, with 1 chosen by default. No Round uses a 30-minute step any more.
 
 **Blocked by:** None (can start immediately)

@@ -1,5 +1,7 @@
 # 02: Drag Numbers: a drop lands on the highlighted slot
 
+Covers: A3
+
 **What to build:** while a number is dragged, the slot under it is highlighted. Letting go while a slot is highlighted always places the number there, with a mouse or a finger. Today the drop is sometimes lost: the highlight follows the last pointer move, but the drop is worked out again from where the pointer is released, and a small slip as the finger lifts can miss the slot.
 
 **Blocked by:** None (can start immediately)

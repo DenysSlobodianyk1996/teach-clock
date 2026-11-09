@@ -1,5 +1,7 @@
 # 03: Drag Numbers: one number size
 
+Covers: A3
+
 **What to build:** a number looks the same size wherever it is: in the tray, under the finger while dragged, and placed on the face. The size follows the clock, so on a phone the numbers are smaller than on a desktop. Each number in the tray keeps a 48 px tap area, so small fingers still grab the right one.
 
 **Blocked by:** 02 (same board; avoids two branches changing it at once)

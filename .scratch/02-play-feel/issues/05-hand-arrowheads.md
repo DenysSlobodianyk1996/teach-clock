@@ -1,5 +1,7 @@
 # 05: Drag Arrows: show the tick a dragged hand lands on
 
+Covers: A1
+
 **What to build:** while a hand is dragged on the Drag Arrows clock, the tick it will land on lights up: a ring on the snapped minute (Minute Hand) or on the hour's number (Hour Hand). It clears on release. The hands stay plain lines with the 48 px drag circle at the tip, as before.
 
 Arrowheads at the hand tips were tried and dropped after review: the lit tick is enough.
