@@ -196,7 +196,7 @@
 .pair { display: flex; gap: 14px; align-items: flex-end; padding: 14px; border-radius: 22px; background: var(--surface); }
 .pair figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .pair figcaption { font-size: 13px; font-weight: 800; color: var(--muted); }
-.pair .t { font-size: 18px; font-weight: 900; }
+.pair .t { font-size: 22px; font-weight: 900; }
 .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--surface); font-weight: 900; font-size: 17px; }
 .chip .dot { width: 14px; height: 14px; }
 .confetti rect, .confetti circle { opacity: 0.95; }
