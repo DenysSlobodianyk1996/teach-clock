@@ -121,7 +121,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             class="clock"
             :time="task.answer"
             :rim="rim"
-            pointed
+            :pointed="round.mode === 'teach'"
           />
           <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
           <ClockFace
@@ -131,7 +131,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             :time="hands"
             :rim="rim"
             draggable
-            pointed
+            :pointed="round.mode === 'teach'"
             :animate="helping"
             @drag="dragHand"
           />

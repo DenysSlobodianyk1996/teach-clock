@@ -43,16 +43,38 @@ const shownTime = () => clockLabel().replace(CLOCK_SHOWS, '')
 /** The hour number lit on the Round clock. */
 const litNumber = () => wrapper.get('.clock-side .c-num.lit').text()
 
-describe('Round screen clock lights up where the hands point', () => {
-  it.each<[Game, Mode]>([
-    ['setTime', 'test'],
-    ['setTime', 'teach'],
-    ['dragArrows', 'test'],
-    ['dragArrows', 'teach'],
-  ])('in %s %s', async (game, mode) => {
-    await open(game, mode)
-    expect(wrapper.find('.clock-side [data-lit-tick]').exists()).toBe(true)
-    expect(litNumber()).toMatch(/^\d{1,2}$/)
+const litTick = () => wrapper.find('.clock-side [data-lit-tick]')
+const litNumbers = () => wrapper.findAll('.clock-side .c-num.lit')
+
+describe('Round screen Lit Place, shown in Teach only', () => {
+  it('Set Time in Teach lights the tick and the shown hour', async () => {
+    await open('setTime', 'teach')
+    expect(litTick().exists()).toBe(true)
+    expect(litNumber()).toBe(shownTime().split(':')[0])
+  })
+
+  it('Drag Arrows in Teach lights 12 at the start and follows the dragged hands', async () => {
+    await open('dragArrows', 'teach')
+    expect(litTick().exists()).toBe(true)
+    expect(litNumber()).toBe('12')
+    await setHands('3:15')
+    expect(litTick().exists()).toBe(true)
+    expect(litNumber()).toBe('3')
+  })
+
+  it('Set Time in Test lights nothing', async () => {
+    await open('setTime', 'test')
+    expect(litTick().exists()).toBe(false)
+    expect(litNumbers()).toHaveLength(0)
+  })
+
+  it('Drag Arrows in Test lights nothing, before or after dragging', async () => {
+    await open('dragArrows', 'test')
+    expect(litTick().exists()).toBe(false)
+    expect(litNumbers()).toHaveLength(0)
+    await setHands('3:15')
+    expect(litTick().exists()).toBe(false)
+    expect(litNumbers()).toHaveLength(0)
   })
 })
 
@@ -62,7 +84,6 @@ describe('Round screen, Set Time', () => {
     expect(wrapper.get('h1').text()).toBe(t('round.question'))
     expect(clockLabel()).toBe(`${CLOCK_SHOWS}${shownTime()}`)
     expect(shownTime()).toMatch(/^\d{1,2}:\d{2}$/)
-    expect(litNumber()).toBe(shownTime().split(':')[0])
     expect(wrapper.text()).toContain(
       `${t('round.progress', { n: 1, total: 10 })} · ${t('modes.test.name')}`,
     )
@@ -218,7 +239,6 @@ describe('Round screen, Drag Arrows in Test', () => {
     expect(target()).toMatch(/^\d{1,2}:\d{2}$/)
     expect(target()).not.toBe('12:00')
     expect(handsLabel()).toBe(CLOCK_DRAG)
-    expect(litNumber()).toBe('12')
     expect(button(t('round.submit'))!.attributes('disabled')).toBeUndefined()
   })
 
