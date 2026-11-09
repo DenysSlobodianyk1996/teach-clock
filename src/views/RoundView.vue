@@ -285,7 +285,7 @@ h1 {
     width: clamp(150px, 100svh - 500px, 100vw - 40px);
   }
   .setTime.has-hint .clock {
-    width: clamp(150px, 100svh - 578px, 100vw - 40px);
+    width: clamp(140px, 100svh - 578px, 100vw - 40px);
   }
   .dragArrows .clock {
     width: clamp(150px, 100svh - 360px, 100vw - 40px);
