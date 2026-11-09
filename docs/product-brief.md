@@ -22,8 +22,9 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
 4. **Summary**: read-only. Tasks grouped into **Right** and **Wrong**. Each wrong Task shows the
-   Player's first Answer next to the correct one, both drawn as clocks. Buttons: Play again,
-   back to Settings.
+   Player's first Answer next to the correct one, both drawn as big clocks (on a phone the pair
+   stacks: the Player's Answer, a down arrow, then the correct one). Buttons: Play again, back to
+   Settings.
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
 English second) and theme (middle by default, dark, light). The device remembers Preferences and

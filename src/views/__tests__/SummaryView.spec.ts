@@ -101,6 +101,15 @@ describe('Summary screen', () => {
     expect(wrong.findAll('li svg.clock')).toHaveLength(4)
   })
 
+  it('shows each pair as the Player’s answer, a decorative arrow, then the correct clock', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', playRound('test', 1))
+    const pair = wrapper.get('[aria-labelledby="wrong-title"] li')
+    const parts = pair.findAll(':scope > [aria-hidden="true"]')
+    expect(parts.map((part) => part.classes()[0])).toEqual(['side', 'arrow', 'side'])
+    expect(parts[0]!.get('s').text()).toBe('12:59')
+    expect(parts[2]!.get('b').text()).toBe(formatClockTime(tasks()[0]!.answer))
+  })
+
   it('in Teach, lists helped Tasks under Wrong with the first try', async () => {
     const { wrapper } = await mountScreen(SummaryView, '/summary', playRound('teach', 1))
     expect(wrapper.get('h1').text()).toBe(t('summary.headline', { right: 9, total: 10 }))
