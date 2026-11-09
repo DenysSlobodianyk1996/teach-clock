@@ -6,10 +6,10 @@ Covers: B3
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] Set Time and Drag Arrows in Test: no lit tick or number at any point in the Round
-- [ ] Set Time and Drag Arrows in Teach: lit as today
-- [ ] Component tests cover both Modes in both Games
-- [ ] Product brief says the Lit Place is a Teach help
-- [ ] After the fix, the design boards this ticket changes are updated to match the app (`docs/design/project/*.dc.html`, shared styles in `docs/design/project/theme.css`); ticket 03 does the final check and republishes the canvas
+- [x] Set Time and Drag Arrows in Test: no lit tick or number at any point in the Round
+- [x] Set Time and Drag Arrows in Teach: lit as today
+- [x] Component tests cover both Modes in both Games
+- [x] Product brief says the Lit Place is a Teach help
+- [x] After the fix, the design boards this ticket changes are updated to match the app (`docs/design/project/*.dc.html`, shared styles in `docs/design/project/theme.css`); ticket 03 does the final check and republishes the canvas (Test boards changed: SetTimeTest, DesktopSetTime, DragArrowsTest, PhoneDragArrows)
