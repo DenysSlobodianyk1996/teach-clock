@@ -116,7 +116,7 @@ function leaveRound() {
   }
 }
 /* Phones: room only for icons, as in the design. Names stay for screen readers. */
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .hdr {
     padding: 0 14px;
   }

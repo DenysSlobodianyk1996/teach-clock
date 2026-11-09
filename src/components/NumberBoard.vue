@@ -471,7 +471,7 @@ function tapTray() {
     0 22px 30px rgba(0, 0, 0, 0.3);
   cursor: grabbing;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .board {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -503,7 +503,7 @@ function tapTray() {
     padding: 8px;
   }
 }
-@media (max-height: 500px) and (min-width: 601px) {
+@media (--phone-sideways) {
   .board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

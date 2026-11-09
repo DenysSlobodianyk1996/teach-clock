@@ -194,7 +194,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 .submit {
   width: 100%;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .answer {
     gap: 10px;
     width: 100%;

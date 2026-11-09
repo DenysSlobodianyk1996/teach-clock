@@ -5,6 +5,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
+import { customMediaPlugin } from './src/styles/media.ts'
 
 /** The middle theme's background (--bg in src/styles/theme.css). */
 const themeColor = '#1d4b5c'
@@ -16,6 +17,8 @@ const base = process.env.GITHUB_PAGES ? '/teach-clock/' : '/'
 export default defineConfig({
   base,
   server: { port: 4200, strictPort: true },
+  // Shared breakpoints such as `@media (--phone)`, defined once in src/styles/media.ts.
+  css: { postcss: { plugins: [customMediaPlugin] } },
   plugins: [
     vue(),
     vueDevTools(),

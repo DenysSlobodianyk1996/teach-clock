@@ -66,7 +66,7 @@
     "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
     "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав числа (Drag Numbers)", "kind": "title1", "maxW": 3232 },
     "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 2128 },
-    "rowPhone": { "x": 0, "y": 6748, "text": "Телефон, вертикально", "kind": "title1", "maxW": 2740 },
+    "rowPhone": { "x": 0, "y": 6748, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 2740 },
     "rowDesktop": { "x": 0, "y": 7992, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 9040 },
     "rowThemes": { "x": 0, "y": 9292, "text": "Темна і світла теми", "kind": "title1", "maxW": 6544 }
   },

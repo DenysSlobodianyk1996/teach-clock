@@ -57,7 +57,7 @@ const { t } = useI18n()
   color: var(--text);
   font-weight: 900;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .hint-panel {
     gap: 2px;
   }

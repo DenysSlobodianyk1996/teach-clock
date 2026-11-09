@@ -262,7 +262,7 @@ h1 {
 }
 
 /* Phone upright: the clock sits above the answer. */
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .round {
     padding: 4px 20px 20px;
   }
@@ -306,7 +306,7 @@ h1 {
     white-space: nowrap;
   }
 }
-@media (max-height: 500px) and (min-width: 601px) {
+@media (--phone-sideways) {
   .play {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

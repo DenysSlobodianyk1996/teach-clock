@@ -164,7 +164,7 @@ h1 {
   gap: 12px;
 }
 
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .settings {
     padding: 4px 20px 24px;
     gap: 12px;
