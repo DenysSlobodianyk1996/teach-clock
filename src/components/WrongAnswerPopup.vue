@@ -43,7 +43,7 @@ const { t } = useI18n()
 .got-it {
   min-width: 220px;
 }
-@media (max-width: 600px) {
+@media (--phone-upright) {
   .correct {
     gap: 18px;
   }

@@ -82,7 +82,7 @@ function trapTab(event: KeyboardEvent) {
   margin: 0;
   font-size: 17px;
 }
-@media (max-width: 600px) {
+@media (--phone-upright) {
   .popup {
     padding: 28px 22px;
   }

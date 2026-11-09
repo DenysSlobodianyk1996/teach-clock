@@ -100,7 +100,7 @@ const preferences = usePreferencesStore()
   height: 26px;
 }
 
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .themes-all {
     display: none;
   }

@@ -457,7 +457,7 @@ s.time {
   justify-content: center;
   gap: 16px;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .summary {
     padding: 8px 20px 24px;
   }

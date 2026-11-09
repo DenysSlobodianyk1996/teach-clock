@@ -66,7 +66,7 @@ const { t } = useI18n()
 .submit {
   width: min(340px, 100%);
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .target {
     padding: 10px 30px;
     font-size: 56px;

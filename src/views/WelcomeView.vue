@@ -146,7 +146,7 @@ h1 {
   filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.14));
 }
 
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .welcome {
     grid-template-columns: 1fr;
     align-content: start;

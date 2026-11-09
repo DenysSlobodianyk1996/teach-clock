@@ -76,7 +76,7 @@ const { t } = useI18n()
 .zero {
   grid-column: span 2;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .pad {
     gap: 6px;
   }

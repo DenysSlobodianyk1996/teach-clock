@@ -176,7 +176,7 @@ h1 {
   white-space: nowrap;
   box-shadow: var(--shadow);
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .round {
     padding: 4px 20px 20px;
   }

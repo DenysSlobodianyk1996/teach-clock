@@ -79,7 +79,7 @@ const STATUS_CLASS: Record<DotStatus, string | null> = {
   background: transparent;
   border: 4px solid var(--accent);
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .dots {
     gap: 8px;
   }

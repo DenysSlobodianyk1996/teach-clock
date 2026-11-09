@@ -96,10 +96,13 @@ Rules shared by Drag Arrows and Set Time:
   softened green/red for right/wrong). Dark and light themes as alternatives.
 - Text meets WCAG AA contrast. Touch targets at least 48 px.
 - The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
-  desktop. On a phone held upright, the clock sits above the answer area.
-- On desktop and tablet the clock never moves during a Round. Anything that can appear around it
-  (the Hint, an error, the Drag Numbers hint, Submit) has its space kept from the first Task, empty
-  until needed.
+  desktop. Every screen switches to the phone layout when the window is 768 px wide or less, taller
+  than wide (an upright tablet too), or 500 px tall or less (a phone held sideways). There the
+  screen stacks and scrolls, and the clock sits above the answer area (beside it on a sideways
+  phone wider than 600 px). The breakpoint is defined once, in `src/styles/media.ts`.
+- In the 4:3 layout (desktop, landscape tablet) the clock never moves during a Round. Anything that
+  can appear around it (the Hint, an error, the Drag Numbers hint, Submit) has its space kept from
+  the first Task, empty until needed.
 - On a phone the clock is as big as the screen allows: no empty space is kept, so the clock may
   shrink or move only when a Hint, a hint note or Submit appears. Everything still fits a
   360 × 720 screen without scrolling.
