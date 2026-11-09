@@ -49,11 +49,12 @@ Rules shared by Drag Arrows and Set Time:
 
 - A Clock Time has hours 1–12 and minutes 00–59. No seconds, no 24-hour times, no AM/PM.
 - Minutes are multiples of the Level step. A Round never repeats a Clock Time.
-- The clock lights up where the hands point, in both Modes: the Minute Hand's tick in the Minute
+- In Teach the clock shows the Lit Place, a Teach help: the Minute Hand's tick in the Minute
   Hand's colour, a little thicker, with a glow; and the number of the hour the Hour Hand has passed
   (at 2:55 the 2, at 12:40 the 12) in the Hour Hand's colour, with a glow. The lit number is drawn
-  over the grips, so it stays readable where a grip sits on it (at 3:15 the 3). Clocks in the
-  Summary and the wrong-answer popup light nothing.
+  over the Grips, so it stays readable where a Grip sits on it (at 3:15 the 3). In Test nothing is
+  lit at any point, before or after dragging. Clocks in the Summary and the wrong-answer popup light
+  nothing.
 
 ### Drag Arrows: how the hands move
 
@@ -64,7 +65,8 @@ Rules shared by Drag Arrows and Set Time:
 - Dragging the Hour Hand changes only the hour. It jumps to the hour whose position (with the
   current minutes) is nearest the finger. At 1:30 the Hour Hand is between 1 and 2, whichever
   hand was set first.
-- The lit tick and number follow the hands while they are dragged and stay lit after letting go.
+- In Teach the lit tick and number follow the hands while they are dragged and stay lit after
+  letting go.
 - Hands start at 12:00 for every Task. 12:00 is never a target, so an untouched submit is wrong.
 
 ### Set Time: input
@@ -106,6 +108,11 @@ Rules shared by Drag Arrows and Set Time:
 - Mid-tone, soft but saturated palette as the default "middle" theme (for example deep teal/navy
   background, warm cream clock face, coral Hour Hand, teal Minute Hand, mustard highlights,
   softened green/red for right/wrong). Dark and light themes as alternatives.
+- Both hands are thin on every clock, so a number they cross stays readable; they differ by length
+  and colour. In Drag Arrows each hand ends in a Grip: both Grips are the same small ring in their
+  hand's colour, with a bigger invisible touch area around them, and every number is drawn over the
+  hands and Grips, so a Grip never hides a number. On clocks without Grips the numbers stay under
+  the hands.
 - Text meets WCAG AA contrast. Touch targets at least 48 px.
 - The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
   desktop. Every screen switches to the phone layout when the window is 768 px wide or less, taller

@@ -6,7 +6,7 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 ## Status
 
 Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
-Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `03-readability` (Drag Numbers default, Mode icons, phone layout up to 768px, Set Time ranges, lit tick and number, bigger Summary clocks). Current: `04-clear-hands` (planned).
+Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `04-clear-hands` (Lit Place in Teach only, thin hands, small matching Grips, numbers above the Grips in Drag Arrows).
 
 ## Commands
 

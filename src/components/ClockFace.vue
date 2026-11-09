@@ -36,10 +36,12 @@ const tick5 = { dash: 3, gap: circumference / 12 - 3 }
 const LIT_TICK = { y1: -90, y2: -79 }
 
 // Each hand: its line (tail past the pin to tip), its grip at the tip, and a bigger see-through
-// circle around the grip, 48 units across: about 48 px to touch on a phone-sized clock.
+// circle around the grip, 48 units across: about 48 px to touch on a phone-sized clock. Both
+// grips are the same small ring, so the number under one stays readable.
+const GRIP_SIZE = 7
 const HANDS = {
-  hour: { line: 'c-hour', tail: 10, tip: -45, grip: 'h', gripSize: 9, reach: 24 },
-  minute: { line: 'c-min', tail: 14, tip: -70, grip: 'm', gripSize: 11, reach: 24 },
+  hour: { line: 'c-hour', tail: 10, tip: -45, grip: 'h', reach: 24 },
+  minute: { line: 'c-min', tail: 14, tip: -70, grip: 'm', reach: 24 },
 } as const
 /** Near the pin the pointer's direction swings wildly, so moves this close (in clock units) are ignored. */
 const DEAD_ZONE = 20
@@ -82,7 +84,7 @@ const lit = computed(() => {
     tickStyle: { transform: `rotate(${tick * 6}deg)` },
   }
 })
-/** The numbers drawn plainly: all but the lit one, which goes on top of the grips. */
+/** The numbers drawn plainly: all but the lit one, which goes on top of everything. */
 const plainNumbers = computed(() => numbers.filter(({ n }) => n !== lit.value?.number.n))
 /** The blur behind the lit tick and number; unique per clock, as several can share a page. */
 const glowId = `glow-${useId()}`
@@ -159,7 +161,10 @@ function release(event: PointerEvent) {
         <line :y1="LIT_TICK.y1" :y2="LIT_TICK.y2" />
       </g>
     </template>
-    <text v-for="{ n, x, y } in plainNumbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
+    <!-- Without grips the numbers go under the hands; the thin hands leave them readable. -->
+    <template v-if="!draggable">
+      <text v-for="{ n, x, y } in plainNumbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
+    </template>
     <!-- The Minute Hand comes second, so it is on top where the hands cross. -->
     <g v-for="hand in HAND_ORDER" :key="hand" :data-hand="hand" :style="turn(hand)">
       <line :class="HANDS[hand].line" :y1="HANDS[hand].tail" :y2="HANDS[hand].tip" />
@@ -176,15 +181,13 @@ function release(event: PointerEvent) {
         @pointerdown="grab(hand, $event)"
       >
         <circle class="hit" :cy="HANDS[hand].tip" :r="HANDS[hand].reach" />
-        <circle
-          class="c-grip"
-          :class="HANDS[hand].grip"
-          :cy="HANDS[hand].tip"
-          :r="HANDS[hand].gripSize"
-        />
+        <circle class="c-grip" :class="HANDS[hand].grip" :cy="HANDS[hand].tip" :r="GRIP_SIZE" />
       </g>
+      <!-- With grips every number goes over them (at 3:15 the Minute Hand's grip sits on the 3).
+           Numbers ignore the pointer, so a press on one still grabs the grip beneath. -->
+      <text v-for="{ n, x, y } in plainNumbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
     </template>
-    <!-- The lit number goes over the grips: at 3:15 the Minute Hand's grip sits on the 3. -->
+    <!-- The lit number goes on top of everything. -->
     <template v-if="lit">
       <text
         class="c-num c-lit-glow"
