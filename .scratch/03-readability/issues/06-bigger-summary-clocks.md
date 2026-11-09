@@ -6,9 +6,11 @@ Covers: A7
 
 **Blocked by:** 03 (the phone layout changes first)
 
-**Status:** todo
+**Status:** done
 
-- [ ] Summary clocks are about 2× bigger on desktop and readable on a phone
-- [ ] On a phone each pair stacks vertically with a down arrow
-- [ ] Drag Numbers pairs and the "Right" list grow too
-- [ ] No other screen has clocks this small (checked: Round, Hint panel, wrong-answer popup)
+- [x] Summary clocks are about 2× bigger on desktop and readable on a phone
+- [x] On a phone each pair stacks vertically with a down arrow
+- [x] Drag Numbers pairs and the "Right" list grow too
+- [x] No other screen has clocks this small (checked: Round, Hint panel, wrong-answer popup)
+
+**Result:** wrong-answer pairs 70px → 140px (120px on a phone), the "Right" list 64px → 128px (108px on a phone, two per row). On desktop each side shows its caption and time under the clock; on a phone the pair stacks with a down arrow under the clocks. Other screens checked: the Round clock fills its side; the Hint panel has no clock (text only); the Teach wrong-answer popup clock is 150px (110px on a phone). None needed a change.

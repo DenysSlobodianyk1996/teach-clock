@@ -155,7 +155,7 @@ describe('Drag Numbers in Test', () => {
     let round = startRound(TEST, seededRandom(1))
     for (const n of ONE_TO_TWELVE.slice(0, 11)) round = dropNumber(round, n, n).round
     expect(canSubmit(round)).toBe(false)
-    expect(() => submitPlacements(round)).toThrow()
+    expect(() => submitPlacements(round)).toThrow('Submit needs a Test Round')
     round = dropNumber(round, 12, 12).round
     expect(canSubmit(round)).toBe(true)
     expect(isFinished(round)).toBe(false)
@@ -186,8 +186,8 @@ describe('Drag Numbers in Test', () => {
   it('does not let Teach use Test moves', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 7, 7).round
-    expect(() => returnToTray(round, 7)).toThrow()
-    expect(() => submitPlacements(round)).toThrow()
+    expect(() => returnToTray(round, 7)).toThrow('Only Test can take numbers back')
+    expect(() => submitPlacements(round)).toThrow('Submit needs a Test Round')
   })
 })
 

@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import ClockFace, { type Hand } from '@/components/ClockFace.vue'
 import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
 import DragNumbersRound from './DragNumbersRound.vue'
+import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
@@ -109,13 +110,19 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
       <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />
       <div class="task-no">
         {{ t('round.progress', { n: shownIndex + 1, total: round.tasks.length }) }} ·
-        {{ t(`modes.${round.mode}.name`) }}
+        <ModeIcon :mode="round.mode" inline />{{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
     <section class="play" :class="[round.game, { 'has-hint': taskHint }]">
       <div class="clock-side">
         <div class="clock-wrap">
-          <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
+          <ClockFace
+            v-if="round.game === 'setTime'"
+            class="clock"
+            :time="task.answer"
+            :rim="rim"
+            pointed
+          />
           <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
           <ClockFace
             v-else
@@ -124,6 +131,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             :time="hands"
             :rim="rim"
             draggable
+            pointed
             :animate="helping"
             @drag="dragHand"
           />
@@ -262,7 +270,7 @@ h1 {
 }
 
 /* Phone upright: the clock sits above the answer. */
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .round {
     padding: 4px 20px 20px;
   }
@@ -282,10 +290,10 @@ h1 {
    * small-phone browser tests check it all fits. With the Hint showing, the clock shrinks to make room.
    */
   .setTime .clock {
-    width: clamp(150px, 100svh - 484px, 100vw - 40px);
+    width: clamp(150px, 100svh - 500px, 100vw - 40px);
   }
   .setTime.has-hint .clock {
-    width: clamp(150px, 100svh - 562px, 100vw - 40px);
+    width: clamp(140px, 100svh - 578px, 100vw - 40px);
   }
   .dragArrows .clock {
     width: clamp(150px, 100svh - 360px, 100vw - 40px);
@@ -306,7 +314,7 @@ h1 {
     white-space: nowrap;
   }
 }
-@media (max-height: 500px) and (min-width: 601px) {
+@media (--phone-sideways) {
   .play {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

@@ -113,6 +113,16 @@
 .dot.bad { background: var(--bad); }
 .dot.now { width: 22px; height: 22px; background: transparent; border: 4px solid var(--accent); }
 .task-no { font-size: 15px; color: var(--muted); font-weight: 700; }
+.task-no .mode-icon { width: 1.3em; height: 1.3em; margin-right: 0.25em; vertical-align: -0.3em; }
+
+/* ---------- Mode icons: a lightbulb for Teach, a check mark in a circle for Test ---------- */
+/* Rays and base take the text colour around the icon, so they read on cards and on the page. */
+.m-rays line { stroke: currentColor; stroke-width: 9; stroke-linecap: round; }
+.m-bulb { fill: var(--help); }
+.m-filament { fill: none; stroke: var(--accent-ink); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.m-base { fill: currentColor; }
+.m-badge { fill: var(--good); }
+.m-check { fill: none; stroke: var(--accent-ink); stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- clock ---------- */
 .clock { display: block; overflow: visible; filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.14)); }
@@ -123,10 +133,12 @@
 .c-hour { stroke: var(--hour); stroke-width: 11; stroke-linecap: round; }
 .c-min { stroke: var(--minute); stroke-width: 7; stroke-linecap: round; }
 .c-pin { fill: var(--pin); stroke: var(--face); stroke-width: 3; }
-/* The tick a dragged hand will land on: a mustard ring in the hand's colour around it. */
-.c-target circle { fill: var(--accent); fill-opacity: 0.6; stroke-width: 3; }
-.c-target.hour circle { stroke: var(--hour); }
-.c-target.minute circle { stroke: var(--minute); }
+/* Where the hands point (Set Time, Drag Arrows): the Minute Hand's tick and the Hour Hand's number in
+   the hand's colour, each with a glow (a blurred copy behind it, filter #glow). */
+.c-lit-tick line { stroke: var(--minute); stroke-width: 3.5; }
+.c-lit-tick .glow { stroke-width: 7; opacity: 0.7; }
+.c-num.lit { fill: var(--hour); stroke: var(--face); stroke-width: 3; paint-order: stroke; pointer-events: none; }
+.c-lit-glow { fill: var(--hour); stroke: var(--hour); stroke-width: 4; opacity: 0.45; }
 .c-grip { fill: var(--face); stroke-width: 4; }
 .c-grip.h { stroke: var(--hour); }
 .c-grip.m { stroke: var(--minute); }
@@ -144,7 +156,13 @@
 .tile.lifted { transform: rotate(-8deg); box-shadow: 0 14px 0 rgba(0, 0, 0, 0.12), 0 22px 30px rgba(0, 0, 0, 0.3); background: var(--accent); color: var(--accent-ink); }
 
 /* ---------- Set Time entry ---------- */
-.timebox-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+/* Boxes on top, each box's range under it. The error lines lie over the ranges and the room under
+   them, so the pad sits close and nothing moves when an error appears. */
+.timebox-row { display: grid; grid-template-columns: repeat(3, auto); grid-template-rows: auto 1.4em; justify-content: center; justify-items: center; align-items: center; gap: 4px 10px; margin-bottom: 8px; }
+.timebox-row .h { grid-column: 1; }
+.timebox-row .colon { grid-column: 2; }
+.timebox-row .mm { grid-column: 3; }
+.range { grid-row: 2; line-height: 1.4; font-weight: 800; color: var(--muted); }
 .timebox { display: flex; align-items: center; justify-content: center; height: 96px; border-radius: 22px; background: var(--face); color: var(--num); font: 900 58px "Nunito", sans-serif; border: 4px solid transparent; }
 .timebox.h { width: 92px; }
 .timebox.mm { width: 150px; }
@@ -178,7 +196,7 @@
 .pair { display: flex; gap: 14px; align-items: flex-end; padding: 14px; border-radius: 22px; background: var(--surface); }
 .pair figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .pair figcaption { font-size: 13px; font-weight: 800; color: var(--muted); }
-.pair .t { font-size: 18px; font-weight: 900; }
+.pair .t { font-size: 22px; font-weight: 900; }
 .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--surface); font-weight: 900; font-size: 17px; }
 .chip .dot { width: 14px; height: 14px; }
 .confetti rect, .confetti circle { opacity: 0.95; }

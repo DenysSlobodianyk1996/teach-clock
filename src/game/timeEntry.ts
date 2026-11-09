@@ -3,7 +3,14 @@
  * Any digits can be typed; an impossible value is reported only when the Player submits.
  * Plain TypeScript, no Vue.
  */
-import { clockTime, isValidHour, isValidMinute, type ClockTime } from './clockTime'
+import {
+  clockTime,
+  HOUR_RANGE,
+  isValidHour,
+  isValidMinute,
+  MINUTE_RANGE,
+  type ClockTime,
+} from './clockTime'
 
 export type Box = 'hour' | 'minute'
 
@@ -11,6 +18,12 @@ export interface TimeEntry {
   readonly hour: string
   readonly minute: string
   readonly selected: Box
+}
+
+/** The numbers each box takes, shown under it. Other digits can still be typed. */
+export const BOX_RANGE: Record<Box, { readonly from: number; readonly to: number }> = {
+  hour: HOUR_RANGE,
+  minute: MINUTE_RANGE,
 }
 
 export const EMPTY_ENTRY: TimeEntry = { hour: '', minute: '', selected: 'hour' }

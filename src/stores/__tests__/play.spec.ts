@@ -10,8 +10,8 @@ describe('play store', () => {
     setActivePinia(createPinia())
   })
 
-  it('opens Settings on Set Time, Teach, 1 minute', () => {
-    expect(usePlayStore().settings).toEqual({ game: 'setTime', mode: 'teach', level: 1 })
+  it('opens Settings on Drag Numbers, Teach, 1 minute', () => {
+    expect(usePlayStore().settings).toEqual({ game: 'dragNumbers', mode: 'teach', level: 1 })
   })
 
   it('has no Round until the Player starts one', () => {
@@ -62,6 +62,7 @@ describe('play store', () => {
 
   it('submits Answers to the current Round and builds the Summary when it finishes', () => {
     const play = usePlayStore()
+    play.settings.game = 'setTime'
     play.settings.mode = 'test'
     play.startRound(seededRandom(3))
     expect(play.summary).toBeNull()

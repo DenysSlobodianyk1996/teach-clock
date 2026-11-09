@@ -21,13 +21,13 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /offline\.spec|small-phone/,
+      testIgnore: /offline\.spec|small-phone|phone-layout-768/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
       // On a phone the clock may move when a hint appears, so clock-stays-put is desktop only.
-      testIgnore: /offline\.spec|small-phone|clock-stays-put/,
+      testIgnore: /offline\.spec|small-phone|clock-stays-put|phone-layout-768/,
     },
     {
       // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when
@@ -35,6 +35,13 @@ export default defineConfig({
       name: 'small-phone',
       use: { ...devices['Galaxy S8'], viewport: { width: 360, height: 720 } },
       testMatch: /fits-small-phone\.spec|number-size\.spec/,
+    },
+    {
+      // Windows between phone and desktop: 601–768px wide, an upright tablet, a wide landscape window
+      // and a sideways phone. Each test sets its own viewport; see phone-layout-768.spec.ts.
+      name: 'tablet',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /phone-layout-768\.spec/,
     },
     {
       // The built app: the offline check, and checks that minified CSS has broken before.

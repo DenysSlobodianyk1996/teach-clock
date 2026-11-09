@@ -44,21 +44,21 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div class="label" style="margin-top: 6px">Режим</div>
     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-      <button class="choice" type="button" aria-pressed="true" style="padding: 10px 14px"><b>Навчання</b><span>Помилився — покажемо, як правильно, і допоможемо виправити.</span></button>
-      <button class="choice" type="button" aria-pressed="false" style="padding: 10px 14px"><b>Перевірка</b><span>Без підказок. Що вийшло — побачиш у кінці.</span></button>
+      <button class="choice" type="button" aria-pressed="true" style="padding: 10px 14px; gap: 6px"><svg class="mode-icon teach" viewBox="-100 -100 200 200" aria-hidden="true" style="width: 40px; height: 40px; flex: none"><g class="m-rays"><line x1="0" y1="-78" x2="0" y2="-96"></line><line x1="-42" y1="-60" x2="-55" y2="-73"></line><line x1="42" y1="-60" x2="55" y2="-73"></line><line x1="-60" y1="-18" x2="-78" y2="-18"></line><line x1="60" y1="-18" x2="78" y2="-18"></line></g><path class="m-bulb" d="M -28 18 A 46 46 0 1 1 28 18 L 22 40 L -22 40 Z"></path><path class="m-filament" d="M -11 30 L -11 6 L 0 -6 L 11 6 L 11 30"></path><rect class="m-base" x="-24" y="48" width="48" height="12" rx="6"></rect><rect class="m-base" x="-16" y="66" width="32" height="12" rx="6"></rect></svg><div style="display: flex; flex-direction: column; gap: 2px"><b>Навчання</b><span>Помилився — покажемо, як правильно, і допоможемо виправити.</span></div></button>
+      <button class="choice" type="button" aria-pressed="false" style="padding: 10px 14px; gap: 6px"><svg class="mode-icon test" viewBox="-100 -100 200 200" aria-hidden="true" style="width: 40px; height: 40px; flex: none"><circle class="m-badge" r="78"></circle><path class="m-check" d="M -38 2 L -12 28 L 40 -26"></path></svg><div style="display: flex; flex-direction: column; gap: 2px"><b>Перевірка</b><span>Без підказок. Що вийшло — побачиш у кінці.</span></div></button>
     </div>
 
     <div class="label" style="margin-top: 6px">Крок хвилин</div>
     <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-      <button class="choice" type="button" aria-pressed="true" style="padding: 10px 6px; align-items: center"><b>1</b><span>хв</span></button>
-      <button class="choice" type="button" aria-pressed="false" style="padding: 10px 6px; align-items: center"><b>5</b><span>хв</span></button>
-      <button class="choice" type="button" aria-pressed="false" style="padding: 10px 6px; align-items: center"><b>15</b><span>хв</span></button>
+      <button class="choice" type="button" aria-pressed="true" style="padding: 14px 6px; align-items: center"><b>1 хв</b></button>
+      <button class="choice" type="button" aria-pressed="false" style="padding: 14px 6px; align-items: center"><b>5 хв</b></button>
+      <button class="choice" type="button" aria-pressed="false" style="padding: 14px 6px; align-items: center"><b>15 хв</b></button>
     </div>
 
     <div style="flex-grow: 1"></div>
     <div style="display: flex; gap: 10px">
-      <a class="btn btn-soft" href="PhoneWelcome.dc.html" aria-label="Назад" style="padding: 0; width: 60px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
-      <a class="btn" href="PhoneDragArrows.dc.html" style="flex-grow: 1">Грати<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></a>
+      <a class="btn btn-soft" href="PhoneWelcome.dc.html" style="flex: 1 1 0; padding: 0 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Назад</a>
+      <a class="btn" href="PhoneDragArrows.dc.html" style="flex: 1 1 0; padding: 0 12px">Грати<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></a>
     </div>
   </main>
 </div>

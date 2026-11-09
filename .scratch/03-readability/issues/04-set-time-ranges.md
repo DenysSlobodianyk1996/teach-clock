@@ -6,8 +6,8 @@ Covers: A4
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] Each box shows its range underneath, in both languages (text through i18n, `uk` and `en`)
-- [ ] The space between the boxes and the number pad is visibly smaller, on desktop and phone
-- [ ] Typing and Check behave as today
+- [x] Each box shows its range underneath, in both languages (text through i18n, `uk` and `en`)
+- [x] The space between the boxes and the number pad is visibly smaller, on desktop and phone
+- [x] Typing and Check behave as today

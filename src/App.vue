@@ -66,8 +66,9 @@ watch(
   background: var(--bg);
 }
 
-/* Desktop: the stage sits as a card on a deeper background. */
-@media (min-width: 1100px) and (min-height: 860px) {
+/* Desktop: the stage sits as a card on a deeper background. Not when taller than wide: that is the
+   phone layout (see src/styles/media.ts). */
+@media (min-width: 1100px) and (min-height: 860px) and (orientation: landscape) {
   .app {
     background: var(--bg-deep);
   }
@@ -82,7 +83,7 @@ watch(
 }
 
 /* Phones (upright or sideways): no 4:3, the screen stacks and scrolls. */
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .stage {
     width: 100%;
     aspect-ratio: auto;

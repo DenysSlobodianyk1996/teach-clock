@@ -40,6 +40,21 @@ async function answer(time: string) {
 const clockLabel = () => wrapper.get('.clock-side svg.clock').attributes('aria-label')!
 const CLOCK_SHOWS = t('app.clockShows', { time: '' })
 const shownTime = () => clockLabel().replace(CLOCK_SHOWS, '')
+/** The hour number lit on the Round clock. */
+const litNumber = () => wrapper.get('.clock-side .c-num.lit').text()
+
+describe('Round screen clock lights up where the hands point', () => {
+  it.each<[Game, Mode]>([
+    ['setTime', 'test'],
+    ['setTime', 'teach'],
+    ['dragArrows', 'test'],
+    ['dragArrows', 'teach'],
+  ])('in %s %s', async (game, mode) => {
+    await open(game, mode)
+    expect(wrapper.find('.clock-side [data-lit-tick]').exists()).toBe(true)
+    expect(litNumber()).toMatch(/^\d{1,2}$/)
+  })
+})
 
 describe('Round screen, Set Time', () => {
   it('shows a clock and asks what time it is', async () => {
@@ -47,6 +62,7 @@ describe('Round screen, Set Time', () => {
     expect(wrapper.get('h1').text()).toBe(t('round.question'))
     expect(clockLabel()).toBe(`${CLOCK_SHOWS}${shownTime()}`)
     expect(shownTime()).toMatch(/^\d{1,2}:\d{2}$/)
+    expect(litNumber()).toBe(shownTime().split(':')[0])
     expect(wrapper.text()).toContain(
       `${t('round.progress', { n: 1, total: 10 })} · ${t('modes.test.name')}`,
     )
@@ -105,6 +121,9 @@ describe('Round screen, Set Time in Teach', () => {
     await answer(WRONG)
     const popup = wrapper.get('[role="dialog"]')
     expect(popup.get('h2').text()).toBe(t('teach.wrongTitle'))
+    expect(popup.find('svg.clock').exists()).toBe(true)
+    expect(popup.find('[data-lit-tick]').exists()).toBe(false)
+    expect(popup.find('.c-num.lit').exists()).toBe(false)
     expect(popup.get('.big-time').text()).toBe(correct)
     const [h, m] = correct.split(':').map(Number) as [number, number]
     const mistake = describeMistake(clockTime(h, m), clockTime(12, 1))
@@ -199,6 +218,7 @@ describe('Round screen, Drag Arrows in Test', () => {
     expect(target()).toMatch(/^\d{1,2}:\d{2}$/)
     expect(target()).not.toBe('12:00')
     expect(handsLabel()).toBe(CLOCK_DRAG)
+    expect(litNumber()).toBe('12')
     expect(button(t('round.submit'))!.attributes('disabled')).toBeUndefined()
   })
 
@@ -428,5 +448,22 @@ describe('Round screen, Drag Numbers in Test', () => {
     await submitButton()!.trigger('click')
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
     expect(usePlayStore().summary).toMatchObject({ rightCount: 12, total: 12 })
+  })
+})
+
+describe('Round screen, Mode icon on the progress line', () => {
+  const cases: [Game, Mode][] = [
+    ['dragNumbers', 'teach'],
+    ['dragArrows', 'test'],
+    ['setTime', 'teach'],
+    ['setTime', 'test'],
+  ]
+  it.each(cases)('%s in %s shows the Mode icon just before the Mode name', async (game, mode) => {
+    await open(game, mode)
+    const line = wrapper.get('.task-no').element
+    const icon = line.querySelector('svg')!
+    expect(icon.classList).toContain(mode)
+    expect(icon.getAttribute('aria-hidden')).toBe('true')
+    expect(icon.nextSibling?.textContent?.trim()).toBe(t(`modes.${mode}.name`))
   })
 })

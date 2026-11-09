@@ -345,20 +345,20 @@ ul {
 }
 .right-clocks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 12px 8px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 14px 8px;
 }
 .right-clocks li {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 900;
 }
 .small {
-  width: 64px;
-  height: 64px;
+  width: 128px;
+  height: 128px;
 }
 .chips {
   display: flex;
@@ -385,32 +385,35 @@ ul {
 .pair {
   display: flex;
   align-items: center;
+  justify-content: space-around;
   gap: 14px;
-  padding: 10px 14px;
+  padding: 14px;
   border-radius: 22px;
   background: var(--surface);
 }
+/* Each side: the clock, then its caption and time under it. */
 .side {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 12px;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 2px;
+  text-align: center;
 }
 .pair-clock {
-  grid-row: span 2;
-  width: 70px;
-  height: 70px;
+  flex: none;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 6px;
 }
 .caption {
-  align-self: end;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--muted);
 }
 .time {
-  align-self: start;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 900;
 }
 s.time {
@@ -457,7 +460,7 @@ s.time {
   justify-content: center;
   gap: 16px;
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .summary {
     padding: 8px 20px 24px;
   }
@@ -468,13 +471,52 @@ s.time {
   .faces {
     grid-template-columns: 1fr;
   }
+  /* Stacked: the Player's answer on top, a down arrow, then the correct one. */
   .pair {
-    gap: 8px;
-    padding: 8px 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 12px 14px;
+  }
+  /* Under the middle of the clocks. */
+  .pair .arrow {
+    align-self: flex-start;
+    margin-left: calc((120px - 26px) / 2);
+    transform: rotate(90deg);
+  }
+  /* Beside the clock now: caption on top, time under it. */
+  .side {
+    flex: none;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: center;
+    text-align: start;
   }
   .pair-clock {
-    width: 56px;
-    height: 56px;
+    grid-row: span 2;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 0;
+  }
+  .caption {
+    align-self: end;
+  }
+  /* Drag Numbers has no time under the caption. */
+  .caption:last-child {
+    grid-row: span 2;
+    align-self: center;
+  }
+  .time {
+    align-self: start;
+  }
+  .right-clocks {
+    grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  }
+  .small {
+    width: 108px;
+    height: 108px;
   }
   .actions {
     flex-direction: column;

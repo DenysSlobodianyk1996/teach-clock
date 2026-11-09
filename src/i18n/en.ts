@@ -63,6 +63,8 @@ export default {
     minuteHand: 'Long — minutes',
     hours: 'Hours',
     minutes: 'Minutes',
+    /** A box's range, shown under it. */
+    range: '{from}–{to}',
     clear: 'Clear',
     submit: 'Check',
     errors: {

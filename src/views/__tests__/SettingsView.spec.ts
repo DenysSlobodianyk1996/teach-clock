@@ -30,22 +30,45 @@ describe('Settings screen', () => {
     expect(wrapper.find('h1').text()).toBe(t('settings.greeting', { name: 'Оля' }))
   })
 
-  it('shows the selected Game, Mode and Level as checked', async () => {
+  it('opens on Drag Numbers and Teach, with no Level', async () => {
     const { wrapper } = await open()
-    expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('games.dragNumbers.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(false)
     expect(choice(wrapper, t('modes.teach.name')).element.checked).toBe(true)
-    expect(choice(wrapper, t('levels.1.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
+    expect(wrapper.text()).not.toContain(t('settings.level'))
+  })
+
+  it.each(['dragArrows', 'setTime'] as const)(
+    'shows the Level with 1 minute checked once %s is picked',
+    async (game) => {
+      const { wrapper } = await open()
+      await choice(wrapper, t(`games.${game}.name`)).setValue(true)
+      expect(wrapper.text()).toContain(t('settings.level'))
+      expect(choice(wrapper, t('levels.1.name')).element.checked).toBe(true)
+    },
+  )
+
+  it('shows each Mode card with its own icon, hidden from screen readers like the Game icons', async () => {
+    const { wrapper } = await open()
+    for (const mode of ['teach', 'test'] as const) {
+      const card = choice(wrapper, t(`modes.${mode}.name`)).element.closest('label')!
+      const icon = card.querySelector('svg')
+      expect(icon?.classList).toContain(mode)
+      expect(icon?.getAttribute('aria-hidden')).toBe('true')
+    }
   })
 
   it('offers the Levels 1, 5 and 15 minutes, smallest step first', async () => {
     const { wrapper } = await open()
+    await choice(wrapper, t('games.setTime.name')).setValue(true)
     const levels = wrapper.findAll('.levels label.choice b').map((b) => b.text())
     expect(levels).toEqual([t('levels.1.name'), t('levels.5.name'), t('levels.15.name')])
   })
 
   it('hides the Level for Drag Numbers and shows it again for other Games', async () => {
     const { wrapper } = await open()
+    await choice(wrapper, t('games.setTime.name')).setValue(true)
     expect(wrapper.text()).toContain(t('settings.level'))
 
     await choice(wrapper, t('games.dragNumbers.name')).setValue(true)
@@ -58,6 +81,7 @@ describe('Settings screen', () => {
 
   it('starts a Round with the chosen Settings and opens it', async () => {
     const { wrapper, router } = await open()
+    await choice(wrapper, t('games.setTime.name')).setValue(true)
     await choice(wrapper, t('modes.test.name')).setValue(true)
     await choice(wrapper, t('levels.5.name')).setValue(true)
     await button(wrapper, t('settings.play')).trigger('click')

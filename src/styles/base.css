@@ -145,20 +145,33 @@ input {
   stroke-width: 7;
   stroke-linecap: round;
 }
-/* The tick a dragged hand will land on: a mustard ring in the hand's colour around it. */
-.c-target {
+/* Where the hands point: the Minute Hand's tick, a bit thicker and longer, and the Hour Hand's
+   number, each in its hand's colour with a soft glow (a blurred copy behind it). */
+.c-lit-tick {
   pointer-events: none;
 }
-.c-target circle {
-  fill: var(--accent);
-  fill-opacity: 0.6;
-  stroke-width: 3;
-}
-.c-target.hour circle {
-  stroke: var(--hour);
-}
-.c-target.minute circle {
+.c-lit-tick line {
   stroke: var(--minute);
+  stroke-width: 3.5;
+}
+.c-lit-tick .glow {
+  stroke-width: 7;
+  opacity: 0.7;
+}
+/* A face-coloured outline keeps the number readable where it sits on a grip. */
+.c-num.lit {
+  fill: var(--hour);
+  stroke: var(--face);
+  stroke-width: 3;
+  paint-order: stroke;
+  pointer-events: none;
+}
+.c-lit-glow {
+  fill: var(--hour);
+  stroke: var(--hour);
+  stroke-width: 4;
+  opacity: 0.45;
+  pointer-events: none;
 }
 .c-pin {
   fill: var(--pin);

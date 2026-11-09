@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import ModeIcon from '@/components/ModeIcon.vue'
 import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
 import { canSubmit, type Neighbours } from '@/game/dragNumbers'
@@ -71,7 +72,11 @@ function submit() {
   <div class="round">
     <div class="progress">
       <ProgressDots :statuses="dots" :label="progress.label" />
-      <div class="task-no">{{ progress.text }} · {{ t(`modes.${round.mode}.name`) }}</div>
+      <div class="task-no">
+        {{ progress.text }} · <ModeIcon :mode="round.mode" inline />{{
+          t(`modes.${round.mode}.name`)
+        }}
+      </div>
     </div>
     <NumberBoard
       :hinted="hint !== null"
@@ -176,7 +181,7 @@ h1 {
   white-space: nowrap;
   box-shadow: var(--shadow);
 }
-@media (max-width: 600px), (max-height: 500px) {
+@media (--phone) {
   .round {
     padding: 4px 20px 20px;
   }

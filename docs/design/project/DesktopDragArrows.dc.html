@@ -30,26 +30,39 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <div class="dots" aria-label="Прогрес: завдання 5 з 10">
           <span class="dot ok"></span><span class="dot ok"></span><span class="dot help"></span><span class="dot ok"></span><span class="dot ok"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </div>
-        <div class="task-no">Завдання 5 з 10 · Навчання · 5 хв</div>
+        <div class="task-no">Завдання 5 з 10 · <svg class="mode-icon teach" viewBox="-100 -100 200 200" aria-hidden="true"><g class="m-rays"><line x1="0" y1="-78" x2="0" y2="-96"></line><line x1="-42" y1="-60" x2="-55" y2="-73"></line><line x1="42" y1="-60" x2="55" y2="-73"></line><line x1="-60" y1="-18" x2="-78" y2="-18"></line><line x1="60" y1="-18" x2="78" y2="-18"></line></g><path class="m-bulb" d="M -28 18 A 46 46 0 1 1 28 18 L 22 40 L -22 40 Z"></path><path class="m-filament" d="M -11 30 L -11 6 L 0 -6 L 11 6 L 11 30"></path><rect class="m-base" x="-24" y="48" width="48" height="12" rx="6"></rect><rect class="m-base" x="-16" y="66" width="32" height="12" rx="6"></rect></svg>Навчання</div>
       </div>
       <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: center">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
-          <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Стрілки показують 8:20" style="width: 420px; height: 420px">
+          <div style="position: relative">
+          <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Годинник зі стрілками на 8:20. Перетягни стрілки." style="width: 420px; height: 420px">
             <circle class="c-face" r="94" style="stroke: var(--good)"></circle>
             <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
             <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
-            <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33">4</text><text class="c-num" x="33" y="57.2">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-57.2" y="33">8</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
+            <!-- Where the hands point: the Minute Hand's tick (under the hands) and the Hour Hand's number (below), lit with a glow. -->
+            <defs><filter id="glow" filterUnits="userSpaceOnUse" x="-110" y="-110" width="220" height="220"><feGaussianBlur stdDeviation="2.2"></feGaussianBlur></filter></defs>
+            <g class="c-lit-tick" transform="rotate(120)"><line class="glow" y1="-90" y2="-79" filter="url(#glow)"></line><line y1="-90" y2="-79"></line></g>
+            <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33">4</text><text class="c-num" x="33" y="57.2">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
             <g transform="rotate(250)"><line class="c-hour" y1="10" y2="-45"></line><circle class="c-grip h" cx="0" cy="-45" r="9"></circle></g>
             <g transform="rotate(120)"><line class="c-min" y1="14" y2="-70"></line><circle class="c-grip m" cx="0" cy="-70" r="11"></circle></g>
+            <!-- The lit number goes over the grips: a grip can sit on it. -->
+            <text class="c-num c-lit-glow" x="-57.2" y="33" filter="url(#glow)" aria-hidden="true">8</text>
+            <text class="c-num lit" x="-57.2" y="33">8</text>
             <circle class="c-pin" r="7"></circle>
           </svg>
+          <!-- Teach, right Answer: the toast sits over the bottom of the clock. -->
+          <div style="position: absolute; bottom: 4%; left: 50%; transform: translateX(-50%)"><div class="toast" role="status" style="white-space: nowrap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Правильно! Далі…</div></div>
+          </div>
       <!-- The Hint's space is kept from the first Task, so the clock never moves when it appears. -->
       <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; visibility: hidden" aria-hidden="true"><button class="btn btn-help" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>Постав правильну відповідь</button><div style="font-size: 18px; color: var(--muted)">Підказка: <b style="color: var(--text); font-weight: 900">8:20</b></div></div>
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 22px">
           <h1 style="margin: 0; font-size: 32px; font-weight: 900">Постав стрілки на</h1>
           <div class="card" style="padding: 18px 46px; background: var(--face); color: var(--num)"><div class="big-time" style="font-size: 96px">8:20</div></div>
-          <div class="toast" role="status" style="background: var(--good); color: #173322"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Правильно! Далі…</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 18px; color: var(--muted)">
+            <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 60 20" aria-hidden="true" style="width: 60px; height: 20px"><line class="c-hour" x1="8" y1="10" x2="40" y2="10"></line></svg>Коротка — години</div>
+            <div style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 60 20" aria-hidden="true" style="width: 60px; height: 20px"><line class="c-min" x1="6" y1="10" x2="56" y2="10"></line></svg>Довга — хвилини</div>
+          </div>
           <button class="btn" type="button" disabled style="width: 340px">Перевірити</button>
         </div>
       </div>

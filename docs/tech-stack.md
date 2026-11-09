@@ -25,6 +25,7 @@ No physics, no game loop, no backend.
 | Interface text | **vue-i18n** | `uk` default, `en` |
 | Preferences + last name | `localStorage` (via VueUse `useStorage`) | The only thing kept on the device |
 | Themes | CSS custom properties per theme (`middle`, `dark`, `light`) | |
+| Breakpoints | **Custom media** such as `@media (--phone)`, expanded at build time by a few-line PostCSS plugin in `src/styles/media.ts` | One definition for every screen. No new dependency: `postcss-custom-media` / `postcss-preset-env` would add packages for one replace, and Lightning CSS custom media can't see a definition from another `<style>` block |
 | Offline / install | **vite-plugin-pwa** | |
 | Tests | **Vitest** (+ Vue Test Utils), **Playwright** for drag flows | Clock maths and Round rules test-first |
 

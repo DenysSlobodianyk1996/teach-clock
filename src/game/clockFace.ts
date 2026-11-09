@@ -1,5 +1,7 @@
 /** Where things sit on the clock face, in SVG units around the centre (y grows downwards). Plain TypeScript. */
 
+import { mod } from './clockTime.ts'
+
 /** The point at `radius` from the centre in the direction of `angle` (degrees, 0° at 12, clockwise). */
 export function pointAt(angle: number, radius: number): { x: number; y: number } {
   const rad = (angle * Math.PI) / 180
@@ -16,6 +18,20 @@ export function numberPositions(radius: number): { n: number; x: number; y: numb
 export function angleAt(x: number, y: number): number {
   const angle = (Math.atan2(x, -y) * 180) / Math.PI
   return angle < 0 ? angle + 360 : angle
+}
+
+/**
+ * The places the hands point to, lit up in Set Time and Drag Arrows: the minute tick (0–59) nearest
+ * the Minute Hand, and the number (1–12) of the hour the Hour Hand has passed, so 2:55 lights the 2
+ * and 12:40 the 12. Takes hand angles, which may be wound past a full turn.
+ */
+export function pointedPlace(angles: { hour: number; minute: number }): {
+  tick: number
+  number: number
+} {
+  const tick = mod(Math.round(angles.minute / 6), 60)
+  const hour = Math.floor(mod(angles.hour, 360) / 30)
+  return { tick, number: hour === 0 ? 12 : hour }
 }
 
 /** The Drag Numbers face's viewBox is this many units across. */
