@@ -6,8 +6,8 @@ Covers: A1
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] A fresh Settings screen has Drag Numbers picked, Teach picked, and no Level row
-- [ ] Picking Drag Arrows or Set Time shows Level 1 picked
-- [ ] Product brief and design notes that name the default Game are updated
+- [x] A fresh Settings screen has Drag Numbers picked, Teach picked, and no Level row
+- [x] Picking Drag Arrows or Set Time shows Level 1 picked
+- [x] Product brief and design notes that name the default Game are updated

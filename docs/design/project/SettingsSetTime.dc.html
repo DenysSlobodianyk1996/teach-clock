@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<title>Налаштування: Розстав числа</title>
+<title>Налаштування: Який час?</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="./theme.css">
 </head>
@@ -30,7 +30,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div class="label">Гра</div>
     <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
-      <button class="choice" type="button" aria-pressed="true" style="flex-direction: row; align-items: center; gap: 14px">
+      <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
         <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><circle class="c-slot" cx="0" cy="-62" r="16"></circle><circle class="c-slot" cx="62" cy="0" r="16"></circle><circle class="c-slot" cx="0" cy="62" r="16"></circle><circle class="c-tile" cx="-62" cy="0" r="18"></circle><text class="c-tile-num" x="-62" y="0">9</text></svg>
         <div style="display: flex; flex-direction: column; gap: 4px"><b>Розстав числа</b><span>Перетягни числа 1–12 на їхні місця.</span></div>
       </button>
@@ -38,7 +38,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(120)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(0)"></line><circle class="c-grip m" cx="0" cy="-64" r="14"></circle><circle class="c-pin" r="9"></circle></svg>
         <div style="display: flex; flex-direction: column; gap: 4px"><b>Постав стрілки</b><span>Покажи на годиннику заданий час.</span></div>
       </button>
-      <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
+      <button class="choice" type="button" aria-pressed="true" style="flex-direction: row; align-items: center; gap: 14px">
         <svg viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><text class="c-num" x="0" y="2" style="font-size: 54px">4:15</text></svg>
         <div style="display: flex; flex-direction: column; gap: 4px"><b>Який час?</b><span>Подивись на годинник і введи час.</span></div>
       </button>
@@ -46,14 +46,21 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div class="label" style="margin-top: 6px">Режим</div>
     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
-      <button class="choice" type="button" aria-pressed="false"><b>Навчання</b><span>Помилився — покажемо, як правильно, і допоможемо виправити.</span></button>
-      <button class="choice" type="button" aria-pressed="true"><b>Перевірка</b><span>Без підказок. Що вийшло — побачиш у кінці.</span></button>
+      <button class="choice" type="button" aria-pressed="true"><b>Навчання</b><span>Помилився — покажемо, як правильно, і допоможемо виправити.</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>Перевірка</b><span>Без підказок. Що вийшло — побачиш у кінці.</span></button>
+    </div>
+
+    <div class="label" style="margin-top: 6px">Крок хвилин</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+      <button class="choice" type="button" aria-pressed="true"><b>1 хв</b><span>Будь-яка хвилина</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>5 хв</b><span>Кожні 5 хвилин</span></button>
+      <button class="choice" type="button" aria-pressed="false"><b>15 хв</b><span>:00, :15, :30, :45</span></button>
     </div>
 
     <div style="flex-grow: 1"></div>
     <div style="display: flex; justify-content: space-between; align-items: center">
       <a class="btn btn-soft" href="Welcome.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Назад</a>
-      <a class="btn" href="DragNumbersDrag.dc.html">Грати<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></a>
+      <a class="btn" href="SetTimeTest.dc.html">Грати<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"></path></svg></a>
     </div>
   </main>
 </div>
