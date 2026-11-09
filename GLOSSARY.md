@@ -71,6 +71,14 @@ _Avoid_: Small arrow
 The long hand.
 _Avoid_: Big arrow
 
+**Grip**:
+The circle at a hand's tip in Drag Arrows that the Player grabs to turn the hand.
+_Avoid_: Handle, knob
+
+**Lit Place**:
+The tick the Minute Hand points to and the number the Hour Hand has passed, lit in the hands' colours. Shown in Teach only, in Drag Arrows and Set Time.
+_Avoid_: Highlight, pointed place, target, ring
+
 ### Games
 
 **Drag Numbers**:
