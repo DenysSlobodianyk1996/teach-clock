@@ -212,6 +212,34 @@ describe('ClockFace with draggable hands', () => {
     expect(wrapper.findAll('.c-num:not(.c-lit-glow)').map((n) => n.text())).toHaveLength(12)
   })
 
+  it('draws every number over the hands and grips in Drag Arrows, so no grip hides a number', async () => {
+    const wrapper = draggable()
+    await wrapper.setProps({ time: clockTime(9, 15) })
+    const grips = wrapper.findAll('[data-grip]').map((g) => g.element)
+    const numbers = wrapper.findAll('.c-num')
+    expect(numbers.map((n) => n.text())).toHaveLength(12)
+    for (const number of numbers)
+      for (const grip of grips)
+        expect(
+          grip.compareDocumentPosition(number.element) & Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy()
+  })
+
+  it('keeps the numbers under the hands on a clock without grips', () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(1, 10) })
+    const hand = wrapper.get('[data-hand="hour"]').element
+    for (const number of wrapper.findAll('.c-num'))
+      expect(
+        hand.compareDocumentPosition(number.element) & Node.DOCUMENT_POSITION_PRECEDING,
+      ).toBeTruthy()
+  })
+
+  it('draws both grips the same size', () => {
+    const wrapper = draggable()
+    const size = (hand: string) => wrapper.get(`[data-grip="${hand}"] .c-grip`).attributes('r')
+    expect(size('hour')).toBe(size('minute'))
+  })
+
   it('keeps the lit places on the hands through a drag and after letting go', async () => {
     const wrapper = draggable(true)
     expect(litNumbers(wrapper)).toEqual(['12'])

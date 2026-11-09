@@ -129,19 +129,26 @@
 .c-face { fill: var(--face); stroke: var(--rim); stroke-width: 7; }
 .c-tick { fill: none; stroke: var(--tick); stroke-width: 4; opacity: 0.45; }
 .c-tick5 { fill: none; stroke: var(--tick); stroke-width: 9; }
-.c-num { fill: var(--num); font: 900 19px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
-.c-hour { stroke: var(--hour); stroke-width: 11; stroke-linecap: round; }
-.c-min { stroke: var(--minute); stroke-width: 7; stroke-linecap: round; }
+/* Numbers ignore the pointer: in Drag Arrows they sit over the grips. Both hands are thin (they differ by
+   length and colour), so a number they cross stays readable. */
+.c-num { fill: var(--num); font: 900 19px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.c-hour { stroke: var(--hour); stroke-width: 4; stroke-linecap: round; }
+.c-min { stroke: var(--minute); stroke-width: 4; stroke-linecap: round; }
 .c-pin { fill: var(--pin); stroke: var(--face); stroke-width: 3; }
 /* Where the hands point (Set Time, Drag Arrows): the Minute Hand's tick and the Hour Hand's number in
    the hand's colour, each with a glow (a blurred copy behind it, filter #glow). */
 .c-lit-tick line { stroke: var(--minute); stroke-width: 3.5; }
 .c-lit-tick .glow { stroke-width: 7; opacity: 0.7; }
-.c-num.lit { fill: var(--hour); stroke: var(--face); stroke-width: 3; paint-order: stroke; pointer-events: none; }
+.c-num.lit { fill: var(--hour); stroke: var(--face); stroke-width: 3; paint-order: stroke; }
 .c-lit-glow { fill: var(--hour); stroke: var(--hour); stroke-width: 4; opacity: 0.45; }
-.c-grip { fill: var(--face); stroke-width: 4; }
+/* Both grips are the same small ring (r 7) in their hand's colour; the touch area around them is bigger. */
+.c-grip { fill: var(--face); stroke-width: 3; }
 .c-grip.h { stroke: var(--hour); }
 .c-grip.m { stroke: var(--minute); }
+/* Small pictures of a clock (the brand mark, the Game cards) keep bold hands, so they read at icon size. */
+.c-icon .c-hour { stroke-width: 11; }
+.c-icon .c-min { stroke-width: 7; }
+.c-icon .c-grip { stroke-width: 4; }
 .c-slot { fill: none; stroke: var(--slot); stroke-width: 2.5; stroke-dasharray: 4 4; }
 .c-slot.target { stroke: var(--accent); stroke-width: 4; stroke-dasharray: none; fill: rgba(242, 184, 75, 0.18); }
 .c-tile { fill: var(--accent); }
