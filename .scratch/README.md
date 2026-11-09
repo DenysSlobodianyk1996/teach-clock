@@ -7,7 +7,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [01-first-version](01-first-version/) | first version | done    | yes  | #1–#14     |
 | [02-play-feel](02-play-feel/)         | fixes         | done    | no   | #15–#18    |
 | — (outside a batch)                   | fixes, deploy | done    | —    | #19–#22    |
-| [03-readability](03-readability/)     | fixes         | planned | no   | #23 (plan) |
+| [03-readability](03-readability/)     | fixes         | planned | no   | #24 (plan) |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
