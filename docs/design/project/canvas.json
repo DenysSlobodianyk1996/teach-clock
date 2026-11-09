@@ -8,8 +8,8 @@
     "Main.dc.html": { "x": 0, "y": 0, "w": 1024, "h": 768, "title": "Стиль: кольори, годинник, елементи" },
 
     "Welcome.dc.html": { "x": 0, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вітання" },
-    "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?)" },
-    "SettingsDragNumbers.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Розстав числа, без кроку)" },
+    "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Розстав числа, без кроку)" },
+    "SettingsSetTime.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?, з кроком)" },
     "LeaveRound.dc.html": { "x": 3312, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вийти з раунду?" },
 
     "SetTimeTest.dc.html": { "x": 0, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Перевірка" },
@@ -50,7 +50,7 @@
   },
   "order": [
     "Main.dc.html",
-    "Welcome.dc.html", "Settings.dc.html", "SettingsDragNumbers.dc.html", "LeaveRound.dc.html",
+    "Welcome.dc.html", "Settings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html",
     "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "SetTimeTeachHint.dc.html",
     "DragArrowsTest.dc.html", "DragArrowsTeachWrong.dc.html", "DragArrowsTeachHint.dc.html",
     "DragNumbersDrag.dc.html", "DragNumbersTeachHint.dc.html", "DragNumbersTestSubmit.dc.html",

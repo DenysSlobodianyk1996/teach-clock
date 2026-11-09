@@ -60,6 +60,7 @@ describe('screen guards', () => {
   it('sends a finished Round to its Summary', async () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
+    play.settings.game = 'setTime'
     play.startRound()
     while (play.round && currentTask(play.round)) play.submitAnswer(currentTask(play.round)!.answer)
     expect(await open('/round')).toBe('summary')
@@ -84,6 +85,7 @@ describe('screen guards', () => {
   it('sends Back from a just-finished Round to its Summary (Teach "Right! Next…" pause)', async () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
+    play.settings.game = 'setTime'
     play.startRound()
     const router = createAppRouter(createMemoryHistory())
     await router.push('/round')

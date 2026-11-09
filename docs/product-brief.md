@@ -18,7 +18,8 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 
 1. **Welcome**: a short description of what the app teaches, a name field, Start.
 2. **Settings**: choose the Game, Mode and Level (no Level for Drag Numbers). Each option has a
-   one-line description. Back returns to Welcome.
+   one-line description. Drag Numbers in Teach is picked when Settings opens; picking Drag Arrows
+   or Set Time shows the Level, set to 1 minute. Back returns to Welcome.
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
 4. **Summary**: read-only. Tasks grouped into **Right** and **Wrong**. Each wrong Task shows the

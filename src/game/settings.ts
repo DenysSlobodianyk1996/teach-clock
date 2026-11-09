@@ -16,7 +16,7 @@ export interface Settings {
   level: Level
 }
 
-export const DEFAULT_SETTINGS: Settings = { game: 'setTime', mode: 'teach', level: 1 }
+export const DEFAULT_SETTINGS: Settings = { game: 'dragNumbers', mode: 'teach', level: 1 }
 
 /** Drag Numbers places the numbers 1–12 and has no minute step. */
 export function hasLevel(game: Game): boolean {
