@@ -99,6 +99,8 @@ describe('Summary screen', () => {
         ),
     )
     expect(wrong.findAll('li svg.clock')).toHaveLength(4)
+    expect(wrapper.find('[data-lit-tick]').exists()).toBe(false)
+    expect(wrapper.find('.c-num.lit').exists()).toBe(false)
   })
 
   it('in Teach, lists helped Tasks under Wrong with the first try', async () => {

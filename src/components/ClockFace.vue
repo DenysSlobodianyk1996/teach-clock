@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useId, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { angleAt, numberPositions } from '@/game/clockFace'
+import { angleAt, numberPositions, pointedPlace } from '@/game/clockFace'
 import { formatClockTime, handAngles, minutesBetween, type ClockTime } from '@/game/clockTime'
 
 export type Hand = 'hour' | 'minute'
@@ -9,8 +9,8 @@ export type Hand = 'hour' | 'minute'
 /**
  * An analogue clock showing a Clock Time. `rim="good"` turns the rim green, as after a right Answer
  * in Teach. `draggable` adds a grip to each hand tip: grabbing a hand and moving the pointer emits
- * `drag` with the pointer's angle, and the parent decides the new Clock Time. While a hand is
- * dragged, a ring lights up the tick it lands on.
+ * `drag` with the pointer's angle, and the parent decides the new Clock Time. `pointed` lights up
+ * where the hands point: the Minute Hand's tick and the Hour Hand's number, each in its hand's colour.
  */
 const props = defineProps<{
   time: ClockTime
@@ -18,6 +18,8 @@ const props = defineProps<{
   draggable?: boolean
   /** The hands turn smoothly to a new time, as when "Set correct answer" moves them. */
   animate?: boolean
+  /** Light up the minute tick and hour number the hands point to, as in Set Time and Drag Arrows. */
+  pointed?: boolean
 }>()
 const emit = defineEmits<{ drag: [{ hand: Hand; angle: number }] }>()
 
@@ -30,6 +32,8 @@ const TICK_RADIUS = 84
 const circumference = 2 * Math.PI * TICK_RADIUS
 const tick = { dash: 1.2, gap: circumference / 60 - 1.2 }
 const tick5 = { dash: 3, gap: circumference / 12 - 3 }
+/** The lit tick runs a little past the others at both ends, so it shows beyond the minute grip. */
+const LIT_TICK = { y1: -90, y2: -79 }
 
 // Each hand: its line (tail past the pin to tip), its grip at the tip, and a bigger see-through
 // circle around the grip, 48 units across: about 48 px to touch on a phone-sized clock.
@@ -69,13 +73,19 @@ const label = computed(() =>
 const svg = ref<SVGSVGElement>()
 /** The drag in progress, with the clock's box measured once when the grip was grabbed. */
 const dragging = ref<{ hand: Hand; pointerId: number; box: DOMRect } | null>(null)
-/** The tick the dragged hand lands on: the snapped minute, or the hour's number (not the hand). */
-const target = computed(() => {
-  const hand = dragging.value?.hand
-  if (!hand) return null
-  const angle = hand === 'minute' ? props.time.minute * 6 : (props.time.hour % 12) * 30
-  return { hand, style: { transform: `rotate(${angle}deg)` } }
+/** The minute tick and hour number the hands point to, when `pointed`. */
+const lit = computed(() => {
+  if (!props.pointed) return null
+  const { tick, number } = pointedPlace(angles.value)
+  return {
+    number: numbers[number - 1]!,
+    tickStyle: { transform: `rotate(${tick * 6}deg)` },
+  }
 })
+/** The numbers drawn plainly: all but the lit one, which goes on top of the grips. */
+const plainNumbers = computed(() => numbers.filter(({ n }) => n !== lit.value?.number.n))
+/** The blur behind the lit tick and number; unique per clock, as several can share a page. */
+const glowId = `glow-${useId()}`
 
 /** Only a grip starts a drag: a press on the line past the pin would turn the hand half a circle. */
 function grab(hand: Hand, event: PointerEvent) {
@@ -130,7 +140,26 @@ function release(event: PointerEvent) {
       :stroke-dasharray="`${tick5.dash} ${tick5.gap}`"
       :stroke-dashoffset="tick5.dash / 2"
     />
-    <text v-for="{ n, x, y } in numbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
+    <template v-if="lit">
+      <defs>
+        <filter
+          :id="glowId"
+          filterUnits="userSpaceOnUse"
+          x="-100"
+          y="-100"
+          width="200"
+          height="200"
+        >
+          <feGaussianBlur stdDeviation="2.2" />
+        </filter>
+      </defs>
+      <!-- Under the hands, so the grips stay on top. The glow is a blurred copy behind it. -->
+      <g class="c-lit-tick" data-lit-tick :style="lit.tickStyle">
+        <line class="glow" :y1="LIT_TICK.y1" :y2="LIT_TICK.y2" :filter="`url(#${glowId})`" />
+        <line :y1="LIT_TICK.y1" :y2="LIT_TICK.y2" />
+      </g>
+    </template>
+    <text v-for="{ n, x, y } in plainNumbers" :key="n" class="c-num" :x="x" :y="y">{{ n }}</text>
     <!-- The Minute Hand comes second, so it is on top where the hands cross. -->
     <g v-for="hand in HAND_ORDER" :key="hand" :data-hand="hand" :style="turn(hand)">
       <line :class="HANDS[hand].line" :y1="HANDS[hand].tail" :y2="HANDS[hand].tip" />
@@ -155,10 +184,19 @@ function release(event: PointerEvent) {
         />
       </g>
     </template>
-    <!-- Over the hands, so the hand's own grip never hides the tick it lands on. -->
-    <g v-if="target" class="c-target" :class="target.hand" data-target-tick :style="target.style">
-      <circle :cy="-TICK_RADIUS" r="8" />
-    </g>
+    <!-- The lit number goes over the grips: at 3:15 the Minute Hand's grip sits on the 3. -->
+    <template v-if="lit">
+      <text
+        class="c-num c-lit-glow"
+        :x="lit.number.x"
+        :y="lit.number.y"
+        :filter="`url(#${glowId})`"
+        aria-hidden="true"
+      >
+        {{ lit.number.n }}
+      </text>
+      <text class="c-num lit" :x="lit.number.x" :y="lit.number.y">{{ lit.number.n }}</text>
+    </template>
     <circle class="c-pin" r="7" />
   </svg>
 </template>

@@ -116,7 +116,13 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
     <section class="play" :class="[round.game, { 'has-hint': taskHint }]">
       <div class="clock-side">
         <div class="clock-wrap">
-          <ClockFace v-if="round.game === 'setTime'" class="clock" :time="task.answer" :rim="rim" />
+          <ClockFace
+            v-if="round.game === 'setTime'"
+            class="clock"
+            :time="task.answer"
+            :rim="rim"
+            pointed
+          />
           <!-- A fresh clock per Task, so a drag still held from the last Task does not carry over. -->
           <ClockFace
             v-else
@@ -125,6 +131,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             :time="hands"
             :rim="rim"
             draggable
+            pointed
             :animate="helping"
             @drag="dragHand"
           />
