@@ -154,7 +154,13 @@
 .tile.lifted { transform: rotate(-8deg); box-shadow: 0 14px 0 rgba(0, 0, 0, 0.12), 0 22px 30px rgba(0, 0, 0, 0.3); background: var(--accent); color: var(--accent-ink); }
 
 /* ---------- Set Time entry ---------- */
-.timebox-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+/* Boxes on top, each box's range under it. The error lines lie over the ranges and the room under
+   them, so the pad sits close and nothing moves when an error appears. */
+.timebox-row { display: grid; grid-template-columns: repeat(3, auto); grid-template-rows: auto 1.4em; justify-content: center; justify-items: center; align-items: center; gap: 4px 10px; margin-bottom: 8px; }
+.timebox-row .h { grid-column: 1; }
+.timebox-row .colon { grid-column: 2; }
+.timebox-row .mm { grid-column: 3; }
+.range { grid-row: 2; line-height: 1.4; font-weight: 800; color: var(--muted); }
 .timebox { display: flex; align-items: center; justify-content: center; height: 96px; border-radius: 22px; background: var(--face); color: var(--num); font: 900 58px "Nunito", sans-serif; border: 4px solid transparent; }
 .timebox.h { width: 92px; }
 .timebox.mm { width: 150px; }

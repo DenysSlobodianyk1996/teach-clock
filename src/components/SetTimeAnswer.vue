@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import NumberPad from './NumberPad.vue'
 import type { ClockTime } from '@/game/clockTime'
 import {
+  BOX_RANGE,
   canSubmit,
   clearBox,
   EMPTY_ENTRY,
@@ -27,6 +28,8 @@ const emit = defineEmits<{ submit: [time: ClockTime] }>()
 const { t } = useI18n()
 
 const root = ref<HTMLElement>()
+const id = useId()
+const rangeId = (box: Box) => `${id}-${box}-range`
 const entry = ref<TimeEntry>(EMPTY_ENTRY)
 const errors = ref<Box[]>([])
 const ready = computed(() => canSubmit(entry.value))
@@ -88,7 +91,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 <template>
   <div ref="root" class="answer">
-    <div class="timebox-row">
+    <div class="entry" :class="{ 'has-error': errors.length }">
       <template v-for="box in ['hour', 'minute'] as const" :key="box">
         <span v-if="box === 'minute'" class="colon" aria-hidden="true">:</span>
         <button
@@ -97,6 +100,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           :class="[box, { focus: entry.selected === box }]"
           :data-box="box"
           :aria-label="t(box === 'hour' ? 'round.hours' : 'round.minutes')"
+          :aria-describedby="rangeId(box)"
           :aria-pressed="entry.selected === box"
           :aria-invalid="errors.includes(box) || undefined"
           @click="select(box)"
@@ -104,12 +108,16 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         >
           {{ shown(box) }}
         </button>
+        <span :id="rangeId(box)" class="range" :class="box">
+          {{ t('round.range', BOX_RANGE[box]) }}
+        </span>
       </template>
+      <!-- Always in the page; on a wide screen it covers the ranges and the room under them, so
+           nothing moves when an error appears. -->
+      <p class="error" role="alert">
+        <span v-for="box in errors" :key="box">{{ t(`round.errors.${box}`) }}</span>
+      </p>
     </div>
-    <!-- Always in the page with room for both lines, so nothing moves when an error appears. -->
-    <p class="error" role="alert">
-      <span v-for="box in errors" :key="box">{{ t(`round.errors.${box}`) }}</span>
-    </p>
     <NumberPad
       class="pad"
       :disabled="disabled"
@@ -130,13 +138,37 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   gap: 18px;
   width: min(340px, 100%);
 }
-.timebox-row {
-  display: flex;
-  align-items: center;
+/* Boxes on top, each box's range under it; the error lies over the ranges (see .error). */
+.entry {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: auto 1.4em;
   justify-content: center;
-  gap: 10px;
+  justify-items: center;
+  align-items: center;
+  gap: 4px 10px;
+  /* With the answer's gap, room for an error's second line below the ranges. */
+  margin-bottom: 8px;
+}
+.timebox.hour,
+.range.hour {
+  grid-column: 1;
+}
+.timebox.minute,
+.range.minute {
+  grid-column: 3;
+}
+.range {
+  grid-row: 2;
+  line-height: 1.4;
+  font-weight: 800;
+  color: var(--muted);
+}
+.has-error .range {
+  visibility: hidden;
 }
 .colon {
+  grid-column: 2;
   font:
     900 58px 'Nunito',
     sans-serif;
@@ -170,14 +202,15 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   border-color: var(--bad);
 }
 .error {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: start;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  margin: -6px 0 0;
+  margin: 0;
   line-height: 1.4;
-  /* Two lines of 1.4em and the gap between them. */
-  min-height: calc(2.8em + 2px);
   font-weight: 800;
   color: var(--text);
 }
@@ -199,7 +232,23 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     gap: 10px;
     width: 100%;
   }
-  /* On a phone the answer sits under the clock, so a growing error moves nothing above it. */
+  .entry {
+    grid-template-rows: auto auto auto;
+    row-gap: 2px;
+    /* Brings the pad up to 4px under the ranges. */
+    margin-bottom: -6px;
+  }
+  .range {
+    font-size: 14px;
+  }
+  /* On a phone the answer sits under the clock, so the error takes its own row under the ranges:
+     a growing error moves nothing above it. */
+  .error {
+    grid-row: 3;
+  }
+  .has-error .range {
+    visibility: visible;
+  }
   .error:empty {
     display: none;
   }

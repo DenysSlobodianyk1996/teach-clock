@@ -283,10 +283,10 @@ h1 {
    * small-phone browser tests check it all fits. With the Hint showing, the clock shrinks to make room.
    */
   .setTime .clock {
-    width: clamp(150px, 100svh - 484px, 100vw - 40px);
+    width: clamp(150px, 100svh - 500px, 100vw - 40px);
   }
   .setTime.has-hint .clock {
-    width: clamp(150px, 100svh - 562px, 100vw - 40px);
+    width: clamp(150px, 100svh - 578px, 100vw - 40px);
   }
   .dragArrows .clock {
     width: clamp(150px, 100svh - 360px, 100vw - 40px);

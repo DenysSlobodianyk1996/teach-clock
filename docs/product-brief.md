@@ -66,10 +66,14 @@ Rules shared by Drag Arrows and Set Time:
 - Hour and minute boxes, up to two digits each. The Player taps a box to select it; the hour box
   hands over to the minutes after its second digit. One digit reads with a leading zero
   (`1` → 01, `5` minutes → 05).
+- Under each box its range, in every Mode and Level: "1–12" under the hours, "0–59" under the
+  minutes. It only tells the Player which numbers fit; any digits can still be typed. The number pad
+  sits close under the ranges.
 - On-screen number pad (0–9, clear). Clear empties the whole selected box. A physical keyboard
   also works: digits, Backspace/Delete to clear, ←/→ or Tab to switch boxes, Enter to submit.
 - Submit is enabled once both boxes have a digit. An impossible value (hour outside 1–12, minute
-  outside 00–59) shows an error under the boxes and is not submitted; the Player fixes it first.
+  outside 00–59) shows an error under the boxes (on a wide screen in place of the ranges) and is not submitted; the Player
+  fixes it first.
 
 ## Modes
 
