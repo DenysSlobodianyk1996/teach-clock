@@ -2,7 +2,7 @@
 
 Covers: A7
 
-**What to build:** the clocks in the Summary are big enough to read easily: roughly twice today's size (wrong-answer pairs 70px, the "Right" list 64px), sized by eye. On a phone each wrong-answer pair stacks: the Player's answer on top, a down arrow, then the correct one. Drag Numbers pairs grow the same way. The Teach wrong-answer popup clock (150px) is already big enough. See `../images/a7-summary-clocks.png`.
+**What to build:** the clocks in the Summary are big enough to read easily: roughly twice today's size (wrong-answer pairs 70px, the "Right" list 64px), sized by eye. On a phone each wrong-answer pair stacks: the Player's answer on top, a down arrow, then the correct one. Drag Numbers pairs grow the same way. The Teach wrong-answer popup clock (150px) is already big enough. See `../images/06-summary-clocks.png`.
 
 **Blocked by:** 03 (the phone layout changes first)
 

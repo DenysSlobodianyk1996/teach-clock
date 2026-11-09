@@ -2,7 +2,7 @@
 
 Covers: A5, A6
 
-**What to build:** the clock highlights the place each hand points to, always, in both Games and both Modes. The Minute Hand's tick takes the Minute Hand's colour, gets a little thicker and glows. The Hour Hand lights its number (the hour it has passed: at 2:55 the 2) in the Hour Hand's colour with a glow. This replaces today's ring, which shows only while dragging and overlaps the minute grip (see `../images/a6-drag-arrows-target.png`). In Drag Arrows the highlight follows the hands as they are dragged; the hands start at 12:00, so the 12 is lit at the start. Grips stay where they are.
+**What to build:** the clock highlights the place each hand points to, always, in both Games and both Modes. The Minute Hand's tick takes the Minute Hand's colour, gets a little thicker and glows. The Hour Hand lights its number (the hour it has passed: at 2:55 the 2) in the Hour Hand's colour with a glow. This replaces today's ring, which shows only while dragging and overlaps the minute grip (see `../images/05-drag-arrows-target.png`). In Drag Arrows the highlight follows the hands as they are dragged; the hands start at 12:00, so the 12 is lit at the start. Grips stay where they are.
 
 **Blocked by:** None (can start immediately)
 
