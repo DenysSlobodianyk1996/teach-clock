@@ -123,10 +123,12 @@
 .c-hour { stroke: var(--hour); stroke-width: 11; stroke-linecap: round; }
 .c-min { stroke: var(--minute); stroke-width: 7; stroke-linecap: round; }
 .c-pin { fill: var(--pin); stroke: var(--face); stroke-width: 3; }
-/* The tick a dragged hand will land on: a mustard ring in the hand's colour around it. */
-.c-target circle { fill: var(--accent); fill-opacity: 0.6; stroke-width: 3; }
-.c-target.hour circle { stroke: var(--hour); }
-.c-target.minute circle { stroke: var(--minute); }
+/* Where the hands point (Set Time, Drag Arrows): the Minute Hand's tick and the Hour Hand's number in
+   the hand's colour, each with a glow (a blurred copy behind it, filter #glow). */
+.c-lit-tick line { stroke: var(--minute); stroke-width: 3.5; }
+.c-lit-tick .glow { stroke-width: 7; opacity: 0.7; }
+.c-num.lit { fill: var(--hour); stroke: var(--face); stroke-width: 3; paint-order: stroke; pointer-events: none; }
+.c-lit-glow { fill: var(--hour); stroke: var(--hour); stroke-width: 4; opacity: 0.45; }
 .c-grip { fill: var(--face); stroke-width: 4; }
 .c-grip.h { stroke: var(--hour); }
 .c-grip.m { stroke: var(--minute); }

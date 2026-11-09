@@ -24,6 +24,13 @@ async function pointer(
 const turn = (wrapper: VueWrapper, hand: 'hour' | 'minute') =>
   (wrapper.get(`[data-hand="${hand}"]`).element as SVGElement).style.transform
 
+/** The rotation of the lit minute tick. */
+const litTick = (wrapper: VueWrapper) =>
+  (wrapper.get('[data-lit-tick]').element as SVGElement).style.transform
+
+/** The numbers lit up on the face. */
+const litNumbers = (wrapper: VueWrapper) => wrapper.findAll('.c-num.lit').map((n) => n.text())
+
 describe('ClockFace', () => {
   it('names the Clock Time it shows', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
@@ -78,9 +85,31 @@ describe('ClockFace', () => {
     expect(turn(wrapper, 'hour')).toBe('rotate(2.5deg)')
   })
 
-  it('lights no tick on a clock that is not being dragged', () => {
+  it('lights nothing unless asked, as on Summary and popup clocks', () => {
     const wrapper = mountComponent(ClockFace, { time: clockTime(7, 45) })
-    expect(wrapper.find('[data-target-tick]').exists()).toBe(false)
+    expect(wrapper.find('[data-lit-tick]').exists()).toBe(false)
+    expect(wrapper.find('.c-num.lit').exists()).toBe(false)
+  })
+
+  it('lights the minute tick and the hour number the hands point to', () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(2, 55), pointed: true })
+    expect(litTick(wrapper)).toBe('rotate(330deg)')
+    expect(litNumbers(wrapper)).toEqual(['2'])
+  })
+
+  it('at 3:15 lights both the tick at 3 and the number 3', () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(3, 15), pointed: true })
+    expect(litTick(wrapper)).toBe('rotate(90deg)')
+    expect(litNumbers(wrapper)).toEqual(['3'])
+  })
+
+  it('moves the lit places with the time', async () => {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(12, 0), pointed: true })
+    expect(litTick(wrapper)).toBe('rotate(0deg)')
+    expect(litNumbers(wrapper)).toEqual(['12'])
+    await wrapper.setProps({ time: clockTime(4, 20) })
+    expect(litTick(wrapper)).toBe('rotate(120deg)')
+    expect(litNumbers(wrapper)).toEqual(['4'])
   })
 
   it('only animates when asked', () => {
@@ -98,8 +127,8 @@ describe('ClockFace', () => {
 
 describe('ClockFace with draggable hands', () => {
   /** A draggable clock drawn 200 px square at the page's top-left, so its centre is (100, 100). */
-  function draggable() {
-    const wrapper = mountComponent(ClockFace, { time: clockTime(12, 0), draggable: true })
+  function draggable(pointed = false) {
+    const wrapper = mountComponent(ClockFace, { time: clockTime(12, 0), draggable: true, pointed })
     wrapper.element.getBoundingClientRect = () => DOMRect.fromRect({ width: 200, height: 200 })
     return wrapper
   }
@@ -168,23 +197,30 @@ describe('ClockFace with draggable hands', () => {
     expect(wrapper.emitted('drag')).toBeUndefined()
   })
 
-  it('lights the tick for the minute the Minute Hand lands on while it is dragged', async () => {
+  it('draws no ring over the grips while a hand is dragged', async () => {
     const wrapper = draggable()
     await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
-    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(0deg)')
-    await wrapper.setProps({ time: clockTime(12, 20) })
-    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(120deg)')
-    await pointer(wrapper, 'pointerup')
-    expect(wrapper.find('[data-target-tick]').exists()).toBe(false)
+    expect(wrapper.find('.c-target').exists()).toBe(false)
   })
 
-  it('lights the tick for the hour the Hour Hand lands on while it is dragged', async () => {
-    const wrapper = draggable()
-    await wrapper.setProps({ time: clockTime(4, 30) })
-    await pointer(wrapper.find('[data-grip="hour"] .c-grip'), 'pointerdown')
-    // On the 4, not where the hand sits halfway to 5.
-    expect(wrapper.get('[data-target-tick]').attributes('style')).toContain('rotate(120deg)')
-    expect(wrapper.get('[data-target-tick]').classes()).toContain('hour')
+  it('draws the lit number over the grips, so at 3:15 the Minute Hand grip cannot hide the 3', async () => {
+    const wrapper = draggable(true)
+    await wrapper.setProps({ time: clockTime(3, 15) })
+    const lit = wrapper.get('.c-num.lit').element
+    const grip = wrapper.get('[data-grip="minute"]').element
+    expect(grip.compareDocumentPosition(lit) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(wrapper.findAll('.c-num:not(.c-lit-glow)').map((n) => n.text())).toHaveLength(12)
+  })
+
+  it('keeps the lit places on the hands through a drag and after letting go', async () => {
+    const wrapper = draggable(true)
+    expect(litNumbers(wrapper)).toEqual(['12'])
+    await pointer(wrapper.find('[data-grip="minute"] .c-grip'), 'pointerdown')
+    await wrapper.setProps({ time: clockTime(12, 20) })
+    expect(litTick(wrapper)).toBe('rotate(120deg)')
+    await pointer(wrapper, 'pointerup')
+    expect(litTick(wrapper)).toBe('rotate(120deg)')
+    expect(litNumbers(wrapper)).toEqual(['12'])
   })
 
   it('ignores moves that are not part of a drag', async () => {

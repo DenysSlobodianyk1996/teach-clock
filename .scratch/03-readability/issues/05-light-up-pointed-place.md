@@ -6,11 +6,11 @@ Covers: A5, A6
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] The ring is gone; nothing overlaps the grips
-- [ ] Set Time: the minute tick and hour number the hands point to are lit, in Teach and Test
-- [ ] Drag Arrows: the lit tick and number follow the hands while dragging and stay lit after letting go
-- [ ] At 3:15 the minute tick at 3 and the number 3 are both lit and readable
-- [ ] Which tick and number are lit is worked out in plain TypeScript (ADR 0001), with unit tests
-- [ ] Looks right in the three themes; Summary and popup clocks show no highlight
+- [x] The ring is gone; nothing overlaps the grips
+- [x] Set Time: the minute tick and hour number the hands point to are lit, in Teach and Test
+- [x] Drag Arrows: the lit tick and number follow the hands while dragging and stay lit after letting go
+- [x] At 3:15 the minute tick at 3 and the number 3 are both lit and readable
+- [x] Which tick and number are lit is worked out in plain TypeScript (ADR 0001), with unit tests
+- [x] Looks right in the three themes; Summary and popup clocks show no highlight
