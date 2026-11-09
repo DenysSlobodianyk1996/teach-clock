@@ -134,15 +134,18 @@ input {
     sans-serif;
   text-anchor: middle;
   dominant-baseline: central;
+  /* In Drag Arrows the numbers sit over the grips; a press on one must reach the grip. */
+  pointer-events: none;
 }
+/* Both hands are thin, so a number they cross stays readable; they differ by length and colour. */
 .c-hour {
   stroke: var(--hour);
-  stroke-width: 11;
+  stroke-width: 4;
   stroke-linecap: round;
 }
 .c-min {
   stroke: var(--minute);
-  stroke-width: 7;
+  stroke-width: 4;
   stroke-linecap: round;
 }
 /* Where the hands point: the Minute Hand's tick, a bit thicker and longer, and the Hour Hand's
@@ -164,14 +167,12 @@ input {
   stroke: var(--face);
   stroke-width: 3;
   paint-order: stroke;
-  pointer-events: none;
 }
 .c-lit-glow {
   fill: var(--hour);
   stroke: var(--hour);
   stroke-width: 4;
   opacity: 0.45;
-  pointer-events: none;
 }
 .c-pin {
   fill: var(--pin);
@@ -180,8 +181,18 @@ input {
 }
 .c-grip {
   fill: var(--face);
-  stroke-width: 4;
+  stroke-width: 3;
   stroke: var(--minute);
+}
+/* Small pictures of a clock (the brand mark, the Game cards) keep bold hands, so they read at icon size. */
+.c-icon .c-hour {
+  stroke-width: 11;
+}
+.c-icon .c-min {
+  stroke-width: 7;
+}
+.c-icon .c-grip {
+  stroke-width: 4;
 }
 .c-slot {
   fill: none;

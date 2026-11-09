@@ -108,6 +108,11 @@ Rules shared by Drag Arrows and Set Time:
 - Mid-tone, soft but saturated palette as the default "middle" theme (for example deep teal/navy
   background, warm cream clock face, coral Hour Hand, teal Minute Hand, mustard highlights,
   softened green/red for right/wrong). Dark and light themes as alternatives.
+- Both hands are thin on every clock, so a number they cross stays readable; they differ by length
+  and colour. In Drag Arrows each hand ends in a Grip: both Grips are the same small ring in their
+  hand's colour, with a bigger invisible touch area around them, and every number is drawn over the
+  hands and Grips, so a Grip never hides a number. On clocks without Grips the numbers stay under
+  the hands.
 - Text meets WCAG AA contrast. Touch targets at least 48 px.
 - The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
   desktop. Every screen switches to the phone layout when the window is 768 px wide or less, taller
