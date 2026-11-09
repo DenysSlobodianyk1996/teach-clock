@@ -5,12 +5,16 @@ export interface ClockTime {
   readonly minute: number
 }
 
+/** The smallest and largest possible hour and minute. */
+export const HOUR_RANGE = { from: 1, to: 12 } as const
+export const MINUTE_RANGE = { from: 0, to: 59 } as const
+
 export function isValidHour(hour: number): boolean {
-  return Number.isInteger(hour) && hour >= 1 && hour <= 12
+  return Number.isInteger(hour) && hour >= HOUR_RANGE.from && hour <= HOUR_RANGE.to
 }
 
 export function isValidMinute(minute: number): boolean {
-  return Number.isInteger(minute) && minute >= 0 && minute <= 59
+  return Number.isInteger(minute) && minute >= MINUTE_RANGE.from && minute <= MINUTE_RANGE.to
 }
 
 /** Builds a Clock Time, throwing on an impossible hour or minute. */

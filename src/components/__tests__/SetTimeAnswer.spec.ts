@@ -38,6 +38,16 @@ describe('SetTimeAnswer', () => {
     expect(submit().attributes('disabled')).toBeDefined()
   })
 
+  it('shows each box its range underneath, tied to the box for screen readers', () => {
+    open()
+    const range = (name: string) => {
+      const id = box(name).attributes('aria-describedby')!
+      return wrapper.get(`[id="${id}"]`).text()
+    }
+    expect(range(t('round.hours'))).toBe(t('round.range', { from: 1, to: 12 }))
+    expect(range(t('round.minutes'))).toBe(t('round.range', { from: 0, to: 59 }))
+  })
+
   it('submits the Clock Time typed on the number pad', async () => {
     open()
     await tap('1', '0', '5', '5')

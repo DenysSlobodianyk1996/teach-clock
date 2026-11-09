@@ -63,6 +63,8 @@ export default {
     minuteHand: 'Довга — хвилини',
     hours: 'Години',
     minutes: 'Хвилини',
+    /** A box's range, shown under it. */
+    range: '{from}–{to}',
     clear: 'Стерти',
     submit: 'Перевірити',
     errors: {
