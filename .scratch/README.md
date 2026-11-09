@@ -21,6 +21,7 @@ Kinds: first version, feature, fixes. Status: planned, in progress, done.
 - `request.md`: the raw input as given (a list of adjustments, screenshots it points to), unedited apart from ids. Only when the batch starts from such a list.
 - `spec.md`: only when the batch needs one (shared rules, new terms, several tickets on the same screens).
 - `issues/NN-<slug>.md`: one file per ticket, numbered from 01, with **Blocked by**, **Status** (todo / done) and a checklist. Worked in number order, respecting Blocked by.
+- The last ticket syncs design and docs with the app: local boards in `docs/design/`, the online design canvas, the product brief, and this index. Blocked by every other ticket.
 - `images/NN-<what>.png`: named after the ticket they belong to. Crop to the app; no desktop, tabs or bookmarks.
 
 ## When a batch starts or ends
