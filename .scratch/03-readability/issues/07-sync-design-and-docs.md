@@ -10,10 +10,10 @@ Covers: A1–A7 (closing step for the batch)
 
 **Blocked by:** 01, 02, 03, 04, 05, 06
 
-**Status:** todo
+**Status:** done
 
-- [ ] Boards show Drag Numbers as the default Game, the Mode icons, the phone layout up to 768px, the Set Time ranges, the lit tick and number, and the bigger Summary clocks
-- [ ] Every board string is in `src/i18n/uk.ts`; theme tokens match the app in all three themes
-- [ ] Screenshots of the changed screens compared with the running app, desktop and phone
-- [ ] Online canvas republished from the updated boards
-- [ ] Product brief updated; `.scratch/README.md` marks 03-readability done with its PRs
+- [x] Boards show Drag Numbers as the default Game, the Mode icons, the phone layout up to 768px, the Set Time ranges, the lit tick and number, and the bigger Summary clocks
+- [x] Every board string is in `src/i18n/uk.ts`; theme tokens match the app in all three themes
+- [x] Screenshots of the changed screens compared with the running app, desktop and phone
+- [x] Online canvas republished from the updated boards
+- [x] Product brief updated; `.scratch/README.md` marks 03-readability done with its PRs

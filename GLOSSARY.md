@@ -83,3 +83,7 @@ _Avoid_: Set the Clock, ArrowManipulation
 **Set Time**:
 The Game where the clock shows a Clock Time and the Player enters it as digits.
 _Avoid_: Read the Clock, TimeArrow
+
+**Range**:
+The numbers a Set Time box accepts, shown under it: "1–12" for the hours, "0–59" for the minutes. Shown in every Mode; it is not a Hint.
+_Avoid_: Hint, tooltip

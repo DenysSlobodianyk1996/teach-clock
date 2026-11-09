@@ -24,10 +24,11 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the
    dots, "Task 1 of 10 · Teach" with the Mode's icon before its name.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
-4. **Summary**: read-only. Tasks grouped into **Right** and **Wrong**. Each wrong Task shows the
-   Player's first Answer next to the correct one, both drawn as big clocks (on a phone the pair
-   stacks: the Player's Answer, a down arrow, then the correct one). Buttons: Play again, back to
-   Settings.
+4. **Summary**: read-only. A line with the Player's name, Game, Mode and Level, the score and the
+   Round's dots; then Tasks grouped into **Right** (first) and **Wrong**. Right Tasks are drawn as
+   big clocks with their times. Each wrong Task shows the Player's first Answer next to the correct
+   one, both as big clocks (on a phone the pair stacks: the Player's Answer, a down arrow, then the
+   correct one). Buttons: Play again, back to Settings.
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
 English second) and theme (middle by default, dark, light). The device remembers Preferences and
@@ -77,8 +78,8 @@ Rules shared by Drag Arrows and Set Time:
 - On-screen number pad (0–9, clear). Clear empties the whole selected box. A physical keyboard
   also works: digits, Backspace/Delete to clear, ←/→ or Tab to switch boxes, Enter to submit.
 - Submit is enabled once both boxes have a digit. An impossible value (hour outside 1–12, minute
-  outside 00–59) shows an error under the boxes (on a wide screen in place of the ranges) and is not submitted; the Player
-  fixes it first.
+  outside 00–59) shows an error under the boxes (on a wide screen in place of the ranges) and is
+  not submitted; the Player fixes it first.
 
 ## Modes
 
