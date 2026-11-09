@@ -52,7 +52,7 @@ Rules shared by Drag Arrows and Set Time:
 - In Teach the clock shows the Lit Place, a Teach help: the Minute Hand's tick in the Minute
   Hand's colour, a little thicker, with a glow; and the number of the hour the Hour Hand has passed
   (at 2:55 the 2, at 12:40 the 12) in the Hour Hand's colour, with a glow. The lit number is drawn
-  over the grips, so it stays readable where a grip sits on it (at 3:15 the 3). In Test nothing is
+  over the Grips, so it stays readable where a Grip sits on it (at 3:15 the 3). In Test nothing is
   lit at any point, before or after dragging. Clocks in the Summary and the wrong-answer popup light
   nothing.
 

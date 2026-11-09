@@ -10,9 +10,9 @@ Covers: B1–B3 (closing step for the batch)
 
 **Blocked by:** 01, 02
 
-**Status:** todo
+**Status:** done
 
-- [ ] Boards match the app: Test without Lit Place, thin hands, small matching Grips, numbers readable
-- [ ] Screenshots of the changed screens compared with the running app, desktop and phone
-- [ ] Online canvas republished from the updated boards
-- [ ] Product brief updated; `.scratch/README.md` marks 04-clear-hands done with its PRs
+- [x] Boards match the app: Test without Lit Place, thin hands, small matching Grips, numbers readable
+- [x] Screenshots of the changed screens compared with the running app, desktop and phone
+- [x] Online canvas republished from the updated boards
+- [x] Product brief updated; `.scratch/README.md` marks 04-clear-hands done with its PRs

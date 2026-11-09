@@ -16,6 +16,6 @@ See `../images/02-grip-covers-number.png` (Drag Arrows, the Grip hides the 3) an
 
 - [x] Hour Hand and Minute Hand about 4 units wide on every clock; lengths unchanged
 - [x] Drag Arrows: numbers above hands and Grips; the number under a Grip is readable at 3:15, 6:30, 9:15 and 12:00
-- [ ] Both visible Grips smaller and matching; touch area unchanged (Playwright drag tests still pass on the phone project): pending run; component tests pass, drags checked by hand
+- [x] Both visible Grips smaller and matching; touch area unchanged (Playwright drag tests still pass on the phone project): 47 passed, 2 skipped on the combined branch
 - [x] Looks right in the three themes, desktop and phone
 - [x] After the fix, the design boards this ticket changes are updated to match the app (`docs/design/project/*.dc.html`, shared styles in `docs/design/project/theme.css`); ticket 03 does the final check and republishes the canvas
