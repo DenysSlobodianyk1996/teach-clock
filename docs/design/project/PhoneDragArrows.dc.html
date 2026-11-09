@@ -29,16 +29,13 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
     <div class="dots" style="gap: 8px" aria-label="Прогрес: завдання 3 з 10">
       <span class="dot ok"></span><span class="dot ok"></span><span class="dot now"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
-    <div class="task-no">Завдання 3 з 10</div>
+    <div class="task-no">Завдання 3 з 10 · <svg class="mode-icon test" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="m-badge" r="78"></circle><path class="m-check" d="M -38 2 L -12 28 L 40 -26"></path></svg>Перевірка</div>
   </div>
 
   <main style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 14px 20px 20px">
-    <div style="display: flex; align-items: center; gap: 14px">
-      <span style="font-size: 22px; font-weight: 900">Постав стрілки на</span>
-      <span class="card" style="padding: 4px 16px; background: var(--face); color: var(--num); font-size: 40px; font-weight: 900">4:15</span>
-    </div>
+    <!-- On a phone the question "Постав стрілки на" is kept for screen readers only. -->
     <div style="position: relative">
-      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Стрілки показують 4:10, хвилинну стрілку тягнуть" style="width: 340px; height: 340px">
+      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Годинник зі стрілками на 4:10. Перетягни стрілки." style="width: 340px; height: 340px">
         <circle class="c-face" r="94"></circle>
         <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
         <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
@@ -55,11 +52,11 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
       </svg>
       <svg aria-hidden="true" viewBox="0 0 24 24" style="position: absolute; left: 266px; top: 120px; width: 40px; height: 40px"><path d="M5 3l14 8-6 2 4 7-3 1.5-4-7-5 4z" style="fill: #fffaf0; stroke: #2a2633; stroke-width: 1.5; stroke-linejoin: round"></path></svg>
     </div>
-    <div style="display: flex; gap: 18px; font-size: 15px; color: var(--muted)">
-      <span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 40 20" aria-hidden="true" style="width: 40px; height: 20px"><line class="c-hour" x1="6" y1="10" x2="28" y2="10"></line></svg>години</span>
-      <span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 40 20" aria-hidden="true" style="width: 40px; height: 20px"><line class="c-min" x1="4" y1="10" x2="36" y2="10"></line></svg>хвилини</span>
+    <div class="card" style="padding: 10px 30px; background: var(--face); color: var(--num); font-size: 56px; font-weight: 900; line-height: 1.1">4:15</div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--muted)">
+      <span style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 60 20" aria-hidden="true" style="width: 44px; height: 20px"><line class="c-hour" x1="8" y1="10" x2="40" y2="10"></line></svg>Коротка — години</span>
+      <span style="display: flex; align-items: center; gap: 12px"><svg viewBox="0 0 60 20" aria-hidden="true" style="width: 44px; height: 20px"><line class="c-min" x1="4" y1="10" x2="56" y2="10"></line></svg>Довга — хвилини</span>
     </div>
-    <div style="flex-grow: 1"></div>
     <button class="btn" type="button" style="width: 100%">Перевірити</button>
   </main>
 </div>
