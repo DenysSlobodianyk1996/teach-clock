@@ -279,7 +279,7 @@ How it works:
 
 - The 2019 thesis and screenshots in `docs/original/` show the original mechanics only. Their stack, code, palette and art are not to be reused; all art is original SVG.
 - A design prototype of every screen and Game comes before any code, and needs the user's approval for all features. If the design changes anything important, update this spec and the tickets before building.
-- Changes after the first version (Levels 1 / 5 / 15, the lit target tick, Drag Numbers drops and sizes, the clock staying put) are in `.scratch/play-tweaks/issues/`; the product brief describes the result.
+- Changes after the first version (Levels 1 / 5 / 15, the lit target tick, Drag Numbers drops and sizes, the clock staying put) are in `.scratch/02-play-feel/issues/`; the product brief describes the result.
 - Suggested build order after design approval: the rules module first (it is most of the logic and fully testable), then
   1. Set Time,
   2. Drag Arrows,

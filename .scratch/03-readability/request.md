@@ -1,6 +1,6 @@
-# Play tweaks 2: adjustments (raw list)
+# 03 Readability: request
 
-As given on 2026-11-09. Ids (A1–A7) are used by the tickets; images are named after the ticket they belong to.
+The Player-tester's list as given on 2026-11-09, unedited apart from the ids. Ids (A1–A7) are used by the tickets; images are named after the ticket they belong to.
 
 - **A1** Drag Numbers should be the default Game.
 - **A2** Teach / Test Mode choice: each should have its own icon next to the text.
