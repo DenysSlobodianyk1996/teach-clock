@@ -18,8 +18,10 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 
 1. **Welcome**: a short description of what the app teaches, a name field, Start.
 2. **Settings**: choose the Game, Mode and Level (no Level for Drag Numbers). Each option has a
-   one-line description. Back returns to Welcome.
-3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward.
+   one-line description; each Game and Mode also has an icon (Teach: a lightbulb, Test: a check
+   mark in a circle). Back returns to Welcome.
+3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the
+   dots, "Task 1 of 10 · Teach" with the Mode's icon before its name.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
 4. **Summary**: read-only. Tasks grouped into **Right** and **Wrong**. Each wrong Task shows the
    Player's first Answer next to the correct one, both drawn as clocks. Buttons: Play again,
@@ -31,11 +33,11 @@ the last name typed.
 
 ## Games
 
-| Game | Player sees | Player does | Round | Levels |
-|---|---|---|---|---|
-| **Drag Numbers** | An empty clock face with 12 slots and a tray of shuffled numbers | Drags each number 1–12 onto its slot | All 12 numbers | — |
-| **Drag Arrows** | A target Clock Time `H:MM` and a clock with hands at 12:00 | Drags the hands to show the target, presses Submit | 10 Tasks | 1 / 5 / 15 min |
-| **Set Time** | A clock showing a Clock Time | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks | 1 / 5 / 15 min |
+| Game             | Player sees                                                      | Player does                                              | Round          | Levels         |
+| ---------------- | ---------------------------------------------------------------- | -------------------------------------------------------- | -------------- | -------------- |
+| **Drag Numbers** | An empty clock face with 12 slots and a tray of shuffled numbers | Drags each number 1–12 onto its slot                     | All 12 numbers | —              |
+| **Drag Arrows**  | A target Clock Time `H:MM` and a clock with hands at 12:00       | Drags the hands to show the target, presses Submit       | 10 Tasks       | 1 / 5 / 15 min |
+| **Set Time**     | A clock showing a Clock Time                                     | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks       | 1 / 5 / 15 min |
 
 2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
 only, not for look).

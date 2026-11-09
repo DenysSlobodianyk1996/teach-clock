@@ -6,9 +6,9 @@ Covers: A2
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] Both Mode cards in Settings show their icon, matching the Game cards
-- [ ] The Round's progress line shows the Mode's icon before its name, in Drag Numbers, Drag Arrows and Set Time
-- [ ] Icons are decorative to screen readers (the Mode name is already read out)
-- [ ] Looks right in the three themes and on a phone
+- [x] Both Mode cards in Settings show their icon, matching the Game cards
+- [x] The Round's progress line shows the Mode's icon before its name, in Drag Numbers, Drag Arrows and Set Time
+- [x] Icons are decorative to screen readers (the Mode name is already read out)
+- [x] Looks right in the three themes and on a phone

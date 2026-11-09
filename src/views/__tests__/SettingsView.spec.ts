@@ -38,6 +38,16 @@ describe('Settings screen', () => {
     expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
   })
 
+  it('shows each Mode card with its own icon, hidden from screen readers like the Game icons', async () => {
+    const { wrapper } = await open()
+    for (const mode of ['teach', 'test'] as const) {
+      const card = choice(wrapper, t(`modes.${mode}.name`)).element.closest('label')!
+      const icon = card.querySelector('svg')
+      expect(icon?.classList).toContain(mode)
+      expect(icon?.getAttribute('aria-hidden')).toBe('true')
+    }
+  })
+
   it('offers the Levels 1, 5 and 15 minutes, smallest step first', async () => {
     const { wrapper } = await open()
     const levels = wrapper.findAll('.levels label.choice b').map((b) => b.text())

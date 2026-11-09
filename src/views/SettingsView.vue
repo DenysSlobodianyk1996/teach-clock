@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ChoiceCard from '@/components/ChoiceCard.vue'
+import ModeIcon from '@/components/ModeIcon.vue'
 import { GAMES, LEVELS, MODES, hasLevel } from '@/game/settings'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
@@ -70,7 +71,11 @@ function startRound() {
           name="mode"
           :checked="play.settings.mode === mode"
           @select="play.settings.mode = mode"
-        />
+        >
+          <template #icon>
+            <ModeIcon :mode="mode" />
+          </template>
+        </ChoiceCard>
       </div>
     </fieldset>
 
@@ -171,6 +176,17 @@ h1 {
   }
   .games {
     grid-template-columns: 1fr;
+  }
+  /* Two Mode cards side by side leave no room for the icon beside the text, so it goes on top. */
+  .modes :deep(.choice) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 14px 14px;
+  }
+  .modes :deep(.choice svg) {
+    width: 44px;
+    height: 44px;
   }
   .levels :deep(.description) {
     display: none;

@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import ClockFace, { type Hand } from '@/components/ClockFace.vue'
 import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
 import DragNumbersRound from './DragNumbersRound.vue'
+import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
@@ -109,7 +110,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
       <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />
       <div class="task-no">
         {{ t('round.progress', { n: shownIndex + 1, total: round.tasks.length }) }} ·
-        {{ t(`modes.${round.mode}.name`) }}
+        <ModeIcon :mode="round.mode" inline />{{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
     <section class="play" :class="[round.game, { 'has-hint': taskHint }]">

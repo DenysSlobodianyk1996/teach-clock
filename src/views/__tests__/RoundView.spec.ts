@@ -430,3 +430,20 @@ describe('Round screen, Drag Numbers in Test', () => {
     expect(usePlayStore().summary).toMatchObject({ rightCount: 12, total: 12 })
   })
 })
+
+describe('Round screen, Mode icon on the progress line', () => {
+  const cases: [Game, Mode][] = [
+    ['dragNumbers', 'teach'],
+    ['dragArrows', 'test'],
+    ['setTime', 'teach'],
+    ['setTime', 'test'],
+  ]
+  it.each(cases)('%s in %s shows the Mode icon just before the Mode name', async (game, mode) => {
+    await open(game, mode)
+    const line = wrapper.get('.task-no').element
+    const icon = line.querySelector('svg')!
+    expect(icon.classList).toContain(mode)
+    expect(icon.getAttribute('aria-hidden')).toBe('true')
+    expect(icon.nextSibling?.textContent?.trim()).toBe(t(`modes.${mode}.name`))
+  })
+})
