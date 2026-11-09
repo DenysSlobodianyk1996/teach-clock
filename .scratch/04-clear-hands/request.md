@@ -5,3 +5,4 @@ The Player-tester's notes as given on 2026-11-09 after 03-readability shipped, u
 - **B1** "I see minute arrow is over numbers, its a bug" (Drag Arrows: the Minute Hand's grip covers the 3). ![grip](images/02-grip-covers-number.png)
 - **B2** "here the same - minute. Also, in this mode minute arrow is over number - make arrow width smaller." (Set Time) ![set time](images/01-set-time-test-lit.png)
 - **B3** "don't highlight anything at all in test mode. the same for drag arrows"
+- **B4** On a sketch comparing today, the planned ticket 02 and numbers drawn above every hand (`images/02-hands-compared.png`): "After ticket 02 (planned) looks fine. Just make hour the same stroke as minutes" — confirmed as both the Hour Hand's line and its Grip. ![compared](images/02-hands-compared.png)

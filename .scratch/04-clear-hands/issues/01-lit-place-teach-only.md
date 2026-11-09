@@ -12,3 +12,4 @@ Covers: B3
 - [ ] Set Time and Drag Arrows in Teach: lit as today
 - [ ] Component tests cover both Modes in both Games
 - [ ] Product brief says the Lit Place is a Teach help
+- [ ] After the fix, the design boards this ticket changes are updated to match the app (`docs/design/project/*.dc.html`, shared styles in `docs/design/project/theme.css`); ticket 03 does the final check and republishes the canvas
