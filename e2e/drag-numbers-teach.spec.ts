@@ -53,3 +53,54 @@ test('a Drag Numbers Teach Round rejects a wrong drop with a hint and ends on th
       }),
   ).toBeVisible()
 })
+
+test('in Teach, the Place-It button beside a Hint puts the number in its place', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+  await page.getByRole('button', { name: t('welcome.start') }).click()
+  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
+  await page.getByRole('button', { name: t('settings.play') }).click()
+  await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
+
+  const placeIt = (number: number) =>
+    page.getByRole('button', { name: t('numbers.placeIt', { number }) })
+  await expect(page.locator('.place-it')).toHaveCount(0)
+
+  // A wrong drop: the toast and, to its right, the 48 px round button.
+  await dragNumber(page, 2, 7)
+  await expect(page.getByRole('status')).toHaveText(
+    t('numbers.between', { number: 2, before: 1, after: 3 }),
+  )
+  const button = placeIt(2)
+  await expect(button).toBeVisible()
+  const box = (await button.boundingBox())!
+  expect(Math.round(box.width)).toBe(48)
+  expect(Math.round(box.height)).toBe(48)
+  const toast = (await page.locator('.toast').boundingBox())!
+  expect(box.x).toBeGreaterThan(toast.x + toast.width)
+
+  // Pressed with Enter: 2 lands on its slot and the Hint closes.
+  await button.focus()
+  await page.keyboard.press('Enter')
+  await expect(slot(page, 2)).toHaveText('2')
+  await expect(tile(page, 2)).toBeHidden()
+  await expect(page.getByRole('status')).toHaveText('')
+  await expect(page.locator('.place-it')).toHaveCount(0)
+  // Keyboard focus stays in play, on the first number left on the tray.
+  await expect(page.locator('.tray .tile').first()).toBeFocused()
+
+  // Space works too.
+  await dragNumber(page, 5, 9)
+  await placeIt(5).focus()
+  await page.keyboard.press('Space')
+  await expect(slot(page, 5)).toHaveText('5')
+
+  for (const n of [1, 3, 4, 6, 7, 8, 9, 10, 11, 12]) await tapNumber(page, n, n)
+  await expect(page).toHaveURL(/\/summary$/)
+  await expect(
+    page.getByRole('heading', { name: t('summary.headline', { right: 10, total: 12 }) }),
+  ).toBeVisible()
+})

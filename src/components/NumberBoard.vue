@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
@@ -21,6 +21,8 @@ const props = defineProps<{
   disabled?: boolean
   /** A hint shows above the face: on a phone the face shrinks to keep the tray on screen. */
   hinted?: boolean
+  /** A slot whose number just landed for the Player (the Place-It button): it flashes green. */
+  flash?: number | null
 }>()
 const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
 
@@ -56,6 +58,15 @@ const held = ref<{
 } | null>(null)
 /** A drag just ended, so a click on the tile that follows is not a tap. */
 let dragged = false
+
+/** The Player can still pick this number up: on the tray, or on the face in Test. */
+const pickable = (n: number) =>
+  props.tray.includes(n) || (!!props.movable && props.slots.includes(n))
+// A number can leave the tray without the Player (the Place-It button): let go of it.
+watch([() => props.tray, () => props.slots], () => {
+  if (selected.value !== null && !pickable(selected.value)) selected.value = null
+  if (held.value && !pickable(held.value.number)) held.value = null
+})
 
 const placed = computed(() => props.slots.filter((n) => n !== null).length)
 const faceLabel = computed(() => t('numbers.face', { n: placed.value }))
@@ -164,8 +175,9 @@ const interactive = (slot: number) => props.slots[slot - 1] === null || canHold(
 
 function slotClasses(slot: number) {
   const number = props.slots[slot - 1]
-  if (number === null)
-    return ['slot', { target: held.value?.slot === slot, ready: selected.value !== null }]
+  // A picked or dragged number lights every free slot it can go to.
+  const ready = selected.value !== null || !!held.value?.moved
+  if (number === null) return ['slot', { target: held.value?.slot === slot, ready }]
   return [
     'placed',
     {
@@ -173,6 +185,7 @@ function slotClasses(slot: number) {
       selected: selected.value === number,
       ghost: held.value?.moved && held.value.number === number,
       target: held.value?.slot === slot,
+      flash: props.flash === slot,
     },
   ]
 }
@@ -252,6 +265,7 @@ function tapTray() {
           >
             <circle v-if="interactive(n)" class="hit" :cx="x" :cy="y" r="20" />
             <template v-if="slots[n - 1] !== null">
+              <circle v-if="flash === n" class="c-flash" :cx="x" :cy="y" :r="TILE_RADIUS + 4" />
               <circle class="c-tile" :cx="x" :cy="y" :r="TILE_RADIUS" />
               <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
             </template>
@@ -439,6 +453,34 @@ function tapTray() {
 }
 .placed.ghost {
   opacity: 0.3;
+}
+/* The Place-It button put this number here: a green ring that swells and fades. */
+.c-flash {
+  fill: none;
+  stroke: var(--good);
+  stroke-width: 4;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flash 0.8s ease-out forwards;
+}
+@keyframes flash {
+  from {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .c-flash {
+    animation: none;
+  }
 }
 .movable {
   touch-action: none;

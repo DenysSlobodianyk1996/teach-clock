@@ -8,14 +8,14 @@ The rules belong in `src/game/dragNumbers.ts`, for example a `placeForMe(round, 
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] The button is shown only while a Hint shows, in Teach only; Test never shows it
-- [ ] It is a 48 px round button to the right of the toast (on a phone too, and the face does not jump), drawn as an original SVG lightbulb (the Teach icon, `ModeIcon`)
-- [ ] Its accessible name says which number it places, for example "Put 2 in its place"; it works with Enter and Space; uk and en text are added in `src/i18n/`
-- [ ] Pressing it places the number, flashes its slot green, clears the Hint and the marked tray tile, and ends the Round if all 12 are placed
-- [ ] The number ends as `helped`; a Summary after using it lists it under Wrong
-- [ ] Rules tests in `src/game/__tests__/dragNumbers.spec.ts`: places only the hinted number, keeps `helped`, refuses in Test, refuses a number already placed, ends the Round on the last one
-- [ ] Component or view test for show/hide and press; a Playwright Teach flow (`e2e/drag-numbers-teach.spec.ts`) using `t` for every text, desktop and phone
-- [ ] The flash respects `prefers-reduced-motion` (a plain green ring, no animation)
-- [ ] The design boards this changes (`DragNumbersTeachHint.dc.html`, `PhoneDragNumbers.dc.html`) are updated to match the app; ticket 03 does the final check
+- [x] The button is shown only while a Hint shows, in Teach only; Test never shows it
+- [x] It is a 48 px round button to the right of the toast (on a phone too, and the face does not jump), drawn as an original SVG lightbulb (the Teach icon, `ModeIcon`)
+- [x] Its accessible name says which number it places, for example "Put 2 in its place"; it works with Enter and Space; uk and en text are added in `src/i18n/`
+- [x] Pressing it places the number, flashes its slot green, clears the Hint and the marked tray tile, and ends the Round if all 12 are placed
+- [x] The number ends as `helped`; a Summary after using it lists it under Wrong
+- [x] Rules tests in `src/game/__tests__/dragNumbers.spec.ts`: places only the hinted number, keeps `helped`, refuses in Test, refuses a number already placed, ends the Round on the last one
+- [x] Component or view test for show/hide and press; a Playwright Teach flow (`e2e/drag-numbers-teach.spec.ts`) using `t` for every text, desktop and phone
+- [x] The flash respects `prefers-reduced-motion` (a plain green ring, no animation)
+- [x] The design boards this changes (`DragNumbersTeachHint.dc.html`, `PhoneDragNumbers.dc.html`) are updated to match the app; ticket 03 does the final check

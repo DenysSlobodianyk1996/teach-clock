@@ -45,6 +45,10 @@ The Player's response to a Task, submitted with a button and marked right or wro
 What a Player in Teach is shown after a wrong try: the correct Answer, or in Drag Numbers where the number goes ("7 goes between 6 and 8"). A Task that needed a Hint counts as wrong.
 _Avoid_: Tip, solution
 
+**Place-It button**:
+In Teach, the button beside a Hint that puts the number on its right place for the Player. The number still counts as helped.
+_Avoid_: Auto-place, solve
+
 **Summary**:
 The read-only screen at the end of a Round, grouping Tasks into right and wrong and showing the Player's first Answer next to the correct one.
 _Avoid_: Results, report

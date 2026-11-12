@@ -61,6 +61,24 @@ export function dropNumber(
   return { round: next, outcome: { placed: true, hint: null, finished: isFinished(next) } }
 }
 
+/**
+ * Teach, the Place-It button: puts a number on its own slot for the Player, after a wrong drop.
+ * The number stays helped, since the wrong drop already happened. A number still on the tray
+ * with no wrong drop yet, or one already placed, is left alone.
+ */
+export function placeForMe(
+  round: NumbersRound,
+  number: number,
+): { round: NumbersRound; outcome: DropOutcome } {
+  if (round.mode !== 'teach') throw new Error('Only Teach can place a number for the Player')
+  const task = round.tasks[number - 1]
+  if (!task || task.firstAnswer === null) {
+    return { round, outcome: { placed: false, hint: null, finished: isFinished(round) } }
+  }
+  // A right drop after a wrong one: dropNumber already keeps it helped.
+  return dropNumber(round, number, task.answer)
+}
+
 const PLACED: DropOutcome = { placed: true, hint: null, finished: false }
 
 function moveFreely(round: NumbersRound, number: number, slot: number): NumbersRound {

@@ -10,10 +10,10 @@ Covers: C1–C2 (closing step for the batch)
 
 **Blocked by:** 01, 02
 
-**Status:** todo
+**Status:** done
 
-- [ ] Boards match the app: orange slots while dragging, the Place-It button beside the Hint, the green flash
-- [ ] Screenshots of the changed screens compared with the running app, desktop and phone
-- [ ] Online canvas republished from the updated boards
-- [ ] Glossary has the Place-It button; the product brief says what it does and that the number counts as helped
-- [ ] `.scratch/README.md` marks 05-drag-help done with its PRs
+- [x] Boards match the app: orange slots while dragging, the Place-It button beside the Hint, the green flash
+- [x] Screenshots of the changed screens compared with the running app, desktop and phone
+- [x] Online canvas republished from the updated boards
+- [x] Glossary has the Place-It button; the product brief says what it does and that the number counts as helped
+- [x] `.scratch/README.md` marks 05-drag-help done with its PRs

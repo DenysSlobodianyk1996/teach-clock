@@ -6,12 +6,12 @@ Covers: C1
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] While a tray number is being dragged, every free slot has the orange ring, in Teach and Test
-- [ ] Test: dragging a number that is already on the face lights the same slots the drop would accept (free ones and other filled ones keep their own look)
-- [ ] The slot under the pointer still shows the stronger target look
-- [ ] Drop, cancel (`pointercancel`, lost capture) and a drop back on the tray all clear the orange
-- [ ] A short press (tap) still behaves as today
-- [ ] Component test in `src/components/__tests__/` covers drag start, move and end; a Playwright check in an existing drag spec, desktop and phone
-- [ ] The design boards this changes (`docs/design/project/DragNumbersDrag.dc.html`, `PhoneDragNumbers.dc.html` if it shows a drag) are updated to match the app; ticket 03 does the final check
+- [x] While a tray number is being dragged, every free slot has the orange ring, in Teach and Test
+- [x] Test: dragging a number that is already on the face lights the same slots the drop would accept (free ones and other filled ones keep their own look)
+- [x] The slot under the pointer still shows the stronger target look
+- [x] Drop, cancel (`pointercancel`, lost capture) and a drop back on the tray all clear the orange
+- [x] A short press (tap) still behaves as today
+- [x] Component test in `src/components/__tests__/` covers drag start, move and end; a Playwright check in an existing drag spec, desktop and phone
+- [x] The design boards this changes (`docs/design/project/DragNumbersDrag.dc.html`, `PhoneDragNumbers.dc.html` if it shows a drag) are updated to match the app; ticket 03 does the final check

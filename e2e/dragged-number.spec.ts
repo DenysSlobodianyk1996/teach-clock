@@ -30,3 +30,24 @@ test('a dragged number is centred under the pointer', async ({ page }) => {
   ).toBeLessThanOrEqual(1)
   await page.mouse.up()
 })
+
+test('every free slot turns orange while a number is dragged, and grey again after', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+  await page.getByRole('button', { name: t('welcome.start') }).click()
+  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('button', { name: t('settings.play') }).click()
+  await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
+
+  const ready = page.locator('[data-slot].ready')
+  const from = (await tile(page, 6).boundingBox())!
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2)
+  await page.mouse.down()
+  await expect(ready).toHaveCount(0)
+  await page.mouse.move(from.x - 60, from.y + 40, { steps: 5 })
+  await expect(ready).toHaveCount(12)
+  await page.mouse.up()
+  await expect(ready).toHaveCount(0)
+})

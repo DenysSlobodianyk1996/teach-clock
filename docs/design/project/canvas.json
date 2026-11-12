@@ -23,6 +23,7 @@
     "DragNumbersDrag.dc.html": { "x": 0, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · перетягування" },
     "DragNumbersTeachHint.dc.html": { "x": 1104, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · Навчання: підказка" },
     "DragNumbersTestSubmit.dc.html": { "x": 2208, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · Перевірка: усі 12" },
+    "DragNumbersPlaceIt.dc.html": { "x": 3312, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав числа · Навчання: Постав на місце" },
 
     "Summary.dc.html": { "x": 0, "y": 5840, "w": 1024, "h": 1100, "title": "Планшет · Підсумок" },
     "SummaryDragNumbers.dc.html": { "x": 1104, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав числа" },
@@ -53,7 +54,7 @@
     "Welcome.dc.html", "Settings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html",
     "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "SetTimeTeachHint.dc.html",
     "DragArrowsTest.dc.html", "DragArrowsTeachWrong.dc.html", "DragArrowsTeachHint.dc.html",
-    "DragNumbersDrag.dc.html", "DragNumbersTeachHint.dc.html", "DragNumbersTestSubmit.dc.html",
+    "DragNumbersDrag.dc.html", "DragNumbersTeachHint.dc.html", "DragNumbersPlaceIt.dc.html", "DragNumbersTestSubmit.dc.html",
     "Summary.dc.html", "SummaryDragNumbers.dc.html",
     "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragNumbers.dc.html", "PhoneSummary.dc.html",
     "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragNumbers.dc.html", "DesktopSummary.dc.html",
