@@ -21,7 +21,7 @@ function mountBoard(props: Record<string, unknown> = {}) {
 
 async function pointer(
   target: { element: Element },
-  type: 'pointerdown' | 'pointermove' | 'pointerup',
+  type: 'pointerdown' | 'pointermove' | 'pointerup' | 'pointercancel',
   clientX: number,
   clientY: number,
 ) {
@@ -35,6 +35,12 @@ const tile = (n: number) => wrapper.get(`.tray [data-number="${n}"]`)
 const slot = (n: number) => wrapper.get(`[data-slot="${n}"]`)
 /** Slot 3 sits 66 units right of the centre. */
 const AT_3 = [176, 110] as const
+/** The free slots that show the orange "ready" ring. */
+const readySlots = () =>
+  wrapper
+    .findAll('[data-slot]')
+    .filter((s) => s.classes('ready'))
+    .map((s) => Number(s.attributes('data-slot')))
 
 describe('NumberBoard', () => {
   it('drops a tile dragged onto a free slot', async () => {
@@ -55,6 +61,34 @@ describe('NumberBoard', () => {
     // 30 units right of slot 3: past its reach, the way a lifting finger can slide.
     await pointer(tile(7), 'pointerup', 206, 110)
     expect(wrapper.emitted('drop')).toEqual([[7, 3]])
+  })
+
+  it('rings every free slot while a tile is dragged, and clears them on the drop', async () => {
+    mountBoard({ slots: [1, ...Array(11).fill(null)], tray: [7, 3, 12] })
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    expect(readySlots()).toEqual([])
+    await pointer(tile(7), 'pointermove', 200, 110)
+    expect(readySlots()).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+    await pointer(tile(7), 'pointermove', ...AT_3)
+    expect(slot(3).find('.c-slot.target').exists()).toBe(true)
+    await pointer(tile(7), 'pointerup', ...AT_3)
+    expect(readySlots()).toEqual([])
+  })
+
+  it('clears the ringed slots when a drag is cancelled', async () => {
+    mountBoard()
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    await pointer(tile(7), 'pointermove', 200, 110)
+    expect(readySlots()).toHaveLength(12)
+    await pointer(tile(7), 'pointercancel', 200, 110)
+    expect(readySlots()).toEqual([])
+  })
+
+  it('does not ring the slots for a short press', async () => {
+    mountBoard()
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    await pointer(tile(7), 'pointermove', 302, 101)
+    expect(readySlots()).toEqual([])
   })
 
   it('drops nothing when let go away from a slot', async () => {
@@ -155,6 +189,13 @@ describe('NumberBoard in Test (movable)', () => {
     await pointer(slot(3), 'pointermove', ...AT_9)
     await pointer(slot(3), 'pointerup', 14, 110)
     expect(wrapper.emitted('drop')).toEqual([[3, 9]])
+  })
+
+  it('rings only the free slots while a face number is dragged', async () => {
+    mountBoard({ slots: SLOTS, tray: [12], movable: true })
+    await pointer(slot(3), 'pointerdown', ...AT_3)
+    await pointer(slot(3), 'pointermove', 100, 110)
+    expect(readySlots()).toEqual([1, 2, 4, 5, 6, 7, 8, 10, 11, 12])
   })
 
   it('takes a placed number back when it is let go over the tray', async () => {

@@ -164,8 +164,9 @@ const interactive = (slot: number) => props.slots[slot - 1] === null || canHold(
 
 function slotClasses(slot: number) {
   const number = props.slots[slot - 1]
-  if (number === null)
-    return ['slot', { target: held.value?.slot === slot, ready: selected.value !== null }]
+  // A picked or dragged number lights every free slot it can go to.
+  const ready = selected.value !== null || !!held.value?.moved
+  if (number === null) return ['slot', { target: held.value?.slot === slot, ready }]
   return [
     'placed',
     {

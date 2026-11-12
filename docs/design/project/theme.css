@@ -150,6 +150,8 @@
 .c-icon .c-min { stroke-width: 7; }
 .c-icon .c-grip { stroke-width: 4; }
 .c-slot { fill: none; stroke: var(--slot); stroke-width: 2.5; stroke-dasharray: 4 4; }
+/* A number is picked or dragged: every free slot it can go to turns orange. */
+.c-slot.ready { stroke: var(--accent); }
 .c-slot.target { stroke: var(--accent); stroke-width: 4; stroke-dasharray: none; fill: rgba(242, 184, 75, 0.18); }
 .c-tile { fill: var(--accent); }
 .c-tile-num { fill: var(--accent-ink); font: 900 17px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
