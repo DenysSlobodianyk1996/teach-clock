@@ -34,6 +34,12 @@ describe('Round', () => {
     const dragHours = startRound({ game: 'dragHours', mode: 'teach', level: 5 }, seededRandom(1))
     expect(dragHours.level).toBeNull()
     expect(dragHours.tasks).toHaveLength(12)
+    const dragMinutes = startRound(
+      { game: 'dragMinutes', mode: 'test', level: 15 },
+      seededRandom(1),
+    )
+    expect(dragMinutes).toMatchObject({ game: 'dragMinutes', level: null, submitted: false })
+    expect(dragMinutes.tasks).toHaveLength(12)
   })
 
   it('records a right Answer and moves on', () => {

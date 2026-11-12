@@ -39,6 +39,27 @@ describe('Settings screen', () => {
     expect(wrapper.text()).not.toContain(t('settings.level'))
   })
 
+  it('lists four Games, the two drag Games side by side, each with its own icon', async () => {
+    const { wrapper } = await open()
+    const games = wrapper.findAll('.games label.choice b').map((b) => b.text())
+    expect(games).toEqual(
+      (['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const).map((g) =>
+        t(`games.${g}.name`),
+      ),
+    )
+    const icons = wrapper.findAll('.games svg').map((s) => s.html())
+    expect(new Set(icons).size).toBe(4)
+  })
+
+  it('shows no Level for Drag Minutes, and starts a Drag Minutes Round', async () => {
+    const { wrapper } = await open()
+    await choice(wrapper, t('games.setTime.name')).setValue(true)
+    await choice(wrapper, t('games.dragMinutes.name')).setValue(true)
+    expect(wrapper.text()).not.toContain(t('settings.level'))
+    await button(wrapper, t('settings.play')).trigger('click')
+    expect(usePlayStore().round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null })
+  })
+
   it.each(['dragArrows', 'setTime'] as const)(
     'shows the Level with 1 minute checked once %s is picked',
     async (game) => {

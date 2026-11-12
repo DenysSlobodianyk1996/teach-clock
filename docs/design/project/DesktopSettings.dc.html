@@ -28,10 +28,14 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
     <div class="stage" style="background: var(--bg); display: flex; flex-direction: column; gap: 16px; padding: 36px 48px 36px">
       <h1 style="margin: 0; font-size: 36px; font-weight: 900">Оля, у що граємо?</h1>
       <div class="label">Гра</div>
-      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
         <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
           <svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><circle class="c-slot" cx="0" cy="-62" r="16"></circle><circle class="c-slot" cx="62" cy="0" r="16"></circle><circle class="c-slot" cx="0" cy="62" r="16"></circle><circle class="c-tile" cx="-62" cy="0" r="18"></circle><text class="c-tile-num" x="-62" y="0">9</text></svg>
           <div style="display: flex; flex-direction: column; gap: 4px"><b>Розстав години</b><span>Перетягни числа 1–12 на їхні місця.</span></div>
+        </button>
+        <button class="choice" type="button" aria-pressed="false" style="flex-direction: row; align-items: center; gap: 14px">
+          <svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><circle class="c-slot" cx="-60" cy="-8" r="16"></circle><circle class="c-tile" cx="28" cy="-48" r="32"></circle><text class="c-tile-num" x="28" y="-48" style="font-size: 36px">5</text><circle class="c-tile" cx="0" cy="56" r="32"></circle><text class="c-tile-num" x="0" y="56" style="font-size: 36px">30</text></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px"><b>Розстав хвилини</b><span>Перетягни хвилини 5–60 на їхні місця.</span></div>
         </button>
         <button class="choice" type="button" aria-pressed="true" style="flex-direction: row; align-items: center; gap: 14px">
           <svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true" style="width: 56px; height: 56px; flex: none"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(120)"></line><line class="c-min" y1="10" y2="-64"></line><circle class="c-grip m" cx="0" cy="-64" r="14"></circle><circle class="c-pin" r="9"></circle></svg>

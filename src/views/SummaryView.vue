@@ -8,7 +8,7 @@ import ProgressDots from '@/components/ProgressDots.vue'
 import SummaryConfetti from '@/components/SummaryConfetti.vue'
 import { formatClockTime } from '@/game/clockTime'
 import { neighbours, shownNeighbours, tileValue } from '@/game/dragNumbers'
-import type { WrongTask } from '@/game/summary'
+import { isNumbersSummary, type WrongTask } from '@/game/summary'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -22,7 +22,7 @@ const player = usePlayerStore()
 // one even while "Play again" replaces the Round under it.
 const summary = play.summary
 /** Set for a drag Game: it says what each tile shows. */
-const numbersGame = summary?.game === 'dragHours' ? summary.game : null
+const numbersGame = summary && isNumbersSummary(summary) ? summary.game : null
 /** What tile N shows. */
 const value = (n: number) => (numbersGame ? tileValue(numbersGame, n) : n)
 /** "N goes between…", for tile N. */
@@ -35,7 +35,7 @@ const headline = computed(() => {
   if (!summary) return ''
   const counts = { right: summary.rightCount, total: summary.total }
   // In Teach every number ends in its place, so "in their places" is only true of Test.
-  const numbersTest = summary.game === 'dragHours' && summary.mode === 'test'
+  const numbersTest = isNumbersSummary(summary) && summary.mode === 'test'
   return t(numbersTest ? 'summary.numbersHeadline' : 'summary.headline', counts)
 })
 
@@ -77,11 +77,12 @@ function numberPair({ answer, firstAnswer }: WrongTask<number>) {
   return `${first}. ${between(answer)}`
 }
 
-/** Drag Hours in Test: the Player's face against the correct one. */
+/** A drag Game in Test: the Player's face against the correct one. */
 const faces = computed(() => {
-  if (summary?.game !== 'dragHours' || summary.mode !== 'test') return null
+  if (!summary || !isNumbersSummary(summary) || summary.mode !== 'test') return null
   const misplaced = summary.wrong.map((w) => w.answer)
   return {
+    game: summary.game,
     placements: summary.placements,
     // The slots where a number does not belong.
     marked: summary.wrong.map((w) => w.firstAnswer),
@@ -120,7 +121,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.yourFace') }}</figcaption>
         <NumberFace
-          :game="numbersGame!"
+          :game="faces.game"
           class="big-face"
           :slots="faces.placements"
           :marked="faces.marked"
@@ -131,7 +132,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.correctFace') }}</figcaption>
         <NumberFace
-          :game="numbersGame!"
+          :game="faces.game"
           class="big-face"
           :slots="faces.correct"
           :good="faces.misplaced"
@@ -154,7 +155,7 @@ function toSettings() {
           <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
-        <ul v-else-if="summary.game === 'dragHours'" class="chips">
+        <ul v-else-if="isNumbersSummary(summary)" class="chips">
           <li v-for="n in summary.right" :key="n" class="chip">{{ value(n) }}</li>
         </ul>
         <ul v-else class="right-clocks">
@@ -169,13 +170,13 @@ function toSettings() {
         <h2 id="wrong-title">
           <span class="dot bad" />{{ t('summary.wrong') }} · {{ summary.wrong.length }}
         </h2>
-        <ul v-if="summary.game === 'dragHours'" class="pairs">
+        <ul v-if="isNumbersSummary(summary)" class="pairs">
           <li v-for="task in summary.wrong" :key="task.answer" class="pair">
             <!-- The pictures are hidden from screen readers; this says the same in words. -->
             <span class="sr-only">{{ numberPair(task) }}</span>
             <div class="side" aria-hidden="true">
               <NumberFace
-                :game="numbersGame!"
+                :game="summary.game"
                 class="pair-clock"
                 :slots="only(task.answer, task.firstAnswer)"
                 :marked="[task.firstAnswer]"
@@ -188,7 +189,7 @@ function toSettings() {
             </svg>
             <div class="side" aria-hidden="true">
               <NumberFace
-                :game="numbersGame!"
+                :game="summary.game"
                 class="pair-clock"
                 :slots="only(task.answer, task.answer)"
                 label=""

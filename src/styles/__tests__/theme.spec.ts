@@ -49,7 +49,21 @@ const TEXT_PAIRS: [text: string, background: string][] = [
   ['--pop-ink', '--pop'],
   ['--num', '--face'],
   ['--tile-ink', '--tile'],
+  // The Hour Badge's digit, on the bare face around its soft circle.
+  ['--tick', '--face'],
 ]
+
+/** `top` laid over `bottom` at `alpha`, as `#rrggbb`. */
+function blend(top: string, bottom: string, alpha: number): string {
+  const channel = (hex: string, i: number) => parseInt(hex.slice(i, i + 2), 16)
+  return `#${[1, 3, 5]
+    .map((i) => Math.round(channel(top, i) * alpha + channel(bottom, i) * (1 - alpha)))
+    .map((c) => c.toString(16).padStart(2, '0'))
+    .join('')}`
+}
+
+/** How strongly the Hour Badge's circle tints the face with the tick colour (see base.css). */
+const BADGE_ALPHA = 0.12
 
 describe('theme contrast', () => {
   it('checks real numbers', () => {
@@ -64,5 +78,11 @@ describe('theme contrast', () => {
       ratio: Math.round(contrast(t[fg]!, t[bg]!) * 100) / 100,
     })).filter(({ ratio }) => ratio < 4.5)
     expect(failing).toEqual([])
+  })
+
+  it.each(THEMES)('the Hour Badge digit meets WCAG AA on its circle in the %s theme', (theme) => {
+    const t = tokens(theme)
+    const circle = blend(t['--tick']!, t['--face']!, BADGE_ALPHA)
+    expect(contrast(t['--tick']!, circle)).toBeGreaterThanOrEqual(4.5)
   })
 })

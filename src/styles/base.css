@@ -211,3 +211,17 @@ input {
   text-anchor: middle;
   dominant-baseline: central;
 }
+/* Drag Minutes: the Hour Badge, a soft circle of the tick colour with the hour in it. The
+   circle's 12% matches BADGE_ALPHA in __tests__/theme.spec.ts, which checks the contrast. */
+.c-badge {
+  fill: var(--tick);
+  fill-opacity: 0.12;
+}
+.c-badge-num {
+  fill: var(--tick);
+  font:
+    800 11px 'Nunito',
+    sans-serif;
+  text-anchor: middle;
+  dominant-baseline: central;
+}

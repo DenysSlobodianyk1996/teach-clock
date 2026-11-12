@@ -39,6 +39,7 @@ export default {
   },
   games: {
     dragHours: { name: 'Drag Hours', description: 'Drag the numbers 1–12 to their places.' },
+    dragMinutes: { name: 'Drag Minutes', description: 'Drag the minutes 5–60 to their places.' },
     dragArrows: { name: 'Drag Arrows', description: 'Show the given time on the clock.' },
     setTime: { name: 'Set Time', description: 'Look at the clock and enter the time.' },
   },

@@ -4,6 +4,7 @@ import { DEFAULT_SETTINGS, type Settings } from '@/game/settings'
 import type { ClockTime } from '@/game/clockTime'
 import {
   isFinished,
+  isNumbersRound,
   startRound as newRound,
   submitAnswer as submit,
   type Round,
@@ -41,7 +42,7 @@ export const usePlayStore = defineStore('play', () => {
   }
 
   function numbersRound() {
-    if (round.value?.game !== 'dragHours') throw new Error('No Drag Hours Round in play')
+    if (!round.value || !isNumbersRound(round.value)) throw new Error('No drag Game Round in play')
     return round.value
   }
 

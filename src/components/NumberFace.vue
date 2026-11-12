@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS } from '@/game/clockFace'
 import { tileValue } from '@/game/dragNumbers'
+import HourBadges from './HourBadges.vue'
 import type { NumbersGame } from '@/game/round'
 
 /**
@@ -35,6 +36,7 @@ const value = (n: number) => tileValue(props.game, n)
   >
     <circle class="c-face" r="94" />
     <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
+    <HourBadges v-if="game === 'dragMinutes'" />
     <template v-for="{ n, x, y } in places" :key="n">
       <g
         v-if="slots[n - 1] !== null"
