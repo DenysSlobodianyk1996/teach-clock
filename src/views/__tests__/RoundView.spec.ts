@@ -383,12 +383,12 @@ async function place(number: number, slot: number) {
   await wrapper.get(`[data-slot="${slot}"]`).trigger('click')
 }
 
-describe('Round screen, Drag Numbers in Teach', () => {
+describe('Round screen, Drag Hours in Teach', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
   afterEach(() => vi.useRealTimers())
 
   it('shows an empty face, the tray of 1–12 and 12 grey dots', async () => {
-    await open('dragNumbers', 'teach')
+    await open('dragHours', 'teach')
     expect(wrapper.get('h1').text()).toBe(t('numbers.heading'))
     const tray = wrapper.findAll('.tray .tile').map((b) => Number(b.text()))
     expect([...tray].sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
@@ -400,7 +400,7 @@ describe('Round screen, Drag Numbers in Teach', () => {
   })
 
   it('sends a wrong drop back to the tray with the neighbour hint', async () => {
-    await open('dragNumbers', 'teach')
+    await open('dragHours', 'teach')
     await place(12, 4)
     expect(wrapper.get('[role="status"]').text()).toBe(
       t('numbers.between', { number: 12, before: 11, after: 1 }),
@@ -410,7 +410,7 @@ describe('Round screen, Drag Numbers in Teach', () => {
   })
 
   it('locks a right drop on the face, clears the hint and colours its dot', async () => {
-    await open('dragNumbers', 'teach')
+    await open('dragHours', 'teach')
     await place(7, 4)
     await place(7, 7)
     await place(3, 3)
@@ -423,7 +423,7 @@ describe('Round screen, Drag Numbers in Teach', () => {
   })
 
   it('opens the Summary once all 12 are placed', async () => {
-    const { router } = await open('dragNumbers', 'teach')
+    const { router } = await open('dragHours', 'teach')
     for (let n = 1; n <= 12; n++) await place(n, n)
     expect(router.currentRoute.value.name).toBe('round')
     vi.runAllTimers()
@@ -434,12 +434,12 @@ describe('Round screen, Drag Numbers in Teach', () => {
 const placeIt = (number: number) =>
   wrapper.find(`button[aria-label="${t('numbers.placeIt', { number })}"]`)
 
-describe('Round screen, Drag Numbers Place-It button', () => {
+describe('Round screen, Drag Hours Place-It button', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
   afterEach(() => vi.useRealTimers())
 
   it('shows only beside a Hint', async () => {
-    await open('dragNumbers', 'teach')
+    await open('dragHours', 'teach')
     expect(wrapper.find('.place-it').exists()).toBe(false)
     await place(12, 4)
     expect(placeIt(12).exists()).toBe(true)
@@ -448,7 +448,7 @@ describe('Round screen, Drag Numbers Place-It button', () => {
   })
 
   it('puts the hinted number on its slot, flashes it green and closes the Hint', async () => {
-    await open('dragNumbers', 'teach')
+    await open('dragHours', 'teach')
     await place(12, 4)
     await placeIt(12).trigger('click')
     expect(wrapper.get('[data-slot="12"]').text()).toBe('12')
@@ -463,7 +463,7 @@ describe('Round screen, Drag Numbers Place-It button', () => {
   })
 
   it('counts the number it placed as Wrong in the Summary', async () => {
-    const { router } = await open('dragNumbers', 'teach')
+    const { router } = await open('dragHours', 'teach')
     for (let n = 1; n <= 10; n++) await place(n, n)
     await place(12, 11)
     await placeIt(12).trigger('click')
@@ -477,18 +477,51 @@ describe('Round screen, Drag Numbers Place-It button', () => {
   })
 
   it('never shows in Test', async () => {
-    await open('dragNumbers', 'test')
+    await open('dragHours', 'test')
     await place(12, 4)
     expect(wrapper.find('.place-it').exists()).toBe(false)
+  })
+})
+
+describe('Round screen, Drag Minutes in Teach', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  it('shows an empty face with Hour Badges, and a tray of 5–60', async () => {
+    await open('dragMinutes', 'teach')
+    const tray = wrapper.findAll('.tray .tile').map((b) => Number(b.text()))
+    expect([...tray].sort((a, b) => a - b)).toEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60])
+    expect(wrapper.findAll('.hour-badge')).toHaveLength(12)
+    expect(dotClasses()).toEqual(Array(12).fill(undefined))
+  })
+
+  it('hints a wrong drop in minutes, wrapping round the top', async () => {
+    await open('dragMinutes', 'teach')
+    await place(2, 5)
+    expect(wrapper.get('[role="status"]').text()).toBe(
+      t('numbers.between', { number: 10, before: 5, after: 15 }),
+    )
+    await place(12, 5)
+    expect(wrapper.get('[role="status"]').text()).toBe(
+      t('numbers.between', { number: 60, before: 55, after: 5 }),
+    )
+  })
+
+  it('places the hinted minute with the Place-It button, as helped', async () => {
+    await open('dragMinutes', 'teach')
+    await place(12, 4)
+    await placeIt(60).trigger('click')
+    expect(wrapper.get('[data-slot="12"] .c-tile-num').text()).toBe('60')
+    expect(dotClasses()[11]).toBe('help')
   })
 })
 
 const submitButton = () => button(t('numbers.submit'))
 const placedAt = (slot: number) => wrapper.get(`[data-slot="${slot}"]`).text()
 
-describe('Round screen, Drag Numbers in Test', () => {
+describe('Round screen, Drag Hours in Test', () => {
   it('takes a wrong drop with no hint, and counts placed numbers with neutral dots', async () => {
-    await open('dragNumbers', 'test')
+    await open('dragHours', 'test')
     await place(12, 4)
     expect(placedAt(4)).toBe('12')
     expect(wrapper.get('[role="status"]').text()).toBe('')
@@ -499,7 +532,7 @@ describe('Round screen, Drag Numbers in Test', () => {
   })
 
   it('swaps two numbers on the face, and takes one back to the tray', async () => {
-    await open('dragNumbers', 'test')
+    await open('dragHours', 'test')
     await place(12, 4)
     await place(3, 9)
     await wrapper.get('[data-slot="4"]').trigger('click')
@@ -513,7 +546,7 @@ describe('Round screen, Drag Numbers in Test', () => {
   })
 
   it('shows Submit only once all 12 are placed, then opens the Summary', async () => {
-    const { router } = await open('dragNumbers', 'test')
+    const { router } = await open('dragHours', 'test')
     for (let n = 1; n <= 11; n++) await place(n, n)
     expect(submitButton()).toBeUndefined()
     await place(12, 12)
@@ -523,9 +556,58 @@ describe('Round screen, Drag Numbers in Test', () => {
   })
 })
 
+describe('Round screen, Drag Minutes in Test', () => {
+  it('takes a wrong minute with no hint and no Place-It button, keeping the Hour Badges', async () => {
+    await open('dragMinutes', 'test')
+    await place(12, 4)
+    expect(placedAt(4)).toBe('60')
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(placeIt(60).exists()).toBe(false)
+    expect(wrapper.findAll('.hour-badge').map((b) => b.text())).toEqual([
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+    ])
+  })
+
+  it('swaps two minutes on the face, and takes one back to the tray', async () => {
+    await open('dragMinutes', 'test')
+    await place(12, 4)
+    await place(3, 9)
+    await wrapper.get('[data-slot="4"]').trigger('click')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    expect(placedAt(4)).toBe('15')
+    expect(placedAt(9)).toBe('60')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    await wrapper.get('.tray').trigger('click')
+    expect(wrapper.get('.tray [data-number="12"]').text()).toBe('60')
+    expect(placedAt(9)).toBe('')
+  })
+
+  it('shows Submit once all 12 minutes are placed, then opens a Drag Minutes Summary', async () => {
+    const { router } = await open('dragMinutes', 'test')
+    for (let n = 1; n <= 11; n++) await place(n, n === 4 ? 5 : n === 5 ? 4 : n)
+    expect(submitButton()).toBeUndefined()
+    await place(12, 12)
+    expect(wrapper.findAll('.hour-badge')).toHaveLength(12)
+    await submitButton()!.trigger('click')
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    expect(usePlayStore().summary).toMatchObject({ game: 'dragMinutes', rightCount: 10, total: 12 })
+  })
+})
+
 describe('Round screen, Mode icon on the progress line', () => {
   const cases: [Game, Mode][] = [
-    ['dragNumbers', 'teach'],
+    ['dragHours', 'teach'],
     ['dragArrows', 'test'],
     ['setTime', 'teach'],
     ['setTime', 'test'],

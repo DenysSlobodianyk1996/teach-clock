@@ -1,7 +1,7 @@
 # Teach Clock
 
-A browser game that teaches children to read and set an analogue clock. Three games
-(Drag Numbers, Drag Arrows, Set Time), each in Teach or Test mode. Works offline as a PWA.
+A browser game that teaches children to read and set an analogue clock. Four games
+(Drag Hours, Drag Minutes, Drag Arrows, Set Time), each in Teach or Test mode. Works offline as a PWA.
 
 **Play it:** https://denysslobodianyk1996.github.io/teach-clock/
 

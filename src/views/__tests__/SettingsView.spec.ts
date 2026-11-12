@@ -30,13 +30,34 @@ describe('Settings screen', () => {
     expect(wrapper.find('h1').text()).toBe(t('settings.greeting', { name: 'Оля' }))
   })
 
-  it('opens on Drag Numbers and Teach, with no Level', async () => {
+  it('opens on Drag Hours and Teach, with no Level', async () => {
     const { wrapper } = await open()
-    expect(choice(wrapper, t('games.dragNumbers.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('games.dragHours.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(false)
     expect(choice(wrapper, t('modes.teach.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
     expect(wrapper.text()).not.toContain(t('settings.level'))
+  })
+
+  it('lists four Games, the two drag Games side by side, each with its own icon', async () => {
+    const { wrapper } = await open()
+    const games = wrapper.findAll('.games label.choice b').map((b) => b.text())
+    expect(games).toEqual(
+      (['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const).map((g) =>
+        t(`games.${g}.name`),
+      ),
+    )
+    const icons = wrapper.findAll('.games svg').map((s) => s.html())
+    expect(new Set(icons).size).toBe(4)
+  })
+
+  it('shows no Level for Drag Minutes, and starts a Drag Minutes Round', async () => {
+    const { wrapper } = await open()
+    await choice(wrapper, t('games.setTime.name')).setValue(true)
+    await choice(wrapper, t('games.dragMinutes.name')).setValue(true)
+    expect(wrapper.text()).not.toContain(t('settings.level'))
+    await button(wrapper, t('settings.play')).trigger('click')
+    expect(usePlayStore().round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null })
   })
 
   it.each(['dragArrows', 'setTime'] as const)(
@@ -66,12 +87,12 @@ describe('Settings screen', () => {
     expect(levels).toEqual([t('levels.1.name'), t('levels.5.name'), t('levels.15.name')])
   })
 
-  it('hides the Level for Drag Numbers and shows it again for other Games', async () => {
+  it('hides the Level for Drag Hours and shows it again for other Games', async () => {
     const { wrapper } = await open()
     await choice(wrapper, t('games.setTime.name')).setValue(true)
     expect(wrapper.text()).toContain(t('settings.level'))
 
-    await choice(wrapper, t('games.dragNumbers.name')).setValue(true)
+    await choice(wrapper, t('games.dragHours.name')).setValue(true)
     expect(wrapper.text()).not.toContain(t('settings.level'))
     expect(wrapper.text()).not.toContain(t('levels.15.name'))
 

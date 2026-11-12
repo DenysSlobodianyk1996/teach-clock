@@ -5,7 +5,7 @@ import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import ClockFace, { type Hand } from '@/components/ClockFace.vue'
 import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
-import DragNumbersRound from './DragNumbersRound.vue'
+import DragRound from './DragRound.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
@@ -14,7 +14,7 @@ import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
 import { clockTime, type ClockTime } from '@/game/clockTime'
 import { dragHourHand, dragMinuteHand } from '@/game/handDrag'
 import { describeMistake, type Mistake } from '@/game/mistakes'
-import { currentTask, hint } from '@/game/round'
+import { currentTask, hint, isNumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
 const { t } = useI18n()
@@ -26,9 +26,9 @@ const RIGHT_PAUSE_MS = 1200
 
 // The router opens this screen with an unfinished Round. The Round goes away when the Player
 // leaves, and has no current Task while the Summary loads; the screen draws nothing then.
-// Drag Numbers has its own screen part; the rest of this file plays the Clock Time Games.
-const numbersRound = computed(() => (play.round?.game === 'dragNumbers' ? play.round : null))
-const round = computed(() => (play.round?.game !== 'dragNumbers' ? play.round : null))
+// The drag Games have their own screen part; the rest of this file plays the Clock Time Games.
+const numbersRound = computed(() => (play.round && isNumbersRound(play.round) ? play.round : null))
+const round = computed(() => (play.round && !isNumbersRound(play.round) ? play.round : null))
 
 /** Teach: the Task just answered right, kept on screen with the toast before moving on. */
 const rightTask = ref<number | null>(null)
@@ -104,7 +104,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
 </script>
 
 <template>
-  <DragNumbersRound v-if="numbersRound" :round="numbersRound" />
+  <DragRound v-if="numbersRound" :round="numbersRound" />
   <div v-else-if="round && task" class="round">
     <div class="progress">
       <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />

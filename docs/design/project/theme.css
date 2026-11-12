@@ -155,6 +155,9 @@
 .c-slot.target { stroke: var(--accent); stroke-width: 4; stroke-dasharray: none; fill: rgba(242, 184, 75, 0.18); }
 .c-tile { fill: var(--accent); }
 .c-tile-num { fill: var(--accent-ink); font: 900 17px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
+/* Drag Minutes: the Hour Badge, the hour 1–12 in a soft circle towards the centre from each slot. */
+.c-badge { fill: var(--tick); fill-opacity: 0.12; }
+.c-badge-num { fill: var(--tick); font: 800 11px "Nunito", sans-serif; text-anchor: middle; dominant-baseline: central; }
 .c-miss { fill: none; stroke: var(--bad); stroke-width: 3.5; }
 
 /* ---------- number tiles (tray) ---------- */
@@ -200,7 +203,7 @@
 .big-time { font: 900 64px "Nunito", sans-serif; line-height: 1; }
 .toast { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 999px; background: var(--pop); color: var(--pop-ink); font-size: 20px; font-weight: 800; box-shadow: var(--shadow); }
 .toast svg { width: 26px; height: 26px; flex: none; }
-/* Teach, beside a Drag Numbers Hint: the Place-It button puts the number on its place. */
+/* Teach, beside a Drag Hours Hint: the Place-It button puts the number on its place. */
 .toast-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .place-it { display: grid; place-items: center; flex: none; box-sizing: border-box; width: 48px; height: 48px; padding: 6px; border: 3px dashed var(--accent); border-radius: 50%; background: var(--pop); color: var(--pop-ink); box-shadow: var(--shadow); cursor: pointer; }
 .place-it svg { width: 100%; height: 100%; }

@@ -11,7 +11,7 @@ The child playing, known only by the name they type in to be greeted.
 _Avoid_: User, account, profile
 
 **Game**:
-One of the three clock puzzles: Drag Numbers, Drag Arrows, Set Time.
+One of the four clock puzzles: Drag Hours, Drag Minutes, Drag Arrows, Set Time.
 _Avoid_: Module, exercise
 
 **Mode**:
@@ -27,11 +27,11 @@ The Mode where every Answer moves on, right or wrong, with no help, and the resu
 _Avoid_: Exam, challenge
 
 **Level**:
-The minute step that Clock Times in a Round snap to: 1, 5 or 15 minutes (1 by default). Drag Numbers has no Level.
+The minute step that Clock Times in a Round snap to: 1, 5 or 15 minutes (1 by default). Drag Hours and Drag Minutes have no Level.
 _Avoid_: Priority, difficulty
 
 **Round**:
-One playthrough of a Game in a Mode: ten Tasks, or the twelve numbers in Drag Numbers. A Round only moves forward.
+One playthrough of a Game in a Mode: ten Tasks, or the twelve numbers in Drag Hours or Drag Minutes. A Round only moves forward.
 _Avoid_: Session, level
 
 **Task**:
@@ -42,7 +42,7 @@ _Avoid_: Question, puzzle
 The Player's response to a Task, submitted with a button and marked right or wrong.
 
 **Hint**:
-What a Player in Teach is shown after a wrong try: the correct Answer, or in Drag Numbers where the number goes ("7 goes between 6 and 8"). A Task that needed a Hint counts as wrong.
+What a Player in Teach is shown after a wrong try: the correct Answer, or in Drag Hours and Drag Minutes where the number goes ("7 goes between 6 and 8", "10 goes between 5 and 15"). A Task that needed a Hint counts as wrong.
 _Avoid_: Tip, solution
 
 **Place-It button**:
@@ -85,8 +85,16 @@ _Avoid_: Highlight, pointed place, target, ring
 
 ### Games
 
-**Drag Numbers**:
+**Drag Hours**:
 The Game where the Player drags the numbers 1–12 onto an empty clock face.
+_Avoid_: Drag Numbers
+
+**Drag Minutes**:
+The Game where the Player drags the minutes 5, 10, … 60 onto an empty clock face: minute N×5 goes on the slot of hour N (60 at the top).
+
+**Hour Badge**:
+The small hour 1–12 by each slot on the Drag Minutes face. It is part of the face, so it shows in both Modes; it is not a Hint.
+_Avoid_: hint, label
 
 **Drag Arrows**:
 The Game where the Player is given a Clock Time and drags the Hour Hand and Minute Hand to show it.

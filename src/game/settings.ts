@@ -1,6 +1,6 @@
 /** Settings: the Game, Mode and Level a Player picks before a Round. Plain TypeScript, no Vue. */
 
-export const GAMES = ['dragNumbers', 'dragArrows', 'setTime'] as const
+export const GAMES = ['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const
 export type Game = (typeof GAMES)[number]
 
 export const MODES = ['teach', 'test'] as const
@@ -16,14 +16,21 @@ export interface Settings {
   level: Level
 }
 
-export const DEFAULT_SETTINGS: Settings = { game: 'dragNumbers', mode: 'teach', level: 1 }
+export const DEFAULT_SETTINGS: Settings = { game: 'dragHours', mode: 'teach', level: 1 }
 
-/** Drag Numbers places the numbers 1–12 and has no minute step. */
-export function hasLevel(game: Game): boolean {
-  return game !== 'dragNumbers'
+/** The drag Games, where the Player drags 12 tiles onto an empty face. */
+export type NumbersGame = 'dragHours' | 'dragMinutes'
+
+export function isNumbersGame(game: Game): game is NumbersGame {
+  return game === 'dragHours' || game === 'dragMinutes'
 }
 
-/** Ten Tasks, or one Task per number in Drag Numbers. */
+/** The drag Games place 12 fixed tiles and have no minute step. */
+export function hasLevel(game: Game): boolean {
+  return !isNumbersGame(game)
+}
+
+/** Ten Tasks, or one Task per tile in a drag Game. */
 export function taskCount(game: Game): number {
-  return game === 'dragNumbers' ? 12 : 10
+  return isNumbersGame(game) ? 12 : 10
 }

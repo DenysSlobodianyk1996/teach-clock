@@ -5,8 +5,8 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). All three Games playable in Test and Teach (tickets 03–08), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
-Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `05-drag-help` (orange free slots while dragging, the Place-It button beside a Drag Numbers Hint in Teach).
+Design approved (ticket 01). App skeleton in place (ticket 02). All four Games playable in Test and Teach (tickets 03–08, Drag Minutes in batch 06), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `06-drag-minutes` (the first drag Game renamed Drag Hours, and a new Game, Drag Minutes, with 5–60 tiles and Hour Badges, in both Modes and the Summary).
 
 ## Commands
 
@@ -21,7 +21,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 ## Where things are
 
 - `GLOSSARY.md` — the project's terms (Player, Game, Mode, Level, Round, Task, Hint, Summary…). Use them in code and docs.
-- `docs/product-brief.md` — screens, the three Games, Teach/Test rules, look. Read this first.
+- `docs/product-brief.md` — screens, the four Games, Teach/Test rules, look. Read this first.
 - `docs/tech-stack.md` — libraries and what was rejected.
 - `docs/adr/` — decisions that are hard to reverse.
 - `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).

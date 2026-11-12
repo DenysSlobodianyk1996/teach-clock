@@ -24,7 +24,7 @@ export default {
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
-      'Three short games: put the numbers on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
+      'Four short games: put the hours, then the minutes, on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
     nameLabel: 'What’s your name?',
     namePlaceholder: 'Your name',
     start: 'Start',
@@ -38,7 +38,8 @@ export default {
     play: 'Play',
   },
   games: {
-    dragNumbers: { name: 'Drag Numbers', description: 'Drag the numbers 1–12 to their places.' },
+    dragHours: { name: 'Drag Hours', description: 'Drag the numbers 1–12 to their places.' },
+    dragMinutes: { name: 'Drag Minutes', description: 'Drag the minutes 5–60 to their places.' },
     dragArrows: { name: 'Drag Arrows', description: 'Show the given time on the clock.' },
     setTime: { name: 'Set Time', description: 'Look at the clock and enter the time.' },
   },

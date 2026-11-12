@@ -10,11 +10,11 @@ Covers: D1–D4 (closing step for the batch)
 
 **Blocked by:** 01, 02, 03
 
-**Status:** todo
+**Status:** done
 
-- [ ] Boards match the app in all three themes: the new names, four Games, Drag Minutes in both Modes, Hour Badges, the Summary
-- [ ] Every board string is in `src/i18n/uk.ts`
-- [ ] Screenshots of the changed screens compared with the running app, desktop and phone
-- [ ] Online canvas republished from the updated boards
-- [ ] Product brief, glossary and CLAUDE.md updated; no "Drag Numbers" left in the docs except history (`.scratch/0[1-5]-*`, `docs/original/`)
-- [ ] `.scratch/README.md` marks 06-drag-minutes done with its PRs
+- [x] Boards match the app in all three themes: the new names, four Games, Drag Minutes in both Modes, Hour Badges, the Summary
+- [x] Every board string is in `src/i18n/uk.ts`
+- [x] Screenshots of the changed screens compared with the running app, desktop and phone
+- [x] Online canvas republished from the updated boards
+- [x] Product brief, glossary and CLAUDE.md updated; no "Drag Numbers" left in the docs except history (`.scratch/0[1-5]-*`, `docs/original/`)
+- [x] `.scratch/README.md` marks 06-drag-minutes done with its PRs

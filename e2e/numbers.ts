@@ -1,4 +1,4 @@
-/** Moving Drag Numbers tiles onto the empty clock face, with a real mouse or by tapping. */
+/** Moving Drag Hours tiles onto the empty clock face, with a real mouse or by tapping. */
 import type { Page } from '@playwright/test'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS } from '../src/game/clockFace.ts'
 

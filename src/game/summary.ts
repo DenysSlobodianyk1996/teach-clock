@@ -2,14 +2,16 @@
 import type { ClockTime } from './clockTime'
 import {
   isFinished,
+  isNumbersRound,
   type ClockGame,
   type ClockRound,
+  type NumbersGame,
   type NumbersRound,
   type Round,
   type Task,
   type TaskStatus,
 } from './round'
-import { LEVELS, type Level, type Mode } from './settings'
+import { LEVELS, isNumbersGame, type Level, type Mode } from './settings'
 
 /** A Task that was wrong or helped: its correct Answer and the Player's first one. */
 export interface WrongTask<A = ClockTime> {
@@ -35,9 +37,9 @@ export interface ClockSummary extends Grouped<ClockTime> {
   level: Level
 }
 
-/** Drag Numbers: Answers are slots, and the face as the Player left it. */
+/** A drag Game: Answers are slots, and the face as the Player left it. */
 export interface NumbersSummary extends Grouped<number> {
-  game: 'dragNumbers'
+  game: NumbersGame
   level: null
   /** What each slot held at the end: index N−1 is the slot where N belongs. */
   placements: (number | null)[]
@@ -45,18 +47,22 @@ export interface NumbersSummary extends Grouped<number> {
 
 export type Summary = ClockSummary | NumbersSummary
 
+export function isNumbersSummary(summary: Summary): summary is NumbersSummary {
+  return isNumbersGame(summary.game)
+}
+
 export function summarize(round: ClockRound): ClockSummary
 export function summarize(round: NumbersRound): NumbersSummary
 export function summarize(round: Round): Summary
 export function summarize(round: Round): Summary {
   if (!isFinished(round)) throw new Error('The Round is not finished')
-  if (round.game === 'dragNumbers') {
+  if (isNumbersRound(round)) {
     return { game: round.game, level: null, ...group(round), placements: [...round.slots] }
   }
   return { game: round.game, level: round.level, ...group(round) }
 }
 
-/** The next smaller Level (15 → 5 → 1), or null at 1 minute and for Drag Numbers. */
+/** The next smaller Level (15 → 5 → 1), or null at 1 minute and for the drag Games. */
 function smallerLevel(level: Level | null): Level | null {
   if (level === null) return null
   const smaller = LEVELS.filter((step) => step < level)

@@ -7,8 +7,9 @@ import NumberFace from '@/components/NumberFace.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import SummaryConfetti from '@/components/SummaryConfetti.vue'
 import { formatClockTime } from '@/game/clockTime'
-import { neighbours } from '@/game/dragNumbers'
-import type { WrongTask } from '@/game/summary'
+import { neighbours, shownNeighbours, tileValue } from '@/game/dragNumbers'
+import { isNumbersSummary, type WrongTask } from '@/game/summary'
+import type { NumbersGame } from '@/game/round'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -21,12 +22,15 @@ const player = usePlayerStore()
 // The router only opens this screen for a finished Round. A Summary never changes, so keep this
 // one even while "Play again" replaces the Round under it.
 const summary = play.summary
+/** "N goes between…", for tile N, in the values the tiles show. */
+const between = (game: NumbersGame, n: number) =>
+  t('numbers.between', { ...shownNeighbours(game, neighbours(n)) })
 
 const headline = computed(() => {
   if (!summary) return ''
   const counts = { right: summary.rightCount, total: summary.total }
   // In Teach every number ends in its place, so "in their places" is only true of Test.
-  const numbersTest = summary.game === 'dragNumbers' && summary.mode === 'test'
+  const numbersTest = isNumbersSummary(summary) && summary.mode === 'test'
   return t(numbersTest ? 'summary.numbersHeadline' : 'summary.headline', counts)
 })
 
@@ -59,26 +63,30 @@ function clockPair({ answer, firstAnswer }: WrongTask) {
   })
 }
 
-function numberPair({ answer, firstAnswer }: WrongTask<number>) {
+function numberPair(game: NumbersGame, { answer, firstAnswer }: WrongTask<number>) {
+  // The place is named by what belongs there, as the face shows it.
   const first = t('summary.numberFirst', {
     caption: caption.value,
-    number: answer,
-    slot: firstAnswer,
+    number: tileValue(game, answer),
+    slot: tileValue(game, firstAnswer),
   })
-  return `${first}. ${t('numbers.between', { ...neighbours(answer) })}`
+  return `${first}. ${between(game, answer)}`
 }
 
-/** Drag Numbers in Test: the Player's face against the correct one. */
+/** A drag Game in Test: the Player's face against the correct one. */
 const faces = computed(() => {
-  if (summary?.game !== 'dragNumbers' || summary.mode !== 'test') return null
+  if (!summary || !isNumbersSummary(summary) || summary.mode !== 'test') return null
   const misplaced = summary.wrong.map((w) => w.answer)
   return {
+    game: summary.game,
     placements: summary.placements,
     // The slots where a number does not belong.
     marked: summary.wrong.map((w) => w.firstAnswer),
     misplaced,
     correct: Array.from({ length: 12 }, (_, i) => i + 1),
-    label: t('summary.yourFaceLabel', { numbers: misplaced.join(', ') }),
+    label: t('summary.yourFaceLabel', {
+      numbers: misplaced.map((n) => tileValue(summary.game, n)).join(', '),
+    }),
   }
 })
 
@@ -111,6 +119,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.yourFace') }}</figcaption>
         <NumberFace
+          :game="faces.game"
           class="big-face"
           :slots="faces.placements"
           :marked="faces.marked"
@@ -121,6 +130,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.correctFace') }}</figcaption>
         <NumberFace
+          :game="faces.game"
           class="big-face"
           :slots="faces.correct"
           :good="faces.misplaced"
@@ -128,7 +138,7 @@ function toSettings() {
         />
         <ul v-if="faces.misplaced.length" class="face-note">
           <li v-for="n in faces.misplaced" :key="n">
-            {{ t('numbers.between', { ...neighbours(n) }) }}
+            {{ between(faces.game, n) }}
           </li>
         </ul>
       </figure>
@@ -143,8 +153,8 @@ function toSettings() {
           <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
-        <ul v-else-if="summary.game === 'dragNumbers'" class="chips">
-          <li v-for="n in summary.right" :key="n" class="chip">{{ n }}</li>
+        <ul v-else-if="isNumbersSummary(summary)" class="chips">
+          <li v-for="n in summary.right" :key="n" class="chip">{{ tileValue(summary.game, n) }}</li>
         </ul>
         <ul v-else class="right-clocks">
           <li v-for="time in summary.right" :key="formatClockTime(time)">
@@ -158,13 +168,15 @@ function toSettings() {
         <h2 id="wrong-title">
           <span class="dot bad" />{{ t('summary.wrong') }} · {{ summary.wrong.length }}
         </h2>
-        <ul v-if="summary.game === 'dragNumbers'" class="pairs">
+        <ul v-if="isNumbersSummary(summary)" class="pairs">
           <li v-for="task in summary.wrong" :key="task.answer" class="pair">
             <!-- The pictures are hidden from screen readers; this says the same in words. -->
-            <span class="sr-only">{{ numberPair(task) }}</span>
+            <span class="sr-only">{{ numberPair(summary.game, task) }}</span>
             <div class="side" aria-hidden="true">
               <NumberFace
+                :game="summary.game"
                 class="pair-clock"
+                small
                 :slots="only(task.answer, task.firstAnswer)"
                 :marked="[task.firstAnswer]"
                 label=""
@@ -175,10 +187,14 @@ function toSettings() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
             <div class="side" aria-hidden="true">
-              <NumberFace class="pair-clock" :slots="only(task.answer, task.answer)" label="" />
-              <span class="caption good">{{
-                t('numbers.between', { ...neighbours(task.answer) })
-              }}</span>
+              <NumberFace
+                :game="summary.game"
+                class="pair-clock"
+                small
+                :slots="only(task.answer, task.answer)"
+                label=""
+              />
+              <span class="caption good">{{ between(summary.game, task.answer) }}</span>
             </div>
           </li>
         </ul>
@@ -503,7 +519,7 @@ s.time {
   .caption {
     align-self: end;
   }
-  /* Drag Numbers has no time under the caption. */
+  /* The drag Games have no time under the caption. */
   .caption:last-child {
     grid-row: span 2;
     align-self: center;

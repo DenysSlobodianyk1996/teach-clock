@@ -2,13 +2,13 @@ import { t, startingWith } from './i18n.ts'
 import { expect, test } from '@playwright/test'
 import { dragNumber, dragPlaced, slot, tapNumber, tile } from './numbers.ts'
 
-test('a Drag Numbers Test Round takes free moves, submits once and shows the misplaced numbers', async ({
+test('a Drag Hours Test Round takes free moves, submits once and shows the misplaced numbers', async ({
   page,
 }) => {
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.test.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   const submit = page.getByRole('button', { name: t('numbers.submit') })

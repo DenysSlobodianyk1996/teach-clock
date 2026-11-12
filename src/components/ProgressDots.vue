@@ -2,12 +2,12 @@
 import { useI18n } from 'vue-i18n'
 import type { TaskStatus } from '@/game/round'
 
-/** `placed`: Drag Numbers in Test before Submit, a number on the face whose result is still hidden. */
+/** `placed`: a drag Game in Test before Submit, a number on the face whose result is still hidden. */
 export type DotStatus = TaskStatus | 'placed'
 
 /**
- * One dot per Task, coloured by its status. `current` is the 0-based Task being played; Drag
- * Numbers has none and passes its own `label`.
+ * One dot per Task, coloured by its status. `current` is the 0-based Task being played; the
+ * drag Games have none and pass their own `label`.
  */
 defineProps<
   { statuses: readonly DotStatus[] } & (

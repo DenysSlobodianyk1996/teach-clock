@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import type { VueWrapper } from '@vue/test-utils'
 import NumberBoard from '../NumberBoard.vue'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
@@ -10,6 +11,7 @@ afterEach(() => wrapper.unmount())
 /** The face drawn 220 px across at the page's top left, so 1 px is 1 clock unit from (110, 110). */
 function mountBoard(props: Record<string, unknown> = {}) {
   wrapper = mountComponent(NumberBoard, {
+    game: 'dragHours',
     slots: Array(12).fill(null),
     tray: [7, 3, 12],
     ...props,
@@ -256,5 +258,63 @@ describe('NumberBoard in Test (movable)', () => {
     await tile(12).trigger('click')
     await slot(9).trigger('click')
     expect(wrapper.emitted('drop')).toBeUndefined()
+  })
+})
+
+describe('NumberBoard in Drag Minutes', () => {
+  it('shows minute values on every tile, and Hour Badges 1–12, only in Drag Minutes', async () => {
+    mountBoard({ game: 'dragMinutes', slots: [null, 2, ...Array(10).fill(null)], tray: [12, 1] })
+    expect(wrapper.findAll('.tray .tile').map((b) => b.text())).toEqual(['60', '5'])
+    expect(slot(2).text()).toBe('10')
+    const badges = wrapper.findAll('.hour-badge')
+    expect(badges.map((b) => b.text())).toEqual([
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+    ])
+    // The badge stays by its slot after a tile lands there.
+    expect(badges[1]!.isVisible()).toBe(true)
+    await pointer(tile(12), 'pointerdown', 300, 100)
+    await pointer(tile(12), 'pointermove', 200, 110)
+    expect(document.querySelector('.disc.lifted')?.textContent?.trim()).toBe('60')
+    await pointer(tile(12), 'pointerup', 200, 110)
+  })
+
+  it('names empty and placed slots by the minutes they hold, not by slot id', () => {
+    mountBoard({
+      game: 'dragMinutes',
+      slots: [null, 2, ...Array(10).fill(null)],
+      tray: [12, 1],
+      movable: true,
+    })
+    expect(slot(3).attributes('aria-label')).toBe(t('numbers.slot', { n: 15 }))
+    expect(slot(2).attributes('aria-label')).toBe(t('numbers.placedTile', { number: 10, n: 10 }))
+  })
+
+  it('draws no Hour Badges in Drag Hours', () => {
+    mountBoard()
+    expect(wrapper.find('.hour-badge').exists()).toBe(false)
+  })
+
+  it('never catches a pointer: a tile let go on the badge of 3 lands on slot 3', async () => {
+    mountBoard({ game: 'dragMinutes' })
+    const badges = wrapper.get('.hour-badges')
+    expect(badges.attributes('pointer-events')).toBe('none')
+    expect(badges.attributes('aria-hidden')).toBe('true')
+    // The badge of 3 sits 40 units right of the centre.
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    await pointer(tile(7), 'pointermove', 200, 110)
+    await pointer(tile(7), 'pointermove', 150, 110)
+    await pointer(tile(7), 'pointerup', 150, 110)
+    expect(wrapper.emitted('drop')).toEqual([[7, 3]])
   })
 })
