@@ -40,7 +40,7 @@ function startRound() {
           <template #icon>
             <svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true">
               <circle class="c-face" r="90" />
-              <template v-if="game === 'dragNumbers'">
+              <template v-if="game === 'dragHours'">
                 <circle class="c-slot" cx="0" cy="-62" r="16" />
                 <circle class="c-slot" cx="62" cy="0" r="16" />
                 <circle class="c-slot" cx="0" cy="62" r="16" />

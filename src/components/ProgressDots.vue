@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import type { TaskStatus } from '@/game/round'
 
-/** `placed`: Drag Numbers in Test before Submit, a number on the face whose result is still hidden. */
+/** `placed`: Drag Hours in Test before Submit, a number on the face whose result is still hidden. */
 export type DotStatus = TaskStatus | 'placed'
 
 /**

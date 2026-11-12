@@ -10,6 +10,7 @@ afterEach(() => wrapper.unmount())
 /** The face drawn 220 px across at the page's top left, so 1 px is 1 clock unit from (110, 110). */
 function mountBoard(props: Record<string, unknown> = {}) {
   wrapper = mountComponent(NumberBoard, {
+    game: 'dragHours',
     slots: Array(12).fill(null),
     tray: [7, 3, 12],
     ...props,

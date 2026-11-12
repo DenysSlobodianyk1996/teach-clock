@@ -42,19 +42,19 @@ test('a Player walks from Welcome through Settings to a Round', async ({ page })
   await expect(page).toHaveURL(/\/settings$/)
 })
 
-test('Drag Numbers hides the Level and plays 12 numbers', async ({ page }) => {
+test('Drag Hours hides the Level and plays 12 numbers', async ({ page }) => {
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  // Drag Numbers is already picked when Settings opens.
+  // Drag Hours is already picked when Settings opens.
   await expect(
-    page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }),
+    page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }),
   ).toBeChecked()
   await expect(page.getByText(t('settings.level'))).toBeHidden()
 
   await page.getByRole('radio', { name: startingWith(t('games.dragArrows.name')) }).check()
   await expect(page.getByText(t('settings.level'))).toBeVisible()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await expect(page.getByText(t('settings.level'))).toBeHidden()
   await page.getByRole('button', { name: t('settings.play') }).click()
 

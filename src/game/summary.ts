@@ -4,6 +4,7 @@ import {
   isFinished,
   type ClockGame,
   type ClockRound,
+  type NumbersGame,
   type NumbersRound,
   type Round,
   type Task,
@@ -35,9 +36,9 @@ export interface ClockSummary extends Grouped<ClockTime> {
   level: Level
 }
 
-/** Drag Numbers: Answers are slots, and the face as the Player left it. */
+/** Drag Hours: Answers are slots, and the face as the Player left it. */
 export interface NumbersSummary extends Grouped<number> {
-  game: 'dragNumbers'
+  game: NumbersGame
   level: null
   /** What each slot held at the end: index N−1 is the slot where N belongs. */
   placements: (number | null)[]
@@ -50,13 +51,13 @@ export function summarize(round: NumbersRound): NumbersSummary
 export function summarize(round: Round): Summary
 export function summarize(round: Round): Summary {
   if (!isFinished(round)) throw new Error('The Round is not finished')
-  if (round.game === 'dragNumbers') {
+  if (round.game === 'dragHours') {
     return { game: round.game, level: null, ...group(round), placements: [...round.slots] }
   }
   return { game: round.game, level: round.level, ...group(round) }
 }
 
-/** The next smaller Level (15 → 5 → 1), or null at 1 minute and for Drag Numbers. */
+/** The next smaller Level (15 → 5 → 1), or null at 1 minute and for Drag Hours. */
 function smallerLevel(level: Level | null): Level | null {
   if (level === null) return null
   const smaller = LEVELS.filter((step) => step < level)

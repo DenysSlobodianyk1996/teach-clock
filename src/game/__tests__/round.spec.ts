@@ -29,14 +29,11 @@ describe('Round', () => {
     expect(isFinished(round)).toBe(false)
   })
 
-  it('keeps the Settings it started with, with no Level for Drag Numbers', () => {
+  it('keeps the Settings it started with, with no Level for Drag Hours', () => {
     expect(startRound(SET_TIME_TEST, seededRandom(1))).toMatchObject(SET_TIME_TEST)
-    const dragNumbers = startRound(
-      { game: 'dragNumbers', mode: 'teach', level: 5 },
-      seededRandom(1),
-    )
-    expect(dragNumbers.level).toBeNull()
-    expect(dragNumbers.tasks).toHaveLength(12)
+    const dragHours = startRound({ game: 'dragHours', mode: 'teach', level: 5 }, seededRandom(1))
+    expect(dragHours.level).toBeNull()
+    expect(dragHours.tasks).toHaveLength(12)
   })
 
   it('records a right Answer and moves on', () => {

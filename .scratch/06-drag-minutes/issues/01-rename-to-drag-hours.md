@@ -6,11 +6,11 @@ Covers: D1
 
 **Blocked by:** None (can start immediately; 05-drag-help must be merged first)
 
-**Status:** todo
+**Status:** done
 
-- [ ] Game id `dragNumbers` → `dragHours` in `src/game/`, `src/stores/`, `src/views/`, `src/i18n/` and every test and e2e spec; e2e files renamed (`drag-numbers-*.spec.ts` → `drag-hours-*.spec.ts`), and `DragNumbersRound.vue` renamed to fit
-- [ ] en "Drag Hours", uk "Розстав години"; descriptions unchanged
-- [ ] `NumbersGame = 'dragHours'` (widened in ticket 02), `ClockGame = Exclude<Game, NumbersGame>`, and `tileValue(game, n)` with tests
-- [ ] `NumberBoard` and `NumberFace` take their tile labels from `tileValue`; Hint text and aria labels use it too
-- [ ] `npm run type-check`, `npm run lint`, `npx vitest run` and `npx playwright test` all pass with no behaviour change
-- [ ] Design boards renamed or retitled to Drag Hours (`docs/design/project/*DragNumbers*`); ticket 04 does the final check
+- [x] Game id `dragNumbers` → `dragHours` in `src/game/`, `src/stores/`, `src/views/`, `src/i18n/` and every test and e2e spec; e2e files renamed (`drag-numbers-*.spec.ts` → `drag-hours-*.spec.ts`), and `DragNumbersRound.vue` renamed to fit
+- [x] en "Drag Hours", uk "Розстав години"; descriptions unchanged
+- [x] `NumbersGame = 'dragHours'` (widened in ticket 02), `ClockGame = Exclude<Game, NumbersGame>`, and `tileValue(game, n)` with tests
+- [x] `NumberBoard` and `NumberFace` take their tile labels from `tileValue`; Hint text and aria labels use it too
+- [x] `npm run type-check`, `npm run lint`, `npx vitest run` and `npx playwright test` all pass with no behaviour change
+- [x] Design boards renamed or retitled to Drag Hours (`docs/design/project/*DragNumbers*`); ticket 04 does the final check

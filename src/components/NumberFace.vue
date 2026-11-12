@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS } from '@/game/clockFace'
+import { tileValue } from '@/game/dragNumbers'
+import type { NumbersGame } from '@/game/round'
 
 /**
- * A read-only Drag Numbers face, as in the Summary: each slot shows the number on it, or an empty
- * ring. `marked` slots get a red ring, for numbers that are not where they belong.
+ * A read-only drag Game face, as in the Summary: each slot shows the tile on it, or an empty
+ * ring. `marked` slots get a red ring, for tiles that are not where they belong.
  */
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    /** Says what each tile shows (`tileValue`). Numbers below are slot ids 1–12. */
+    game: NumbersGame
     /** What each slot holds: index N−1 is the slot where N belongs. */
     slots: readonly (number | null)[]
     marked?: readonly number[]
@@ -18,6 +22,8 @@ withDefaults(
 )
 
 const places = numberPositions(SLOT_RADIUS)
+/** What tile N shows. */
+const value = (n: number) => tileValue(props.game, n)
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const places = numberPositions(SLOT_RADIUS)
         :class="{ marked: marked.includes(n), good: good.includes(slots[n - 1]!) }"
       >
         <circle class="c-tile" :cx="x" :cy="y" r="15" />
-        <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
+        <text class="c-tile-num" :x="x" :y="y">{{ value(slots[n - 1]!) }}</text>
       </g>
       <circle v-else class="c-slot" :cx="x" :cy="y" r="14" />
     </template>

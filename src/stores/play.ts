@@ -41,30 +41,30 @@ export const usePlayStore = defineStore('play', () => {
   }
 
   function numbersRound() {
-    if (round.value?.game !== 'dragNumbers') throw new Error('No Drag Numbers Round in play')
+    if (round.value?.game !== 'dragHours') throw new Error('No Drag Hours Round in play')
     return round.value
   }
 
-  /** Drag Numbers: drops a number on a slot (in Test, also one already on the face). */
+  /** Drag Hours: drops a number on a slot (in Test, also one already on the face). */
   function dropNumber(number: number, slot: number) {
     const result = drop(numbersRound(), number, slot)
     round.value = result.round
     return result.outcome
   }
 
-  /** Drag Numbers in Teach, the Place-It button: puts a hinted number on its slot. */
+  /** Drag Hours in Teach, the Place-It button: puts a hinted number on its slot. */
   function placeForMe(number: number) {
     const result = placeNumber(numbersRound(), number)
     round.value = result.round
     return result.outcome
   }
 
-  /** Drag Numbers in Test: takes a placed number back to the tray. */
+  /** Drag Hours in Test: takes a placed number back to the tray. */
   function returnToTray(number: number) {
     round.value = toTray(numbersRound(), number)
   }
 
-  /** Drag Numbers in Test: Submit with all 12 placed. */
+  /** Drag Hours in Test: Submit with all 12 placed. */
   function submitPlacements() {
     const result = submitFace(numbersRound())
     round.value = result.round

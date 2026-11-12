@@ -30,9 +30,9 @@ describe('Settings screen', () => {
     expect(wrapper.find('h1').text()).toBe(t('settings.greeting', { name: 'Оля' }))
   })
 
-  it('opens on Drag Numbers and Teach, with no Level', async () => {
+  it('opens on Drag Hours and Teach, with no Level', async () => {
     const { wrapper } = await open()
-    expect(choice(wrapper, t('games.dragNumbers.name')).element.checked).toBe(true)
+    expect(choice(wrapper, t('games.dragHours.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(false)
     expect(choice(wrapper, t('modes.teach.name')).element.checked).toBe(true)
     expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(false)
@@ -66,12 +66,12 @@ describe('Settings screen', () => {
     expect(levels).toEqual([t('levels.1.name'), t('levels.5.name'), t('levels.15.name')])
   })
 
-  it('hides the Level for Drag Numbers and shows it again for other Games', async () => {
+  it('hides the Level for Drag Hours and shows it again for other Games', async () => {
     const { wrapper } = await open()
     await choice(wrapper, t('games.setTime.name')).setValue(true)
     expect(wrapper.text()).toContain(t('settings.level'))
 
-    await choice(wrapper, t('games.dragNumbers.name')).setValue(true)
+    await choice(wrapper, t('games.dragHours.name')).setValue(true)
     expect(wrapper.text()).not.toContain(t('settings.level'))
     expect(wrapper.text()).not.toContain(t('levels.15.name'))
 

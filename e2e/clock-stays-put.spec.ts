@@ -5,7 +5,7 @@ import { dragNumber, tapNumber } from './numbers.ts'
 
 async function start(
   page: Page,
-  game: 'dragNumbers' | 'dragArrows' | 'setTime',
+  game: 'dragHours' | 'dragArrows' | 'setTime',
   mode: 'teach' | 'test',
 ) {
   await page.goto('/')
@@ -14,7 +14,7 @@ async function start(
   await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
   await page.getByRole('radio', { name: startingWith(t(`modes.${mode}.name`)) }).check()
   // 15 minutes, so the wrong Answers typed below (12:01) can never be a Task.
-  if (game !== 'dragNumbers') {
+  if (game !== 'dragHours') {
     await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
   }
   await page.getByRole('button', { name: t('settings.play') }).click()
@@ -77,8 +77,8 @@ test('Set Time Teach: the clock stays put for the time-box error and the Hint', 
   expect(await spot(clock)).toEqual(before)
 })
 
-test('Drag Numbers Teach: the face stays put when a Hint appears and goes', async ({ page }) => {
-  await start(page, 'dragNumbers', 'teach')
+test('Drag Hours Teach: the face stays put when a Hint appears and goes', async ({ page }) => {
+  await start(page, 'dragHours', 'teach')
   const face = page.locator('svg.number-face')
   const before = await spot(face)
 
@@ -93,10 +93,10 @@ test('Drag Numbers Teach: the face stays put when a Hint appears and goes', asyn
   expect(await spot(face)).toEqual(before)
 })
 
-test('Drag Numbers Test: the face stays put as the tray empties and Submit appears', async ({
+test('Drag Hours Test: the face stays put as the tray empties and Submit appears', async ({
   page,
 }) => {
-  await start(page, 'dragNumbers', 'test')
+  await start(page, 'dragHours', 'test')
   const face = page.locator('svg.number-face')
   const before = await spot(face)
   for (let n = 1; n <= 12; n++) {

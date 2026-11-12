@@ -26,12 +26,12 @@ function playRound(mode: Mode, wrong: number, level: Level = 15) {
   }
 }
 
-/** Drag Numbers in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
-function submitDragNumbers(swap: boolean) {
+/** Drag Hours in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
+function submitDragHours(swap: boolean) {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    Object.assign(play.settings, { game: 'dragNumbers', mode: 'test' })
+    Object.assign(play.settings, { game: 'dragHours', mode: 'test' })
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) play.dropNumber(n, swap && n === 4 ? 5 : swap && n === 5 ? 4 : n)
     play.submitPlacements()
@@ -39,11 +39,11 @@ function submitDragNumbers(swap: boolean) {
 }
 
 /** Places every number, the first `wrong` of them after a drop on the slot two along. */
-function playDragNumbers(wrong: number) {
+function playDragHours(wrong: number) {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    play.settings.game = 'dragNumbers'
+    play.settings.game = 'dragHours'
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) {
       if (n <= wrong) play.dropNumber(n, ((n + 1) % 12) + 1)
@@ -144,8 +144,8 @@ describe('Summary screen', () => {
     expect(wrapper.get('svg.confetti').attributes('aria-hidden')).toBe('true')
   })
 
-  it('for Drag Numbers, lists numbers and shows where a helped number was first dropped', async () => {
-    const { wrapper } = await mountScreen(SummaryView, '/summary', playDragNumbers(1))
+  it('for Drag Hours, lists numbers and shows where a helped number was first dropped', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', playDragHours(1))
     expect(wrapper.get('h1').text()).toBe(t('summary.headline', { right: 11, total: 12 }))
     const right = wrapper.findAll('[aria-labelledby="right-title"] li').map((li) => li.text())
     expect(right).toEqual(['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
@@ -157,8 +157,8 @@ describe('Summary screen', () => {
     expect(pair.findAll('[data-slot="1"]')).toHaveLength(1)
   })
 
-  it('for Drag Numbers in Test, shows the Player’s face next to the correct one', async () => {
-    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragNumbers(true))
+  it('for Drag Hours in Test, shows the Player’s face next to the correct one', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragHours(true))
     expect(wrapper.get('h1').text()).toBe(t('summary.numbersHeadline', { right: 10, total: 12 }))
     const [mine, correct] = wrapper.findAll('.face-card')
     expect(mine!.get('svg').attributes('aria-label')).toBe(
@@ -175,8 +175,8 @@ describe('Summary screen', () => {
     expect(wrapper.find('[aria-labelledby="wrong-title"]').exists()).toBe(false)
   })
 
-  it('for a perfect Drag Numbers Test, says so under the two faces', async () => {
-    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragNumbers(false))
+  it('for a perfect Drag Hours Test, says so under the two faces', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragHours(false))
     expect(wrapper.find('.marked').exists()).toBe(false)
     expect(wrapper.get('.perfect-note').text()).toBe(
       `${t('summary.perfect')} ${t('summary.tryOther')}`,

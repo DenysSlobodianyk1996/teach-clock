@@ -6,17 +6,25 @@ import {
   placeForMe,
   returnToTray,
   submitPlacements,
+  shownNeighbours,
+  tileValue,
 } from '../dragNumbers'
 import type { NumbersRound } from '../round'
 import { isFinished, startRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 
-const TEACH = { game: 'dragNumbers', mode: 'teach', level: 15 } as const
+const TEACH = { game: 'dragHours', mode: 'teach', level: 15 } as const
 const TEST = { ...TEACH, mode: 'test' } as const
 const ONE_TO_TWELVE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-describe('Drag Numbers neighbour hint', () => {
+describe('Drag Hours tile value', () => {
+  it('shows the hour of its slot', () => {
+    expect([1, 6, 12].map((n) => tileValue('dragHours', n))).toEqual([1, 6, 12])
+  })
+})
+
+describe('Drag Hours neighbour hint', () => {
   it('names the numbers either side', () => {
     expect(neighbours(7)).toEqual({ number: 7, before: 6, after: 8 })
   })
@@ -25,9 +33,17 @@ describe('Drag Numbers neighbour hint', () => {
     expect(neighbours(12)).toEqual({ number: 12, before: 11, after: 1 })
     expect(neighbours(1)).toEqual({ number: 1, before: 12, after: 2 })
   })
+
+  it('says the hint with the values the tiles show', () => {
+    expect(shownNeighbours('dragHours', neighbours(12))).toEqual({
+      number: 12,
+      before: 11,
+      after: 1,
+    })
+  })
 })
 
-describe('Drag Numbers Round', () => {
+describe('Drag Hours Round', () => {
   it('starts with 12 empty slots, a shuffled tray of 1–12 and 12 pending Tasks', () => {
     const round = startRound(TEACH, seededRandom(1))
     expect(round.slots).toEqual(Array(12).fill(null))
@@ -45,7 +61,7 @@ describe('Drag Numbers Round', () => {
   })
 })
 
-describe('Drag Numbers in Teach', () => {
+describe('Drag Hours in Teach', () => {
   it('locks a number dropped on its own slot and takes it off the tray', () => {
     const round = startRound(TEACH, seededRandom(1))
     const { round: next, outcome } = dropNumber(round, 7, 7)
@@ -107,7 +123,7 @@ describe('Drag Numbers in Teach', () => {
   })
 })
 
-describe('Drag Numbers Place-It in Teach', () => {
+describe('Drag Hours Place-It in Teach', () => {
   it('puts a hinted number on its own slot, and it stays helped', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 2, 9).round
@@ -165,7 +181,7 @@ function placeAll(round: NumbersRound, slotOf: (n: number) => number): NumbersRo
   return round
 }
 
-describe('Drag Numbers in Test', () => {
+describe('Drag Hours in Test', () => {
   it('takes any number on any slot, with no feedback', () => {
     const round = startRound(TEST, seededRandom(1))
     const { round: next, outcome } = dropNumber(round, 7, 4)
@@ -250,14 +266,14 @@ describe('Drag Numbers in Test', () => {
   })
 })
 
-describe('Drag Numbers Summary', () => {
+describe('Drag Hours Summary', () => {
   it('lists numbers placed first time as Right and helped ones as Wrong with the first slot tried', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 4, 5).round
     round = dropNumber(round, 9, 3).round
     for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
     expect(summarize(round)).toEqual({
-      game: 'dragNumbers',
+      game: 'dragHours',
       mode: 'teach',
       level: null,
       statuses: ONE_TO_TWELVE.map((n) => (n === 4 || n === 9 ? 'helped' : 'right')),

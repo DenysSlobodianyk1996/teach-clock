@@ -7,7 +7,7 @@ test('a dragged number is centred under the pointer', async ({ page }) => {
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
@@ -37,7 +37,7 @@ test('every free slot turns orange while a number is dragged, and grey again aft
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
