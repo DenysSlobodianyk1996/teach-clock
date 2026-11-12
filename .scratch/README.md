@@ -10,6 +10,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [03-readability](03-readability/)     | fixes         | done    | no   | #24 (plan), #25–#32      |
 | [04-clear-hands](04-clear-hands/)     | fixes         | done    | no   | #33, #34 (plan), #35–#38 |
 | [05-drag-help](05-drag-help/)         | feature       | planned | no   | #39 (plan)               |
+| [06-drag-minutes](06-drag-minutes/)   | feature       | planned | yes  | (plan)                   |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
