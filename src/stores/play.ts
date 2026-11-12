@@ -46,26 +46,26 @@ export const usePlayStore = defineStore('play', () => {
     return round.value
   }
 
-  /** Drag Hours: drops a number on a slot (in Test, also one already on the face). */
+  /** The drag Games: drops a number on a slot (in Test, also one already on the face). */
   function dropNumber(number: number, slot: number) {
     const result = drop(numbersRound(), number, slot)
     round.value = result.round
     return result.outcome
   }
 
-  /** Drag Hours in Teach, the Place-It button: puts a hinted number on its slot. */
+  /** The drag Games in Teach, the Place-It button: puts a hinted number on its slot. */
   function placeForMe(number: number) {
     const result = placeNumber(numbersRound(), number)
     round.value = result.round
     return result.outcome
   }
 
-  /** Drag Hours in Test: takes a placed number back to the tray. */
+  /** The drag Games in Test: takes a placed number back to the tray. */
   function returnToTray(number: number) {
     round.value = toTray(numbersRound(), number)
   }
 
-  /** Drag Hours in Test: Submit with all 12 placed. */
+  /** The drag Games in Test: Submit with all 12 placed. */
   function submitPlacements() {
     const result = submitFace(numbersRound())
     round.value = result.round

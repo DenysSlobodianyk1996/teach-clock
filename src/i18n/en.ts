@@ -24,7 +24,7 @@ export default {
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
-      'Three short games: put the numbers on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
+      'Four short games: put the hours, then the minutes, on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
     nameLabel: 'What’s your name?',
     namePlaceholder: 'Your name',
     start: 'Start',

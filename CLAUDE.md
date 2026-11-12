@@ -21,7 +21,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 ## Where things are
 
 - `GLOSSARY.md` — the project's terms (Player, Game, Mode, Level, Round, Task, Hint, Summary…). Use them in code and docs.
-- `docs/product-brief.md` — screens, the three Games, Teach/Test rules, look. Read this first.
+- `docs/product-brief.md` — screens, the four Games, Teach/Test rules, look. Read this first.
 - `docs/tech-stack.md` — libraries and what was rejected.
 - `docs/adr/` — decisions that are hard to reverse.
 - `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).

@@ -211,6 +211,11 @@ input {
   text-anchor: middle;
   dominant-baseline: central;
 }
+/* On a face drawn small (a Summary pair) the badge digits would shrink to about 6 px: draw them
+   bigger in face units so they stay readable. */
+.large .c-badge-num {
+  font-size: 16px;
+}
 /* Drag Minutes: the Hour Badge, a soft circle of the tick colour with the hour in it. The
    circle's 12% matches BADGE_ALPHA in __tests__/theme.spec.ts, which checks the contrast. */
 .c-badge {

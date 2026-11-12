@@ -3,12 +3,12 @@ import { computed, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
-import { tileValue } from '@/game/dragNumbers'
+import { hasHourBadges, tileValue } from '@/game/dragNumbers'
 import HourBadges from './HourBadges.vue'
 import type { NumbersGame } from '@/game/round'
 
 /**
- * Drag Hours: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
+ * The drag Games: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
  * tile onto a slot with a finger or the mouse, or tap a tile and then a slot (also by keyboard).
  * With `movable` (Test), numbers on the face can be picked up too: dropped on another slot, or
  * back on the tray. The board only reports `drop` and `toTray`; the parent decides what they do.
@@ -199,8 +199,11 @@ function slotClasses(slot: number) {
 
 function slotLabel(slot: number) {
   const number = props.slots[slot - 1]
-  if (number == null) return t('numbers.slot', { n: slot })
-  return canHold(slot) ? t('numbers.placedTile', { number: value(number), n: slot }) : undefined
+  // A place is named by what belongs there, as the tiles show it.
+  if (number == null) return t('numbers.slot', { n: value(slot) })
+  return canHold(slot)
+    ? t('numbers.placedTile', { number: value(number), n: value(slot) })
+    : undefined
 }
 
 /** A tap, Enter or Space on a slot. */
@@ -249,7 +252,7 @@ function tapTray() {
         >
           <circle class="c-face" r="94" />
           <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
-          <HourBadges v-if="game === 'dragMinutes'" />
+          <HourBadges v-if="hasHourBadges(game)" />
           <!-- One element per slot, whatever it holds, so keyboard focus stays put through a move. -->
           <g
             v-for="{ n, x, y } in places"

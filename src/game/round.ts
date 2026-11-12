@@ -10,14 +10,14 @@ import { generateClockTimes, shuffledNumbers, type Random } from './tasks'
 export type TaskStatus = 'pending' | 'right' | 'helped' | 'wrong'
 
 /**
- * A Task with its correct Answer: a Clock Time, or in Drag Hours the slot a number belongs on
- * (number N belongs on slot N).
+ * A Task with its correct Answer: a Clock Time, or in the drag Games the slot a tile belongs
+ * on (tile N belongs on slot N).
  */
 export interface Task<A = ClockTime> {
   readonly answer: A
   /**
    * The Player's first Answer, set on the first try. In Teach it is set while the Task is still
-   * pending after a wrong try. In Drag Hours Test it is the slot the number is on at Submit:
+   * pending after a wrong try. In a drag Game in Test it is the slot the number is on at Submit:
    * moves before then are not Answers, so that is the first and only one.
    */
   readonly firstAnswer: A | null

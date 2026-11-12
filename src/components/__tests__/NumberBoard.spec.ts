@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import type { VueWrapper } from '@vue/test-utils'
 import NumberBoard from '../NumberBoard.vue'
 import { mountComponent } from '@/test/mountComponent'
+import { t } from '@/test/i18n'
 
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
@@ -286,6 +287,17 @@ describe('NumberBoard in Drag Minutes', () => {
     await pointer(tile(12), 'pointermove', 200, 110)
     expect(document.querySelector('.disc.lifted')?.textContent?.trim()).toBe('60')
     await pointer(tile(12), 'pointerup', 200, 110)
+  })
+
+  it('names empty and placed slots by the minutes they hold, not by slot id', () => {
+    mountBoard({
+      game: 'dragMinutes',
+      slots: [null, 2, ...Array(10).fill(null)],
+      tray: [12, 1],
+      movable: true,
+    })
+    expect(slot(3).attributes('aria-label')).toBe(t('numbers.slot', { n: 15 }))
+    expect(slot(2).attributes('aria-label')).toBe(t('numbers.placedTile', { number: 10, n: 10 }))
   })
 
   it('draws no Hour Badges in Drag Hours', () => {
