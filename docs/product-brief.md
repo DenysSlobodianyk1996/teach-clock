@@ -45,6 +45,11 @@ the last name typed.
 2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
 only, not for look).
 
+Drag Numbers, in both Modes: a number is moved by dragging it, or by tapping it and then a slot.
+While a number is picked by a tap or held in a drag, every free slot turns from grey dashes to
+orange; the slot under the finger gets a stronger orange ring. Letting go or cancelling turns them
+grey again.
+
 Rules shared by Drag Arrows and Set Time:
 
 - A Clock Time has hours 1–12 and minutes 00–59. No seconds, no 24-hour times, no AM/PM.
@@ -95,7 +100,10 @@ Rules shared by Drag Arrows and Set Time:
 - The Round moves on only after a right Answer. Dots: green = right first time, yellow = needed help.
   A Task that needed help is listed under **Wrong** in the Summary.
 - Drag Numbers: a number dropped on the wrong slot goes straight back to the tray with a hint
-  "7 goes between 6 and 8".
+  "7 goes between 6 and 8". Beside the hint a round lightbulb **Place-It button** puts that number
+  on its slot for the Player: the slot rings green for a moment (a still ring with reduced motion)
+  and the hint closes. The number stays helped (yellow dot, under **Wrong** in the Summary), since
+  the wrong drop already happened. The hint and the button close at the next drop.
 
 ### Test
 
