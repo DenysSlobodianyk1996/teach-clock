@@ -55,6 +55,10 @@ an Hour Badge (the hour 1–12 in a soft circle, towards the centre from the slo
 part of the face, not a Hint: they stay visible after a minute is placed, in Teach and in Test, and
 in the Summary.
 
+The Summary of Drag Minutes looks like Drag Hours, with the minute tiles and the Hour Badges on
+every face. In Teach the right numbers are listed as chips, and each helped number shows the
+Player's first drop next to its slot. In Test the Player's face sits next to the correct one.
+
 Rules shared by Drag Arrows and Set Time:
 
 - A Clock Time has hours 1–12 and minutes 00–59. No seconds, no 24-hour times, no AM/PM.
@@ -106,9 +110,9 @@ Rules shared by Drag Arrows and Set Time:
   A Task that needed help is listed under **Wrong** in the Summary.
 - Drag Hours and Drag Minutes: a number dropped on the wrong slot goes straight back to the tray
   with a hint "7 goes between 6 and 8" (Drag Minutes: "10 goes between 5 and 15"; across the top
-  it wraps: "60 goes between 55 and 5", "5 goes between 60 and 10"). Beside the hint a round lightbulb **Place-It button** puts that number
-  on its slot for the Player: the slot rings green for a moment (a still ring with reduced motion)
-  and the hint closes. The number stays helped (yellow dot, under **Wrong** in the Summary), since
+  it wraps: "60 goes between 55 and 5", "5 goes between 60 and 10"). Beside the hint a round
+  lightbulb **Place-It button** puts that number on its slot for the Player: the slot rings green
+  for a moment (a still ring with reduced motion) and the hint closes. The number stays helped (yellow dot, under **Wrong** in the Summary), since
   the wrong drop already happened. The hint and the button close at the next drop.
 
 ### Test
@@ -117,8 +121,6 @@ Rules shared by Drag Arrows and Set Time:
 - Drag Hours and Drag Minutes: numbers can be placed and swapped freely, with no feedback. Submit
   becomes available when all 12 are placed. The Summary shows the Player's face next to the correct
   one.
-- The Summary of Drag Minutes looks like Drag Hours (chips in Teach, the two faces in Test), with
-  the minute tiles and the Hour Badges on both faces.
 
 ## Look
 
