@@ -1,13 +1,13 @@
 /**
- * The drag Games (Drag Hours): the Player puts 12 tiles on an empty clock face. The rules work on
+ * The drag Games (Drag Hours, Drag Minutes): the Player puts 12 tiles on an empty clock face. The rules work on
  * slot ids 1–12 (tile N belongs on slot N); only `tileValue` says what tile N shows. Every action
  * returns a new Round plus an outcome; the Round passed in is never changed. Plain TypeScript.
  */
 import { isFinished, type NumbersGame, type NumbersRound, type TaskStatus } from './round'
 
-/** What tile N shows in a drag Game: the hour N in Drag Hours. */
-export function tileValue(_game: NumbersGame, n: number): number {
-  return n
+/** What tile N shows in a drag Game: the hour N in Drag Hours, N × 5 minutes in Drag Minutes. */
+export function tileValue(game: NumbersGame, n: number): number {
+  return game === 'dragMinutes' ? n * 5 : n
 }
 
 /** "N goes between `before` and `after`", wrapping round the top: 12 sits between 11 and 1. */

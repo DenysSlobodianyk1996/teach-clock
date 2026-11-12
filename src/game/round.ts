@@ -3,7 +3,7 @@
  * the Round passed in is never changed. Plain TypeScript, no Vue.
  */
 import { sameClockTime, type ClockTime } from './clockTime'
-import { taskCount, type Game, type Settings } from './settings'
+import { isNumbersGame, taskCount, type Game, type NumbersGame, type Settings } from './settings'
 import { generateClockTimes, shuffledNumbers, type Random } from './tasks'
 
 /** `helped`: right only after a wrong try in Teach. It counts as wrong in the Summary. */
@@ -24,8 +24,7 @@ export interface Task<A = ClockTime> {
   readonly status: TaskStatus
 }
 
-/** The Games where the Player drags numbers onto an empty face (widened as drag Games are added). */
-export type NumbersGame = 'dragHours'
+export type { NumbersGame }
 
 export type ClockGame = Exclude<Game, NumbersGame>
 
@@ -39,7 +38,7 @@ export interface ClockRound {
   readonly current: number
 }
 
-/** A Round of Drag Hours: one Task per number, all on the face at once. */
+/** A Round of a drag Game (Drag Hours, Drag Minutes): one Task per tile, all on the face at once. */
 export interface NumbersRound {
   readonly game: NumbersGame
   readonly mode: Settings['mode']
@@ -56,6 +55,10 @@ export interface NumbersRound {
 
 export type Round = ClockRound | NumbersRound
 
+export function isNumbersRound(round: Round): round is NumbersRound {
+  return isNumbersGame(round.game)
+}
+
 export interface Outcome {
   right: boolean
   /** False only for a wrong Answer in Teach: the Player stays on the Task and fixes it. */
@@ -67,7 +70,7 @@ export function startRound(settings: Settings & { game: ClockGame }, random: Ran
 export function startRound(settings: Settings & { game: NumbersGame }, random: Random): NumbersRound
 export function startRound(settings: Settings, random: Random): Round
 export function startRound({ game, mode, level }: Settings, random: Random): Round {
-  if (game === 'dragHours') {
+  if (isNumbersGame(game)) {
     const tasks = Array.from({ length: taskCount(game) }, (_, i): Task<number> => ({
       answer: i + 1,
       firstAnswer: null,
@@ -93,13 +96,13 @@ export function startRound({ game, mode, level }: Settings, random: Random): Rou
 }
 
 export function isFinished(round: Round): boolean {
-  if (round.game !== 'dragHours') return round.current >= round.tasks.length
+  if (!isNumbersRound(round)) return round.current >= round.tasks.length
   return round.mode === 'test' ? round.submitted : round.tasks.every((t) => t.status !== 'pending')
 }
 
-/** The Clock Time Task being played; none in Drag Hours, where every number is on screen. */
+/** The Clock Time Task being played; none in a drag Game, where every tile is on screen. */
 export function currentTask(round: Round): Task | null {
-  return round.game === 'dragHours' ? null : (round.tasks[round.current] ?? null)
+  return isNumbersRound(round) ? null : (round.tasks[round.current] ?? null)
 }
 
 /**
@@ -111,7 +114,7 @@ export function submitAnswer(
   time: ClockTime,
 ): { round: ClockRound; outcome: Outcome } {
   const task = currentTask(round)
-  if (round.game === 'dragHours') throw new Error('Drag Hours has no Clock Time Answers')
+  if (isNumbersRound(round)) throw new Error('A drag Game has no Clock Time Answers')
   if (!task) throw new Error('The Round is already finished')
   const right = sameClockTime(task.answer, time)
   let status: TaskStatus

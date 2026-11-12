@@ -47,6 +47,15 @@ function startRound() {
                 <circle class="c-tile" cx="-62" cy="0" r="18" />
                 <text class="c-tile-num" x="-62" y="0">9</text>
               </template>
+              <!-- Drag Minutes: big minute tiles, 5 by the 1 and 30 at the 6, set apart from the
+                   single hour tile of Drag Hours. -->
+              <template v-else-if="game === 'dragMinutes'">
+                <circle class="c-slot" cx="-60" cy="-8" r="16" />
+                <circle class="c-tile" cx="28" cy="-48" r="32" />
+                <text class="c-tile-num icon-tile" x="28" y="-48">5</text>
+                <circle class="c-tile" cx="0" cy="56" r="32" />
+                <text class="c-tile-num icon-tile" x="0" y="56">30</text>
+              </template>
               <template v-else-if="game === 'dragArrows'">
                 <line class="c-hour" y1="8" y2="-42" transform="rotate(120)" />
                 <line class="c-min" y1="10" y2="-64" />
@@ -151,7 +160,10 @@ h1 {
   gap: 14px;
 }
 .games {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.icon-tile {
+  font-size: 36px;
 }
 .modes {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -174,16 +186,19 @@ h1 {
     padding: 4px 20px 24px;
     gap: 12px;
   }
+  /* Two by two: Drag Hours and Drag Minutes share the first row. */
   .games {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Two Mode cards side by side leave no room for the icon beside the text, so it goes on top. */
+  /* Two cards side by side leave no room for the icon beside the text, so it goes on top. */
+  .games :deep(.choice),
   .modes :deep(.choice) {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
     padding: 14px 14px;
   }
+  .games :deep(.choice svg),
   .modes :deep(.choice svg) {
     width: 44px;
     height: 44px;

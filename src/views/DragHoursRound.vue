@@ -9,7 +9,7 @@ import { canSubmit, shownNeighbours, type DropOutcome, type Neighbours } from '@
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
-/** The Round screen for Drag Hours. RoundView shows it while a Drag Hours Round is in play. */
+/** The Round screen for the drag Games (Drag Hours, Drag Minutes), shown by RoundView. */
 const props = defineProps<{ round: NumbersRound }>()
 
 const { t } = useI18n()

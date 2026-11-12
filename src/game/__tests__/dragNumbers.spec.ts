@@ -24,6 +24,57 @@ describe('Drag Hours tile value', () => {
   })
 })
 
+describe('Drag Minutes tile value', () => {
+  it('shows the minutes of its slot: 5 at the 1, 30 at the 6, 60 at the top', () => {
+    expect([1, 2, 6, 11, 12].map((n) => tileValue('dragMinutes', n))).toEqual([5, 10, 30, 55, 60])
+  })
+
+  it('says the hint in minutes, wrapping round the top', () => {
+    expect(shownNeighbours('dragMinutes', neighbours(2))).toEqual({
+      number: 10,
+      before: 5,
+      after: 15,
+    })
+    expect(shownNeighbours('dragMinutes', neighbours(12))).toEqual({
+      number: 60,
+      before: 55,
+      after: 5,
+    })
+    expect(shownNeighbours('dragMinutes', neighbours(1))).toEqual({
+      number: 5,
+      before: 60,
+      after: 10,
+    })
+  })
+})
+
+describe('Drag Minutes Round', () => {
+  const MINUTES_TEACH = { game: 'dragMinutes', mode: 'teach', level: 5 } as const
+
+  it('starts like Drag Hours: no Level, 12 empty slots and a shuffled tray of slot ids', () => {
+    const round = startRound(MINUTES_TEACH, seededRandom(1))
+    expect(round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null })
+    expect(round.slots).toEqual(Array(12).fill(null))
+    expect([...round.tray].sort((a, b) => a - b)).toEqual(ONE_TO_TWELVE)
+  })
+
+  it('places a minute with the Place-It button after a wrong drop, as helped', () => {
+    const round = startRound(MINUTES_TEACH, seededRandom(1))
+    const wrongDrop = dropNumber(round, 2, 5)
+    expect(wrongDrop.outcome.hint).toEqual(neighbours(2))
+    const { round: next, outcome } = placeForMe(wrongDrop.round, 2)
+    expect(outcome.placed).toBe(true)
+    expect(next.slots[1]).toBe(2)
+    expect(next.tasks[1]!.status).toBe('helped')
+  })
+
+  it('is summarised as a Drag Minutes Summary', () => {
+    let round: NumbersRound = startRound(MINUTES_TEACH, seededRandom(1))
+    for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
+    expect(summarize(round)).toMatchObject({ game: 'dragMinutes', level: null, rightCount: 12 })
+  })
+})
+
 describe('Drag Hours neighbour hint', () => {
   it('names the numbers either side', () => {
     expect(neighbours(7)).toEqual({ number: 7, before: 6, after: 8 })

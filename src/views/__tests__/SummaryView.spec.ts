@@ -39,11 +39,11 @@ function submitDragHours(swap: boolean) {
 }
 
 /** Places every number, the first `wrong` of them after a drop on the slot two along. */
-function playDragHours(wrong: number) {
+function playDragHours(wrong: number, game: 'dragHours' | 'dragMinutes' = 'dragHours') {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    play.settings.game = 'dragHours'
+    play.settings.game = game
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) {
       if (n <= wrong) play.dropNumber(n, ((n + 1) % 12) + 1)
@@ -155,6 +155,18 @@ describe('Summary screen', () => {
     )
     expect(pair.findAll('[data-slot="3"]')).toHaveLength(1)
     expect(pair.findAll('[data-slot="1"]')).toHaveLength(1)
+  })
+
+  it('for Drag Minutes in Teach, lists minutes and says where a helped minute goes', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', playDragHours(1, 'dragMinutes'))
+    expect(wrapper.get('.details').text()).toContain(t('games.dragMinutes.name'))
+    const right = wrapper.findAll('.chip').map((c) => c.text())
+    expect(right).toEqual(['10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60'])
+    const wrong = wrapper.get('[aria-labelledby="wrong-title"]')
+    expect(wrong.get('.caption.good').text()).toBe(
+      t('numbers.between', { number: 5, before: 60, after: 10 }),
+    )
+    expect(wrong.get('.c-tile-num').text()).toBe('5')
   })
 
   it('for Drag Hours in Test, shows the Player’s face next to the correct one', async () => {

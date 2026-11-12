@@ -4,6 +4,7 @@ import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
 import { tileValue } from '@/game/dragNumbers'
+import HourBadges from './HourBadges.vue'
 import type { NumbersGame } from '@/game/round'
 
 /**
@@ -248,6 +249,7 @@ function tapTray() {
         >
           <circle class="c-face" r="94" />
           <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
+          <HourBadges v-if="game === 'dragMinutes'" />
           <!-- One element per slot, whatever it holds, so keyboard focus stays put through a move. -->
           <g
             v-for="{ n, x, y } in places"

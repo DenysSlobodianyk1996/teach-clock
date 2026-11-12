@@ -483,6 +483,39 @@ describe('Round screen, Drag Hours Place-It button', () => {
   })
 })
 
+describe('Round screen, Drag Minutes in Teach', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  it('shows an empty face with Hour Badges, and a tray of 5–60', async () => {
+    await open('dragMinutes', 'teach')
+    const tray = wrapper.findAll('.tray .tile').map((b) => Number(b.text()))
+    expect([...tray].sort((a, b) => a - b)).toEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60])
+    expect(wrapper.findAll('.hour-badge')).toHaveLength(12)
+    expect(dotClasses()).toEqual(Array(12).fill(undefined))
+  })
+
+  it('hints a wrong drop in minutes, wrapping round the top', async () => {
+    await open('dragMinutes', 'teach')
+    await place(2, 5)
+    expect(wrapper.get('[role="status"]').text()).toBe(
+      t('numbers.between', { number: 10, before: 5, after: 15 }),
+    )
+    await place(12, 5)
+    expect(wrapper.get('[role="status"]').text()).toBe(
+      t('numbers.between', { number: 60, before: 55, after: 5 }),
+    )
+  })
+
+  it('places the hinted minute with the Place-It button, as helped', async () => {
+    await open('dragMinutes', 'teach')
+    await place(12, 4)
+    await placeIt(60).trigger('click')
+    expect(wrapper.get('[data-slot="12"] .c-tile-num').text()).toBe('60')
+    expect(dotClasses()[11]).toBe('help')
+  })
+})
+
 const submitButton = () => button(t('numbers.submit'))
 const placedAt = (slot: number) => wrapper.get(`[data-slot="${slot}"]`).text()
 

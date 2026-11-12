@@ -8,7 +8,7 @@
     "Main.dc.html": { "x": 0, "y": 0, "w": 1024, "h": 768, "title": "Стиль: кольори, годинник, елементи" },
 
     "Welcome.dc.html": { "x": 0, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вітання" },
-    "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Розстав години, без кроку)" },
+    "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (чотири гри, Розстав години, без кроку)" },
     "SettingsSetTime.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?, з кроком)" },
     "LeaveRound.dc.html": { "x": 3312, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вийти з раунду?" },
 
@@ -33,14 +33,16 @@
     "PhoneSetTime.dc.html": { "x": 940, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Який час?" },
     "PhoneDragArrows.dc.html": { "x": 1410, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Постав стрілки" },
     "PhoneDragHours.dc.html": { "x": 1880, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав години" },
-    "PhoneSummary.dc.html": { "x": 2350, "y": 7340, "w": 390, "h": 1700, "title": "Телефон · Підсумок" },
+    "PhoneDragMinutes.dc.html": { "x": 2350, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав хвилини · Навчання: підказка" },
+    "PhoneSummary.dc.html": { "x": 2820, "y": 7340, "w": 390, "h": 1700, "title": "Телефон · Підсумок" },
 
     "DesktopWelcome.dc.html": { "x": 0, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Вітання" },
     "DesktopSettings.dc.html": { "x": 1520, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Налаштування" },
     "DesktopSetTime.dc.html": { "x": 3040, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Який час?" },
     "DesktopDragArrows.dc.html": { "x": 4560, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Постав стрілки" },
     "DesktopDragHours.dc.html": { "x": 6080, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Розстав години" },
-    "DesktopSummary.dc.html": { "x": 7600, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Підсумок" },
+    "DesktopDragMinutes.dc.html": { "x": 7600, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Розстав хвилини · Навчання: підказка" },
+    "DesktopSummary.dc.html": { "x": 9120, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Підсумок" },
 
     "DarkSettings.dc.html": { "x": 0, "y": 10680, "w": 1024, "h": 768, "title": "Темна тема · Налаштування" },
     "DarkSetTime.dc.html": { "x": 1104, "y": 10680, "w": 1024, "h": 768, "title": "Темна тема · Який час?" },
@@ -56,8 +58,8 @@
     "DragArrowsTest.dc.html", "DragArrowsTeachWrong.dc.html", "DragArrowsTeachHint.dc.html",
     "DragHoursDrag.dc.html", "DragHoursTeachHint.dc.html", "DragHoursPlaceIt.dc.html", "DragHoursTestSubmit.dc.html",
     "Summary.dc.html", "SummaryDragHours.dc.html",
-    "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneSummary.dc.html",
-    "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopSummary.dc.html",
+    "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html",
+    "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html",
     "DarkSettings.dc.html", "DarkSetTime.dc.html", "DarkSummary.dc.html", "LightSettings.dc.html", "LightDragArrows.dc.html", "LightSummary.dc.html"
   ],
   "notes": {
@@ -67,8 +69,8 @@
     "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
     "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав години (Drag Hours)", "kind": "title1", "maxW": 3232 },
     "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 2128 },
-    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 2740 },
-    "rowDesktop": { "x": 0, "y": 9120, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 9040 },
+    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 3210 },
+    "rowDesktop": { "x": 0, "y": 9120, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 10560 },
     "rowThemes": { "x": 0, "y": 10420, "text": "Темна і світла теми", "kind": "title1", "maxW": 6544 }
   },
   "designSystems": []
