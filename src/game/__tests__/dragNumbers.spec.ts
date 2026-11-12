@@ -134,6 +134,15 @@ describe('Drag Numbers Place-It in Teach', () => {
     expect(next).toBe(round)
   })
 
+  it('leaves the face alone when the right slot is somehow taken', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    round = dropNumber(round, 2, 9).round
+    round = { ...round, slots: round.slots.map((s, i) => (i === 1 ? 5 : s)) }
+    const { round: next, outcome } = placeForMe(round, 2)
+    expect(outcome.placed).toBe(false)
+    expect(next).toBe(round)
+  })
+
   it('refuses in Test', () => {
     const round = startRound(TEST, seededRandom(1))
     expect(() => placeForMe(round, 2)).toThrow('Only Teach')

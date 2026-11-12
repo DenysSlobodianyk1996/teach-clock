@@ -84,6 +84,20 @@ describe('NumberBoard', () => {
     expect(readySlots()).toEqual([])
   })
 
+  it('lets go of a picked or dragged number that leaves the tray without the Player', async () => {
+    mountBoard()
+    await tile(7).trigger('click')
+    await pointer(tile(3), 'pointerdown', 300, 100)
+    await pointer(tile(3), 'pointermove', 200, 110)
+    await wrapper.setProps({
+      tray: [12],
+      slots: [null, null, 3, null, null, null, 7, ...Array(5).fill(null)],
+    })
+    expect(readySlots()).toEqual([])
+    await pointer(tile(12), 'pointerup', ...AT_3)
+    expect(wrapper.emitted('drop')).toBeUndefined()
+  })
+
   it('does not ring the slots for a short press', async () => {
     mountBoard()
     await pointer(tile(7), 'pointerdown', 300, 100)

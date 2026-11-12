@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
@@ -58,6 +58,15 @@ const held = ref<{
 } | null>(null)
 /** A drag just ended, so a click on the tile that follows is not a tap. */
 let dragged = false
+
+/** The Player can still pick this number up: on the tray, or on the face in Test. */
+const pickable = (n: number) =>
+  props.tray.includes(n) || (!!props.movable && props.slots.includes(n))
+// A number can leave the tray without the Player (the Place-It button): let go of it.
+watch([() => props.tray, () => props.slots], () => {
+  if (selected.value !== null && !pickable(selected.value)) selected.value = null
+  if (held.value && !pickable(held.value.number)) held.value = null
+})
 
 const placed = computed(() => props.slots.filter((n) => n !== null).length)
 const faceLabel = computed(() => t('numbers.face', { n: placed.value }))

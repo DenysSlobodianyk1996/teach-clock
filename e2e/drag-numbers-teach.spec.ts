@@ -89,6 +89,8 @@ test('in Teach, the Place-It button beside a Hint puts the number in its place',
   await expect(tile(page, 2)).toBeHidden()
   await expect(page.getByRole('status')).toHaveText('')
   await expect(page.locator('.place-it')).toHaveCount(0)
+  // Keyboard focus stays in play, on the first number left on the tray.
+  await expect(page.locator('.tray .tile').first()).toBeFocused()
 
   // Space works too.
   await dragNumber(page, 5, 9)

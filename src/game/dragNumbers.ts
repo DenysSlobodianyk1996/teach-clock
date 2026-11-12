@@ -72,16 +72,11 @@ export function placeForMe(
 ): { round: NumbersRound; outcome: DropOutcome } {
   if (round.mode !== 'teach') throw new Error('Only Teach can place a number for the Player')
   const task = round.tasks[number - 1]
-  if (!task || task.firstAnswer === null || !round.tray.includes(number)) {
+  if (!task || task.firstAnswer === null) {
     return { round, outcome: { placed: false, hint: null, finished: isFinished(round) } }
   }
-  const next: NumbersRound = {
-    ...round,
-    tasks: round.tasks.map((t, i) => (i === number - 1 ? { ...t, status: 'helped' } : t)),
-    slots: round.slots.map((s, i) => (i === task.answer - 1 ? number : s)),
-    tray: round.tray.filter((n) => n !== number),
-  }
-  return { round: next, outcome: { placed: true, hint: null, finished: isFinished(next) } }
+  // A right drop after a wrong one: dropNumber already keeps it helped.
+  return dropNumber(round, number, task.answer)
 }
 
 const PLACED: DropOutcome = { placed: true, hint: null, finished: false }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ModeIcon from '@/components/ModeIcon.vue'
@@ -25,6 +25,7 @@ const FLASH_MS = 900
 const hint = ref<Neighbours | null>(null)
 /** The slot the Place-It button just filled, ringed green for a moment. */
 const flash = ref<number | null>(null)
+const root = ref<HTMLElement>()
 const done = ref(false)
 const busy = computed(() => play.askingToLeave || done.value)
 
@@ -63,11 +64,13 @@ function placeIt() {
   if (busy.value || number === undefined) return
   const outcome = play.placeForMe(number)
   if (outcome.placed) {
-    flash.value = number
+    flash.value = props.round.tasks[number - 1]!.answer
     clearTimeout(flashing)
     flashing = setTimeout(() => (flash.value = null), FLASH_MS)
   }
   after(outcome)
+  // The button goes away with the Hint: keep keyboard focus in play, on the next tray number.
+  nextTick(() => root.value?.querySelector<HTMLElement>('.tray .tile')?.focus())
 }
 
 /** Shows the drop's hint, and moves on to the Summary once the face is full. */
@@ -95,7 +98,7 @@ function submit() {
 </script>
 
 <template>
-  <div class="round">
+  <div ref="root" class="round">
     <div class="progress">
       <ProgressDots :statuses="dots" :label="progress.label" />
       <div class="task-no">
@@ -127,6 +130,7 @@ function submit() {
             type="button"
             :aria-label="t('numbers.placeIt', { number: hint.number })"
             :title="t('numbers.placeIt', { number: hint.number })"
+            :disabled="busy"
             @click="placeIt"
           >
             <ModeIcon mode="teach" />
@@ -263,7 +267,14 @@ h1 {
   .toast-row {
     height: auto;
   }
+  /* A narrow phone wraps the hint rather than push the button off screen. */
+  .toast-status {
+    flex-shrink: 1;
+    min-width: 0;
+  }
   .toast {
+    white-space: normal;
+    text-align: center;
     font-size: 17px;
     line-height: 22px;
     padding: 10px 18px;
