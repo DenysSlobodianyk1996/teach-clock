@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { canSubmit, dropNumber, neighbours, returnToTray, submitPlacements } from '../dragNumbers'
+import {
+  canSubmit,
+  dropNumber,
+  neighbours,
+  placeForMe,
+  returnToTray,
+  submitPlacements,
+} from '../dragNumbers'
 import type { NumbersRound } from '../round'
 import { isFinished, startRound } from '../round'
 import { summarize } from '../summary'
@@ -97,6 +104,49 @@ describe('Drag Numbers in Teach', () => {
     dropNumber(round, 7, 4)
     dropNumber(round, 7, 7)
     expect(round).toEqual(copy)
+  })
+})
+
+describe('Drag Numbers Place-It in Teach', () => {
+  it('puts a hinted number on its own slot, and it stays helped', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    round = dropNumber(round, 2, 9).round
+    const { round: next, outcome } = placeForMe(round, 2)
+    expect(outcome).toEqual({ placed: true, hint: null, finished: false })
+    expect(next.slots[1]).toBe(2)
+    expect(next.tray).not.toContain(2)
+    expect(next.tasks[1]).toMatchObject({ status: 'helped', firstAnswer: 9 })
+  })
+
+  it('leaves a number with no wrong drop yet on the tray', () => {
+    const round = startRound(TEACH, seededRandom(1))
+    const { round: next, outcome } = placeForMe(round, 2)
+    expect(outcome).toEqual({ placed: false, hint: null, finished: false })
+    expect(next).toBe(round)
+  })
+
+  it('leaves a number that is already placed alone', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    round = dropNumber(round, 2, 9).round
+    round = dropNumber(round, 2, 2).round
+    const { round: next, outcome } = placeForMe(round, 2)
+    expect(outcome.placed).toBe(false)
+    expect(next).toBe(round)
+  })
+
+  it('refuses in Test', () => {
+    const round = startRound(TEST, seededRandom(1))
+    expect(() => placeForMe(round, 2)).toThrow('Only Teach')
+  })
+
+  it('finishes the Round when it places the last number', () => {
+    let round = startRound(TEACH, seededRandom(1))
+    round = dropNumber(round, 12, 3).round
+    for (const n of ONE_TO_TWELVE.slice(0, 11)) round = dropNumber(round, n, n).round
+    const { round: done, outcome } = placeForMe(round, 12)
+    expect(outcome).toEqual({ placed: true, hint: null, finished: true })
+    expect(isFinished(done)).toBe(true)
+    expect(summarize(done).wrong).toEqual([{ answer: 12, firstAnswer: 3 }])
   })
 })
 

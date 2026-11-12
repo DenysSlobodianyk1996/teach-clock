@@ -21,6 +21,8 @@ const props = defineProps<{
   disabled?: boolean
   /** A hint shows above the face: on a phone the face shrinks to keep the tray on screen. */
   hinted?: boolean
+  /** A slot whose number just landed for the Player (the Place-It button): it flashes green. */
+  flash?: number | null
 }>()
 const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
 
@@ -174,6 +176,7 @@ function slotClasses(slot: number) {
       selected: selected.value === number,
       ghost: held.value?.moved && held.value.number === number,
       target: held.value?.slot === slot,
+      flash: props.flash === slot,
     },
   ]
 }
@@ -253,6 +256,7 @@ function tapTray() {
           >
             <circle v-if="interactive(n)" class="hit" :cx="x" :cy="y" r="20" />
             <template v-if="slots[n - 1] !== null">
+              <circle v-if="flash === n" class="c-flash" :cx="x" :cy="y" :r="TILE_RADIUS + 4" />
               <circle class="c-tile" :cx="x" :cy="y" :r="TILE_RADIUS" />
               <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
             </template>
@@ -440,6 +444,34 @@ function tapTray() {
 }
 .placed.ghost {
   opacity: 0.3;
+}
+/* The Place-It button put this number here: a green ring that swells and fades. */
+.c-flash {
+  fill: none;
+  stroke: var(--good);
+  stroke-width: 4;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flash 0.8s ease-out forwards;
+}
+@keyframes flash {
+  from {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .c-flash {
+    animation: none;
+  }
 }
 .movable {
   touch-action: none;

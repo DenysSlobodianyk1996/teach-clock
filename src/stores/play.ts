@@ -10,6 +10,7 @@ import {
 } from '@/game/round'
 import {
   dropNumber as drop,
+  placeForMe as placeNumber,
   returnToTray as toTray,
   submitPlacements as submitFace,
 } from '@/game/dragNumbers'
@@ -51,6 +52,13 @@ export const usePlayStore = defineStore('play', () => {
     return result.outcome
   }
 
+  /** Drag Numbers in Teach, the Place-It button: puts a hinted number on its slot. */
+  function placeForMe(number: number) {
+    const result = placeNumber(numbersRound(), number)
+    round.value = result.round
+    return result.outcome
+  }
+
   /** Drag Numbers in Test: takes a placed number back to the tray. */
   function returnToTray(number: number) {
     round.value = toTray(numbersRound(), number)
@@ -77,6 +85,7 @@ export const usePlayStore = defineStore('play', () => {
     startRound,
     submitAnswer,
     dropNumber,
+    placeForMe,
     returnToTray,
     submitPlacements,
     leaveRound,

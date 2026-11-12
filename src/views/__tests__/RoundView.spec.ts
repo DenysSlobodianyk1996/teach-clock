@@ -431,6 +431,58 @@ describe('Round screen, Drag Numbers in Teach', () => {
   })
 })
 
+const placeIt = (number: number) =>
+  wrapper.find(`button[aria-label="${t('numbers.placeIt', { number })}"]`)
+
+describe('Round screen, Drag Numbers Place-It button', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  it('shows only beside a Hint', async () => {
+    await open('dragNumbers', 'teach')
+    expect(wrapper.find('.place-it').exists()).toBe(false)
+    await place(12, 4)
+    expect(placeIt(12).exists()).toBe(true)
+    await place(12, 12)
+    expect(wrapper.find('.place-it').exists()).toBe(false)
+  })
+
+  it('puts the hinted number on its slot, flashes it green and closes the Hint', async () => {
+    await open('dragNumbers', 'teach')
+    await place(12, 4)
+    await placeIt(12).trigger('click')
+    expect(wrapper.get('[data-slot="12"]').text()).toBe('12')
+    expect(wrapper.get('[data-slot="12"]').classes()).toContain('flash')
+    expect(wrapper.find('.tray [data-number="12"]').exists()).toBe(false)
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(wrapper.find('.place-it').exists()).toBe(false)
+    expect(dotClasses()[11]).toBe('help')
+    vi.runAllTimers()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('[data-slot="12"]').classes()).not.toContain('flash')
+  })
+
+  it('counts the number it placed as Wrong in the Summary', async () => {
+    const { router } = await open('dragNumbers', 'teach')
+    for (let n = 1; n <= 10; n++) await place(n, n)
+    await place(12, 11)
+    await placeIt(12).trigger('click')
+    await place(11, 11)
+    vi.runAllTimers()
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    expect(usePlayStore().summary).toMatchObject({
+      rightCount: 11,
+      wrong: [{ answer: 12, firstAnswer: 11 }],
+    })
+  })
+
+  it('never shows in Test', async () => {
+    await open('dragNumbers', 'test')
+    await place(12, 4)
+    expect(wrapper.find('.place-it').exists()).toBe(false)
+  })
+})
+
 const submitButton = () => button(t('numbers.submit'))
 const placedAt = (slot: number) => wrapper.get(`[data-slot="${slot}"]`).text()
 

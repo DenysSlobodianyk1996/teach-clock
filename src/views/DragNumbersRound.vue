@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import ModeIcon from '@/components/ModeIcon.vue'
 import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
-import { canSubmit, type Neighbours } from '@/game/dragNumbers'
+import { canSubmit, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
@@ -18,9 +18,13 @@ const play = usePlayStore()
 
 /** How long the full face shows before the Summary. */
 const DONE_PAUSE_MS = 1200
+/** How long a slot filled by the Place-It button stays ringed green. */
+const FLASH_MS = 900
 
 /** Teach: "N goes between…", shown from a wrong drop until the next drop. */
 const hint = ref<Neighbours | null>(null)
+/** The slot the Place-It button just filled, ringed green for a moment. */
+const flash = ref<number | null>(null)
 const done = ref(false)
 const busy = computed(() => play.askingToLeave || done.value)
 
@@ -41,11 +45,33 @@ const progress = computed(() => {
 })
 
 let pause: ReturnType<typeof setTimeout> | undefined
-onBeforeUnmount(() => clearTimeout(pause))
+let flashing: ReturnType<typeof setTimeout> | undefined
+onBeforeUnmount(() => {
+  clearTimeout(pause)
+  clearTimeout(flashing)
+})
 
 function drop(number: number, slot: number) {
   if (busy.value) return
-  const outcome = play.dropNumber(number, slot)
+  flash.value = null
+  after(play.dropNumber(number, slot))
+}
+
+/** Teach, the Place-It button: puts the hinted number on its slot and rings it green. */
+function placeIt() {
+  const number = hint.value?.number
+  if (busy.value || number === undefined) return
+  const outcome = play.placeForMe(number)
+  if (outcome.placed) {
+    flash.value = number
+    clearTimeout(flashing)
+    flashing = setTimeout(() => (flash.value = null), FLASH_MS)
+  }
+  after(outcome)
+}
+
+/** Shows the drop's hint, and moves on to the Summary once the face is full. */
+function after(outcome: DropOutcome) {
   hint.value = outcome.hint
   if (outcome.finished) {
     done.value = true
@@ -85,14 +111,27 @@ function submit() {
       :marked="hint?.number"
       :movable="test"
       :disabled="busy"
+      :flash="flash"
       @drop="drop"
       @to-tray="toTray"
     >
       <template #clock>
-        <!-- Always in the page, so screen readers announce the text when it appears. -->
-        <p class="toast-status" role="status">
-          <span v-if="hint" class="toast">{{ t('numbers.between', { ...hint }) }}</span>
-        </p>
+        <div class="toast-row">
+          <!-- Always in the page, so screen readers announce the text when it appears. -->
+          <p class="toast-status" role="status">
+            <span v-if="hint" class="toast">{{ t('numbers.between', { ...hint }) }}</span>
+          </p>
+          <button
+            v-if="hint && !test"
+            class="place-it"
+            type="button"
+            :aria-label="t('numbers.placeIt', { number: hint.number })"
+            :title="t('numbers.placeIt', { number: hint.number })"
+            @click="placeIt"
+          >
+            <ModeIcon mode="teach" />
+          </button>
+        </div>
       </template>
       <template #heading>
         <h1>{{ t('numbers.heading') }}</h1>
@@ -162,12 +201,41 @@ h1 {
   text-align: center;
 }
 /* A fixed height that fits the hint, so the face does not jump when a hint comes and goes. */
+.toast-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+}
 .toast-status {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
   margin: 0;
+}
+/* The Place-It button: round, 48 px, the Teach lightbulb on the toast's colour. */
+.place-it {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  padding: 6px;
+  border: 3px dashed var(--accent);
+  border-radius: 50%;
+  background: var(--pop);
+  color: var(--pop-ink);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.place-it:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 2px;
+}
+.place-it svg {
+  width: 100%;
+  height: 100%;
 }
 .toast {
   display: inline-block;
@@ -192,7 +260,7 @@ h1 {
     font-size: 15px;
   }
   /* A phone keeps no empty room for the hint: the face may move when a hint appears. */
-  .toast-status {
+  .toast-row {
     height: auto;
   }
   .toast {
