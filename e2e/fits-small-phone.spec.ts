@@ -73,11 +73,9 @@ for (const game of ['setTime', 'dragArrows'] as const) {
   })
 }
 
-test('Drag Numbers Teach: a big face, and the tray stays on screen with a hint', async ({
-  page,
-}) => {
+test('Drag Hours Teach: a big face, and the tray stays on screen with a hint', async ({ page }) => {
   await toSettings(page)
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   const face = page.locator('svg.number-face')
@@ -96,9 +94,9 @@ test('Drag Numbers Teach: a big face, and the tray stays on screen with a hint',
   ).toBeLessThanOrEqual(height)
 })
 
-test('Drag Numbers Test: Готово fits once all 12 numbers are placed', async ({ page }) => {
+test('Drag Hours Test: Готово fits once all 12 numbers are placed', async ({ page }) => {
   await toSettings(page)
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.test.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   for (let n = 1; n <= 12; n++) {

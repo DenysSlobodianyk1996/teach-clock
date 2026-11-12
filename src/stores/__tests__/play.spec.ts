@@ -10,8 +10,8 @@ describe('play store', () => {
     setActivePinia(createPinia())
   })
 
-  it('opens Settings on Drag Numbers, Teach, 1 minute', () => {
-    expect(usePlayStore().settings).toEqual({ game: 'dragNumbers', mode: 'teach', level: 1 })
+  it('opens Settings on Drag Hours, Teach, 1 minute', () => {
+    expect(usePlayStore().settings).toEqual({ game: 'dragHours', mode: 'teach', level: 1 })
   })
 
   it('has no Round until the Player starts one', () => {
@@ -28,18 +28,18 @@ describe('play store', () => {
     expect(play.round?.tasks).toHaveLength(10)
   })
 
-  it('starts Drag Numbers with 12 Tasks and no Level', () => {
+  it('starts Drag Hours with 12 Tasks and no Level', () => {
     const play = usePlayStore()
-    play.settings.game = 'dragNumbers'
+    play.settings.game = 'dragHours'
     play.startRound()
-    expect(play.round).toMatchObject({ game: 'dragNumbers', mode: 'teach', level: null })
+    expect(play.round).toMatchObject({ game: 'dragHours', mode: 'teach', level: null })
     expect(play.round?.tasks).toHaveLength(12)
   })
 
-  it('keeps the chosen Level while Drag Numbers is picked', () => {
+  it('keeps the chosen Level while Drag Hours is picked', () => {
     const play = usePlayStore()
     play.settings.level = 1
-    play.settings.game = 'dragNumbers'
+    play.settings.game = 'dragHours'
     play.settings.game = 'setTime'
     expect(play.settings.level).toBe(1)
   })

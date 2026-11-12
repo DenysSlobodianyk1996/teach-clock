@@ -38,7 +38,7 @@ export default {
     play: 'Play',
   },
   games: {
-    dragNumbers: { name: 'Drag Numbers', description: 'Drag the numbers 1–12 to their places.' },
+    dragHours: { name: 'Drag Hours', description: 'Drag the numbers 1–12 to their places.' },
     dragArrows: { name: 'Drag Arrows', description: 'Show the given time on the clock.' },
     setTime: { name: 'Set Time', description: 'Look at the clock and enter the time.' },
   },

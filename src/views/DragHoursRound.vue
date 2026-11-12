@@ -5,11 +5,11 @@ import { useI18n } from 'vue-i18n'
 import ModeIcon from '@/components/ModeIcon.vue'
 import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
-import { canSubmit, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
+import { canSubmit, shownNeighbours, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
-/** The Round screen for Drag Numbers. RoundView shows it while a Drag Numbers Round is in play. */
+/** The Round screen for Drag Hours. RoundView shows it while a Drag Hours Round is in play. */
 const props = defineProps<{ round: NumbersRound }>()
 
 const { t } = useI18n()
@@ -23,6 +23,8 @@ const FLASH_MS = 900
 
 /** Teach: "N goes between…", shown from a wrong drop until the next drop. */
 const hint = ref<Neighbours | null>(null)
+/** The hint in the values the tiles show. */
+const shownHint = computed(() => hint.value && shownNeighbours(props.round.game, hint.value))
 /** The slot the Place-It button just filled, ringed green for a moment. */
 const flash = ref<number | null>(null)
 const root = ref<HTMLElement>()
@@ -108,6 +110,7 @@ function submit() {
       </div>
     </div>
     <NumberBoard
+      :game="round.game"
       :hinted="hint !== null"
       :slots="round.slots"
       :tray="round.tray"
@@ -122,14 +125,14 @@ function submit() {
         <div class="toast-row">
           <!-- Always in the page, so screen readers announce the text when it appears. -->
           <p class="toast-status" role="status">
-            <span v-if="hint" class="toast">{{ t('numbers.between', { ...hint }) }}</span>
+            <span v-if="shownHint" class="toast">{{ t('numbers.between', { ...shownHint }) }}</span>
           </p>
           <button
-            v-if="hint && !test"
+            v-if="shownHint && !test"
             class="place-it"
             type="button"
-            :aria-label="t('numbers.placeIt', { number: hint.number })"
-            :title="t('numbers.placeIt', { number: hint.number })"
+            :aria-label="t('numbers.placeIt', { number: shownHint.number })"
+            :title="t('numbers.placeIt', { number: shownHint.number })"
             :disabled="busy"
             @click="placeIt"
           >

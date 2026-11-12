@@ -2,13 +2,13 @@ import { t, startingWith } from './i18n.ts'
 import { expect, test } from '@playwright/test'
 import { dragNumber, slot, tapNumber, tile } from './numbers.ts'
 
-test('a Drag Numbers Teach Round rejects a wrong drop with a hint and ends on the Summary', async ({
+test('a Drag Hours Teach Round rejects a wrong drop with a hint and ends on the Summary', async ({
   page,
 }) => {
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
@@ -60,7 +60,7 @@ test('in Teach, the Place-It button beside a Hint puts the number in its place',
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragNumbers.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()

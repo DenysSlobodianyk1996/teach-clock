@@ -10,21 +10,24 @@ import { generateClockTimes, shuffledNumbers, type Random } from './tasks'
 export type TaskStatus = 'pending' | 'right' | 'helped' | 'wrong'
 
 /**
- * A Task with its correct Answer: a Clock Time, or in Drag Numbers the slot a number belongs on
+ * A Task with its correct Answer: a Clock Time, or in Drag Hours the slot a number belongs on
  * (number N belongs on slot N).
  */
 export interface Task<A = ClockTime> {
   readonly answer: A
   /**
    * The Player's first Answer, set on the first try. In Teach it is set while the Task is still
-   * pending after a wrong try. In Drag Numbers Test it is the slot the number is on at Submit:
+   * pending after a wrong try. In Drag Hours Test it is the slot the number is on at Submit:
    * moves before then are not Answers, so that is the first and only one.
    */
   readonly firstAnswer: A | null
   readonly status: TaskStatus
 }
 
-export type ClockGame = Exclude<Game, 'dragNumbers'>
+/** The Games where the Player drags numbers onto an empty face (widened as drag Games are added). */
+export type NumbersGame = 'dragHours'
+
+export type ClockGame = Exclude<Game, NumbersGame>
 
 /** A Round of a Game played on Clock Times, one Task after another. */
 export interface ClockRound {
@@ -36,9 +39,9 @@ export interface ClockRound {
   readonly current: number
 }
 
-/** A Round of Drag Numbers: one Task per number, all on the face at once. */
+/** A Round of Drag Hours: one Task per number, all on the face at once. */
 export interface NumbersRound {
-  readonly game: 'dragNumbers'
+  readonly game: NumbersGame
   readonly mode: Settings['mode']
   readonly level: null
   /** Task N−1 is the number N. */
@@ -61,13 +64,10 @@ export interface Outcome {
 }
 
 export function startRound(settings: Settings & { game: ClockGame }, random: Random): ClockRound
-export function startRound(
-  settings: Settings & { game: 'dragNumbers' },
-  random: Random,
-): NumbersRound
+export function startRound(settings: Settings & { game: NumbersGame }, random: Random): NumbersRound
 export function startRound(settings: Settings, random: Random): Round
 export function startRound({ game, mode, level }: Settings, random: Random): Round {
-  if (game === 'dragNumbers') {
+  if (game === 'dragHours') {
     const tasks = Array.from({ length: taskCount(game) }, (_, i): Task<number> => ({
       answer: i + 1,
       firstAnswer: null,
@@ -93,13 +93,13 @@ export function startRound({ game, mode, level }: Settings, random: Random): Rou
 }
 
 export function isFinished(round: Round): boolean {
-  if (round.game !== 'dragNumbers') return round.current >= round.tasks.length
+  if (round.game !== 'dragHours') return round.current >= round.tasks.length
   return round.mode === 'test' ? round.submitted : round.tasks.every((t) => t.status !== 'pending')
 }
 
-/** The Clock Time Task being played; none in Drag Numbers, where every number is on screen. */
+/** The Clock Time Task being played; none in Drag Hours, where every number is on screen. */
 export function currentTask(round: Round): Task | null {
-  return round.game === 'dragNumbers' ? null : (round.tasks[round.current] ?? null)
+  return round.game === 'dragHours' ? null : (round.tasks[round.current] ?? null)
 }
 
 /**
@@ -111,7 +111,7 @@ export function submitAnswer(
   time: ClockTime,
 ): { round: ClockRound; outcome: Outcome } {
   const task = currentTask(round)
-  if (round.game === 'dragNumbers') throw new Error('Drag Numbers has no Clock Time Answers')
+  if (round.game === 'dragHours') throw new Error('Drag Hours has no Clock Time Answers')
   if (!task) throw new Error('The Round is already finished')
   const right = sameClockTime(task.answer, time)
   let status: TaskStatus

@@ -1,8 +1,14 @@
 /**
- * Drag Numbers: the Player puts the numbers 1–12 on an empty clock face. Every action returns a
- * new Round plus an outcome; the Round passed in is never changed. Plain TypeScript, no Vue.
+ * The drag Games (Drag Hours): the Player puts 12 tiles on an empty clock face. The rules work on
+ * slot ids 1–12 (tile N belongs on slot N); only `tileValue` says what tile N shows. Every action
+ * returns a new Round plus an outcome; the Round passed in is never changed. Plain TypeScript.
  */
-import { isFinished, type NumbersRound, type TaskStatus } from './round'
+import { isFinished, type NumbersGame, type NumbersRound, type TaskStatus } from './round'
+
+/** What tile N shows in a drag Game: the hour N in Drag Hours. */
+export function tileValue(_game: NumbersGame, n: number): number {
+  return n
+}
 
 /** "N goes between `before` and `after`", wrapping round the top: 12 sits between 11 and 1. */
 export interface Neighbours {
@@ -13,6 +19,18 @@ export interface Neighbours {
 
 export function neighbours(number: number): Neighbours {
   return { number, before: ((number + 10) % 12) + 1, after: (number % 12) + 1 }
+}
+
+/** The hint as the Player reads it: the values the three tiles show, not their slot ids. */
+export function shownNeighbours(
+  game: NumbersGame,
+  { number, before, after }: Neighbours,
+): Neighbours {
+  return {
+    number: tileValue(game, number),
+    before: tileValue(game, before),
+    after: tileValue(game, after),
+  }
 }
 
 export interface DropOutcome {

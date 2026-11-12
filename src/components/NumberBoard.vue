@@ -3,14 +3,18 @@ import { computed, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
+import { tileValue } from '@/game/dragNumbers'
+import type { NumbersGame } from '@/game/round'
 
 /**
- * Drag Numbers: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
+ * Drag Hours: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
  * tile onto a slot with a finger or the mouse, or tap a tile and then a slot (also by keyboard).
  * With `movable` (Test), numbers on the face can be picked up too: dropped on another slot, or
  * back on the tray. The board only reports `drop` and `toTray`; the parent decides what they do.
  */
 const props = defineProps<{
+  /** Says what each tile shows (`tileValue`). Numbers below are slot ids 1–12, not tile values. */
+  game: NumbersGame
   /** What each slot holds: index N−1 is the slot where N belongs. */
   slots: readonly (number | null)[]
   tray: readonly number[]
@@ -27,6 +31,8 @@ const props = defineProps<{
 const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
 
 const { t } = useI18n()
+/** What tile N shows. */
+const value = (n: number) => tileValue(props.game, n)
 
 const places = numberPositions(SLOT_RADIUS)
 /** A placed number's radius in face units. Tray and dragged numbers are drawn the same size. */
@@ -192,8 +198,8 @@ function slotClasses(slot: number) {
 
 function slotLabel(slot: number) {
   const number = props.slots[slot - 1]
-  if (number === null) return t('numbers.slot', { n: slot })
-  return canHold(slot) ? t('numbers.placedTile', { number, n: slot }) : undefined
+  if (number == null) return t('numbers.slot', { n: slot })
+  return canHold(slot) ? t('numbers.placedTile', { number: value(number), n: slot }) : undefined
 }
 
 /** A tap, Enter or Space on a slot. */
@@ -267,7 +273,7 @@ function tapTray() {
             <template v-if="slots[n - 1] !== null">
               <circle v-if="flash === n" class="c-flash" :cx="x" :cy="y" :r="TILE_RADIUS + 4" />
               <circle class="c-tile" :cx="x" :cy="y" :r="TILE_RADIUS" />
-              <text class="c-tile-num" :x="x" :y="y">{{ slots[n - 1] }}</text>
+              <text class="c-tile-num" :x="x" :y="y">{{ value(slots[n - 1]!) }}</text>
             </template>
             <circle
               v-else
@@ -315,7 +321,7 @@ function tapTray() {
           @click="tapTile(n, $event)"
         >
           <!-- The button is the 48 px tap area; the disc inside is the number's visible size. -->
-          <span class="disc">{{ n }}</span>
+          <span class="disc">{{ value(n) }}</span>
         </button>
       </div>
       <slot />
@@ -329,7 +335,7 @@ function tapTray() {
       aria-hidden="true"
       :style="[numberSize, { left: `${held.x}px`, top: `${held.y}px` }]"
     >
-      {{ held.number }}
+      {{ value(held.number) }}
     </div>
   </Teleport>
 </template>
