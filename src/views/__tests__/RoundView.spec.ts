@@ -556,6 +556,55 @@ describe('Round screen, Drag Hours in Test', () => {
   })
 })
 
+describe('Round screen, Drag Minutes in Test', () => {
+  it('takes a wrong minute with no hint and no Place-It button, keeping the Hour Badges', async () => {
+    await open('dragMinutes', 'test')
+    await place(12, 4)
+    expect(placedAt(4)).toBe('60')
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(placeIt(60).exists()).toBe(false)
+    expect(wrapper.findAll('.hour-badge').map((b) => b.text())).toEqual([
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+    ])
+  })
+
+  it('swaps two minutes on the face, and takes one back to the tray', async () => {
+    await open('dragMinutes', 'test')
+    await place(12, 4)
+    await place(3, 9)
+    await wrapper.get('[data-slot="4"]').trigger('click')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    expect(placedAt(4)).toBe('15')
+    expect(placedAt(9)).toBe('60')
+    await wrapper.get('[data-slot="9"]').trigger('click')
+    await wrapper.get('.tray').trigger('click')
+    expect(wrapper.get('.tray [data-number="12"]').text()).toBe('60')
+    expect(placedAt(9)).toBe('')
+  })
+
+  it('shows Submit once all 12 minutes are placed, then opens a Drag Minutes Summary', async () => {
+    const { router } = await open('dragMinutes', 'test')
+    for (let n = 1; n <= 11; n++) await place(n, n === 4 ? 5 : n === 5 ? 4 : n)
+    expect(submitButton()).toBeUndefined()
+    await place(12, 12)
+    expect(wrapper.findAll('.hour-badge')).toHaveLength(12)
+    await submitButton()!.trigger('click')
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
+    expect(usePlayStore().summary).toMatchObject({ game: 'dragMinutes', rightCount: 10, total: 12 })
+  })
+})
+
 describe('Round screen, Mode icon on the progress line', () => {
   const cases: [Game, Mode][] = [
     ['dragHours', 'teach'],

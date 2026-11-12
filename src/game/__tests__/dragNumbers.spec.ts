@@ -75,6 +75,26 @@ describe('Drag Minutes Round', () => {
   })
 })
 
+describe('Drag Minutes in Test', () => {
+  const MINUTES_TEST = { game: 'dragMinutes', mode: 'test', level: 5 } as const
+
+  it('moves minutes freely with no feedback, and scores each minute by its slot at Submit', () => {
+    let round = startRound(MINUTES_TEST, seededRandom(1))
+    // 60 tried where 20 goes: no hint, and it can be moved home later.
+    const tried = dropNumber(round, 12, 4)
+    expect(tried.outcome).toEqual({ placed: true, hint: null, finished: false })
+    round = returnToTray(tried.round, 12)
+    round = placeAll(round, (n) => (n === 6 ? 7 : n === 7 ? 6 : n))
+    expect(canSubmit(round)).toBe(true)
+    const summary = summarize(submitPlacements(round).round)
+    expect(summary).toMatchObject({ game: 'dragMinutes', mode: 'test', rightCount: 10 })
+    expect(summary.wrong).toEqual([
+      { answer: 6, firstAnswer: 7 },
+      { answer: 7, firstAnswer: 6 },
+    ])
+  })
+})
+
 describe('Drag Hours neighbour hint', () => {
   it('names the numbers either side', () => {
     expect(neighbours(7)).toEqual({ number: 7, before: 6, after: 8 })

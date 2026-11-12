@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Розстав хвилини: Перевірка, усі 12</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 1024px; height: 768px; display: flex; flex-direction: column">
+  <header class="hdr">
+    <div class="brand"><svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg>Вчимо годинник</div>
+    <div class="hdr-tools">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
+      <a class="icon-btn" href="LeaveRound.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5v16h-5"></path><path d="M9 8l-4 4 4 4"></path><path d="M5 12h11"></path></svg>Вийти</a>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-bottom: 6px">
+    <div class="dots" aria-label="Розставлено 12 з 12">
+      <span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span><span class="dot" style="background: var(--accent)"></span>
+    </div>
+    <div class="task-no">Розставлено 12 з 12 · <svg class="mode-icon test" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="m-badge" r="78"></circle><path class="m-check" d="M -38 2 L -12 28 L 40 -26"></path></svg>Перевірка</div>
+  </div>
+
+  <main style="flex-grow: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: center; padding: 0 48px 28px">
+    <div style="display: flex; justify-content: center">
+      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат, на місці 12 з 12 чисел" style="width: 440px; height: 440px">
+        <circle class="c-face" r="94"></circle>
+        <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+          <g class="hour-badges" aria-hidden="true"><circle class="c-badge" cx="20" cy="-34.6" r="8.5"></circle><text class="c-badge-num" x="20" y="-34.6">1</text><circle class="c-badge" cx="34.6" cy="-20" r="8.5"></circle><text class="c-badge-num" x="34.6" y="-20">2</text><circle class="c-badge" cx="40" cy="0" r="8.5"></circle><text class="c-badge-num" x="40" y="0">3</text><circle class="c-badge" cx="34.6" cy="20" r="8.5"></circle><text class="c-badge-num" x="34.6" y="20">4</text><circle class="c-badge" cx="20" cy="34.6" r="8.5"></circle><text class="c-badge-num" x="20" y="34.6">5</text><circle class="c-badge" cx="0" cy="40" r="8.5"></circle><text class="c-badge-num" x="0" y="40">6</text><circle class="c-badge" cx="-20" cy="34.6" r="8.5"></circle><text class="c-badge-num" x="-20" y="34.6">7</text><circle class="c-badge" cx="-34.6" cy="20" r="8.5"></circle><text class="c-badge-num" x="-34.6" y="20">8</text><circle class="c-badge" cx="-40" cy="0" r="8.5"></circle><text class="c-badge-num" x="-40" y="0">9</text><circle class="c-badge" cx="-34.6" cy="-20" r="8.5"></circle><text class="c-badge-num" x="-34.6" y="-20">10</text><circle class="c-badge" cx="-20" cy="-34.6" r="8.5"></circle><text class="c-badge-num" x="-20" y="-34.6">11</text><circle class="c-badge" cx="0" cy="-40" r="8.5"></circle><text class="c-badge-num" x="0" y="-40">12</text></g>
+        <circle class="c-tile" cx="0" cy="-66" r="15"></circle><text class="c-tile-num" x="0" y="-66">60</text>
+        <circle class="c-tile" cx="33" cy="-57.2" r="15"></circle><text class="c-tile-num" x="33" y="-57.2">5</text>
+        <circle class="c-tile" cx="57.2" cy="-33" r="15"></circle><text class="c-tile-num" x="57.2" y="-33">10</text>
+        <circle class="c-tile" cx="66" cy="0" r="15"></circle><text class="c-tile-num" x="66" y="0">15</text>
+        <circle class="c-tile" cx="57.2" cy="33" r="15"></circle><text class="c-tile-num" x="57.2" y="33">25</text>
+        <circle class="c-tile" cx="33" cy="57.2" r="15"></circle><text class="c-tile-num" x="33" y="57.2">20</text>
+        <circle class="c-tile" cx="0" cy="66" r="15"></circle><text class="c-tile-num" x="0" y="66">30</text>
+        <circle class="c-tile" cx="-33" cy="57.2" r="15"></circle><text class="c-tile-num" x="-33" y="57.2">35</text>
+        <circle class="c-tile" cx="-57.2" cy="33" r="15"></circle><text class="c-tile-num" x="-57.2" y="33">40</text>
+        <circle class="c-tile" cx="-66" cy="0" r="15"></circle><text class="c-tile-num" x="-66" y="0">45</text>
+        <circle class="c-tile" cx="-57.2" cy="-33" r="15"></circle><text class="c-tile-num" x="-57.2" y="-33">50</text>
+        <circle class="c-tile" cx="-33" cy="-57.2" r="15"></circle><text class="c-tile-num" x="-33" y="-57.2">55</text>
+        <circle class="c-pin" r="7"></circle>
+      </svg>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px">
+      <h1 style="margin: 0; font-size: 32px; font-weight: 900">Розстав числа по місцях</h1>
+      <div class="tray" style="--number-size: 60px; width: 300px; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; border: 3px dashed var(--line); background: transparent; color: var(--muted); font-size: 17px; line-height: 1.4"></div>
+      <p style="margin: 0; font-size: 17px; color: var(--muted); text-align: center; max-width: 360px">Усі числа на циферблаті. Перевір і натисни «Готово».</p>
+      <button class="btn" type="button" style="width: 300px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Готово</button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":768}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

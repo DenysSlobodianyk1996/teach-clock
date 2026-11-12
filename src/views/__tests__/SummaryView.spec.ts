@@ -26,12 +26,12 @@ function playRound(mode: Mode, wrong: number, level: Level = 15) {
   }
 }
 
-/** Drag Hours in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
-function submitDragHours(swap: boolean) {
+/** A drag Game in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
+function submitDragHours(swap: boolean, game: 'dragHours' | 'dragMinutes' = 'dragHours') {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    Object.assign(play.settings, { game: 'dragHours', mode: 'test' })
+    Object.assign(play.settings, { game, mode: 'test' })
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) play.dropNumber(n, swap && n === 4 ? 5 : swap && n === 5 ? 4 : n)
     play.submitPlacements()
@@ -193,6 +193,54 @@ describe('Summary screen', () => {
     expect(wrapper.get('.perfect-note').text()).toBe(
       `${t('summary.perfect')} ${t('summary.tryOther')}`,
     )
+  })
+
+  it('for Drag Minutes in Test, shows both faces in minutes, with Hour Badges', async () => {
+    const { wrapper } = await mountScreen(
+      SummaryView,
+      '/summary',
+      submitDragHours(true, 'dragMinutes'),
+    )
+    expect(wrapper.get('.details').text()).toBe(
+      [t('summary.cheer', { name: 'Оля' }), t('games.dragMinutes.name'), t('modes.test.name')].join(
+        ' · ',
+      ),
+    )
+    expect(wrapper.get('h1').text()).toBe(t('summary.numbersHeadline', { right: 10, total: 12 }))
+    const [mine, correct] = wrapper.findAll('.face-card')
+    expect(mine!.get('svg').attributes('aria-label')).toBe(
+      t('summary.yourFaceLabel', { numbers: '20, 25' }),
+    )
+    expect(mine!.get('[data-slot="4"]').text()).toBe('25')
+    expect(mine!.get('[data-slot="12"]').text()).toBe('60')
+    expect(mine!.findAll('.marked').map((g) => g.attributes('data-slot'))).toEqual(['4', '5'])
+    expect(correct!.get('[data-slot="4"]').text()).toBe('20')
+    expect(correct!.findAll('.good').map((g) => g.text())).toEqual(['20', '25'])
+    expect(correct!.findAll('li').map((li) => li.text())).toEqual([
+      t('numbers.between', { number: 20, before: 15, after: 25 }),
+      t('numbers.between', { number: 25, before: 20, after: 30 }),
+    ])
+    for (const face of [mine!, correct!]) {
+      expect(face.findAll('.hour-badge').map((b) => b.text())).toEqual([
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+      ])
+    }
+  })
+
+  it('shows no Hour Badges on the Drag Hours Test faces', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragHours(true))
+    expect(wrapper.find('.hour-badge').exists()).toBe(false)
   })
 
   it('plays again with the same Settings', async () => {
