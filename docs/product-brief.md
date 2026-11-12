@@ -17,9 +17,10 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 ## Screens
 
 1. **Welcome**: a short description of what the app teaches, a name field, Start.
-2. **Settings**: choose the Game, Mode and Level (no Level for Drag Numbers). Each option has a
+2. **Settings**: choose the Game, Mode and Level. Four Games, in this order: Drag Hours, Drag
+   Minutes, Drag Arrows, Set Time (no Level for Drag Hours or Drag Minutes). Each option has a
    one-line description; each Game and Mode also has an icon (Teach: a lightbulb, Test: a check
-   mark in a circle). Drag Numbers in Teach is picked when Settings opens; picking Drag Arrows
+   mark in a circle). Drag Hours in Teach is picked when Settings opens; picking Drag Arrows
    or Set Time shows the Level, set to 1 minute. Back returns to Welcome.
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the
    dots, "Task 1 of 10 · Teach" with the Mode's icon before its name.
@@ -36,19 +37,23 @@ the last name typed.
 
 ## Games
 
-| Game             | Player sees                                                      | Player does                                              | Round          | Levels         |
-| ---------------- | ---------------------------------------------------------------- | -------------------------------------------------------- | -------------- | -------------- |
-| **Drag Numbers** | An empty clock face with 12 slots and a tray of shuffled numbers | Drags each number 1–12 onto its slot                     | All 12 numbers | —              |
-| **Drag Arrows**  | A target Clock Time `H:MM` and a clock with hands at 12:00       | Drags the hands to show the target, presses Submit       | 10 Tasks       | 1 / 5 / 15 min |
-| **Set Time**     | A clock showing a Clock Time                                     | Enters `H:MM` on an on-screen number pad, presses Submit | 10 Tasks       | 1 / 5 / 15 min |
+| Game             | Player sees                                                                                   | Player does                                                             | Round          | Levels         |
+| ---------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------- | -------------- |
+| **Drag Hours**   | An empty clock face with 12 slots and a tray of shuffled numbers                              | Drags each number 1–12 onto its slot                                    | All 12 numbers | —              |
+| **Drag Minutes** | An empty clock face with 12 slots, an Hour Badge 1–12 by each, and a tray of shuffled minutes | Drags each minute 5, 10, … 60 onto the slot of its hour (60 at the top) | All 12 minutes | —              |
+| **Drag Arrows**  | A target Clock Time `H:MM` and a clock with hands at 12:00                                    | Drags the hands to show the target, presses Submit                      | 10 Tasks       | 1 / 5 / 15 min |
+| **Set Time**     | A clock showing a Clock Time                                                                  | Enters `H:MM` on an on-screen number pad, presses Submit                | 10 Tasks       | 1 / 5 / 15 min |
 
 2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
 only, not for look).
 
-Drag Numbers, in both Modes: a number is moved by dragging it, or by tapping it and then a slot.
-While a number is picked by a tap or held in a drag, every free slot turns from grey dashes to
-orange; the slot under the finger gets a stronger orange ring. Letting go or cancelling turns them
-grey again.
+Drag Hours and Drag Minutes share one set of rules and one board, in both Modes: a number is moved
+by dragging it, or by tapping it and then a slot. While a number is picked by a tap or held in a
+drag, every free slot turns from grey dashes to orange; the slot under the finger gets a stronger
+orange ring. Letting go or cancelling turns them grey again. On the Drag Minutes face each slot has
+an Hour Badge (the hour 1–12 in a soft circle, towards the centre from the slot). The Badges are
+part of the face, not a Hint: they stay visible after a minute is placed, in Teach and in Test, and
+in the Summary.
 
 Rules shared by Drag Arrows and Set Time:
 
@@ -99,8 +104,9 @@ Rules shared by Drag Arrows and Set Time:
   still presses Submit.
 - The Round moves on only after a right Answer. Dots: green = right first time, yellow = needed help.
   A Task that needed help is listed under **Wrong** in the Summary.
-- Drag Numbers: a number dropped on the wrong slot goes straight back to the tray with a hint
-  "7 goes between 6 and 8". Beside the hint a round lightbulb **Place-It button** puts that number
+- Drag Hours and Drag Minutes: a number dropped on the wrong slot goes straight back to the tray
+  with a hint "7 goes between 6 and 8" (Drag Minutes: "10 goes between 5 and 15"; across the top
+  it wraps: "60 goes between 55 and 5", "5 goes between 60 and 10"). Beside the hint a round lightbulb **Place-It button** puts that number
   on its slot for the Player: the slot rings green for a moment (a still ring with reduced motion)
   and the hint closes. The number stays helped (yellow dot, under **Wrong** in the Summary), since
   the wrong drop already happened. The hint and the button close at the next drop.
@@ -108,8 +114,11 @@ Rules shared by Drag Arrows and Set Time:
 ### Test
 
 - No feedback during the Round. Every Submit moves on; dots turn green or red.
-- Drag Numbers: numbers can be placed and swapped freely, with no feedback. Submit becomes available
-  when all 12 are placed. The Summary shows the Player's face next to the correct one.
+- Drag Hours and Drag Minutes: numbers can be placed and swapped freely, with no feedback. Submit
+  becomes available when all 12 are placed. The Summary shows the Player's face next to the correct
+  one.
+- The Summary of Drag Minutes looks like Drag Hours (chips in Teach, the two faces in Test), with
+  the minute tiles and the Hour Badges on both faces.
 
 ## Look
 
@@ -128,7 +137,7 @@ Rules shared by Drag Arrows and Set Time:
   screen stacks and scrolls, and the clock sits above the answer area (beside it on a sideways
   phone wider than 600 px). The breakpoint is defined once, in `src/styles/media.ts`.
 - In the 4:3 layout (desktop, landscape tablet) the clock never moves during a Round. Anything that
-  can appear around it (the Hint, an error, the Drag Numbers hint, Submit) has its space kept from
+  can appear around it (the Hint, an error, the drag Games' hint, Submit) has its space kept from
   the first Task, empty until needed.
 - On a phone the clock is as big as the screen allows: no empty space is kept, so the clock may
   shrink or move only when a Hint, a hint note or Submit appears. Everything still fits a
