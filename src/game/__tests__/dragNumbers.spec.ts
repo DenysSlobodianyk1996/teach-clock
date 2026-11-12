@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   canSubmit,
   dropNumber,
+  hasHourBadges,
   neighbours,
   placeForMe,
   returnToTray,
@@ -22,9 +23,17 @@ describe('Drag Hours tile value', () => {
   it('shows the hour of its slot', () => {
     expect([1, 6, 12].map((n) => tileValue('dragHours', n))).toEqual([1, 6, 12])
   })
+
+  it('has no Hour Badges on its face', () => {
+    expect(hasHourBadges('dragHours')).toBe(false)
+  })
 })
 
 describe('Drag Minutes tile value', () => {
+  it('has Hour Badges on its face', () => {
+    expect(hasHourBadges('dragMinutes')).toBe(true)
+  })
+
   it('shows the minutes of its slot: 5 at the 1, 30 at the 6, 60 at the top', () => {
     expect([1, 2, 6, 11, 12].map((n) => tileValue('dragMinutes', n))).toEqual([5, 10, 30, 55, 60])
   })

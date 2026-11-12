@@ -33,7 +33,7 @@ export function generateClockTimes(
   return all.slice(0, count)
 }
 
-/** The numbers 1–12 in a shuffled order, for the Drag Hours tray. Never already in order. */
+/** The numbers 1–12 in a shuffled order, for the tray of the drag Games. Never already in order. */
 export function shuffledNumbers(random: Random): number[] {
   const numbers = Array.from({ length: 12 }, (_, i) => i + 1)
   for (let i = numbers.length - 1; i > 0; i--) {

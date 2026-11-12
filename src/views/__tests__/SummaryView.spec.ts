@@ -167,6 +167,10 @@ describe('Summary screen', () => {
       t('numbers.between', { number: 5, before: 60, after: 10 }),
     )
     expect(wrong.get('.c-tile-num').text()).toBe('5')
+    // The words name the place by the minutes that belong there, as the face shows it.
+    expect(wrong.get('.sr-only').text()).toBe(
+      `${t('summary.numberFirst', { caption: t('summary.firstTry'), number: 5, slot: 15 })}. ${t('numbers.between', { number: 5, before: 60, after: 10 })}`,
+    )
   })
 
   it('for Drag Hours in Test, shows the Player’s face next to the correct one', async () => {

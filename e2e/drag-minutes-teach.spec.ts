@@ -72,6 +72,9 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, the Place-It button
       .getByRole('listitem')
       .filter({ hasText: between }),
   ).toBeVisible()
+  // The small pair faces still show Hour Badges big enough to read.
+  const pairBadge = page.locator('.pair-clock .hour-badge text').nth(11)
+  expect((await pairBadge.boundingBox())!.height).toBeGreaterThanOrEqual(10)
 })
 
 test('Drag Minutes tiles show two-digit minutes inside the tile, the same size as Drag Hours', async ({

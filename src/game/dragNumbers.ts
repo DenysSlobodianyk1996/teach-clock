@@ -10,6 +10,11 @@ export function tileValue(game: NumbersGame, n: number): number {
   return game === 'dragMinutes' ? n * 5 : n
 }
 
+/** Drag Minutes shows an Hour Badge by each slot, so the Player sees which hour each minute sits by. */
+export function hasHourBadges(game: NumbersGame): boolean {
+  return game === 'dragMinutes'
+}
+
 /** "N goes between `before` and `after`", wrapping round the top: 12 sits between 11 and 1. */
 export interface Neighbours {
   number: number

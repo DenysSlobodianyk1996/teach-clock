@@ -5,7 +5,7 @@ import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import ClockFace, { type Hand } from '@/components/ClockFace.vue'
 import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
-import DragHoursRound from './DragHoursRound.vue'
+import DragRound from './DragRound.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import HintPanel from '@/components/HintPanel.vue'
@@ -104,7 +104,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
 </script>
 
 <template>
-  <DragHoursRound v-if="numbersRound" :round="numbersRound" />
+  <DragRound v-if="numbersRound" :round="numbersRound" />
   <div v-else-if="round && task" class="round">
     <div class="progress">
       <ProgressDots :statuses="round.tasks.map((t) => t.status)" :current="shownIndex" />
