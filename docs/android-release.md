@@ -190,7 +190,7 @@ Answer briefly and truthfully. A review usually takes up to 7 days.
 
 ## 8. Release to production
 
-GitHub › Actions › **Android** › **Run workflow** › type the release notes in Ukrainian and English. Each production release is reviewed by Google, which takes hours to a few days.
+GitHub › Actions › **Android** › **Run workflow** › type the release notes in Ukrainian and English. The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release); notes are at most 500 characters each. Each production release is reviewed by Google, which takes hours to a few days.
 
 After the first production release: Play Console › **Grow › Teacher Approved** (or the Families section) › opt in.
 

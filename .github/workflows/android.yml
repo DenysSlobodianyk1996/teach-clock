@@ -15,7 +15,18 @@ on:
       - 'android/**'
       - 'capacitor.config.ts'
       - '.github/workflows/android.yml'
+  # "Run workflow" releases to production: builds a new bundle and uploads it with these notes.
+  # (The upload action can't promote an existing closed-testing release, only upload.)
   workflow_dispatch:
+    inputs:
+      notes_uk:
+        description: 'Release notes in Ukrainian (up to 500 characters)'
+        required: true
+        type: string
+      notes_en:
+        description: 'Release notes in English (up to 500 characters)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -106,6 +117,83 @@ jobs:
         if: always()
         run: rm -f "$RUNNER_TEMP/upload-key.jks"
 
-      # Ticket 12: upload to Play goes here (closed testing on push, production on
-      # workflow_dispatch), only when steps.key.outputs.signed == 'true' and
-      # PLAY_SERVICE_ACCOUNT_JSON is set.
+      # Push to main: closed testing (track "alpha"). Run workflow: production.
+      # Skipped while PLAY_SERVICE_ACCOUNT_JSON is not set (the first upload is by hand in
+      # Play Console; Play's API only accepts uploads once the app exists).
+      - name: Play release notes
+        id: play
+        env:
+          SIGNED: ${{ steps.key.outputs.signed }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PACKAGE_ID: ${{ vars.ANDROID_PACKAGE_ID }}
+          EVENT: ${{ github.event_name }}
+          NOTES_UK: ${{ inputs.notes_uk }}
+          NOTES_EN: ${{ inputs.notes_en }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then
+            track=production
+            # Production is released from main only, never from a branch.
+            if [ "$GITHUB_REF" != refs/heads/main ]; then
+              echo "::error title=Not main::Release to production from main only (this run is on $GITHUB_REF)."
+              exit 1
+            fi
+          else
+            track=alpha
+            NOTES_UK='Покращення та виправлення'
+            NOTES_EN='Improvements and fixes'
+          fi
+          # A production run must not end green without a release; a push may, before setup.
+          skip() {
+            if [ "$track" = production ]; then
+              echo "::error title=No Play upload::$1"
+              exit 1
+            fi
+            echo "::warning title=No Play upload::$1"
+            echo "Not uploaded to Play: $1" >> "$GITHUB_STEP_SUMMARY"
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+          [ "$SIGNED" = true ] || skip "the bundle is unsigned (no upload key secrets)."
+          [ -n "$PLAY_SERVICE_ACCOUNT_JSON" ] || skip "PLAY_SERVICE_ACCOUNT_JSON is not set. Upload the first .aab by hand in Play Console, then add the service account (docs/android-release.md)."
+          if [ -z "$PACKAGE_ID" ]; then
+            echo "::error title=No package id::Set the repository variable ANDROID_PACKAGE_ID (app.teachclockforkids)."
+            exit 1
+          fi
+          # Play: one file per locale, named whatsnew-<BCP 47>, at most 500 characters each.
+          dir="$RUNNER_TEMP/whatsnew"
+          mkdir -p "$dir"
+          write_notes() { # locale, text, input name
+            if [ -z "${2//[[:space:]]/}" ]; then
+              echo "::error title=Empty release notes::$3 is empty."
+              exit 1
+            fi
+            # Count characters, not bytes (Cyrillic is two bytes each in UTF-8).
+            length=$(printf '%s' "$2" | LC_ALL=C.UTF-8 wc -m | tr -d ' ')
+            if [ "$length" -gt 500 ]; then
+              echo "::error title=Release notes too long::$3 has $length characters; Play allows 500."
+              exit 1
+            fi
+            printf '%s' "$2" > "$dir/whatsnew-$1"
+          }
+          write_notes uk-UA "$NOTES_UK" notes_uk
+          write_notes en-US "$NOTES_EN" notes_en
+          {
+            echo "upload=true"
+            echo "track=$track"
+            echo "dir=$dir"
+          } >> "$GITHUB_OUTPUT"
+      - name: Upload to Play
+        if: steps.play.outputs.upload == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ vars.ANDROID_PACKAGE_ID }}
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          tracks: ${{ steps.play.outputs.track }}
+          status: completed
+          whatsNewDirectory: ${{ steps.play.outputs.dir }}
+      - name: Play summary
+        if: steps.play.outputs.upload == 'true'
+        env:
+          TRACK: ${{ steps.play.outputs.track }}
+        run: echo "Uploaded versionCode ${VERSION_CODE} to Play track \`$TRACK\`." >> "$GITHUB_STEP_SUMMARY"
