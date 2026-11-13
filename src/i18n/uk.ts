@@ -135,4 +135,8 @@ export default {
     yourFaceLabel: 'Твій циферблат, не на своїх місцях: {numbers}',
     correctFaceLabel: 'Правильний циферблат',
   },
+  support: {
+    button: 'Підтримати автора',
+    hold: 'Утримуй, щоб відкрити',
+  },
 }
