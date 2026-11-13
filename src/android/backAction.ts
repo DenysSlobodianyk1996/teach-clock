@@ -6,7 +6,8 @@
 export type BackScreen = 'welcome' | 'settings' | 'round' | 'summary'
 
 export interface BackState {
-  screen: BackScreen
+  /** `undefined`: a screen this table does not know. Back then goes to Welcome, never exits. */
+  screen: BackScreen | undefined
   /** A popup is open: the Teach wrong-answer popup, `LeaveRoundDialog`, any `PopupDialog`. */
   popupOpen: boolean
 }
@@ -22,6 +23,7 @@ export function backAction({ screen, popupOpen }: BackState): BackAction {
       return 'openLeaveDialog'
     case 'settings':
     case 'summary':
+    case undefined:
       return 'goWelcome'
   }
 }
