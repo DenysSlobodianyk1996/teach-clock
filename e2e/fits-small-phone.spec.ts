@@ -35,7 +35,7 @@ test('Settings fits: no sideways scroll, Back and Play side by side in full', as
 })
 
 for (const game of ['setTime', 'dragArrows'] as const) {
-  test(`${game} Teach: Submit stays on screen before and after the Hint`, async ({ page }) => {
+  test(`${game} Teach: Submit stays on screen through the wrong-Answer popup`, async ({ page }) => {
     await toSettings(page)
     await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
     await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
@@ -58,16 +58,24 @@ for (const game of ['setTime', 'dragArrows'] as const) {
     )
     expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
 
-    // A wrong try brings the Hint: 12:01 is off the 15-minute step; untouched hands are never right.
+    // A wrong try opens the popup: 12:01 is off the 15-minute step; untouched hands are never right.
     if (game === 'setTime') {
       await page.keyboard.type('1201')
       await page.keyboard.press('Enter')
     } else {
       await submit.click()
     }
-    await page.getByRole('button', { name: t('teach.gotIt') }).click()
-    await expect(page.getByRole('button', { name: t('teach.setCorrect') })).toBeVisible()
-    expect(await bottomFromPageTop(submit), 'Submit fits with the Hint shown').toBeLessThanOrEqual(
+    // Its two buttons fit the narrow screen, stacked, Got it on top.
+    const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+    const gotIt = (await popup.getByRole('button', { name: t('teach.gotIt') }).boundingBox())!
+    const setCorrect = (await popup
+      .getByRole('button', { name: t('teach.setCorrect') })
+      .boundingBox())!
+    expect(setCorrect.y, 'stacked').toBeGreaterThanOrEqual(gotIt.y + gotIt.height)
+    expect(setCorrect.x + setCorrect.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+    await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
+    await expect(popup).toBeHidden()
+    expect(await bottomFromPageTop(submit), 'Submit fits after the popup').toBeLessThanOrEqual(
       page.viewportSize()!.height,
     )
   })

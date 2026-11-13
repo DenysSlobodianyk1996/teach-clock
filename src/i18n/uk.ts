@@ -77,7 +77,6 @@ export default {
     wrongTitle: 'Майже! Правильно так:',
     gotIt: 'Зрозуміло',
     setCorrect: 'Постав правильну відповідь',
-    hint: 'Підказка:',
     right: 'Правильно! Далі…',
     mistakes: {
       hourAhead: 'Коротка стрілка ще не дійшла до {next} — отже, година ще {hour}.',

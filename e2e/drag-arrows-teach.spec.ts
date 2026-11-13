@@ -32,13 +32,16 @@ test('a Drag Arrows Teach Round teaches a wrong Answer and lists it under Wrong'
   await popup.getByRole('button', { name: t('teach.gotIt') }).click()
   await expect(popup).toBeHidden()
 
-  // The hands stay where the Player left them; the Hint appears.
+  // The hands stay where the Player left them; nothing is added under the clock.
   await expect(page.locator(handsAt(wrong))).toBeVisible()
   await expect(progress(1)).toBeVisible()
-  await expect(page.locator('.hint-panel')).toContainText(`${t('teach.hint')} ${first}`)
+  await expect(page.getByRole('button', { name: t('teach.setCorrect') })).toBeHidden()
 
-  // "Set correct answer" turns the hands; the Player still presses Submit.
-  await page.getByRole('button', { name: t('teach.setCorrect') }).click()
+  // A second wrong try opens the popup again. "Set correct answer" turns the hands; the Player
+  // still presses Submit.
+  await submit.click()
+  await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
+  await expect(popup).toBeHidden()
   await expect(page.locator(handsAt(first))).toBeVisible()
   await expect(progress(1)).toBeVisible()
   await submit.click()

@@ -26,8 +26,7 @@ export default defineConfig({
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
-      // On a phone the clock may move when a hint appears, so clock-stays-put is desktop only.
-      testIgnore: /offline\.spec|small-phone|clock-stays-put|phone-layout-768/,
+      testIgnore: /offline\.spec|small-phone|phone-layout-768/,
     },
     {
       // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when

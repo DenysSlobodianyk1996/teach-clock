@@ -77,7 +77,6 @@ export default {
     wrongTitle: 'Almost! Here’s how it is:',
     gotIt: 'Got it',
     setCorrect: 'Set correct answer',
-    hint: 'Hint:',
     right: 'Right! Next…',
     mistakes: {
       hourAhead: 'The short hand hasn’t reached {next} yet — so the hour is still {hour}.',

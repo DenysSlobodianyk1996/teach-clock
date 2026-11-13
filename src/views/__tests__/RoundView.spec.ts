@@ -131,12 +131,13 @@ describe('Round screen, Set Time in Teach', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
   afterEach(() => vi.useRealTimers())
 
-  it('shows no Hint before a wrong try', async () => {
+  it('shows no popup and no Set correct answer before a wrong try', async () => {
     await open('setTime', 'teach')
-    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(button(t('teach.setCorrect'))).toBeUndefined()
   })
 
-  it('after a wrong Answer, shows the correct time with a teaching line and keeps the digits', async () => {
+  it('after a wrong Answer, shows the correct time with a teaching line; Got it keeps the digits', async () => {
     await open('setTime', 'teach')
     const correct = shownTime()
     await answer(WRONG)
@@ -155,16 +156,41 @@ describe('Round screen, Set Time in Teach', () => {
     expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe('12')
     expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe('01')
     expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
-    expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
-    expect(wrapper.get('.hint-panel').classes()).not.toContain('waiting')
+    // Nothing about the Hint stays in the layout.
+    expect(button(t('teach.setCorrect'))).toBeUndefined()
+    expect(wrapper.text()).not.toContain(correct)
   })
 
-  it('Set correct answer fills the digits; after Submit the Task ends helped (yellow)', async () => {
+  it('Escape closes the popup and a second wrong try opens it again; a Task fixed after Got it ends helped', async () => {
     await open('setTime', 'teach')
     const correct = shownTime()
     await answer(WRONG)
+    await wrapper.get('[role="dialog"]').trigger('keydown', { key: 'Escape' })
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe('01')
+
+    await answer(WRONG)
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
     await button(t('teach.gotIt'))!.trigger('click')
+
+    // The Player clears both boxes and types the right time.
+    for (const box of ['round.minutes', 'round.hours']) {
+      await wrapper.get(`[aria-label="${t(box)}"]`).trigger('click')
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }))
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace' }))
+    }
+    await answer(correct)
+    vi.runAllTimers()
+    await wrapper.vm.$nextTick()
+    expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
+  })
+
+  it('Set correct answer in the popup fills the digits; after Submit the Task ends helped (yellow)', async () => {
+    await open('setTime', 'teach')
+    const correct = shownTime()
+    await answer(WRONG)
     await button(t('teach.setCorrect'))!.trigger('click')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     const [hour, minute] = correct.split(':')
     expect(wrapper.get(`[aria-label="${t('round.hours')}"]`).text()).toBe(hour)
     expect(wrapper.get(`[aria-label="${t('round.minutes')}"]`).text()).toBe(minute)
@@ -180,7 +206,7 @@ describe('Round screen, Set Time in Teach', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.get('[role="status"]').text()).toBe('')
     expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
-    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
   })
 
@@ -197,7 +223,6 @@ describe('Round screen, Set Time in Teach', () => {
     const { router } = await open('setTime', 'teach')
     const helped = shownTime()
     await answer(WRONG)
-    await button(t('teach.gotIt'))!.trigger('click')
     await button(t('teach.setCorrect'))!.trigger('click')
     await button(t('round.submit'))!.trigger('click')
     for (let i = 0; i < 10; i++) {
@@ -282,11 +307,12 @@ describe('Round screen, Drag Arrows in Teach', () => {
    */
   const wrongFor = (correct: string) => `${(Number(correct.split(':')[0]) % 11) + 1}:00`
 
-  it('shows no Hint before a wrong try', async () => {
+  it('shows no popup and no Set correct answer before a wrong try', async () => {
     await open('dragArrows', 'teach')
     expect(wrapper.get('h1').text()).toBe(t('round.setHands'))
     expect(handsLabel()).toBe(CLOCK_DRAG)
-    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(button(t('teach.setCorrect'))).toBeUndefined()
   })
 
   it('after a wrong Answer, shows the correct time with a teaching line; the hands stay', async () => {
@@ -306,16 +332,36 @@ describe('Round screen, Drag Arrows in Teach', () => {
     expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     expect(handsLabel()).toBe(handsAt(wrong))
     expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
-    expect(wrapper.get('.hint-panel').text()).toContain(`${t('teach.hint')} ${correct}`)
-    expect(wrapper.get('.hint-panel').classes()).not.toContain('waiting')
+    expect(button(t('teach.setCorrect'))).toBeUndefined()
   })
 
-  it('Set correct answer turns the hands to the Hint; after Submit the Task ends helped (yellow)', async () => {
+  it('the scrim closes the popup and a second wrong try opens it again; a Task fixed after Got it ends helped', async () => {
+    await open('dragArrows', 'teach')
+    const correct = target()
+    const wrong = wrongFor(correct)
+    await setHands(wrong)
+    await submitHands()
+    await wrapper.get('.scrim').trigger('click')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(handsLabel()).toBe(handsAt(wrong))
+
+    await submitHands()
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
+    await button(t('teach.gotIt'))!.trigger('click')
+
+    await setHands(correct)
+    await submitHands()
+    vi.runAllTimers()
+    await wrapper.vm.$nextTick()
+    expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
+  })
+
+  it('Set correct answer in the popup turns the hands to the Hint; after Submit the Task ends helped (yellow)', async () => {
     await open('dragArrows', 'teach')
     const correct = target()
     await submitHands()
-    await button(t('teach.gotIt'))!.trigger('click')
     await button(t('teach.setCorrect'))!.trigger('click')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     expect(handsLabel()).toBe(handsAt(correct))
     expect(wrapper.get('.clock-side svg.clock').classes()).toContain('animate')
     expect(wrapper.text()).toContain(t('round.progress', { n: 1, total: 10 }))
@@ -329,14 +375,13 @@ describe('Round screen, Drag Arrows in Teach', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.text()).toContain(t('round.progress', { n: 2, total: 10 }))
     expect(handsLabel()).toBe(CLOCK_DRAG)
-    expect(wrapper.get('.hint-panel').classes()).toContain('waiting')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     expect(dotClasses().slice(0, 2)).toEqual(['help', 'now'])
   })
 
   it('dragging after Set correct answer moves the hands straight away, without the animation', async () => {
     await open('dragArrows', 'teach')
     await submitHands()
-    await button(t('teach.gotIt'))!.trigger('click')
     await button(t('teach.setCorrect'))!.trigger('click')
     wrapper.findComponent(ClockFace).vm.$emit('drag', { hand: 'hour', angle: 90 })
     await wrapper.vm.$nextTick()
@@ -357,7 +402,6 @@ describe('Round screen, Drag Arrows in Teach', () => {
     const { router } = await open('dragArrows', 'teach')
     const helped = target()
     await submitHands()
-    await button(t('teach.gotIt'))!.trigger('click')
     await button(t('teach.setCorrect'))!.trigger('click')
     await submitHands()
     for (let i = 0; i < 10; i++) {
