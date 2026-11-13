@@ -13,13 +13,10 @@ test('a Drag Minutes Test Round takes free moves, submits once and shows both fa
   await page.getByRole('button', { name: t('settings.play') }).click()
   const submit = page.getByRole('button', { name: t('numbers.submit') })
 
-  // 20 dropped where 25 goes stays there, with no Hint and no Place-It button.
+  // 20 dropped where 25 goes stays there, with no popup.
   await dragNumber(page, 4, 5)
   await expect(slot(page, 5)).toHaveText('20')
-  await expect(page.getByRole('status')).toHaveText('')
-  await expect(
-    page.getByRole('button', { name: t('numbers.placeIt', { number: 20 }) }),
-  ).toBeHidden()
+  await expect(page.getByRole('dialog')).toBeHidden()
   await expect(page.locator('.hour-badge')).toHaveCount(12)
 
   // 25 goes on 20's slot; then a swap by dragging and a swap back by tapping.

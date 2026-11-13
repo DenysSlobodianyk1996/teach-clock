@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 import ModeIcon from '@/components/ModeIcon.vue'
 import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
+import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
+import HintFace from '@/components/HintFace.vue'
 import { canSubmit, shownNeighbours, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
@@ -18,18 +20,20 @@ const play = usePlayStore()
 
 /** How long the full face shows before the Summary. */
 const DONE_PAUSE_MS = 1200
-/** How long a slot filled by the Place-It button stays ringed green. */
+/** How long a slot filled by Set correct answer stays ringed green. */
 const FLASH_MS = 900
 
-/** Teach: "N goes between…", shown from a wrong drop until the next drop. */
+/** Teach: where the last wrongly dropped number goes. Its tray tile stays ringed until the next drop. */
 const hint = ref<Neighbours | null>(null)
-/** The hint in the values the tiles show. */
+/** Teach: the wrong-drop popup is open (for `hint`). */
+const popupOpen = ref(false)
+/** The popup's line, in the values the tiles show. */
 const shownHint = computed(() => hint.value && shownNeighbours(props.round.game, hint.value))
-/** The slot the Place-It button just filled, ringed green for a moment. */
+/** The slot Set correct answer just filled, ringed green for a moment. */
 const flash = ref<number | null>(null)
 const root = ref<HTMLElement>()
 const done = ref(false)
-const busy = computed(() => play.askingToLeave || done.value)
+const busy = computed(() => play.askingToLeave || done.value || popupOpen.value)
 
 const test = computed(() => props.round.mode === 'test')
 const placed = computed(() => props.round.slots.filter((n) => n !== null).length)
@@ -60,24 +64,27 @@ function drop(number: number, slot: number) {
   after(play.dropNumber(number, slot))
 }
 
-/** Teach, the Place-It button: puts the hinted number on its slot and rings it green. */
-function placeIt() {
+/** Teach, the popup's Set correct answer: closes it, puts the number on its slot, rings it green. */
+function setCorrectAnswer() {
+  // Close the popup first: `busy` counts an open popup, and the check below must not see it.
+  popupOpen.value = false
   const number = hint.value?.number
   if (busy.value || number === undefined) return
-  const outcome = play.placeForMe(number)
+  const outcome = play.setCorrectNumber(number)
   if (outcome.placed) {
     flash.value = props.round.tasks[number - 1]!.answer
     clearTimeout(flashing)
     flashing = setTimeout(() => (flash.value = null), FLASH_MS)
   }
   after(outcome)
-  // The button goes away with the Hint: keep keyboard focus in play, on the next tray number.
+  // The popup is gone: keep keyboard focus in play, on the next tray number.
   nextTick(() => root.value?.querySelector<HTMLElement>('.tray .tile')?.focus())
 }
 
-/** Shows the drop's hint, and moves on to the Summary once the face is full. */
+/** Opens the popup after a wrong drop, and moves on to the Summary once the face is full. */
 function after(outcome: DropOutcome) {
   hint.value = outcome.hint
+  popupOpen.value = outcome.hint !== null
   if (outcome.finished) {
     done.value = true
     pause = setTimeout(() => {
@@ -111,7 +118,6 @@ function submit() {
     </div>
     <NumberBoard
       :game="round.game"
-      :hinted="hint !== null"
       :slots="round.slots"
       :tray="round.tray"
       :marked="hint?.number"
@@ -121,25 +127,6 @@ function submit() {
       @drop="drop"
       @to-tray="toTray"
     >
-      <template #clock>
-        <div class="toast-row">
-          <!-- Always in the page, so screen readers announce the text when it appears. -->
-          <p class="toast-status" role="status">
-            <span v-if="shownHint" class="toast">{{ t('numbers.between', { ...shownHint }) }}</span>
-          </p>
-          <button
-            v-if="shownHint && !test"
-            class="place-it"
-            type="button"
-            :aria-label="t('numbers.placeIt', { number: shownHint.number })"
-            :title="t('numbers.placeIt', { number: shownHint.number })"
-            :disabled="busy"
-            @click="placeIt"
-          >
-            <ModeIcon mode="teach" />
-          </button>
-        </div>
-      </template>
       <template #heading>
         <h1>{{ t('numbers.heading') }}</h1>
       </template>
@@ -169,6 +156,14 @@ function submit() {
       </template>
       <p v-else-if="round.tray.length" class="help">{{ t('numbers.help') }}</p>
     </NumberBoard>
+    <WrongAnswerPopup
+      v-if="popupOpen && hint && shownHint"
+      :line="t('numbers.between', { ...shownHint })"
+      @dismiss="popupOpen = false"
+      @set-correct="setCorrectAnswer"
+    >
+      <HintFace :game="round.game" :number="hint.number" />
+    </WrongAnswerPopup>
   </div>
 </template>
 
@@ -207,55 +202,6 @@ h1 {
   color: var(--muted);
   text-align: center;
 }
-/* A fixed height that fits the hint, so the face does not jump when a hint comes and goes. */
-.toast-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 48px;
-}
-.toast-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-/* The Place-It button: round, 48 px, the Teach lightbulb on the toast's colour. */
-.place-it {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 48px;
-  height: 48px;
-  padding: 6px;
-  border: 3px dashed var(--accent);
-  border-radius: 50%;
-  background: var(--pop);
-  color: var(--pop-ink);
-  box-shadow: var(--shadow);
-  cursor: pointer;
-}
-.place-it:focus-visible {
-  outline: 3px solid var(--text);
-  outline-offset: 2px;
-}
-.place-it svg {
-  width: 100%;
-  height: 100%;
-}
-.toast {
-  display: inline-block;
-  padding: 12px 22px;
-  line-height: 24px;
-  border-radius: 999px;
-  background: var(--pop);
-  color: var(--pop-ink);
-  font-size: 20px;
-  font-weight: 800;
-  white-space: nowrap;
-  box-shadow: var(--shadow);
-}
 @media (--phone) {
   .round {
     padding: 4px 20px 20px;
@@ -265,22 +211,6 @@ h1 {
   }
   .help {
     font-size: 15px;
-  }
-  /* A phone keeps no empty room for the hint: the face may move when a hint appears. */
-  .toast-row {
-    height: auto;
-  }
-  /* A narrow phone wraps the hint rather than push the button off screen. */
-  .toast-status {
-    flex-shrink: 1;
-    min-width: 0;
-  }
-  .toast {
-    white-space: normal;
-    text-align: center;
-    font-size: 17px;
-    line-height: 22px;
-    padding: 10px 18px;
   }
 }
 </style>

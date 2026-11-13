@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clockTime, type ClockTime } from '../clockTime'
-import { currentTask, hint, isFinished, startRound, submitAnswer, type ClockRound } from '../round'
+import { currentTask, isFinished, startRound, submitAnswer, type ClockRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 import type { Level } from '../settings'
@@ -93,39 +93,27 @@ describe('Round in Teach', () => {
     expect(next.tasks[0]).toMatchObject({ status: 'pending', firstAnswer: given })
   })
 
-  it('wrong, then Hint, then help used, then right: the Task ends as helped', () => {
+  it('wrong, then right after more tries: the Task ends as helped', () => {
     let round = startRound(SET_TIME_TEACH, seededRandom(1))
     const correct = currentTask(round)!.answer
-    expect(hint(round)).toBeNull()
 
     const firstTry = wrong(correct)
     round = submitAnswer(round, firstTry).round
-    expect(hint(round)).toEqual(correct)
 
     // More wrong tries are allowed and do not replace the first Answer.
     round = submitAnswer(round, wrong(firstTry)).round
     expect(round.current).toBe(0)
 
-    const { round: next, outcome } = submitAnswer(round, hint(round)!)
+    const { round: next, outcome } = submitAnswer(round, correct)
     expect(outcome).toEqual({ right: true, movedOn: true, finished: false })
     expect(next.tasks[0]).toMatchObject({ status: 'helped', firstAnswer: firstTry })
     expect(next.current).toBe(1)
-    expect(hint(next)).toBeNull()
   })
 
   it('marks a right first try right', () => {
     const round = startRound(SET_TIME_TEACH, seededRandom(1))
     const { round: next } = submitAnswer(round, currentTask(round)!.answer)
     expect(next.tasks[0]!.status).toBe('right')
-  })
-})
-
-describe('Round in Test', () => {
-  it('never gives a Hint', () => {
-    const round = startRound(SET_TIME_TEST, seededRandom(1))
-    expect(hint(round)).toBeNull()
-    const next = submitAnswer(round, wrong(currentTask(round)!.answer)).round
-    expect(hint(next)).toBeNull()
   })
 })
 

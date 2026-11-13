@@ -3,9 +3,14 @@ import type { Component } from 'vue'
 import { createAppI18n } from '@/i18n'
 
 /** Mounts a component with the app's i18n, attached to the page so focus works. */
-export function mountComponent(component: Component, props: Record<string, unknown> = {}) {
+export function mountComponent(
+  component: Component,
+  props: Record<string, unknown> = {},
+  slots: Record<string, string> = {},
+) {
   return mount(component, {
     props,
+    slots,
     global: { plugins: [createAppI18n()] },
     attachTo: document.body,
   })

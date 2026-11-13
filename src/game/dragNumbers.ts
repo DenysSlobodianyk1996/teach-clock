@@ -26,6 +26,17 @@ export function neighbours(number: number): Neighbours {
   return { number, before: ((number + 10) % 12) + 1, after: (number % 12) + 1 }
 }
 
+/**
+ * The Hint's face for a number: its own slot and its two neighbours filled, the rest empty.
+ * Indexed like `round.slots` (slot N at N − 1), holding slot ids.
+ */
+export function hintSlots(number: number): (number | null)[] {
+  const { before, after } = neighbours(number)
+  return Array.from({ length: 12 }, (_, i) =>
+    [number, before, after].includes(i + 1) ? i + 1 : null,
+  )
+}
+
 /** The hint as the Player reads it: the values the three tiles show, not their slot ids. */
 export function shownNeighbours(
   game: NumbersGame,
@@ -85,11 +96,11 @@ export function dropNumber(
 }
 
 /**
- * Teach, the Place-It button: puts a number on its own slot for the Player, after a wrong drop.
+ * Teach, the popup's Set correct answer: puts a number on its own slot for the Player, after a wrong drop.
  * The number stays helped, since the wrong drop already happened. A number still on the tray
  * with no wrong drop yet, or one already placed, is left alone.
  */
-export function placeForMe(
+export function setCorrectNumber(
   round: NumbersRound,
   number: number,
 ): { round: NumbersRound; outcome: DropOutcome } {

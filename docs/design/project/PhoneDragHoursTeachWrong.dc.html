@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Телефон · Розстав години · Навчання: помилка</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<div class="tc" style="width: 390px; height: 844px; display: flex; flex-direction: column">
+  <header class="hdr" style="height: 64px; padding: 0 14px">
+    <div class="brand"><svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg></div>
+    <div class="hdr-tools" style="gap: 8px">
+      <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" type="button" aria-label="Тема: середня. Змінити" style="padding: 0; width: 48px"><span class="swatch sw-middle" style="width: 26px; height: 26px"></span></button>
+      <button class="icon-btn" type="button" aria-label="Вийти" style="padding: 0; width: 48px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5v16h-5"></path><path d="M9 8l-4 4 4 4"></path><path d="M5 12h11"></path></svg></button>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+    <div class="dots" style="gap: 6px" aria-label="Прогрес: на місці 4 з 12 чисел">
+      <span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot help" style="width: 16px; height: 16px"></span><span class="dot ok" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span><span class="dot" style="width: 16px; height: 16px"></span>
+    </div>
+    <div class="task-no">На місці 4 з 12 · <svg class="mode-icon teach" viewBox="-100 -100 200 200" aria-hidden="true"><g class="m-rays"><line x1="0" y1="-78" x2="0" y2="-96"></line><line x1="-42" y1="-60" x2="-55" y2="-73"></line><line x1="42" y1="-60" x2="55" y2="-73"></line><line x1="-60" y1="-18" x2="-78" y2="-18"></line><line x1="60" y1="-18" x2="78" y2="-18"></line></g><path class="m-bulb" d="M -28 18 A 46 46 0 1 1 28 18 L 22 40 L -22 40 Z"></path><path class="m-filament" d="M -11 30 L -11 6 L 0 -6 L 11 6 L 11 30"></path><rect class="m-base" x="-24" y="48" width="48" height="12" rx="6"></rect><rect class="m-base" x="-16" y="66" width="32" height="12" rx="6"></rect></svg>Навчання</div>
+  </div>
+
+  <main style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 12px 16px 20px">
+    <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат, на місці 4 з 12 чисел" style="width: 330px; height: 330px">
+      <circle class="c-face" r="94"></circle>
+      <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+      <circle class="c-slot" cx="33" cy="-57.2" r="14"></circle><circle class="c-slot" cx="57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="57.2" cy="33" r="14"></circle><circle class="c-slot" cx="33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-33" cy="57.2" r="14"></circle><circle class="c-slot" cx="-57.2" cy="33" r="14"></circle><circle class="c-slot" cx="-57.2" cy="-33" r="14"></circle><circle class="c-slot" cx="-33" cy="-57.2" r="14"></circle>
+      <circle class="c-tile" cx="0" cy="-66" r="15"></circle><text class="c-tile-num" x="0" y="-66">12</text>
+      <circle class="c-tile" cx="66" cy="0" r="15"></circle><text class="c-tile-num" x="66" y="0">3</text>
+      <circle class="c-tile" cx="0" cy="66" r="15"></circle><text class="c-tile-num" x="0" y="66">6</text>
+      <circle class="c-tile" cx="-66" cy="0" r="15"></circle><text class="c-tile-num" x="-66" y="0">9</text>
+      <circle class="c-pin" r="7"></circle>
+    </svg>
+    <h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 900">Розстав числа по місцях</h1>
+    <div class="tray" style="--number-size: 45px; width: 100%; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; padding: 12px; justify-items: center" aria-label="Числа">
+      <button class="tile" type="button" style="outline: 3px solid var(--hour); outline-offset: 2px">7</button><button class="tile" type="button">2</button><button class="tile" type="button">11</button><button class="tile" type="button">4</button><button class="tile" type="button">10</button><button class="tile" type="button">1</button>
+      <button class="tile" type="button">8</button><button class="tile" type="button">5</button>
+    </div>
+    <p style="margin: 0; font-size: 15px; color: var(--muted); text-align: center">Перетягни число на його місце або торкнись числа, а потім місця.</p>
+  </main>
+    <!-- Teach, a wrong drop: the popup lights the number's own slot in green, between its two
+       neighbours. Got it closes it (the number stays on the tray, ringed); Set correct answer puts
+       it on its slot with a green flash. Nothing is added around the face, so it never moves. -->
+  <div class="scrim">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width: calc(100% - 32px); padding: 26px 20px">
+      <h2 id="wrong-title">Майже! Правильно так:</h2>
+      <svg class="clock" viewBox="-110 -110 220 220" role="img" aria-label="7 стоїть між 6 і 8" style="width: 150px; height: 150px">
+          <circle class="c-face" r="94"></circle>
+          <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+          <circle class="c-slot" cx="33" cy="-57.2" r="14"></circle>
+          <circle class="c-slot" cx="57.2" cy="-33" r="14"></circle>
+          <circle class="c-slot" cx="66" cy="0" r="14"></circle>
+          <circle class="c-slot" cx="57.2" cy="33" r="14"></circle>
+          <circle class="c-slot" cx="33" cy="57.2" r="14"></circle>
+          <circle class="c-tile" cx="0" cy="66" r="15"></circle><text class="c-tile-num" x="0" y="66">6</text>
+          <circle class="c-tile" cx="-33" cy="57.2" r="15" style="fill: var(--good)"></circle><text class="c-tile-num" x="-33" y="57.2">7</text>
+          <circle class="c-tile" cx="-57.2" cy="33" r="15"></circle><text class="c-tile-num" x="-57.2" y="33">8</text>
+          <circle class="c-slot" cx="-66" cy="0" r="14"></circle>
+          <circle class="c-slot" cx="-57.2" cy="-33" r="14"></circle>
+          <circle class="c-slot" cx="-33" cy="-57.2" r="14"></circle>
+          <circle class="c-slot" cx="0" cy="-66" r="14"></circle>
+          <circle class="c-pin" r="7"></circle>
+      </svg>
+      <p>7 стоїть між 6 і 8</p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%">
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px; min-height: 54px; background: var(--bg-deep); color: var(--text)">Постав правильну відповідь</button>
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px; min-height: 54px">Зрозуміло</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

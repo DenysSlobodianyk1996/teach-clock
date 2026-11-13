@@ -1,23 +1,23 @@
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test } from '@playwright/test'
 import { dragNumber, slot, tapNumber, tile } from './numbers.ts'
+import { startRound } from './round.ts'
+import { gotIt, setCorrect as setCorrectButton, wrongPopup } from './teach.ts'
 
-test('a Drag Hours Teach Round rejects a wrong drop with a hint and ends on the Summary', async ({
+test('a Drag Hours Teach Round rejects a wrong drop with the popup and ends on the Summary', async ({
   page,
 }) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragHours', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
-  // 12 dropped where 4 goes: it goes back with the wrap-around hint.
+  // 12 dropped where 4 goes: it goes back, and the popup lights 12 between 11 and 1.
   await dragNumber(page, 12, 4)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 12, before: 11, after: 1 }),
-  )
+  const popup = wrongPopup(page)
+  await expect(popup).toContainText(t('numbers.between', { number: 12, before: 11, after: 1 }))
+  await expect(popup.locator('[data-slot]')).toHaveText(['1', '11', '12'])
+  await expect(gotIt(page)).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(popup).toBeHidden()
   await expect(tile(page, 12)).toBeVisible()
 
   // Dragged to its own slot, it locks in place.
@@ -54,47 +54,30 @@ test('a Drag Hours Teach Round rejects a wrong drop with a hint and ends on the 
   ).toBeVisible()
 })
 
-test('in Teach, the Place-It button beside a Hint puts the number in its place', async ({
-  page,
-}) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+test('in Teach, Set correct answer in the popup puts the number in its place', async ({ page }) => {
+  await startRound(page, { game: 'dragHours', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
-  const placeIt = (number: number) =>
-    page.getByRole('button', { name: t('numbers.placeIt', { number }) })
-  await expect(page.locator('.place-it')).toHaveCount(0)
+  const popup = wrongPopup(page)
+  await expect(popup).toBeHidden()
 
-  // A wrong drop: the toast and, to its right, the 48 px round button.
+  // A wrong drop opens the popup with both buttons.
   await dragNumber(page, 2, 7)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 2, before: 1, after: 3 }),
-  )
-  const button = placeIt(2)
-  await expect(button).toBeVisible()
-  const box = (await button.boundingBox())!
-  expect(Math.round(box.width)).toBe(48)
-  expect(Math.round(box.height)).toBe(48)
-  const toast = (await page.locator('.toast').boundingBox())!
-  expect(box.x).toBeGreaterThan(toast.x + toast.width)
+  await expect(popup).toContainText(t('numbers.between', { number: 2, before: 1, after: 3 }))
+  const setCorrect = setCorrectButton(page)
 
-  // Pressed with Enter: 2 lands on its slot and the Hint closes.
-  await button.focus()
+  // Pressed with Enter: 2 lands on its slot and the popup closes.
+  await setCorrect.focus()
   await page.keyboard.press('Enter')
+  await expect(popup).toBeHidden()
   await expect(slot(page, 2)).toHaveText('2')
   await expect(tile(page, 2)).toBeHidden()
-  await expect(page.getByRole('status')).toHaveText('')
-  await expect(page.locator('.place-it')).toHaveCount(0)
   // Keyboard focus stays in play, on the first number left on the tray.
   await expect(page.locator('.tray .tile').first()).toBeFocused()
 
   // Space works too.
   await dragNumber(page, 5, 9)
-  await placeIt(5).focus()
+  await setCorrect.focus()
   await page.keyboard.press('Space')
   await expect(slot(page, 5)).toHaveText('5')
 

@@ -5,11 +5,11 @@ import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS } from '../src/game/clo
 const SLOTS = numberPositions(SLOT_RADIUS)
 
 export const tile = (page: Page, n: number) => page.locator(`.tray [data-number="${n}"]`)
-export const slot = (page: Page, n: number) => page.locator(`[data-slot="${n}"]`)
+export const slot = (page: Page, n: number) => page.locator(`.board [data-slot="${n}"]`)
 
 /** The page point at the centre of a slot. */
 async function slotPoint(page: Page, n: number) {
-  const face = (await page.locator('svg.number-face').boundingBox())!
+  const face = (await page.locator('.board svg.number-face').boundingBox())!
   const scale = face.width / VIEW
   const { x, y } = SLOTS[n - 1]!
   return { x: face.x + face.width / 2 + x * scale, y: face.y + face.height / 2 + y * scale }

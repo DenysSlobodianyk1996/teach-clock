@@ -1,21 +1,18 @@
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 import { dragNumber, slot, tapNumber, tile } from './numbers.ts'
+import { startRound } from './round.ts'
+import { closeWrongPopup, wrongPopup } from './teach.ts'
 
 /** Tile N shows N × 5 minutes; the helpers still take slot ids. */
 const minutes = (n: number) => String(n * 5)
 
 async function startDragMinutesTeach(page: Page) {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragMinutes.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragMinutes', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 }
 
-test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, the Place-It button, the Summary', async ({
+test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, Set correct answer, the Summary', async ({
   page,
 }) => {
   await startDragMinutesTeach(page)
@@ -25,29 +22,29 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, the Place-It button
   expect(tray.map(Number).sort((a, b) => a - b)).toEqual([
     5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
   ])
-  await expect(page.locator('.hour-badge')).toHaveCount(12)
-  await expect(page.locator('.hour-badge').nth(11)).toHaveText('12')
+  const badges = page.locator('.board .hour-badge')
+  await expect(badges).toHaveCount(12)
+  await expect(badges.nth(11)).toHaveText('12')
 
-  // 60 dropped where 20 goes: it goes back with the wrap-around hint.
+  // 60 dropped where 20 goes: the popup shows 60 lit at the top, with Hour Badges.
   await dragNumber(page, 12, 4)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 60, before: 55, after: 5 }),
-  )
+  const popup = wrongPopup(page)
+  await expect(popup).toContainText(t('numbers.between', { number: 60, before: 55, after: 5 }))
+  await expect(popup.locator('[data-slot="12"]')).toHaveText('60')
+  await expect(popup.locator('.hour-badge')).toHaveCount(12)
   await expect(tile(page, 12)).toBeVisible()
 
-  // The Place-It button puts 60 at the top, and the Hint closes.
-  await page.getByRole('button', { name: t('numbers.placeIt', { number: 60 }) }).click()
+  // Set correct answer puts 60 at the top, and the popup closes.
+  await closeWrongPopup(page, 'setCorrect')
   await expect(slot(page, 12)).toHaveText('60')
   await expect(tile(page, 12)).toBeHidden()
-  await expect(page.getByRole('status')).toHaveText('')
   // The badge stays visible beside the placed minute.
-  await expect(page.locator('.hour-badge').nth(11)).toBeVisible()
+  await expect(badges.nth(11)).toBeVisible()
 
-  // 10 dropped on the 5's slot: "10 goes between 5 and 15".
+  // 10 dropped on the 5's slot: "10 goes between 5 and 15"; Got it, and the Player fixes it.
   await dragNumber(page, 2, 5)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 10, before: 5, after: 15 }),
-  )
+  await expect(popup).toContainText(t('numbers.between', { number: 10, before: 5, after: 15 }))
+  await closeWrongPopup(page, 'gotIt')
 
   for (const n of [1, 2, 3, 5, 7, 9, 11]) {
     await dragNumber(page, n, n)

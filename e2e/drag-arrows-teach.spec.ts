@@ -1,17 +1,13 @@
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test } from '@playwright/test'
 import { drag, handsAt, HOUR_TIP, setHands } from './hands.ts'
+import { startRound } from './round.ts'
+import { closeWrongPopup, wrongPopup } from './teach.ts'
 
 test('a Drag Arrows Teach Round teaches a wrong Answer and lists it under Wrong', async ({
   page,
 }) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragArrows.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragArrows', mode: 'teach', level: 15 })
   await expect(page.getByRole('heading', { name: t('round.setHands') })).toBeVisible()
   await expect(page.getByRole('button', { name: t('teach.setCorrect') })).toBeHidden()
 
@@ -27,18 +23,18 @@ test('a Drag Arrows Teach Round teaches a wrong Answer and lists it under Wrong'
   const wrong = `${wrongHour}:00`
   await drag(page, HOUR_TIP, 0, [15, wrongHour * 30])
   await submit.click()
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
-  await expect(popup.locator('.big-time')).toHaveText(first)
-  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
-  await expect(popup).toBeHidden()
+  await expect(wrongPopup(page).locator('.big-time')).toHaveText(first)
+  await closeWrongPopup(page, 'gotIt')
 
-  // The hands stay where the Player left them; the Hint appears.
+  // The hands stay where the Player left them; nothing is added under the clock.
   await expect(page.locator(handsAt(wrong))).toBeVisible()
   await expect(progress(1)).toBeVisible()
-  await expect(page.locator('.hint-panel')).toContainText(`${t('teach.hint')} ${first}`)
+  await expect(page.getByRole('button', { name: t('teach.setCorrect') })).toBeHidden()
 
-  // "Set correct answer" turns the hands; the Player still presses Submit.
-  await page.getByRole('button', { name: t('teach.setCorrect') }).click()
+  // A second wrong try opens the popup again. "Set correct answer" turns the hands; the Player
+  // still presses Submit.
+  await submit.click()
+  await closeWrongPopup(page, 'setCorrect')
   await expect(page.locator(handsAt(first))).toBeVisible()
   await expect(progress(1)).toBeVisible()
   await submit.click()

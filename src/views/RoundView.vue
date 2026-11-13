@@ -8,13 +8,13 @@ import DragArrowsAnswer from '@/components/DragArrowsAnswer.vue'
 import DragRound from './DragRound.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
-import HintPanel from '@/components/HintPanel.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
 import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
+import HintClock from '@/components/HintClock.vue'
 import { clockTime, type ClockTime } from '@/game/clockTime'
 import { dragHourHand, dragMinuteHand } from '@/game/handDrag'
 import { describeMistake, type Mistake } from '@/game/mistakes'
-import { currentTask, hint, isNumbersRound } from '@/game/round'
+import { currentTask, isNumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
 
 const { t } = useI18n()
@@ -37,9 +37,6 @@ const wrongAnswer = ref<{ answer: ClockTime; mistake: Mistake } | null>(null)
 
 const shownIndex = computed(() => rightTask.value ?? round.value?.current ?? 0)
 const task = computed(() => round.value?.tasks[shownIndex.value] ?? null)
-const taskHint = computed(() =>
-  round.value && rightTask.value === null ? hint(round.value) : null,
-)
 /** Teach: a green rim on the clock while "Right! Next…" shows. */
 const rim = computed(() => (rightTask.value !== null ? 'good' : undefined))
 const busy = computed(
@@ -86,13 +83,16 @@ function submit(time: ClockTime) {
   }
 }
 
+/** Teach: the popup's Set correct answer closes it and puts the Hint in; the Player still submits. */
 function setCorrectAnswer() {
-  if (!taskHint.value || busy.value) return
+  const correct = wrongAnswer.value?.answer
+  wrongAnswer.value = null
+  if (!correct) return
   if (round.value?.game === 'dragArrows') {
     helping.value = true
-    hands.value = taskHint.value
+    hands.value = correct
   } else {
-    answerPanel.value?.fill(taskHint.value)
+    answerPanel.value?.fill(correct)
   }
 }
 
@@ -113,7 +113,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         <ModeIcon :mode="round.mode" inline />{{ t(`modes.${round.mode}.name`) }}
       </div>
     </div>
-    <section class="play" :class="[round.game, { 'has-hint': taskHint }]">
+    <section class="play" :class="round.game">
       <div class="clock-side">
         <div class="clock-wrap">
           <ClockFace
@@ -153,14 +153,6 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
             </span>
           </p>
         </div>
-        <!-- Teach keeps the Hint's space from the first Task, so the clock never moves when it
-             appears. Until then it is hidden, so it is neither seen nor read out. -->
-        <HintPanel
-          v-if="round.mode === 'teach'"
-          :class="{ waiting: !taskHint }"
-          :hint="taskHint ?? START"
-          @help="setCorrectAnswer"
-        />
       </div>
       <div class="answer-side">
         <h1>{{ t(round.game === 'setTime' ? 'round.question' : 'round.setHands') }}</h1>
@@ -175,10 +167,12 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
       </div>
       <WrongAnswerPopup
         v-if="wrongAnswer"
-        :answer="wrongAnswer.answer"
-        :mistake="wrongAnswer.mistake"
-        @close="wrongAnswer = null"
-      />
+        :line="t(`teach.mistakes.${wrongAnswer.mistake.kind}`, wrongAnswer.mistake.params)"
+        @dismiss="wrongAnswer = null"
+        @set-correct="setCorrectAnswer"
+      >
+        <HintClock :time="wrongAnswer.answer" />
+      </WrongAnswerPopup>
     </section>
   </div>
 </template>
@@ -254,9 +248,6 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
   height: auto;
   aspect-ratio: 1;
 }
-.waiting {
-  visibility: hidden;
-}
 .answer-side {
   display: flex;
   flex-direction: column;
@@ -280,26 +271,17 @@ h1 {
     gap: 8px;
     align-content: start;
   }
-  /* A phone keeps no empty room for the Hint: the clock may move when the Hint appears. */
-  .waiting {
-    display: none;
-  }
   /*
    * The clock takes the height the rest of the screen leaves, up to the full width. Each number is
    * the height of everything else (header, dots, answer area, gaps) on a 360 × 720 phone; the
-   * small-phone browser tests check it all fits. With the Hint showing, the clock shrinks to make room.
+   * small-phone browser tests check it all fits. A wrong Answer only opens a popup, so the size
+   * never changes during a Round.
    */
   .setTime .clock {
     width: clamp(150px, 100svh - 500px, 100vw - 40px);
   }
-  .setTime.has-hint .clock {
-    width: clamp(140px, 100svh - 578px, 100vw - 40px);
-  }
   .dragArrows .clock {
     width: clamp(150px, 100svh - 360px, 100vw - 40px);
-  }
-  .dragArrows.has-hint .clock {
-    width: clamp(150px, 100svh - 438px, 100vw - 40px);
   }
   .clock-side {
     gap: 6px;

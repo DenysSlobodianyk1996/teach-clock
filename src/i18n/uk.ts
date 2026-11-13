@@ -77,7 +77,6 @@ export default {
     wrongTitle: 'Майже! Правильно так:',
     gotIt: 'Зрозуміло',
     setCorrect: 'Постав правильну відповідь',
-    hint: 'Підказка:',
     right: 'Правильно! Далі…',
     mistakes: {
       hourAhead: 'Коротка стрілка ще не дійшла до {next} — отже, година ще {hour}.',
@@ -107,7 +106,6 @@ export default {
     tray: 'Числа',
     help: 'Перетягни число на його місце або торкнись числа, а потім місця.',
     between: '{number} стоїть між {before} і {after}',
-    placeIt: 'Постав {number} на місце',
   },
   leave: {
     title: 'Покинути раунд?',

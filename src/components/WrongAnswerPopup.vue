@@ -1,58 +1,57 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import ClockFace from './ClockFace.vue'
 import PopupDialog from './PopupDialog.vue'
-import { formatClockTime, type ClockTime } from '@/game/clockTime'
-import type { Mistake } from '@/game/mistakes'
 
-/** Teach, after a wrong Answer: the correct Clock Time as digits and a small clock, and one teaching line. */
-defineProps<{ answer: ClockTime; mistake: Mistake }>()
-const emit = defineEmits<{ close: [] }>()
+/**
+ * Teach, after a wrong Answer, in every Game: where the right place is (the default slot holds
+ * the picture), one teaching line, and two buttons. Got it, Escape and the scrim emit `dismiss`,
+ * and the Player tries again; Set correct answer emits `setCorrect`, and the Game puts it right.
+ */
+defineProps<{ line: string }>()
+const emit = defineEmits<{ dismiss: []; setCorrect: [] }>()
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <PopupDialog labelledby="wrong-title" describedby="wrong-why" @dismiss="emit('close')">
+  <PopupDialog labelledby="wrong-title" describedby="wrong-why" wide @dismiss="emit('dismiss')">
     <h2 id="wrong-title">{{ t('teach.wrongTitle') }}</h2>
-    <div class="correct">
-      <ClockFace class="small-clock" :time="answer" />
-      <div class="big-time">{{ formatClockTime(answer) }}</div>
+    <slot />
+    <p id="wrong-why">{{ line }}</p>
+    <div class="actions">
+      <button class="btn set-correct" type="button" @click="emit('setCorrect')">
+        {{ t('teach.setCorrect') }}
+      </button>
+      <!-- Got it is the default: on the right, and focused when the popup opens. -->
+      <button class="btn" type="button" data-autofocus @click="emit('dismiss')">
+        {{ t('teach.gotIt') }}
+      </button>
     </div>
-    <p id="wrong-why">{{ t(`teach.mistakes.${mistake.kind}`, mistake.params) }}</p>
-    <button class="btn got-it" type="button" @click="emit('close')">{{ t('teach.gotIt') }}</button>
   </PopupDialog>
 </template>
 
 <style scoped>
-.correct {
+/* Side by side while they fit, Got it on the right; on a narrow phone they wrap into a stack, Got it below. */
+.actions {
   display: flex;
-  align-items: center;
-  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
 }
-.small-clock {
-  width: 150px;
-  height: 150px;
+.actions .btn {
+  flex: 1 1 auto;
+  padding: 0 22px;
+  font-size: 19px;
 }
-.big-time {
-  font:
-    900 64px 'Nunito',
-    sans-serif;
-  line-height: 1;
-}
-.got-it {
-  min-width: 220px;
+/* Stands out on the popup in every theme, as Leave does in LeaveRoundDialog. */
+.set-correct {
+  background: var(--bg-deep);
+  color: var(--text);
 }
 @media (--phone-upright) {
-  .correct {
-    gap: 18px;
-  }
-  .small-clock {
-    width: 110px;
-    height: 110px;
-  }
-  .big-time {
-    font-size: 48px;
+  .actions .btn {
+    min-height: 54px;
   }
 }
 </style>

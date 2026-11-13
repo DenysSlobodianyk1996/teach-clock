@@ -13,10 +13,10 @@ test('a Drag Hours Test Round takes free moves, submits once and shows the mispl
   await page.getByRole('button', { name: t('settings.play') }).click()
   const submit = page.getByRole('button', { name: t('numbers.submit') })
 
-  // A wrong drop stays, with no hint.
+  // A wrong drop stays, with no popup.
   await dragNumber(page, 4, 5)
   await expect(slot(page, 5)).toHaveText('4')
-  await expect(page.getByRole('status')).toHaveText('')
+  await expect(page.getByRole('dialog')).toBeHidden()
 
   // 5 dropped on 4's slot sends nothing back: 4 is on slot 5, so slot 4 is free.
   await dragNumber(page, 5, 4)

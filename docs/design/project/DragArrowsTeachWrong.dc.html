@@ -50,8 +50,6 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <text class="c-num lit" x="66" y="0">3</text>
         <circle class="c-pin" r="7"></circle>
       </svg>
-      <!-- The Hint's space is kept from the first Task, so the clock never moves when it appears. -->
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; visibility: hidden" aria-hidden="true"><button class="btn btn-help" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"></path></svg>Постав правильну відповідь</button><div style="font-size: 18px; color: var(--muted)">Підказка: <b style="color: var(--text); font-weight: 900">4:15</b></div></div>
     </div>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 22px">
       <h1 style="margin: 0; font-size: 32px; font-weight: 900">Постав стрілки на</h1>
@@ -65,7 +63,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
   </main>
 
   <div class="scrim">
-    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width: 520px">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width: 600px">
       <h2 id="wrong-title">Майже! Правильно так:</h2>
       <div style="display: flex; align-items: center; gap: 28px">
         <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 4:15" style="width: 170px; height: 170px">
@@ -80,7 +78,11 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <div class="big-time">4:15</div>
       </div>
       <p>Коротка стрілка між 4 і 5 — отже, година 4.</p>
-      <button class="btn" type="button" style="min-width: 220px">Зрозуміло</button>
+      <!-- Got it is on the right (below when stacked) and focused; Set correct answer puts it right, then the Player presses Submit. -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%">
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px; background: var(--bg-deep); color: var(--text)">Постав правильну відповідь</button>
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px">Зрозуміло</button>
+      </div>
     </div>
   </div>
 </div>
