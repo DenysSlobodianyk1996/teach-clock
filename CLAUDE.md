@@ -20,6 +20,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `VITE_SUPPORT_URL=https://… npm run dev`: shows the Support Button (hidden without an `https://` link)
 - Android (Gradle needs `ANDROID_HOME=~/Library/Android/sdk` and `JAVA_HOME=/opt/homebrew/opt/openjdk@21`):
   - `npm run build:android`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
+  - `npm run build:apk`: `build:android` then `assembleDebug` (fills in `ANDROID_HOME`/`JAVA_HOME` if unset); the APK to sideload is `android/app/build/outputs/apk/debug/app-debug.apk`
   - `npm run check:android`: after `bundleRelease`, fails on location or `AD_ID` permissions
   - `npm run generate-android-assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`
   - `PW_PORT=<port> npm run store-shots`: Play screenshots and feature graphic into `docs/store/`; rerun after UI or text changes

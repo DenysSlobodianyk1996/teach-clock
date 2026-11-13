@@ -1,6 +1,6 @@
 // Draws the Android launcher icon, splash and Play Store icon from public/favicon.svg:
 // `npm run generate-android-assets`. Commit the files it writes.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -10,15 +10,6 @@ export const THEME_COLOR = '#1d4b5c'
 
 /** Android density buckets and their scale from dp to px. */
 export const DENSITIES = { mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 } as const
-
-/** Splash image sizes in px (portrait), as Capacitor's template ships them. */
-const SPLASH_SIZES = {
-  mdpi: [320, 480],
-  hdpi: [480, 800],
-  xhdpi: [720, 1280],
-  xxhdpi: [960, 1600],
-  xxxhdpi: [1280, 1920],
-} as const
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const res = `${root}android/app/src/main/res/`
@@ -95,7 +86,10 @@ async function launcherIcons(): Promise<void> {
 
 /**
  * Android 12+ draws its own splash: `windowSplashScreenBackground` and an icon on a 288dp
- * canvas, masked to a 192dp circle. Older versions show `drawable/splash` (Capacitor's theme).
+ * canvas, masked to a 192dp circle. The launch theme's window background, `drawable/splash`,
+ * shows on older versions and between the system splash and the first web frame. It is a
+ * layer-list that draws the same icon unscaled in the middle: a full-screen bitmap would be
+ * stretched to the screen's shape and turn the round clock into an oval.
  */
 async function splash(): Promise<void> {
   writeFileSync(
@@ -109,13 +103,23 @@ async function splash(): Promise<void> {
       svg(icon, icon, clock(icon / 2, icon / 2, 160 * scale)),
     )
   }
-  const screen = (w: number, h: number) =>
-    svg(w, h, background(w, h) + clock(w / 2, h / 2, Math.min(w, h) * 0.4))
-  for (const [name, [w, h]] of Object.entries(SPLASH_SIZES)) {
-    await png(`${res}drawable-port-${name}/splash.png`, screen(w, h))
-    await png(`${res}drawable-land-${name}/splash.png`, screen(h, w))
+  writeFileSync(
+    `${res}drawable/splash.xml`,
+    `<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/splash_background" />
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/splash_icon" />
+    </item>
+</layer-list>
+`,
+  )
+  // The full-screen bitmaps from Capacitor's template would win over the XML.
+  for (const dir of readdirSync(res).filter((d) => d.startsWith('drawable'))) {
+    rmSync(`${res}${dir}/splash.png`, { force: true })
+    if (dir !== 'drawable' && readdirSync(`${res}${dir}`).length === 0)
+      rmSync(`${res}${dir}`, { recursive: true })
   }
-  await png(`${res}drawable/splash.png`, screen(480, 320))
 }
 
 /** Google Play wants a 512×512 32-bit PNG, full bleed: it rounds the corners itself. */

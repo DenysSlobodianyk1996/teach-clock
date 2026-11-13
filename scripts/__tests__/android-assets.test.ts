@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
@@ -48,11 +48,18 @@ describe('Android launcher icon', () => {
 })
 
 describe('Android splash', () => {
-  it('fills the splash images with the theme colour', async () => {
-    for (const dir of ['drawable', 'drawable-port-xxxhdpi', 'drawable-land-mdpi']) {
-      const { at } = await pixels(`${res}${dir}/splash.png`)
-      expect(at(0, 0).color).toBe(THEME_COLOR)
-    }
+  it('draws the clock unscaled in the middle of a theme-coloured window, on any screen shape', () => {
+    const xml = readFileSync(`${res}drawable/splash.xml`, 'utf8')
+    expect(xml).toContain('<layer-list')
+    expect(xml).toContain('android:drawable="@color/splash_background"')
+    expect(xml).toMatch(
+      /<bitmap[^>]*android:gravity="center"[^>]*android:src="@drawable\/splash_icon"/,
+    )
+  })
+
+  it('ships no full-screen splash bitmaps, which Android stretches to the screen', () => {
+    const dirs = readdirSync(res).filter((dir) => dir.startsWith('drawable'))
+    for (const dir of dirs) expect(existsSync(`${res}${dir}/splash.png`)).toBe(false)
   })
 
   it('sets the theme colour as the system splash background', () => {

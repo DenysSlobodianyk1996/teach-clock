@@ -11,6 +11,7 @@
     "test:e2e": "playwright test",
     "build-only": "vite build",
     "build:android": "VITE_TARGET=android npm run build && cap sync android",
+    "build:apk": "npm run build:android && cd android && ANDROID_HOME=${ANDROID_HOME:-$HOME/Library/Android/sdk} JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21} ./gradlew assembleDebug",
     "type-check": "vue-tsc --build",
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",

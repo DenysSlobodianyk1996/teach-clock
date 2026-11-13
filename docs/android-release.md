@@ -86,7 +86,7 @@ The commands (scripts in `package.json`):
 npm run build:android        # VITE_TARGET=android type-check and build, then cap sync android
 npx cap run android          # install and start on the emulator or a USB phone
 npx cap open android         # open the project in Android Studio
-cd android && ./gradlew assembleDebug   # a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
+npm run build:apk            # build:android, then a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
 cd android && ./gradlew bundleRelease   # the app bundle (.aab); unsigned unless the env vars below are set
 npm run check:android        # after a Gradle build: fails on location or AD_ID permissions
 ```
