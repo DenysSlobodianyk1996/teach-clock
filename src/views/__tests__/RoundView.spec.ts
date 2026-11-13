@@ -144,8 +144,8 @@ describe('Round screen, Set Time in Teach', () => {
     const popup = wrapper.get('[role="dialog"]')
     expect(popup.get('h2').text()).toBe(t('teach.wrongTitle'))
     expect(popup.find('svg.clock').exists()).toBe(true)
-    expect(popup.find('[data-lit-tick]').exists()).toBe(false)
-    expect(popup.find('.c-num.lit').exists()).toBe(false)
+    expect(popup.find('[data-lit-tick]').exists()).toBe(true)
+    expect(popup.findAll('.c-num.lit')).toHaveLength(1)
     expect(popup.get('.big-time').text()).toBe(correct)
     const [h, m] = correct.split(':').map(Number) as [number, number]
     const mistake = describeMistake(clockTime(h, m), clockTime(12, 1))

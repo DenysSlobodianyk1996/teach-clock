@@ -12,7 +12,7 @@ const open = () =>
   mountComponent(WrongAnswerPopup, { line: LINE }, { default: '<div class="picture">7:30</div>' })
 
 describe('WrongAnswerPopup', () => {
-  it('shows the title, the picture and the teaching line, with Got it first and focused', async () => {
+  it('shows the title, the picture and the teaching line, with Set correct answer on the left and Got it on the right, focused', async () => {
     wrapper = open()
     await wrapper.vm.$nextTick()
     const dialog = wrapper.get('[role="dialog"]')
@@ -20,15 +20,15 @@ describe('WrongAnswerPopup', () => {
     expect(dialog.get('.picture').text()).toBe('7:30')
     expect(dialog.get('#wrong-why').text()).toBe(LINE)
     expect(dialog.findAll('button').map((b) => b.text())).toEqual([
-      t('teach.gotIt'),
       t('teach.setCorrect'),
+      t('teach.gotIt'),
     ])
     expect(document.activeElement?.textContent?.trim()).toBe(t('teach.gotIt'))
   })
 
   it('Got it emits dismiss; Set correct answer emits setCorrect', async () => {
     wrapper = open()
-    const [gotIt, setCorrect] = wrapper.findAll('button')
+    const [setCorrect, gotIt] = wrapper.findAll('button')
     await gotIt!.trigger('click')
     expect(wrapper.emitted('dismiss')).toHaveLength(1)
     expect(wrapper.emitted('setCorrect')).toBeUndefined()

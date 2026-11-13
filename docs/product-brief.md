@@ -106,7 +106,7 @@ Rules shared by Drag Arrows and Set Time:
 - Set Time and Drag Arrows: the popup shows the correct Answer (a small clock with the Lit Place,
   plus the digits) and a teaching line for the kind of mistake. The Player's hands or digits stay
   where they were.
-- **Got it** (first and focused) closes the popup; the Player fixes it themselves. Escape or a tap on
+- **Got it** (on the right, below on a narrow phone, and focused) closes the popup; the Player fixes it themselves. Escape or a tap on
   the scrim does the same. Another wrong try opens the popup again.
 - **Set correct answer** closes the popup and puts it right: in Set Time the digits appear, in Drag
   Arrows the hands animate; the Player still presses Submit.

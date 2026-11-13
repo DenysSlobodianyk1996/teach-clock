@@ -1,5 +1,7 @@
 import { t, startingWith } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
+import { startRound } from './round.ts'
+import { gotIt, popupButtons, setCorrect, wrongPopup } from './teach.ts'
 
 const CLOCK_SHOWS = t('app.clockShows', { time: '' })
 
@@ -20,13 +22,7 @@ async function typeTime(page: Page, time: string) {
 }
 
 test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', async ({ page }) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.setTime.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('levels.5.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'setTime', mode: 'teach', level: 5 })
   await expect(
     page.getByText(`${t('round.progress', { n: 1, total: 10 })} · ${t('modes.teach.name')}`),
   ).toBeVisible()
@@ -35,11 +31,11 @@ test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', a
   // A wrong Answer (off the 5-minute step) opens the popup with the correct time.
   const first = await shownTime(page)
   await typeTime(page, '12:01')
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  const popup = wrongPopup(page)
   await expect(popup).toBeVisible()
   await expect(popup.locator('.big-time')).toHaveText(first)
-  await expect(popup.getByRole('button', { name: t('teach.gotIt') })).toBeFocused()
-  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+  await expect(gotIt(page)).toBeFocused()
+  await gotIt(page).click()
   await expect(popup).toBeHidden()
 
   // Got it keeps the Player's digits and adds nothing under the clock.
@@ -49,7 +45,7 @@ test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', a
   // A second wrong try opens the popup again; Set correct answer fills the boxes; the Player submits.
   await page.keyboard.press('Enter')
   await expect(popup).toBeVisible()
-  await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
+  await setCorrect(page).click()
   await expect(popup).toBeHidden()
   const [hour, minute] = first.split(':') as [string, string]
   await expect(page.getByRole('button', { name: t('round.hours') })).toHaveText(hour)
@@ -85,22 +81,14 @@ test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', a
 test.describe('on a desktop screen', () => {
   test.use({ viewport: { width: 1280, height: 720 } })
 
-  test('the wrong-Answer popup shows its two buttons side by side', async ({ page }) => {
-    await page.goto('/')
-    await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-    await page.getByRole('button', { name: t('welcome.start') }).click()
-    await page.getByRole('radio', { name: startingWith(t('games.setTime.name')) }).check()
-    await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-    await page.getByRole('radio', { name: startingWith(t('levels.5.name')) }).check()
-    await page.getByRole('button', { name: t('settings.play') }).click()
+  test('the wrong-Answer popup shows its two buttons side by side, Got it on the right', async ({
+    page,
+  }) => {
+    await startRound(page, { game: 'setTime', mode: 'teach', level: 5 })
     await expect(page.getByRole('heading', { name: t('round.question') })).toBeVisible()
     await typeTime(page, '12:01')
-    const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
-    const gotIt = (await popup.getByRole('button', { name: t('teach.gotIt') }).boundingBox())!
-    const setCorrect = (await popup
-      .getByRole('button', { name: t('teach.setCorrect') })
-      .boundingBox())!
-    expect(setCorrect.y).toBe(gotIt.y)
-    expect(setCorrect.x).toBeGreaterThan(gotIt.x)
+    const buttons = await popupButtons(page)
+    expect(buttons.setCorrect.y).toBe(buttons.gotIt.y)
+    expect(buttons.gotIt.x).toBeGreaterThan(buttons.setCorrect.x)
   })
 })

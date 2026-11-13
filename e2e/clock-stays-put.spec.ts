@@ -2,25 +2,20 @@
  * The clock never moves during a Round, on any screen: a wrong Answer opens a popup over it, and
  * whatever else appears around it has its space kept from the start.
  */
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { dragNumber, tapNumber } from './numbers.ts'
+import { startRound } from './round.ts'
+import { closeWrongPopup, wrongPopup } from './teach.ts'
 
 async function start(
   page: Page,
   game: 'dragHours' | 'dragMinutes' | 'dragArrows' | 'setTime',
   mode: 'teach' | 'test',
 ) {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
-  await page.getByRole('radio', { name: startingWith(t(`modes.${mode}.name`)) }).check()
   // 15 minutes, so the wrong Answers typed below (12:01) can never be a Task.
-  if (game === 'dragArrows' || game === 'setTime') {
-    await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
-  }
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  const level = game === 'dragArrows' || game === 'setTime' ? 15 : undefined
+  await startRound(page, { game, mode, level })
   await expect(page.getByText(t(`modes.${mode}.name`), { exact: false }).first()).toBeVisible()
   // The Round opens scrolled to the top; measure only once it is there.
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(0)
@@ -34,16 +29,6 @@ async function spot(clock: Locator) {
     return { x, y: y + scrollY, width }
   })
   return { x: Math.round(box.x), y: Math.round(box.y), width: Math.round(box.width) }
-}
-
-const wrongPopup = (page: Page) => page.getByRole('dialog', { name: t('teach.wrongTitle') })
-
-/** Presses one of the wrong-Answer popup's buttons and waits for it to close. */
-async function closeWrongPopup(page: Page, button: 'gotIt' | 'setCorrect') {
-  await wrongPopup(page)
-    .getByRole('button', { name: t(`teach.${button}`) })
-    .click()
-  await expect(wrongPopup(page)).toBeHidden()
 }
 
 test('Drag Arrows Teach: the clock stays put through the wrong-Answer popup', async ({ page }) => {

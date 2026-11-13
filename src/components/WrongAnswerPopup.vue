@@ -19,16 +19,19 @@ const { t } = useI18n()
     <slot />
     <p id="wrong-why">{{ line }}</p>
     <div class="actions">
-      <button class="btn" type="button" @click="emit('dismiss')">{{ t('teach.gotIt') }}</button>
       <button class="btn set-correct" type="button" @click="emit('setCorrect')">
         {{ t('teach.setCorrect') }}
+      </button>
+      <!-- Got it is the default: on the right, and focused when the popup opens. -->
+      <button class="btn" type="button" data-autofocus @click="emit('dismiss')">
+        {{ t('teach.gotIt') }}
       </button>
     </div>
   </PopupDialog>
 </template>
 
 <style scoped>
-/* Side by side while they fit; on a narrow phone they wrap into a stack, Got it on top. */
+/* Side by side while they fit, Got it on the right; on a narrow phone they wrap into a stack, Got it below. */
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -127,9 +127,3 @@ export function submitAnswer(
   const next = { ...round, tasks, current: stays ? round.current : round.current + 1 }
   return { round: next, outcome: { right, movedOn: !stays, finished: isFinished(next) } }
 }
-
-/** The Hint: the correct Answer, given in Teach once the Player has made a wrong try at the current Task. */
-export function hint(round: Round): ClockTime | null {
-  const task = currentTask(round)
-  return round.mode === 'teach' && task?.firstAnswer ? task.answer : null
-}

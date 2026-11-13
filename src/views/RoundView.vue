@@ -10,7 +10,7 @@ import ModeIcon from '@/components/ModeIcon.vue'
 import ProgressDots from '@/components/ProgressDots.vue'
 import SetTimeAnswer from '@/components/SetTimeAnswer.vue'
 import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
-import CorrectClockTime from '@/components/CorrectClockTime.vue'
+import HintClock from '@/components/HintClock.vue'
 import { clockTime, type ClockTime } from '@/game/clockTime'
 import { dragHourHand, dragMinuteHand } from '@/game/handDrag'
 import { describeMistake, type Mistake } from '@/game/mistakes'
@@ -171,7 +171,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
         @dismiss="wrongAnswer = null"
         @set-correct="setCorrectAnswer"
       >
-        <CorrectClockTime :time="wrongAnswer.answer" />
+        <HintClock :time="wrongAnswer.answer" />
       </WrongAnswerPopup>
     </section>
   </div>

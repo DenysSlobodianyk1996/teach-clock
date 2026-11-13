@@ -11,7 +11,7 @@ import {
 } from '@/game/round'
 import {
   dropNumber as drop,
-  placeForMe as placeNumber,
+  setCorrectNumber as setRight,
   returnToTray as toTray,
   submitPlacements as submitFace,
 } from '@/game/dragNumbers'
@@ -54,8 +54,8 @@ export const usePlayStore = defineStore('play', () => {
   }
 
   /** The drag Games in Teach, the popup's Set correct answer: puts a hinted number on its slot. */
-  function placeForMe(number: number) {
-    const result = placeNumber(numbersRound(), number)
+  function setCorrectNumber(number: number) {
+    const result = setRight(numbersRound(), number)
     round.value = result.round
     return result.outcome
   }
@@ -86,7 +86,7 @@ export const usePlayStore = defineStore('play', () => {
     startRound,
     submitAnswer,
     dropNumber,
-    placeForMe,
+    setCorrectNumber,
     returnToTray,
     submitPlacements,
     leaveRound,

@@ -3,8 +3,9 @@ import {
   canSubmit,
   dropNumber,
   hasHourBadges,
+  hintSlots,
   neighbours,
-  placeForMe,
+  setCorrectNumber,
   returnToTray,
   submitPlacements,
   shownNeighbours,
@@ -71,7 +72,7 @@ describe('Drag Minutes Round', () => {
     const round = startRound(MINUTES_TEACH, seededRandom(1))
     const wrongDrop = dropNumber(round, 2, 5)
     expect(wrongDrop.outcome.hint).toEqual(neighbours(2))
-    const { round: next, outcome } = placeForMe(wrongDrop.round, 2)
+    const { round: next, outcome } = setCorrectNumber(wrongDrop.round, 2)
     expect(outcome.placed).toBe(true)
     expect(next.slots[1]).toBe(2)
     expect(next.tasks[1]!.status).toBe('helped')
@@ -120,6 +121,11 @@ describe('Drag Hours neighbour hint', () => {
       before: 11,
       after: 1,
     })
+  })
+
+  it("the Hint's face fills only the number's slot and its two neighbours", () => {
+    expect(hintSlots(7)).toEqual([null, null, null, null, null, 6, 7, 8, null, null, null, null])
+    expect(hintSlots(12)).toEqual([1, null, null, null, null, null, null, null, null, null, 11, 12])
   })
 })
 
@@ -207,7 +213,7 @@ describe('Drag Hours Set correct answer in Teach', () => {
   it('puts a hinted number on its own slot, and it stays helped', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 2, 9).round
-    const { round: next, outcome } = placeForMe(round, 2)
+    const { round: next, outcome } = setCorrectNumber(round, 2)
     expect(outcome).toEqual({ placed: true, hint: null, finished: false })
     expect(next.slots[1]).toBe(2)
     expect(next.tray).not.toContain(2)
@@ -216,7 +222,7 @@ describe('Drag Hours Set correct answer in Teach', () => {
 
   it('leaves a number with no wrong drop yet on the tray', () => {
     const round = startRound(TEACH, seededRandom(1))
-    const { round: next, outcome } = placeForMe(round, 2)
+    const { round: next, outcome } = setCorrectNumber(round, 2)
     expect(outcome).toEqual({ placed: false, hint: null, finished: false })
     expect(next).toBe(round)
   })
@@ -225,7 +231,7 @@ describe('Drag Hours Set correct answer in Teach', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 2, 9).round
     round = dropNumber(round, 2, 2).round
-    const { round: next, outcome } = placeForMe(round, 2)
+    const { round: next, outcome } = setCorrectNumber(round, 2)
     expect(outcome.placed).toBe(false)
     expect(next).toBe(round)
   })
@@ -234,21 +240,21 @@ describe('Drag Hours Set correct answer in Teach', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 2, 9).round
     round = { ...round, slots: round.slots.map((s, i) => (i === 1 ? 5 : s)) }
-    const { round: next, outcome } = placeForMe(round, 2)
+    const { round: next, outcome } = setCorrectNumber(round, 2)
     expect(outcome.placed).toBe(false)
     expect(next).toBe(round)
   })
 
   it('refuses in Test', () => {
     const round = startRound(TEST, seededRandom(1))
-    expect(() => placeForMe(round, 2)).toThrow('Only Teach')
+    expect(() => setCorrectNumber(round, 2)).toThrow('Only Teach')
   })
 
   it('finishes the Round when it places the last number', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 12, 3).round
     for (const n of ONE_TO_TWELVE.slice(0, 11)) round = dropNumber(round, n, n).round
-    const { round: done, outcome } = placeForMe(round, 12)
+    const { round: done, outcome } = setCorrectNumber(round, 12)
     expect(outcome).toEqual({ placed: true, hint: null, finished: true })
     expect(isFinished(done)).toBe(true)
     expect(summarize(done).wrong).toEqual([{ answer: 12, firstAnswer: 3 }])

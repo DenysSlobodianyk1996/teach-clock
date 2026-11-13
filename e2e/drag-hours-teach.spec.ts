@@ -1,24 +1,21 @@
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test } from '@playwright/test'
 import { dragNumber, slot, tapNumber, tile } from './numbers.ts'
+import { startRound } from './round.ts'
+import { gotIt, setCorrect as setCorrectButton, wrongPopup } from './teach.ts'
 
 test('a Drag Hours Teach Round rejects a wrong drop with the popup and ends on the Summary', async ({
   page,
 }) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragHours', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
   // 12 dropped where 4 goes: it goes back, and the popup lights 12 between 11 and 1.
   await dragNumber(page, 12, 4)
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  const popup = wrongPopup(page)
   await expect(popup).toContainText(t('numbers.between', { number: 12, before: 11, after: 1 }))
   await expect(popup.locator('[data-slot]')).toHaveText(['1', '11', '12'])
-  await expect(popup.getByRole('button', { name: t('teach.gotIt') })).toBeFocused()
+  await expect(gotIt(page)).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(popup).toBeHidden()
   await expect(tile(page, 12)).toBeVisible()
@@ -58,21 +55,16 @@ test('a Drag Hours Teach Round rejects a wrong drop with the popup and ends on t
 })
 
 test('in Teach, Set correct answer in the popup puts the number in its place', async ({ page }) => {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragHours', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  const popup = wrongPopup(page)
   await expect(popup).toBeHidden()
 
   // A wrong drop opens the popup with both buttons.
   await dragNumber(page, 2, 7)
   await expect(popup).toContainText(t('numbers.between', { number: 2, before: 1, after: 3 }))
-  const setCorrect = popup.getByRole('button', { name: t('teach.setCorrect') })
+  const setCorrect = setCorrectButton(page)
 
   // Pressed with Enter: 2 lands on its slot and the popup closes.
   await setCorrect.focus()

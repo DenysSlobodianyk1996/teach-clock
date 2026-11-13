@@ -6,7 +6,7 @@ import ModeIcon from '@/components/ModeIcon.vue'
 import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
 import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
-import CorrectNumberSlot from '@/components/CorrectNumberSlot.vue'
+import HintFace from '@/components/HintFace.vue'
 import { canSubmit, shownNeighbours, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
@@ -65,11 +65,12 @@ function drop(number: number, slot: number) {
 }
 
 /** Teach, the popup's Set correct answer: closes it, puts the number on its slot, rings it green. */
-function placeIt() {
+function setCorrectAnswer() {
+  // Close the popup first: `busy` counts an open popup, and the check below must not see it.
   popupOpen.value = false
   const number = hint.value?.number
   if (busy.value || number === undefined) return
-  const outcome = play.placeForMe(number)
+  const outcome = play.setCorrectNumber(number)
   if (outcome.placed) {
     flash.value = props.round.tasks[number - 1]!.answer
     clearTimeout(flashing)
@@ -159,9 +160,9 @@ function submit() {
       v-if="popupOpen && hint && shownHint"
       :line="t('numbers.between', { ...shownHint })"
       @dismiss="popupOpen = false"
-      @set-correct="placeIt"
+      @set-correct="setCorrectAnswer"
     >
-      <CorrectNumberSlot :game="round.game" :number="hint.number" />
+      <HintFace :game="round.game" :number="hint.number" />
     </WrongAnswerPopup>
   </div>
 </template>

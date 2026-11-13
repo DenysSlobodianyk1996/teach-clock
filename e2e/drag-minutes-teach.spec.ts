@@ -1,17 +1,14 @@
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 import { dragNumber, slot, tapNumber, tile } from './numbers.ts'
+import { startRound } from './round.ts'
+import { closeWrongPopup, wrongPopup } from './teach.ts'
 
 /** Tile N shows N × 5 minutes; the helpers still take slot ids. */
 const minutes = (n: number) => String(n * 5)
 
 async function startDragMinutesTeach(page: Page) {
-  await page.goto('/')
-  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
-  await page.getByRole('button', { name: t('welcome.start') }).click()
-  await page.getByRole('radio', { name: startingWith(t('games.dragMinutes.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragMinutes', mode: 'teach' })
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 }
 
@@ -31,15 +28,14 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, Set correct answer,
 
   // 60 dropped where 20 goes: the popup shows 60 lit at the top, with Hour Badges.
   await dragNumber(page, 12, 4)
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  const popup = wrongPopup(page)
   await expect(popup).toContainText(t('numbers.between', { number: 60, before: 55, after: 5 }))
   await expect(popup.locator('[data-slot="12"]')).toHaveText('60')
   await expect(popup.locator('.hour-badge')).toHaveCount(12)
   await expect(tile(page, 12)).toBeVisible()
 
   // Set correct answer puts 60 at the top, and the popup closes.
-  await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
-  await expect(popup).toBeHidden()
+  await closeWrongPopup(page, 'setCorrect')
   await expect(slot(page, 12)).toHaveText('60')
   await expect(tile(page, 12)).toBeHidden()
   // The badge stays visible beside the placed minute.
@@ -48,8 +44,7 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, Set correct answer,
   // 10 dropped on the 5's slot: "10 goes between 5 and 15"; Got it, and the Player fixes it.
   await dragNumber(page, 2, 5)
   await expect(popup).toContainText(t('numbers.between', { number: 10, before: 5, after: 15 }))
-  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
-  await expect(popup).toBeHidden()
+  await closeWrongPopup(page, 'gotIt')
 
   for (const n of [1, 2, 3, 5, 7, 9, 11]) {
     await dragNumber(page, n, n)

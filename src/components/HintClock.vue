@@ -2,13 +2,13 @@
 import ClockFace from './ClockFace.vue'
 import { formatClockTime, type ClockTime } from '@/game/clockTime'
 
-/** The wrong-Answer popup's picture for the Clock Time Games: a small clock and the digits. */
+/** The Hint for the Clock Time Games: a small clock with its Lit Place, and the digits. */
 defineProps<{ time: ClockTime }>()
 </script>
 
 <template>
   <div class="correct">
-    <ClockFace class="small-clock" :time="time" />
+    <ClockFace class="small-clock" :time="time" pointed />
     <div class="big-time">{{ formatClockTime(time) }}</div>
   </div>
 </template>

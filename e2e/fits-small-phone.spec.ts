@@ -2,8 +2,10 @@
  * On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view, and the
  * clock as big as the room left allows.
  */
-import { t, startingWith } from './i18n.ts'
+import { t } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import { startRound } from './round.ts'
+import { closeWrongPopup, popupButtons, wrongPopup } from './teach.ts'
 
 async function toSettings(page: Page) {
   await page.goto('/')
@@ -36,11 +38,7 @@ test('Settings fits: no sideways scroll, Back and Play side by side in full', as
 
 for (const game of ['setTime', 'dragArrows'] as const) {
   test(`${game} Teach: Submit stays on screen through the wrong-Answer popup`, async ({ page }) => {
-    await toSettings(page)
-    await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
-    await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-    await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
-    await page.getByRole('button', { name: t('settings.play') }).click()
+    await startRound(page, { game, mode: 'teach', level: 15 })
     const submit = page.getByRole('button', { name: t('round.submit') })
     await expect(submit).toBeVisible()
     if (game === 'dragArrows') {
@@ -65,16 +63,11 @@ for (const game of ['setTime', 'dragArrows'] as const) {
     } else {
       await submit.click()
     }
-    // Its two buttons fit the narrow screen, stacked, Got it on top.
-    const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
-    const gotIt = (await popup.getByRole('button', { name: t('teach.gotIt') }).boundingBox())!
-    const setCorrect = (await popup
-      .getByRole('button', { name: t('teach.setCorrect') })
-      .boundingBox())!
-    expect(setCorrect.y, 'stacked').toBeGreaterThanOrEqual(gotIt.y + gotIt.height)
-    expect(setCorrect.x + setCorrect.width).toBeLessThanOrEqual(page.viewportSize()!.width)
-    await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
-    await expect(popup).toBeHidden()
+    // Its two buttons fit the narrow screen, stacked, Got it below.
+    const { gotIt, setCorrect } = await popupButtons(page)
+    expect(gotIt.y, 'stacked').toBeGreaterThanOrEqual(setCorrect.y + setCorrect.height)
+    expect(gotIt.x + gotIt.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+    await closeWrongPopup(page, 'setCorrect')
     expect(await bottomFromPageTop(submit), 'Submit fits after the popup').toBeLessThanOrEqual(
       page.viewportSize()!.height,
     )
@@ -84,10 +77,7 @@ for (const game of ['setTime', 'dragArrows'] as const) {
 test('Drag Hours Teach: a big face, the popup fits, and the tray stays on screen', async ({
   page,
 }) => {
-  await toSettings(page)
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragHours', mode: 'teach' })
   const face = page.locator('.board svg.number-face')
   await expect(face).toBeVisible()
   expect(await face.evaluate((e) => e.getBoundingClientRect().width)).toBeGreaterThanOrEqual(300)
@@ -98,15 +88,12 @@ test('Drag Hours Teach: a big face, the popup fits, and the tray stays on screen
   const n = Number(await page.locator('.tray [data-number]').first().getAttribute('data-number'))
   await page.locator(`.tray [data-number="${n}"]`).click()
   await page.locator(`.board [data-slot="${(n % 12) + 1}"]`).click()
-  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
-  await expect(popup).toBeVisible()
-  const setCorrect = (await popup
-    .getByRole('button', { name: t('teach.setCorrect') })
-    .boundingBox())!
-  expect(setCorrect.y + setCorrect.height).toBeLessThanOrEqual(height)
-  expect(setCorrect.x + setCorrect.width).toBeLessThanOrEqual(page.viewportSize()!.width)
-  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
-  await expect(popup).toBeHidden()
+  await expect(wrongPopup(page)).toBeVisible()
+  // Got it is the lower of the two stacked buttons.
+  const { gotIt } = await popupButtons(page)
+  expect(gotIt.y + gotIt.height).toBeLessThanOrEqual(height)
+  expect(gotIt.x + gotIt.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+  await closeWrongPopup(page, 'gotIt')
   expect(
     await bottomFromPageTop(page.locator('.tray')),
     'tray fits after the popup',
@@ -114,10 +101,7 @@ test('Drag Hours Teach: a big face, the popup fits, and the tray stays on screen
 })
 
 test('Drag Hours Test: Готово fits once all 12 numbers are placed', async ({ page }) => {
-  await toSettings(page)
-  await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
-  await page.getByRole('radio', { name: startingWith(t('modes.test.name')) }).check()
-  await page.getByRole('button', { name: t('settings.play') }).click()
+  await startRound(page, { game: 'dragHours', mode: 'test' })
   for (let n = 1; n <= 12; n++) {
     await page.locator(`.tray [data-number="${n}"]`).click()
     await page.locator(`.board [data-slot="${n}"]`).click()

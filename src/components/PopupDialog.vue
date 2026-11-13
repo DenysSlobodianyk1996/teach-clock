@@ -2,7 +2,8 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 /**
- * A modal popup on a scrim. Its first button gets the focus (given back on close), Tab stays
+ * A modal popup on a scrim. Its first button, or the one marked `data-autofocus`, gets the focus
+ * (given back on close), Tab stays
  * inside, and Escape or a click on the scrim emits `dismiss`. The content is the slot; label it
  * with `labelledby`. `wide` gives room for two long buttons side by side.
  */
@@ -17,7 +18,8 @@ let focusedBefore: Element | null = null
 
 onMounted(() => {
   focusedBefore = document.activeElement
-  buttons()[0]?.focus()
+  const first = popup.value?.querySelector<HTMLElement>('button[data-autofocus]') ?? buttons()[0]
+  first?.focus()
 })
 onBeforeUnmount(() => {
   if (focusedBefore instanceof HTMLElement && focusedBefore.isConnected) focusedBefore.focus()

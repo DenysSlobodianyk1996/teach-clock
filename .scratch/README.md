@@ -11,7 +11,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [04-clear-hands](04-clear-hands/)     | fixes         | done   | no   | #33, #34 (plan), #35–#38 |
 | [05-drag-help](05-drag-help/)         | feature       | done   | no   | #39 (plan), #42          |
 | [06-drag-minutes](06-drag-minutes/)   | feature       | done   | yes  | #40, #41 (plan), #43     |
-| [07-teach-popup](07-teach-popup/)     | fixes         | done   | yes  | #45 (replaces plan #44)  |
+| [07-teach-popup](07-teach-popup/)     | fixes         | done   | yes  | #44 (plan), #45          |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
@@ -31,4 +31,4 @@ Kinds: first version, feature, fixes. Status: planned, in progress, done.
 ## When a batch starts or ends
 
 - Add or update its row above.
-- Each batch is built on one integration branch, `batch/NN-<outcome>`, off `main`, with a single PR to `main` that carries the plan too. Ticket branches (`feat/`, `fix/`, `docs/`) come off it, are merged back into it, and are deleted after the merge. Batches up to 06 used a branch per ticket off `main` and a separate `plan/<batch>` PR.
+- Each batch is built on one integration branch, `batch/NN-<outcome>`, off `main`, with a single PR to `main` that carries the plan too. Ticket branches (`feat/`, `fix/`, `docs/`) come off it, are merged back into it, and are deleted after the merge. Batches up to 06 used a branch per ticket off `main` and a separate `plan/<batch>` PR. 07 was the switch: its plan had already gone to `main` as its own PR (#44), and its build came in through `batch/07-teach-popup` (#45). From 08 on, the plan rides in the batch PR.

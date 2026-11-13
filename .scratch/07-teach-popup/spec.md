@@ -18,17 +18,18 @@ So the same moment looks and acts differently per Game, and the "set it for me" 
 
 ## Solution
 
-Every Game in Teach shows a wrong Answer in **one popup**, and nothing about the hint is added to the Round layout, so the clock never moves on any screen. The space desktop keeps for the hint today (the hidden Hint panel under the clock, the 48 px row above the number face) is removed too, and the clock gets that room.
+Every Game in Teach shows a wrong Answer in **one popup**, and nothing about the hint is added to the Round layout, so the clock never moves on any screen. The space desktop keeps for the hint today (the hidden Hint panel under the clock, the 48 px row above the number face) is removed too, and the layout re-centres in the space it leaves. The desktop clock keeps its size: it is bound by the width, not by that space.
 
 The popup:
 
+- Takes its picture through a default slot: `HintClock.vue` for the clock Games, `HintFace.vue` for the drag Games. No per-Game prop.
 - Title: "Almost! Here's how it is:" (`teach.wrongTitle`).
 - **Shows where the right place is**:
   - Set Time, Drag Arrows: as today, a small clock with the correct time and the Lit Place, plus the digits.
   - Drag Hours, Drag Minutes: a small number face with the right slot lit (its value shown in it, green as in the Place-It flash), its two neighbours shown for orientation, Hour Badges in Drag Minutes.
 - Teaching line: `teach.mistakes.<kind>` for the clock Games, "7 goes between 6 and 8" (`numbers.between`, values from `tileValue`) for the drag Games.
 - **Two buttons, the same in every Game:**
-  - **Got it** (`teach.gotIt`, "Зрозуміло"), first and focused: closes the popup; the Player fixes it themselves. Escape and a click on the scrim do the same.
+  - **Got it** (`teach.gotIt`, "Зрозуміло"), on the right (below when stacked) and focused: closes the popup; the Player fixes it themselves. Escape and a click on the scrim do the same.
   - **Set correct answer** (`teach.setCorrect`): closes the popup and puts it right:
     - Set Time: fills the digits; the Player presses Submit.
     - Drag Arrows: animates the hands; the Player presses Submit.
@@ -47,10 +48,10 @@ After **Got it** nothing is shown in the layout. Another wrong try opens the pop
 
 ## Implementation Decisions
 
-- **One popup component.** `WrongAnswerPopup.vue` gets a second button and emits `dismiss` and `setCorrect`. Its picture depends on the Game kind: `ClockFace` + digits for clock Games, a small `NumberFace` with one lit slot for drag Games. It keeps using `PopupDialog.vue` (focus trap, Escape, scrim). Buttons sit side by side on desktop and stack on a 360 px phone.
+- **One popup component.** `WrongAnswerPopup.vue` gets a second button and emits `dismiss` and `setCorrect`. Its picture comes through a default slot: `HintClock.vue` (`ClockFace` with the Lit Place, and the digits) for clock Games, `HintFace.vue` (a small `NumberFace` with one lit slot) for drag Games. It keeps using `PopupDialog.vue` (focus trap, Escape, scrim). Buttons sit side by side on desktop, Set correct answer left and Got it right, and stack in that order on a 360 px phone; Got it gets the focus (`data-autofocus`, read by `PopupDialog.vue`).
 - **Clock Games** (`RoundView.vue`): `submit()` opens the popup as today; `setCorrectAnswer()` runs from the popup's `setCorrect`. `HintPanel.vue` is deleted, with `.waiting`, `.has-hint` and the hint-sized clock rules. The clock size on a phone is one value per Game, never changed during a Round.
-- **Drag Games** (`DragRound.vue`, `NumberBoard.vue`): a wrong drop opens the popup instead of setting the inline hint. `placeIt()` runs from the popup's `setCorrect`. `.toast-row`, the Place-It button and `.board.hinted` sizing go; the face gets the room the row took. The `marked` tray tile may stay (it is on the tile, not in the layout).
-- **Rules** (`src/game/round.ts`, `dragNumbers.ts`): unchanged. `hint()` and the drop outcome's `hint` still supply what the popup shows.
+- **Drag Games** (`DragRound.vue`, `NumberBoard.vue`): a wrong drop opens the popup instead of setting the inline hint. `setCorrectAnswer()` runs from the popup's `setCorrect` (the Place-It button's `placeIt()` and the rule `placeForMe()` are renamed `setCorrectAnswer()` and `setCorrectNumber()`). `.toast-row`, the Place-It button and `.board.hinted` sizing go; the face gets the room the row took. The `marked` tray tile may stay (it is on the tile, not in the layout).
+- **Rules** (`src/game/round.ts`, `dragNumbers.ts`): no new rules. The clock Games' popup shows the Task's Answer, which `RoundView.vue` keeps from the wrong submit; `round.ts` `hint()` lost its last caller and is deleted. The drag Games' popup is fed by the drop outcome's `hint`; which slots `HintFace.vue` fills comes from `hintSlots()` in `dragNumbers.ts`, next to `neighbours()`.
 - **i18n**: `teach.hint` and `numbers.placeIt` are no longer used and are removed from `en.ts` and `uk.ts`; `teach.gotIt`, `teach.setCorrect`, `teach.wrongTitle` and `numbers.between` are reused. No new keys unless the drag picture needs an aria label.
 - **Glossary**: **Place-It button** is retired (its action is now the popup's Set correct answer). **Hint** becomes "what the wrong-answer popup shows". Done in the last ticket.
 

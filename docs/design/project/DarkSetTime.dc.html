@@ -72,7 +72,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
   </main>
 
   <div class="scrim">
-    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width: 520px">
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width: 600px">
       <h2 id="wrong-title">Майже! Правильно так:</h2>
       <div style="display: flex; align-items: center; gap: 28px">
         <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 7:45" style="width: 170px; height: 170px">
@@ -86,7 +86,10 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <div class="big-time">7:45</div>
       </div>
       <p>Коротка стрілка ще не дійшла до 8 — отже, година ще 7.</p>
-      <button class="btn" type="button" style="min-width: 220px">Зрозуміло</button>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%">
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px; background: var(--bg-deep); color: var(--text)">Постав правильну відповідь</button>
+        <button class="btn" type="button" style="flex: 1 1 auto; padding: 0 22px; font-size: 19px">Зрозуміло</button>
+      </div>
     </div>
   </div>
 </div>
