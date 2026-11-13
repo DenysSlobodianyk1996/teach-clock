@@ -18,7 +18,8 @@
     "format": "prettier --write --experimental-cli src/ e2e/",
     "generate-pwa-assets": "pwa-assets-generator",
     "generate-android-assets": "node scripts/generate-android-assets.ts",
-    "check:android": "node scripts/check-android-permissions.ts"
+    "check:android": "node scripts/check-android-permissions.ts",
+    "store-shots": "playwright test -c playwright.config.store.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",

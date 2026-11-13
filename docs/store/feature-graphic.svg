@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <!-- Play Store feature graphic. Colours: the middle theme in src/styles/theme.css.
+       Exported to feature-graphic.png by `npm run store-shots`. -->
+  <rect width="1024" height="500" fill="#1d4b5c"/>
+  <circle cx="770" cy="250" r="232" fill="#27606f"/>
+  <circle cx="770" cy="250" r="300" fill="none" stroke="#27606f" stroke-width="18" opacity="0.5"/>
+
+  <!-- Confetti, as on the Welcome screen -->
+  <circle cx="60" cy="62" r="9" fill="#f2b84b"/>
+  <circle cx="512" cy="430" r="7" fill="#e5604b"/>
+  <rect x="470" y="52" width="16" height="16" rx="4" transform="rotate(20 478 60)" fill="#7fd49a"/>
+  <rect x="40" y="420" width="13" height="13" rx="3" transform="rotate(-15 46 426)" fill="#fff3dd" opacity="0.8"/>
+  <circle cx="985" cy="460" r="8" fill="#7fd49a"/>
+  <circle cx="990" cy="48" r="6" fill="#fff3dd" opacity="0.8"/>
+
+  <!-- Title and line -->
+  <g font-family="Nunito, 'Arial Rounded MT Bold', sans-serif" fill="#fdf6e9">
+    <text x="72" y="168" font-size="84" font-weight="900">Вчимо</text>
+    <text x="72" y="262" font-size="84" font-weight="900">годинник</text>
+    <text x="74" y="322" font-size="27" font-weight="700" fill="#dae9e9">Чотири ігри, щоб навчитися</text>
+    <text x="74" y="358" font-size="27" font-weight="700" fill="#dae9e9">читати й ставити час</text>
+  </g>
+
+  <!-- Number tiles, as in Drag Hours -->
+  <g font-family="Nunito, 'Arial Rounded MT Bold', sans-serif" font-size="27" font-weight="900" fill="#2a2633" text-anchor="middle">
+    <circle cx="100" cy="418" r="27" fill="#f2b84b"/>
+    <text x="100" y="428">3</text>
+    <circle cx="164" cy="418" r="27" fill="#fff3dd"/>
+    <text x="164" y="428">6</text>
+    <circle cx="228" cy="418" r="27" fill="#fff3dd"/>
+    <text x="228" y="428">9</text>
+    <circle cx="292" cy="418" r="27" fill="#fff3dd"/>
+    <text x="292" y="428">12</text>
+  </g>
+
+  <!-- The clock, in the app icon's style, at 10:10 -->
+  <circle cx="770" cy="266" r="186" fill="#000" opacity="0.14"/>
+  <g transform="translate(770 250) scale(1.95)">
+    <circle r="94" fill="#fff3dd" stroke="#f2b84b" stroke-width="7"/>
+    <circle r="84" fill="none" stroke="#6b5a49" stroke-width="4" opacity="0.45" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"/>
+    <circle r="84" fill="none" stroke="#6b5a49" stroke-width="9" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"/>
+    <g font-family="Nunito, 'Arial Rounded MT Bold', sans-serif" font-size="19" font-weight="900" fill="#2a2633" text-anchor="middle" dominant-baseline="central">
+      <text x="33" y="-57.2">1</text>
+      <text x="57.2" y="-33">2</text>
+      <text x="66" y="0">3</text>
+      <text x="57.2" y="33">4</text>
+      <text x="33" y="57.2">5</text>
+      <text x="0" y="66">6</text>
+      <text x="-33" y="57.2">7</text>
+      <text x="-57.2" y="33">8</text>
+      <text x="-66" y="0">9</text>
+      <text x="-57.2" y="-33">10</text>
+      <text x="-33" y="-57.2">11</text>
+      <text x="0" y="-66">12</text>
+    </g>
+    <line y1="8" y2="-42" stroke="#e5604b" stroke-width="9" stroke-linecap="round" transform="rotate(305)"/>
+    <line y1="10" y2="-50" stroke="#157f86" stroke-width="6" stroke-linecap="round" transform="rotate(60)"/>
+    <circle r="7" fill="#2a2633" stroke="#fff3dd" stroke-width="3"/>
+  </g>
+</svg>
