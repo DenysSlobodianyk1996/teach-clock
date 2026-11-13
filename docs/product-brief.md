@@ -1,6 +1,7 @@
 # Teach Clock — product brief
 
-A browser game (installable PWA) that teaches children to read and set an analogue clock.
+A game that teaches children to read and set an analogue clock. It runs as a Web App (a website you
+can install from the browser) and as an Android App on Google Play, built from the same code.
 Rebuild of the 2019 thesis project "Time Teacher" (`docs/original/`, in Ukrainian). From 2019 only the
 idea and game mechanics carry over. The old stack, code, accounts, results tracking and the
 "say the time in English" game are dropped.
@@ -13,6 +14,19 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 - **No accounts, nothing stored about the Player.** The name is typed in only for greetings (ADR 0002).
 - **No timer, no sound.** Animations are welcome.
 - **Works everywhere.** Phone, tablet, desktop; touch and mouse; offline.
+
+## Where it runs
+
+- **Web App**: the website on GitHub Pages, installable from the browser. A service worker keeps it
+  playable offline after the first visit. Every merge to `main` that changes the app redeploys it.
+- **Android App**: Google Play, package `app.teachclockforkids`, built with Capacitor (ADR 0004).
+  The whole game is packaged inside, so it plays with no internet from the first launch; there is
+  no service worker. The Android back button never leaves a Round by accident: on Welcome it exits,
+  on Settings and Summary it goes to Welcome, in a Round it opens "Leave this Round?" (or closes
+  it), and an open popup closes first. Every change is a Play release: CI uploads each merge to
+  closed testing, and production is released by hand (`docs/android-release.md`).
+- The two differ only through `src/platform.ts`: no service worker and no Support Button in the
+  Android App.
 
 ## Screens
 
@@ -30,6 +44,23 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
    big clocks with their times. Each wrong Task shows the Player's first Answer next to the correct
    one, both as big clocks (on a phone the pair stacks: the Player's Answer, a down arrow, then the
    correct one). Buttons: Play again, back to Settings.
+
+Welcome and Settings end with the **Footer**, a plain bar after the screen's content (not sticky;
+on a phone it is below the fold). It is never shown in a Round or on the Summary. It holds:
+
+- **Privacy**: opens the **Privacy Page** in a new tab (in the Android App, in the system browser).
+  The Privacy Page is a static page outside the game, Ukrainian then English, at
+  https://denysslobodianyk1996.github.io/teach-clock/privacy.html. It says nothing is collected or
+  sent: no accounts, ads or analytics; only the Preferences and the last name stay on the device;
+  results are not kept after a Round. It also works offline in the Web App.
+- **Contact**: a `mailto:` link to the author with the subject "Contact support from teach clock
+  for kids" (set in `src/config.ts`).
+- **Support Button** (Web App only, and only when the build has an `https://` support link in
+  `VITE_SUPPORT_URL`): a round heart button with "Hold to open" under it. Holding it for 2 seconds
+  (pointer, Enter or Space) fills a ring round the heart and then opens the author's support page
+  in a new tab; letting go early cancels, so a child tapping by accident opens nothing. Google Play
+  forbids leading users to outside payments, so the Android App never shows it. On a desktop it
+  sits beside the links; on a phone it wraps to its own row under them.
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
 English second) and theme (middle by default, dark, light). The device remembers Preferences and
@@ -153,5 +184,6 @@ Rules shared by Drag Arrows and Set Time:
 
 ## Out of scope
 
-Accounts, admin, stored results and statistics, e-mail, timers, sound, telling the time in a
+Accounts, admin, stored results and statistics, e-mail from the app (Contact only opens the
+Player's own mail app), payments inside the Android App, iOS, timers, sound, telling the time in a
 foreign language.
