@@ -5,7 +5,8 @@
  */
 import { useI18n } from 'vue-i18n'
 import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
-import { isAndroidApp } from '@/platform'
+import { isAndroidApp, supportUrl } from '@/platform'
+import SupportButton from './SupportButton.vue'
 
 const { t } = useI18n()
 
@@ -21,6 +22,8 @@ const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTAC
       <a :href="privacyHref" target="_blank" rel="noopener">{{ t('footer.privacy') }}</a>
       <a :href="contactHref">{{ t('footer.contact') }}</a>
     </nav>
+    <!-- Web App only: Google Play forbids outside payments. No https:// link set, no button. -->
+    <SupportButton v-if="!isAndroidApp && supportUrl" :url="supportUrl" />
   </footer>
 </template>
 
