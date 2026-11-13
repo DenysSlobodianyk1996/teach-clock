@@ -6,9 +6,9 @@ Covers: P3
 
 **Blocked by:** 07
 
-**Status:** todo
+**Status:** done
 
-- [ ] A plain function `backAction(state)` → `exit | goWelcome | openLeaveDialog | closePopup`, tested without Capacitor
-- [ ] Welcome: exit; Settings: Welcome; Round: open `LeaveRoundDialog`, or close it if open; Summary: Welcome; any open popup closes first
-- [ ] Wired with `@capacitor/app` `backButton` only in the Android App
-- [ ] Vitest for every row of the table; checked on the emulator
+- [x] A plain function `backAction(state)` → `exit | goWelcome | openLeaveDialog | closePopup`, tested without Capacitor
+- [x] Welcome: exit; Settings: Welcome; Round: open `LeaveRoundDialog`, or close it if open; Summary: Welcome; any open popup closes first
+- [x] Wired with `@capacitor/app` `backButton` only in the Android App
+- [x] Vitest for every row of the table; checked on the emulator (Vitest: `src/android/__tests__/`; emulator check done in ticket 10, see `docs/android-checks.md`)

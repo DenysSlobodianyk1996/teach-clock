@@ -3,11 +3,13 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "include": [
     "vite.config.*",
+    "capacitor.config.*",
     "vitest.config.*",
     "cypress.config.*",
     "playwright.config.*",
     "pwa-assets.config.*",
-    "eslint.config.*"
+    "eslint.config.*",
+    "scripts/**/*"
   ],
   "compilerOptions": {
     // Most tools use transpilation instead of Node.js's native type-stripping.

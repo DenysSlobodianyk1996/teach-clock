@@ -6,6 +6,8 @@ declare module 'vue-router' {
   interface RouteMeta {
     /** What must exist before this screen can open. */
     needs?: 'name' | 'round' | 'summary'
+    /** The screen shows the Footer under its content. */
+    footer?: boolean
   }
 }
 
@@ -17,12 +19,17 @@ export function createAppRouter(
     // Every screen opens at the top: a Round must not start scrolled past its header.
     scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
     routes: [
-      { path: '/', name: 'welcome', component: () => import('@/views/WelcomeView.vue') },
+      {
+        path: '/',
+        name: 'welcome',
+        component: () => import('@/views/WelcomeView.vue'),
+        meta: { footer: true },
+      },
       {
         path: '/settings',
         name: 'settings',
         component: () => import('@/views/SettingsView.vue'),
-        meta: { needs: 'name' },
+        meta: { needs: 'name', footer: true },
       },
       {
         path: '/round',

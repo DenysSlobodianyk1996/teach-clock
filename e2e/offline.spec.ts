@@ -29,11 +29,31 @@ test('after the first visit the whole app works with no internet', async ({ page
   expect(fonts).toContain('Nunito')
 })
 
-test('the app can be installed as "Teach Clock" with its own icons', async ({ page, request }) => {
+test('the Privacy Page opens with no internet after the first visit', async ({ page, context }) => {
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+  await page.evaluate(() => navigator.serviceWorker.ready)
+
+  await context.setOffline(true)
+  await page.goto('/privacy.html')
+
+  await expect(page.locator('h1#privacy-uk')).toBeVisible()
+  await expect(page.locator('h2#privacy-en')).toBeVisible()
+})
+
+test('the app can be installed as "Вчимо годинник" with its own icons', async ({
+  page,
+  request,
+}) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
   const manifest = await (await request.get(href!)).json()
-  expect(manifest).toMatchObject({ name: 'Teach Clock', display: 'standalone', start_url: '/' })
+  expect(manifest).toMatchObject({
+    name: 'Вчимо годинник',
+    lang: 'uk',
+    display: 'standalone',
+    start_url: '/',
+  })
   const sizes = manifest.icons.map((icon: { sizes: string }) => icon.sizes)
   expect(sizes).toEqual(expect.arrayContaining(['192x192', '512x512']))
   for (const icon of manifest.icons) {

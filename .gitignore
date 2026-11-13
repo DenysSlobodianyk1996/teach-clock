@@ -20,3 +20,4 @@ dist-ssr/
 .eslintcache
 __screenshots__/
 *.timestamp-*-*.mjs
+dist-store/

@@ -10,8 +10,14 @@ import { customMediaPlugin } from './src/styles/media.ts'
 /** The middle theme's background (--bg in src/styles/theme.css). */
 const themeColor = '#1d4b5c'
 
-/** GitHub Pages serves the app from /teach-clock/; everywhere else it lives at the root. */
-const base = process.env.GITHUB_PAGES ? '/teach-clock/' : '/'
+/** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
+const isAndroidApp = process.env.VITE_TARGET === 'android'
+
+/**
+ * GitHub Pages serves the app from /teach-clock/; everywhere else, the Android App included, it
+ * lives at the root.
+ */
+const base = process.env.GITHUB_PAGES && !isAndroidApp ? '/teach-clock/' : '/'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,14 +30,19 @@ export default defineConfig({
     vueDevTools(),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
     // first visit; src/pwa.ts registers it and applies updates only between Rounds.
+    // Off in the Android App: the game is packaged inside it, so there is no service worker and
+    // no manifest (ADR 0004). main.ts loads src/pwa.ts only in the Web App; `disable` still
+    // answers its `virtual:pwa-register` import.
     VitePWA({
+      disable: isAndroidApp,
       registerType: 'prompt',
       injectRegister: false,
       manifest: {
-        name: 'Teach Clock',
-        short_name: 'Teach Clock',
-        description: 'A game that teaches children to read and set an analogue clock.',
-        lang: 'en',
+        name: 'Вчимо годинник',
+        // Short enough to fit under a home-screen icon.
+        short_name: 'Годинник',
+        description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
+        lang: 'uk',
         theme_color: themeColor,
         background_color: themeColor,
         display: 'standalone',

@@ -3,6 +3,7 @@ import { flushPromises } from '@vue/test-utils'
 import App from '../App.vue'
 import { mountScreen } from '@/test/mountScreen'
 import { t, tEn } from '@/test/i18n'
+import { usePlayerStore } from '@/stores/player'
 
 type Screen = Awaited<ReturnType<typeof mountScreen>>['wrapper']
 
@@ -66,5 +67,26 @@ describe('Preferences in the header', () => {
     await cycle().trigger('click')
     expect(document.documentElement.dataset.theme).toBe('dark')
     expect(cycle().attributes('aria-label')).toBe(t('header.nextTheme.dark'))
+  })
+})
+
+describe('the Footer', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('is a page footer outside <main> on Welcome and Settings', async () => {
+    const { wrapper, router } = await mountScreen(App, '/')
+    await flushPromises()
+    expect(wrapper.find('main').exists()).toBe(true)
+    // Outside <main>, a <footer> is the page's contentinfo landmark on its own.
+    expect(wrapper.find('footer').exists()).toBe(true)
+    expect(wrapper.find('main footer').exists()).toBe(false)
+    expect(wrapper.find('footer').attributes('role')).toBeUndefined()
+
+    usePlayerStore().setName('Оля')
+    await router.push('/settings')
+    await flushPromises()
+    expect(router.currentRoute.value.name).toBe('settings')
+    expect(wrapper.find('footer').exists()).toBe(true)
+    expect(wrapper.find('main footer').exists()).toBe(false)
   })
 })

@@ -1,12 +1,12 @@
 # Teach Clock
 
-Browser game (offline PWA) that teaches children to read and set an analogue clock.
+Game that teaches children to read and set an analogue clock: a Web App (offline PWA on GitHub Pages) and an Android App (Capacitor, Google Play), one codebase.
 Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). All four Games playable in Test and Teach (tickets 03–08, Drag Minutes in batch 06), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11), one two-button wrong-answer popup in Teach for every Game (batch 07): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
-Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `07-teach-popup` (a wrong Answer in Teach opens the same popup in all four Games, with Got it and Set correct answer; the Hint panel and the Place-It button are gone, so the clock never moves during a Round).
+Design approved (ticket 01). App skeleton in place (ticket 02). All four Games playable in Test and Teach (tickets 03–08, Drag Minutes in batch 06), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11), one two-button wrong-answer popup in Teach for every Game (batch 07), Android App on Google Play with a Footer, Privacy Page and Web-only Support Button (batch 08): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `08-play-store` (Capacitor Android App with back button, icons and store art; CI builds a signed bundle and uploads it to Play closed testing; Footer on Welcome and Settings; `src/platform.ts` is the one place that tells the two builds apart).
 
 ## Commands
 
@@ -17,6 +17,14 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `npx playwright test`: browser flows (desktop + phone, plus an offline check on a fresh build)
 - `npm run build`: type-check and build (with the offline service worker)
 - `npm run generate-pwa-assets`: redraw the app icons in `public/` from `public/favicon.svg`
+- `VITE_SUPPORT_URL=https://… npm run dev`: shows the Support Button (hidden without an `https://` link)
+- Android (Gradle needs `ANDROID_HOME=~/Library/Android/sdk` and `JAVA_HOME=/opt/homebrew/opt/openjdk@21`):
+  - `npm run build:android`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
+  - `npm run check:android`: after `bundleRelease`, fails on location or `AD_ID` permissions
+  - `npm run generate-android-assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`
+  - `PW_PORT=<port> npm run store-shots`: Play screenshots and feature graphic into `docs/store/`; rerun after UI or text changes
+  - `bash scripts/release-wizard.sh [--dry-run]`: walks the author through the Play Console steps only a person can do
+- Push to `main` that changes the app also uploads a signed bundle to Play closed testing (`.github/workflows/android.yml`); production is its Run workflow button
 
 ## Where things are
 
@@ -25,6 +33,9 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `docs/tech-stack.md` — libraries and what was rejected.
 - `docs/adr/` — decisions that are hard to reverse.
 - `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).
+- `docs/android-release.md` — publishing on Google Play step by step (account, keys, secrets, Play Console, testers, releases); `docs/android-checks.md` — the device checklist.
+- `docs/store/` — Play listing text (`listing.uk.md`, `listing.en.md`, with character counts), screenshots, feature graphic, icon, closed-test tracker.
+- `src/platform.ts` — `isAndroidApp` and `supportUrl`; components read the build target only from here.
 - `docs/design/` — ticket 01 design prototype: open `gallery.html` locally; `project/theme.css` has the theme tokens.
 - `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
 

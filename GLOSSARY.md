@@ -103,3 +103,25 @@ _Avoid_: Read the Clock, TimeArrow
 **Range**:
 The numbers a Set Time box accepts, shown under it: "1–12" for the hours, "0–59" for the minutes. Shown in every Mode; it is not a Hint.
 _Avoid_: Hint, tooltip
+
+### Where it runs
+
+**Web App**:
+Teach Clock as a website, including when installed to a home screen from the browser.
+_Avoid_: PWA, site, web version
+
+**Android App**:
+Teach Clock as an app installed from Google Play, with the whole game inside it so it plays without internet from the first launch.
+_Avoid_: mobile app, native app, Play version, APK
+
+**Footer**:
+The plain bar at the bottom of Welcome and Settings with the links to the Privacy Page and to contact the author, and, in the Web App only, the Support Button. Never shown during a Round or on the Summary.
+_Avoid_: bottom bar, links bar
+
+**Support Button**:
+The heart button in the Web App's Footer that opens the author's donation page after the Player holds it for 2 seconds, so a child tapping by accident opens nothing. Never in the Android App.
+_Avoid_: donate button, tip jar, jar
+
+**Privacy Page**:
+The page, separate from the game, that says in Ukrainian and English that nothing about the Player is collected or sent.
+_Avoid_: privacy policy screen, terms

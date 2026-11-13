@@ -1,6 +1,6 @@
 {
   "name": "teach-clock",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,14 +10,21 @@
     "test:unit": "vitest",
     "test:e2e": "playwright test",
     "build-only": "vite build",
+    "build:android": "VITE_TARGET=android npm run build && cap sync android",
     "type-check": "vue-tsc --build",
     "lint": "run-s \"lint:*\"",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/ e2e/",
-    "generate-pwa-assets": "pwa-assets-generator"
+    "generate-pwa-assets": "pwa-assets-generator",
+    "generate-android-assets": "node scripts/generate-android-assets.ts",
+    "check:android": "node scripts/check-android-permissions.ts",
+    "store-shots": "playwright test -c playwright.config.store.ts"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.2",
     "@fontsource/nunito": "^5.3.0",
     "@vueuse/core": "^15.0.0",
     "pinia": "^4.0.3",
@@ -26,6 +33,7 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.6.2",
     "@playwright/test": "^1.63.0",
     "@tsconfig/node24": "^24.0.5",
     "@types/jsdom": "^30.0.0",
@@ -46,6 +54,7 @@
     "npm-run-all2": "^9.0.3",
     "oxlint": "~1.82.0",
     "prettier": "3.9.6",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.0",
     "vite": "^8.2.2",
     "vite-plugin-pwa": "^2.0.0",

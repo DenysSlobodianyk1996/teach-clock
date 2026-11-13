@@ -1,6 +1,6 @@
 ---
 title: Teach Clock on Google Play, plus a Footer and a Support Button
-status: planned
+status: done
 ---
 
 # Teach Clock on Google Play, plus a Footer and a Support Button
@@ -65,13 +65,14 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - letting go early cancels;
   - Enter or Space held from the keyboard works the same;
   - a small hint under it reads "Утримуй, щоб відкрити" ("Hold to open");
-  - when the hold completes, `window.open(url, '_blank', 'noopener')`.
+  - after a full 2 s hold the ring stays full, and the release that follows (pointer up, or keyup of Enter/Space) calls `window.open(url, '_blank', 'noopener')`, once per hold. It opens on the release, not when the 2 s run out, because browsers (Safari, touch screens) only allow a new tab during a user gesture and a timer is none;
+  - the hold resets when the page is hidden, the pointer leaves or is cancelled, or the button loses focus.
   - With `prefers-reduced-motion`, the ring still fills (it shows progress), just without easing.
 - `deploy.yml` passes `VITE_SUPPORT_URL: ${{ vars.VITE_SUPPORT_URL }}` to `npm run build`.
 
 ### Android App
 
-- `capacitor.config.ts`: `appId: 'app.teachclockforkids'`, `appName: 'Вчимо годинник'`, `webDir: 'dist'`.
+- `capacitor.config.ts`: `appId: 'app.teachclockforkids'`, `appName: 'Вчимо годинник'`, `webDir: 'dist'`. The launcher label (`title_activity_main` in `android/app/src/main/res/values/strings.xml`) is the short "Годинник", like the manifest `short_name`, so it is not cut off under the icon.
 - `android/` is committed. Target and compile SDK **36**; min SDK as Capacitor's default. JDK **21** (CI and local).
 - Permissions: only what Capacitor needs. **No location, no `AD_ID`**, no internet-dependent plugins. Apps aimed only at children must not request these.
 - Icons and splash: adaptive icon and splash generated from `public/favicon.svg` (`@capacitor/assets` or a script next to `generate-pwa-assets`).
@@ -87,14 +88,15 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 ### CI
 
 - **Path filter** (both workflows; each also watches its own file and keeps `workflow_dispatch`):
-  - triggers: `src/**`, `public/**`, `index.html`, `vite.config.ts`, `package.json`, `package-lock.json`, `tsconfig*`;
-  - the Android workflow also watches `android/**` and `capacitor.config.ts`;
+  - triggers: `src/**`, `public/**`, `index.html`, `vite.config.ts`, `package.json`, `package-lock.json`, `tsconfig*`, `env.d.ts`;
+  - the Android workflow also watches `android/**`, `capacitor.config.ts` and `scripts/**` (the icon, splash and manifest-check scripts);
   - never triggers on its own: `docs/`, `.scratch/`, `e2e/`, `*.md`, test files.
 - **Android workflow** (`.github/workflows/android.yml`):
   - on push to `main` (path filter): `npm ci` → `VITE_TARGET=android npm run build` → `npx cap sync android` → Gradle `bundleRelease` signed with the upload key from secrets → upload to Play **closed testing** with release notes "Покращення та виправлення" / "Improvements and fixes".
   - **Production**: `workflow_dispatch` with inputs for Ukrainian and English release notes. It promotes the latest closed-testing build to production (or builds and uploads to production; whichever the upload action supports cleanly).
   - Upload with a Google Play service account (JSON in a secret). Package name from `vars.ANDROID_PACKAGE_ID`.
   - The very first upload is done by hand in Play Console (Google allows API uploads only after the app exists). Until then the upload step is skipped.
+- **Concurrency**: the Android workflow runs one at a time per event and branch, so a pending production run is never replaced by a later push.
 - **Secrets** (created by the wizard): `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`. Play App Signing is on, so this key is only the **upload** key and can be reset if lost.
 
 ### Store listing (`docs/store/`)
@@ -105,7 +107,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - full description up to 4000 characters.
 - No donation, jar or payment wording, and no email in the description (Play shows the contact email itself). Website field: the Web App's home page.
 - Graphics, drawn by script (Playwright), committed to `docs/store/`:
-  - at least 4 phone screenshots per language at 1080×1920 (9:16), so the game is eligible for promotion;
+  - 8 phone screenshots per language at 1080×1920 (9:16), covering all four Games and both Modes (Teach and Test), so the game is eligible for promotion;
   - a 1024×500 feature graphic (original SVG to PNG, no alpha);
   - a 512×512 icon (32-bit PNG).
 - Play Console answers (the wizard walks through them):
@@ -120,7 +122,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 
 - Vitest:
   - Footer shows Privacy and Contact, and shows the Support Button only for the Web App with an `https://` URL (three cases: Web App with URL, Web App with `unset`, Android App with URL);
-  - Support Button: a hold under 2 s does nothing, a 2 s hold opens the URL, keyboard hold works (fake timers);
+  - Support Button: a hold under 2 s does nothing, the release after a 2 s hold opens the URL, keyboard hold works (fake timers);
   - back-button handler per screen: route logic tested without Capacitor (the handler takes the router state).
 - Playwright (Web App): the Footer is on Welcome and Settings, not in a Round or on Summary; the Privacy Page loads offline after the first visit (it is in the precache); `fits-small-phone` still passes with the Footer.
 - Android: a CI step lists the merged manifest permissions and fails if location or `AD_ID` appear; a manual check on a device or emulator in airplane mode on first launch (ticket 10 checklist).
@@ -133,6 +135,14 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 - Families: a privacy policy is needed before the target-audience form can be filled in. Apps aimed only at children must not request location or `AD_ID`, and may use only approved SDKs. No general parental-gate rule; we hold-to-open anyway. Source: support.google.com/googleplay/android-developer/answer/9893335, /9867159
 - Payments: the app and the store listing "may not lead users to a payment method other than Google Play's billing system". The only exception is tax-exempt donations. So there is no Support Button in the Android App and no donation text in the listing. Source: support.google.com/googleplay/android-developer/answer/9858738
 - Listing limits 30/80/4000. Screenshots: at least 2 to publish; games need 3+ at 9:16 or 16:9 and at least 1080 px for promotion. Source: support.google.com/googleplay/android-developer/answer/9859152, /9866151
+
+## Follow-ups
+
+Found while building the batch; not fixed here.
+
+- **Welcome start button below the fold at 360×640** (older than this batch): on a 360×640 phone Start ends at about 758 px, so the Player scrolls to reach it. The Footer now sits under it too.
+- **Summary confetti covers the headline on phones**: `SummaryConfetti.vue` drops over "Well done, …" on a phone. The store screenshot of the Summary hides the confetti to work round it.
+- **Set Time number pad below the fold in phone landscape**: on a phone held sideways the pad sits partly under the bottom edge, so the Player scrolls to type.
 
 ## Out of scope
 
