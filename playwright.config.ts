@@ -1,9 +1,11 @@
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
-const port = process.env.CI ? 4173 : 5180
+// PW_PORT / PW_OFFLINE_PORT let parallel checkouts run Playwright side by side without reusing
+// each other's server.
+const port = process.env.CI ? 4173 : Number(process.env.PW_PORT ?? 5180)
 /** The offline check needs the service worker, so it always runs on the built app. */
-const offlinePort = process.env.CI ? 4173 : 4174
+const offlinePort = process.env.CI ? 4173 : Number(process.env.PW_OFFLINE_PORT ?? 4174)
 
 export default defineConfig({
   testDir: './e2e',
