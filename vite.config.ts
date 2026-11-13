@@ -28,10 +28,11 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: false,
       manifest: {
-        name: 'Teach Clock',
-        short_name: 'Teach Clock',
-        description: 'A game that teaches children to read and set an analogue clock.',
-        lang: 'en',
+        name: 'Вчимо годинник',
+        // Short enough to fit under a home-screen icon.
+        short_name: 'Годинник',
+        description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
+        lang: 'uk',
         theme_color: themeColor,
         background_color: themeColor,
         display: 'standalone',

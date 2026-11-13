@@ -6,11 +6,11 @@ Covers: P6
 
 **Blocked by:** none
 
-**Status:** todo
+**Status:** done
 
-- [ ] `SupportButton.vue` takes `url`; pointer down starts a 2 s hold, a ring (SVG stroke) fills around a heart icon (original SVG), release or pointer leave cancels and resets
-- [ ] Enter or Space held does the same; focus ring visible; `aria-label` and a visible hint "Утримуй, щоб відкрити" (`support.hold`)
-- [ ] On completion: `window.open(url, '_blank', 'noopener')`, once per hold
-- [ ] `prefers-reduced-motion`: ring fills linearly, no bounce
-- [ ] i18n `support.button`, `support.hold` in `uk.ts` and `en.ts`
-- [ ] Vitest with fake timers: a 1.9 s hold opens nothing, a 2 s hold opens once, an early release resets, keyboard hold works
+- [x] `SupportButton.vue` takes `url`; pointer down starts a 2 s hold, a ring (SVG stroke) fills around a heart icon (original SVG), release or pointer leave cancels and resets
+- [x] Enter or Space held does the same; focus ring visible; `aria-label` and a visible hint "Утримуй, щоб відкрити" (`support.hold`)
+- [x] On completion: `window.open(url, '_blank', 'noopener')`, once per hold
+- [x] `prefers-reduced-motion`: ring fills linearly, no bounce
+- [x] i18n `support.button`, `support.hold` in `uk.ts` and `en.ts`
+- [x] Vitest with fake timers: a 1.9 s hold opens nothing, a 2 s hold opens once, an early release resets, keyboard hold works

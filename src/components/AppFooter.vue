@@ -4,12 +4,14 @@
  * Inside <main> a <footer> is no landmark by default, so it says it is the page footer.
  */
 import { useI18n } from 'vue-i18n'
-import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
+import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
+import { isAndroidApp } from '@/platform'
 
 const { t } = useI18n()
 
-// The Privacy Page is static HTML in public/, served next to the app under its base.
-const privacyHref = `${import.meta.env.BASE_URL}privacy.html`
+// The Privacy Page is static HTML in public/, served next to the app under its base. The Android
+// App links to the public page instead, which opens in the system browser, outside the app.
+const privacyHref = isAndroidApp ? PRIVACY_URL : `${import.meta.env.BASE_URL}privacy.html`
 const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`
 </script>
 

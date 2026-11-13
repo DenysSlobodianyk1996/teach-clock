@@ -41,11 +41,19 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   await expect(page.locator('h2#privacy-en')).toBeVisible()
 })
 
-test('the app can be installed as "Teach Clock" with its own icons', async ({ page, request }) => {
+test('the app can be installed as "Вчимо годинник" with its own icons', async ({
+  page,
+  request,
+}) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
   const manifest = await (await request.get(href!)).json()
-  expect(manifest).toMatchObject({ name: 'Teach Clock', display: 'standalone', start_url: '/' })
+  expect(manifest).toMatchObject({
+    name: 'Вчимо годинник',
+    lang: 'uk',
+    display: 'standalone',
+    start_url: '/',
+  })
   const sizes = manifest.icons.map((icon: { sizes: string }) => icon.sizes)
   expect(sizes).toEqual(expect.arrayContaining(['192x192', '512x512']))
   for (const icon of manifest.icons) {

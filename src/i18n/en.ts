@@ -138,4 +138,8 @@ export default {
     privacy: 'Privacy',
     contact: 'Contact',
   },
+  support: {
+    button: 'Support the author',
+    hold: 'Hold to open',
+  },
 } satisfies typeof uk

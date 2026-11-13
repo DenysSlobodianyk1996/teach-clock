@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import AppFooter from '../AppFooter.vue'
-import { CONTACT_EMAIL } from '@/config'
+import { CONTACT_EMAIL, PRIVACY_URL } from '@/config'
 import { mountComponent } from '@/test/mountComponent'
 import { t } from '@/test/i18n'
 
@@ -28,6 +28,15 @@ describe('AppFooter', () => {
     expect(link(t('footer.contact')).attributes('href')).toBe(
       `mailto:${CONTACT_EMAIL}?subject=Contact%20support%20from%20teach%20clock%20for%20kids`,
     )
+  })
+
+  it('in the Android App, links to the public Privacy Page, which opens in the system browser', async () => {
+    vi.resetModules()
+    vi.doMock('@/platform', () => ({ isAndroidApp: true, supportUrl: null }))
+    const { default: AndroidFooter } = await import('../AppFooter.vue')
+    wrapper = mountComponent(AndroidFooter)
+    expect(link(t('footer.privacy')).attributes('href')).toBe(PRIVACY_URL)
+    vi.doUnmock('@/platform')
   })
 
   it('is the page footer', () => {
