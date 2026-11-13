@@ -48,7 +48,7 @@ You need these to build and run the Android App locally. CI builds without them.
 
 ```bash
 brew install openjdk@21                       # Android build tools need Java 21 (this Mac has 17)
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+export JAVA_HOME="$(brew --prefix openjdk@21)"  # java_home -v 21 doesn't see Homebrew's JDK
 export ANDROID_HOME="$HOME/Library/Android/sdk"   # the SDK is already there
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 ```
@@ -60,13 +60,29 @@ Put the three `export` lines in `~/.zshrc`. Then in **Android Studio** › Setti
 
 Also create an emulator in Device Manager: a Pixel phone with API 36.
 
-The commands come with ticket 07; see `package.json` for their final names:
+The commands (scripts in `package.json`):
 
 ```bash
-npm run build:android        # VITE_TARGET=android vite build + npx cap sync android
+npm run build:android        # VITE_TARGET=android type-check and build, then npx cap sync android
 npx cap run android          # install and start on the emulator or a USB phone
 npx cap open android         # open the project in Android Studio
+cd android && ./gradlew assembleDebug   # a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
+cd android && ./gradlew bundleRelease   # the app bundle (.aab); unsigned unless the env vars below are set
 ```
+
+Run `npm run build:android` again after every change to the game: Gradle packages whatever is in `dist/` at the last sync.
+
+The release build reads its signing key and version from environment variables:
+
+| Variable                    | What                                                            |
+| --------------------------- | --------------------------------------------------------------- |
+| `ANDROID_KEYSTORE_PATH`     | path to the upload key's `.jks` file; unset = unsigned build    |
+| `ANDROID_KEYSTORE_PASSWORD` | the keystore's password                                         |
+| `ANDROID_KEY_ALIAS`         | the key's alias (`upload`)                                      |
+| `ANDROID_KEY_PASSWORD`      | the key's password                                              |
+| `VERSION_CODE`              | the versionCode; CI sets the run number, local builds default 1 |
+
+`versionName` is always the `version` in `package.json`.
 
 ## 3. Make the upload key (once, keep it safe)
 
@@ -121,7 +137,9 @@ Google only accepts automatic (API) uploads after the app has one build. So:
 1. Locally (with the key from step 3):
    ```bash
    npm run build:android
-   cd android && ./gradlew bundleRelease   # signing config reads the key from env vars (ticket 07)
+   export ANDROID_KEYSTORE_PATH=~/teach-clock-upload.jks ANDROID_KEY_ALIAS=upload
+   read -s ANDROID_KEYSTORE_PASSWORD && export ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_PASSWORD=$ANDROID_KEYSTORE_PASSWORD
+   cd android && ./gradlew bundleRelease   # signed with the env vars from step 2
    ```
    The file is `android/app/build/outputs/bundle/release/app-release.aab`.
 2. Play Console › **Test and release › Testing › Closed testing** › create a track (the default "Alpha" is fine) › **Create release** › upload the `.aab`. Accept Play App Signing when asked.
