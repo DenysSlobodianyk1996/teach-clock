@@ -88,14 +88,15 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 ### CI
 
 - **Path filter** (both workflows; each also watches its own file and keeps `workflow_dispatch`):
-  - triggers: `src/**`, `public/**`, `index.html`, `vite.config.ts`, `package.json`, `package-lock.json`, `tsconfig*`;
-  - the Android workflow also watches `android/**` and `capacitor.config.ts`;
+  - triggers: `src/**`, `public/**`, `index.html`, `vite.config.ts`, `package.json`, `package-lock.json`, `tsconfig*`, `env.d.ts`;
+  - the Android workflow also watches `android/**`, `capacitor.config.ts` and `scripts/**` (the icon, splash and manifest-check scripts);
   - never triggers on its own: `docs/`, `.scratch/`, `e2e/`, `*.md`, test files.
 - **Android workflow** (`.github/workflows/android.yml`):
   - on push to `main` (path filter): `npm ci` → `VITE_TARGET=android npm run build` → `npx cap sync android` → Gradle `bundleRelease` signed with the upload key from secrets → upload to Play **closed testing** with release notes "Покращення та виправлення" / "Improvements and fixes".
   - **Production**: `workflow_dispatch` with inputs for Ukrainian and English release notes. It promotes the latest closed-testing build to production (or builds and uploads to production; whichever the upload action supports cleanly).
   - Upload with a Google Play service account (JSON in a secret). Package name from `vars.ANDROID_PACKAGE_ID`.
   - The very first upload is done by hand in Play Console (Google allows API uploads only after the app exists). Until then the upload step is skipped.
+- **Concurrency**: the Android workflow runs one at a time per event and branch, so a pending production run is never replaced by a later push.
 - **Secrets** (created by the wizard): `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`. Play App Signing is on, so this key is only the **upload** key and can be reset if lost.
 
 ### Store listing (`docs/store/`)

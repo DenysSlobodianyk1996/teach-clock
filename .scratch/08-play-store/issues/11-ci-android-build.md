@@ -8,7 +8,7 @@ Covers: P7
 
 **Status:** done
 
-- [x] Trigger: push to `main` with the spec's path filter plus `android/**`, `capacitor.config.ts`, its own file; `workflow_dispatch`
+- [x] Trigger: push to `main` with the spec's path filter plus `android/**`, `capacitor.config.ts`, `scripts/**`, its own file; `workflow_dispatch`
 - [x] Node 24, JDK 21, Android SDK 36; `npm ci`, `npm run build:android`, permission check from ticket 10, Gradle `bundleRelease`
 - [x] Keystore from `ANDROID_KEYSTORE_BASE64` and the other three secrets; `VERSION_CODE = github.run_number`
 - [x] The `.aab` kept as a workflow artifact (14 days) so the first upload can be done by hand from it
