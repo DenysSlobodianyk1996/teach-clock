@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type RouterHistory } from 'vue-router'
+import { createRouter, createWebHistory, type Router, type RouterHistory } from 'vue-router'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -43,8 +43,17 @@ export function createAppRouter(
         component: () => import('@/views/SummaryView.vue'),
         meta: { needs: 'summary' },
       },
+      {
+        path: '/privacy',
+        name: 'privacy',
+        component: () => import('@/views/PrivacyView.vue'),
+      },
       { path: '/:pathMatch(.*)*', redirect: { name: 'welcome' } },
     ],
+  })
+
+  router.afterEach((_to, from, failure) => {
+    if (!failure) cameFromApp.set(router, from.matched.length > 0)
   })
 
   router.beforeEach((to, from) => {
@@ -69,4 +78,16 @@ export function createAppRouter(
   })
 
   return router
+}
+
+/** Per router: was the screen on show reached from another app screen (not opened straight)? */
+const cameFromApp = new WeakMap<Router, boolean>()
+
+/**
+ * Back to the screen the Player came from, as the browser's Back would; Welcome when there is none
+ * (the screen was opened straight from its address).
+ */
+export async function goBack(router: Router): Promise<void> {
+  if (cameFromApp.get(router)) router.back()
+  else await router.push({ name: 'welcome' })
 }

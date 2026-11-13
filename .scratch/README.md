@@ -2,17 +2,18 @@
 
 Local issue tracker. Each batch of work is one folder, worked through the main flow: grill → spec (if needed) → tickets → implement.
 
-| Batch                                 | Kind          | Status  | Spec | PRs                      |
-| ------------------------------------- | ------------- | ------- | ---- | ------------------------ |
-| [01-first-version](01-first-version/) | first version | done    | yes  | #1–#14                   |
-| [02-play-feel](02-play-feel/)         | fixes         | done    | no   | #15–#18                  |
-| — (outside a batch)                   | fixes, deploy | done    | —    | #19–#22                  |
-| [03-readability](03-readability/)     | fixes         | done    | no   | #24 (plan), #25–#32      |
-| [04-clear-hands](04-clear-hands/)     | fixes         | done    | no   | #33, #34 (plan), #35–#38 |
-| [05-drag-help](05-drag-help/)         | feature       | done    | no   | #39 (plan), #42          |
-| [06-drag-minutes](06-drag-minutes/)   | feature       | done    | yes  | #40, #41 (plan), #43     |
-| [07-teach-popup](07-teach-popup/)     | fixes         | done    | yes  | #44 (plan), #45          |
-| [08-play-store](08-play-store/)       | feature       | done    | yes  | #46 (plan), #47          |
+| Batch                                   | Kind          | Status | Spec | PRs                      |
+| --------------------------------------- | ------------- | ------ | ---- | ------------------------ |
+| [01-first-version](01-first-version/)   | first version | done   | yes  | #1–#14                   |
+| [02-play-feel](02-play-feel/)           | fixes         | done   | no   | #15–#18                  |
+| — (outside a batch)                     | fixes, deploy | done   | —    | #19–#22                  |
+| [03-readability](03-readability/)       | fixes         | done   | no   | #24 (plan), #25–#32      |
+| [04-clear-hands](04-clear-hands/)       | fixes         | done   | no   | #33, #34 (plan), #35–#38 |
+| [05-drag-help](05-drag-help/)           | feature       | done   | no   | #39 (plan), #42          |
+| [06-drag-minutes](06-drag-minutes/)     | feature       | done   | yes  | #40, #41 (plan), #43     |
+| [07-teach-popup](07-teach-popup/)       | fixes         | done   | yes  | #44 (plan), #45          |
+| [08-play-store](08-play-store/)         | feature       | done   | yes  | #46 (plan), #47          |
+| [09-privacy-in-app](09-privacy-in-app/) | feature       | done   | no   | #49                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 

@@ -123,5 +123,5 @@ The heart button in the Web App's Footer that opens the author's donation page a
 _Avoid_: donate button, tip jar, jar
 
 **Privacy Page**:
-The page, separate from the game, that says in Ukrainian and English that nothing about the Player is collected or sent.
+The app screen, opened from the Footer, that says in the interface language that nothing about the Player is collected or sent. The Web App build also writes a static copy, `privacy.html` (Ukrainian, then English), from the same text: that is the public URL in Google Play's listing.
 _Avoid_: privacy policy screen, terms

@@ -4,22 +4,21 @@
  * App.vue shows it outside <main>, so the <footer> is the page's contentinfo landmark.
  */
 import { useI18n } from 'vue-i18n'
-import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
+import { RouterLink } from 'vue-router'
+import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
 import { isAndroidApp, supportUrl } from '@/platform'
 import SupportButton from './SupportButton.vue'
 
 const { t } = useI18n()
 
-// The Privacy Page is static HTML in public/, served next to the app under its base. The Android
-// App links to the public page instead, which opens in the system browser, outside the app.
-const privacyHref = isAndroidApp ? PRIVACY_URL : `${import.meta.env.BASE_URL}privacy.html`
 const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`
 </script>
 
 <template>
   <footer class="footer">
     <nav class="links">
-      <a :href="privacyHref" target="_blank" rel="noopener">{{ t('footer.privacy') }}</a>
+      <!-- An app screen in both builds, so it also opens offline and in the Android App. -->
+      <RouterLink :to="{ name: 'privacy' }">{{ t('footer.privacy') }}</RouterLink>
       <a :href="contactHref">{{ t('footer.contact') }}</a>
     </nav>
     <!-- Web App only: Google Play forbids outside payments. No https:// link set, no button. -->
