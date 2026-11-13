@@ -1,5 +1,6 @@
 /** The Footer: on Welcome and Settings only, with Privacy and Contact. */
 import { t } from './i18n.ts'
+import { CONTACT_EMAIL, CONTACT_SUBJECT } from '../src/config.ts'
 import { expect, test, type Page } from '@playwright/test'
 import { startRound } from './round.ts'
 import { tapNumber } from './numbers.ts'
@@ -12,7 +13,7 @@ test('Welcome and Settings have the Footer with Privacy and Contact', async ({ p
   await expect(privacy).toHaveAttribute('target', '_blank')
   await expect(footer(page).getByRole('link', { name: t('footer.contact') })).toHaveAttribute(
     'href',
-    /^mailto:[^?]+@[^?]+\?subject=Contact%20support%20from%20teach%20clock%20for%20kids$/,
+    `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`,
   )
 
   // Privacy opens the Privacy Page in a new tab.

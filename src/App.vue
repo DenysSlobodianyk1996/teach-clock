@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import { usePreferencesStore } from '@/stores/preferences'
 
 const { locale, t } = useI18n()
 const preferences = usePreferencesStore()
+const route = useRoute()
 
 // The Preferences drive the interface language and the theme on <html>.
 watch(
@@ -35,9 +37,13 @@ watch(
   <div class="app">
     <AppHeader />
     <div class="stage-wrap">
-      <main class="stage">
-        <RouterView />
-      </main>
+      <div class="stage">
+        <main class="screen">
+          <RouterView />
+        </main>
+        <!-- Welcome and Settings only. Outside <main>, so it is the page's contentinfo landmark. -->
+        <AppFooter v-if="route.meta.footer" />
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +70,13 @@ watch(
   width: min(100%, var(--stage-max), calc((100dvh - var(--header-height)) * 4 / 3));
   aspect-ratio: 4 / 3;
   background: var(--bg);
+}
+
+/* The screen fills the stage above the Footer; each view grows inside it. */
+.screen {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Desktop: the stage sits as a card on a deeper background. Not when taller than wide: that is the

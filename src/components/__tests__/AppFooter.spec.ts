@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import AppFooter from '../AppFooter.vue'
-import { CONTACT_EMAIL, PRIVACY_URL } from '@/config'
+import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
 import { mountComponent } from '@/test/mountComponent'
 import { t } from '@/test/i18n'
 
@@ -26,7 +26,7 @@ describe('AppFooter', () => {
   it('writes to the author with a fixed subject', () => {
     wrapper = mountComponent(AppFooter)
     expect(link(t('footer.contact')).attributes('href')).toBe(
-      `mailto:${CONTACT_EMAIL}?subject=Contact%20support%20from%20teach%20clock%20for%20kids`,
+      `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`,
     )
   })
 
@@ -69,12 +69,13 @@ describe('AppFooter', () => {
       expect(supportButton()).toBeUndefined()
     })
 
-    it('opens its link after a hold', async () => {
+    it('opens its link on the release after a hold', async () => {
       vi.useFakeTimers()
       const open = vi.spyOn(window, 'open').mockReturnValue(null)
       await mountWith({ isAndroidApp: false, supportUrl: SUPPORT_URL })
       await supportButton()!.trigger('pointerdown')
       vi.advanceTimersByTime(2000)
+      await supportButton()!.trigger('pointerup')
       expect(open).toHaveBeenCalledWith(SUPPORT_URL, '_blank', 'noopener')
       open.mockRestore()
       vi.useRealTimers()

@@ -81,21 +81,24 @@ describe('SupportButton', () => {
     expect(open).toHaveBeenCalledTimes(2)
   })
 
-  it.each(['pointerleave', 'pointercancel'])('cancels on %s, even after a full hold', async (event) => {
-    await button().trigger('pointerdown')
-    vi.advanceTimersByTime(1000)
-    await button().trigger(event)
-    vi.advanceTimersByTime(2000)
-    await button().trigger('pointerup')
-    expect(open).not.toHaveBeenCalled()
+  it.each(['pointerleave', 'pointercancel'])(
+    'cancels on %s, even after a full hold',
+    async (event) => {
+      await button().trigger('pointerdown')
+      vi.advanceTimersByTime(1000)
+      await button().trigger(event)
+      vi.advanceTimersByTime(2000)
+      await button().trigger('pointerup')
+      expect(open).not.toHaveBeenCalled()
 
-    await button().trigger('pointerdown')
-    vi.advanceTimersByTime(2000)
-    await button().trigger(event)
-    expect(button().classes()).not.toContain('holding')
-    await button().trigger('pointerup')
-    expect(open).not.toHaveBeenCalled()
-  })
+      await button().trigger('pointerdown')
+      vi.advanceTimersByTime(2000)
+      await button().trigger(event)
+      expect(button().classes()).not.toContain('holding')
+      await button().trigger('pointerup')
+      expect(open).not.toHaveBeenCalled()
+    },
+  )
 
   it('resets when the page is hidden, so the next hold works', async () => {
     await button().trigger('pointerdown')
