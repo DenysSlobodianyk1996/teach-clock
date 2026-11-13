@@ -12,7 +12,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [05-drag-help](05-drag-help/)         | feature       | done    | no   | #39 (plan), #42          |
 | [06-drag-minutes](06-drag-minutes/)   | feature       | done    | yes  | #40, #41 (plan), #43     |
 | [07-teach-popup](07-teach-popup/)     | fixes         | done    | yes  | #44 (plan), #45          |
-| [08-play-store](08-play-store/)       | feature       | planned | yes  | —                        |
+| [08-play-store](08-play-store/)       | feature       | done    | yes  | #46 (plan), #47          |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 

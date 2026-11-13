@@ -28,8 +28,8 @@
     "SummaryDragHours.dc.html": { "x": 1104, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав години" },
     "SummaryDragMinutes.dc.html": { "x": 2208, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав хвилини" },
 
-    "PhoneWelcome.dc.html": { "x": 0, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Вітання" },
-    "PhoneSettings.dc.html": { "x": 470, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Налаштування" },
+    "PhoneWelcome.dc.html": { "x": 0, "y": 7340, "w": 390, "h": 906, "title": "Телефон · Вітання" },
+    "PhoneSettings.dc.html": { "x": 470, "y": 7340, "w": 390, "h": 1002, "title": "Телефон · Налаштування" },
     "PhoneSetTime.dc.html": { "x": 940, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Який час?" },
     "PhoneDragArrows.dc.html": { "x": 1410, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Постав стрілки" },
     "PhoneDragHours.dc.html": { "x": 1880, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав години" },
@@ -49,7 +49,14 @@
     "DarkSummary.dc.html": { "x": 2208, "y": 10680, "w": 1024, "h": 1100, "title": "Темна тема · Підсумок" },
     "LightSettings.dc.html": { "x": 3312, "y": 10680, "w": 1024, "h": 768, "title": "Світла тема · Налаштування" },
     "LightDragArrows.dc.html": { "x": 4416, "y": 10680, "w": 1024, "h": 768, "title": "Світла тема · Постав стрілки" },
-    "LightSummary.dc.html": { "x": 5520, "y": 10680, "w": 1024, "h": 1100, "title": "Світла тема · Підсумок" }
+    "LightSummary.dc.html": { "x": 5520, "y": 10680, "w": 1024, "h": 1100, "title": "Світла тема · Підсумок" },
+
+    "SupportDesktopWelcome.dc.html": { "x": 0, "y": 12180, "w": 1440, "h": 900, "title": "Кнопка підтримки · Комп’ютер · Вітання" },
+    "SupportDarkDesktopSettings.dc.html": { "x": 1520, "y": 12180, "w": 1440, "h": 939, "title": "Кнопка підтримки · Темна тема · Комп’ютер · Налаштування" },
+    "SupportLightDesktopWelcome.dc.html": { "x": 3040, "y": 12180, "w": 1440, "h": 900, "title": "Кнопка підтримки · Світла тема · Комп’ютер · Вітання" },
+    "SupportPhoneSettings.dc.html": { "x": 4560, "y": 12180, "w": 390, "h": 1098, "title": "Кнопка підтримки · Телефон · Налаштування" },
+    "SupportDarkPhoneWelcome.dc.html": { "x": 5030, "y": 12180, "w": 390, "h": 1002, "title": "Кнопка підтримки · Темна тема · Телефон · Вітання" },
+    "SupportLightPhoneSettings.dc.html": { "x": 5500, "y": 12180, "w": 390, "h": 1098, "title": "Кнопка підтримки · Світла тема · Телефон · Налаштування" }
   },
   "order": [
     "Main.dc.html",
@@ -60,7 +67,8 @@
     "Summary.dc.html", "SummaryDragHours.dc.html", "SummaryDragMinutes.dc.html",
     "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html",
     "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html",
-    "DarkSettings.dc.html", "DarkSetTime.dc.html", "DarkSummary.dc.html", "LightSettings.dc.html", "LightDragArrows.dc.html", "LightSummary.dc.html"
+    "DarkSettings.dc.html", "DarkSetTime.dc.html", "DarkSummary.dc.html", "LightSettings.dc.html", "LightDragArrows.dc.html", "LightSummary.dc.html",
+    "SupportDesktopWelcome.dc.html", "SupportDarkDesktopSettings.dc.html", "SupportLightDesktopWelcome.dc.html", "SupportPhoneSettings.dc.html", "SupportDarkPhoneWelcome.dc.html", "SupportLightPhoneSettings.dc.html"
   ],
   "notes": {
     "rowStyle": { "x": 0, "y": -260, "text": "Стиль і елементи", "kind": "title1", "maxW": 1024 },
@@ -71,7 +79,8 @@
     "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 3232 },
     "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 3210 },
     "rowDesktop": { "x": 0, "y": 9120, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 10560 },
-    "rowThemes": { "x": 0, "y": 10420, "text": "Темна і світла теми", "kind": "title1", "maxW": 6544 }
+    "rowThemes": { "x": 0, "y": 10420, "text": "Темна і світла теми", "kind": "title1", "maxW": 6544 },
+    "rowSupport": { "x": 0, "y": 11920, "text": "Футер з кнопкою підтримки (лише вебзастосунок)", "kind": "title1", "maxW": 5890 }
   },
   "designSystems": []
 }

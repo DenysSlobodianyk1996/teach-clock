@@ -217,3 +217,20 @@
 /* ---------- stage (desktop) ---------- */
 .stage-wrap { display: flex; justify-content: center; align-items: flex-start; padding: 20px 0 0; }
 .stage { width: 1024px; height: 768px; border-radius: 32px; overflow: hidden; position: relative; box-shadow: var(--shadow); }
+
+/* ---------- Footer (Welcome and Settings) ---------- */
+/* A plain bar after the screen's content, never sticky: Privacy and Contact, and in the Web App
+   (only when a support link is set) the Support Button. On a phone the button wraps to its own row. */
+.ftr { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 24px; padding: 8px 20px 12px; border-top: 1px solid var(--line); }
+.ftr-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; }
+.ftr-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 4px; font-size: 15px; font-weight: 700; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.ftr-links a:hover { color: var(--text); }
+/* Support Button: hold it 2 s and the support page opens; a ring fills round the heart while held. */
+.support { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.hold { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; padding: 0; border: 0; border-radius: 999px; background: var(--surface); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18); }
+.hold svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+.hold .track, .hold .ring { fill: none; stroke-width: 5; }
+.hold .track { stroke: var(--line); }
+.hold .ring { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.hold .heart { fill: var(--hour); transform: rotate(90deg); transform-origin: 32px 32px; }
+.support .hint { font-size: 14px; font-weight: 700; color: var(--muted); }

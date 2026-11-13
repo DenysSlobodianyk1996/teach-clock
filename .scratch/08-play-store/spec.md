@@ -1,6 +1,6 @@
 ---
 title: Teach Clock on Google Play, plus a Footer and a Support Button
-status: planned
+status: done
 ---
 
 # Teach Clock on Google Play, plus a Footer and a Support Button
@@ -133,6 +133,14 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 - Families: a privacy policy is needed before the target-audience form can be filled in. Apps aimed only at children must not request location or `AD_ID`, and may use only approved SDKs. No general parental-gate rule; we hold-to-open anyway. Source: support.google.com/googleplay/android-developer/answer/9893335, /9867159
 - Payments: the app and the store listing "may not lead users to a payment method other than Google Play's billing system". The only exception is tax-exempt donations. So there is no Support Button in the Android App and no donation text in the listing. Source: support.google.com/googleplay/android-developer/answer/9858738
 - Listing limits 30/80/4000. Screenshots: at least 2 to publish; games need 3+ at 9:16 or 16:9 and at least 1080 px for promotion. Source: support.google.com/googleplay/android-developer/answer/9859152, /9866151
+
+## Follow-ups
+
+Found while building the batch; not fixed here.
+
+- **Welcome start button below the fold at 360×640** (older than this batch): on a 360×640 phone Start ends at about 758 px, so the Player scrolls to reach it. The Footer now sits under it too.
+- **Summary confetti covers the headline on phones**: `SummaryConfetti.vue` drops over "Well done, …" on a phone. The store screenshot of the Summary hides the confetti to work round it.
+- **Set Time number pad below the fold in phone landscape**: on a phone held sideways the pad sits partly under the bottom edge, so the Player scrolls to type.
 
 ## Out of scope
 
