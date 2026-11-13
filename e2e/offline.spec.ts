@@ -29,6 +29,18 @@ test('after the first visit the whole app works with no internet', async ({ page
   expect(fonts).toContain('Nunito')
 })
 
+test('the Privacy Page opens with no internet after the first visit', async ({ page, context }) => {
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+  await page.evaluate(() => navigator.serviceWorker.ready)
+
+  await context.setOffline(true)
+  await page.goto('/privacy.html')
+
+  await expect(page.locator('h1#privacy-uk')).toBeVisible()
+  await expect(page.locator('h2#privacy-en')).toBeVisible()
+})
+
 test('the app can be installed as "Teach Clock" with its own icons', async ({ page, request }) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
