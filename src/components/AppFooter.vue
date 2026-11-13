@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * The Footer of Welcome and Settings: a plain bar after the screen's content, never sticky.
- * Inside <main> a <footer> is no landmark by default, so it says it is the page footer.
+ * App.vue shows it outside <main>, so the <footer> is the page's contentinfo landmark.
  */
 import { useI18n } from 'vue-i18n'
 import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
@@ -17,7 +17,7 @@ const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTAC
 </script>
 
 <template>
-  <footer class="footer" role="contentinfo">
+  <footer class="footer">
     <nav class="links">
       <a :href="privacyHref" target="_blank" rel="noopener">{{ t('footer.privacy') }}</a>
       <a :href="contactHref">{{ t('footer.contact') }}</a>

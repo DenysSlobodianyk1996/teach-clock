@@ -31,8 +31,8 @@ export default defineConfig({
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
     // first visit; src/pwa.ts registers it and applies updates only between Rounds.
     // Off in the Android App: the game is packaged inside it, so there is no service worker and
-    // no manifest (ADR 0004). `disable` still answers src/pwa.ts's import, which main.ts never
-    // calls there.
+    // no manifest (ADR 0004). main.ts loads src/pwa.ts only in the Web App; `disable` still
+    // answers its `virtual:pwa-register` import.
     VitePWA({
       disable: isAndroidApp,
       registerType: 'prompt',

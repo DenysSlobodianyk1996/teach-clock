@@ -1,5 +1,4 @@
 import type { Router } from 'vue-router'
-import { usePlayStore } from '@/stores/play'
 import { dismissTopPopup, hasOpenPopup } from '@/components/openPopups'
 import { backAction, type BackScreen } from './backAction'
 
@@ -8,17 +7,14 @@ const SCREENS: readonly BackScreen[] = ['welcome', 'settings', 'round', 'summary
 /** Does what `backAction` says for the screen on show. `exit` closes the app. */
 export async function pressBack(router: Router, exit: () => unknown): Promise<void> {
   const name = router.currentRoute.value.name
-  const screen = SCREENS.find((s) => s === name) ?? 'welcome'
+  const screen = SCREENS.find((s) => s === name)
   switch (backAction({ screen, popupOpen: hasOpenPopup() })) {
     case 'closePopup':
       dismissTopPopup()
       return
-    case 'openLeaveDialog': {
-      const play = usePlayStore()
-      // A finished Round is already on its way to its Summary: nothing to leave.
-      if (play.round && !play.summary) play.askingToLeave = true
-      return
-    }
+    // Leaving a Round goes through the router's guard, like the browser's Back: it opens the
+    // leave dialog, or takes a finished Round on to its Summary.
+    case 'openLeaveDialog':
     case 'goWelcome':
       await router.push({ name: 'welcome' })
       return

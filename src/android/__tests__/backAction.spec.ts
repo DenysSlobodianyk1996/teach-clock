@@ -17,4 +17,8 @@ describe('backAction: what the Android back button does', () => {
   it.each(rows)('on %s, popup open %s: %s', (screen, popupOpen, action) => {
     expect(backAction({ screen, popupOpen })).toBe(action)
   })
+
+  it('on a screen it does not know, goes to Welcome and never exits', () => {
+    expect(backAction({ screen: undefined, popupOpen: false })).toBe('goWelcome')
+  })
 })

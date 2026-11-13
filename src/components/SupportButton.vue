@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, useId } from 'vue'
+import { onBeforeUnmount, onMounted, ref, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 /**
- * Support Button: hold it for 2 s (pointer, Enter or Space) and `url` opens in a new tab.
- * A ring fills around the heart while held; letting go early cancels, so a stray tap opens nothing.
+ * Support Button: hold it for 2 s (pointer, Enter or Space) and `url` opens in a new tab when the
+ * Player lets go. A ring fills around the heart while held; letting go early cancels, so a stray
+ * tap opens nothing. The tab opens on the release, not when the 2 s run out: browsers (Safari and
+ * touch screens above all) only allow a new tab during a user gesture, and a timer is none.
  */
 const props = defineProps<{ url: string }>()
 
@@ -12,7 +14,10 @@ const HOLD_MS = 2000
 
 const { t } = useI18n()
 const hintId = useId()
+/** True from press to release: the ring fills, and stays full once the hold is done. */
 const holding = ref(false)
+/** The 2 s are up: the next release opens the url. */
+let armed = false
 let timer: ReturnType<typeof setTimeout> | undefined
 
 function start() {
@@ -20,15 +25,22 @@ function start() {
   holding.value = true
   timer = setTimeout(() => {
     timer = undefined
-    window.open(props.url, '_blank', 'noopener')
-    // The hold is used up: it stays done until the Player lets go and holds again.
+    armed = true
   }, HOLD_MS)
 }
 
 function cancel() {
   clearTimeout(timer)
   timer = undefined
+  armed = false
   holding.value = false
+}
+
+/** The Player let go: open the url if the hold was full (once per hold), and reset. */
+function release() {
+  const open = armed
+  cancel()
+  if (open) window.open(props.url, '_blank', 'noopener')
 }
 
 function onPointerDown(event: PointerEvent) {
@@ -48,10 +60,19 @@ function onKeyDown(event: KeyboardEvent) {
 function onKeyUp(event: KeyboardEvent) {
   if (!HOLD_KEYS.includes(event.key)) return
   event.preventDefault()
-  cancel()
+  release()
 }
 
-onBeforeUnmount(cancel)
+// A release in another tab or window never reaches the button: start fresh when the page hides.
+function onVisibilityChange() {
+  if (document.visibilityState === 'hidden') cancel()
+}
+
+onMounted(() => document.addEventListener('visibilitychange', onVisibilityChange))
+onBeforeUnmount(() => {
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  cancel()
+})
 </script>
 
 <template>
@@ -63,7 +84,7 @@ onBeforeUnmount(cancel)
       :aria-label="t('support.button')"
       :aria-describedby="hintId"
       @pointerdown="onPointerDown"
-      @pointerup="cancel"
+      @pointerup="release"
       @pointerleave="cancel"
       @pointercancel="cancel"
       @keydown="onKeyDown"

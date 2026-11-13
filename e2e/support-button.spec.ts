@@ -31,7 +31,7 @@ test.afterAll(async () => {
   delete process.env.VITE_SUPPORT_URL
 })
 
-test('the Support Button is in the Footer on Welcome, and holding it opens the support link', async ({
+test('the Support Button is in the Footer on Welcome, and a full hold opens the support link on release', async ({
   page,
 }) => {
   // Keep the test off the real internet: the support page is a stub.
@@ -40,6 +40,8 @@ test('the Support Button is in the Footer on Welcome, and holding it opens the s
     .route(SUPPORT_URL, (route) =>
       route.fulfill({ contentType: 'text/html', body: '<p>support</p>' }),
     )
+  // The hold is timed on a fake clock, so the test never waits in real time.
+  await page.clock.install()
   await page.goto(baseURL)
 
   const button = page.getByRole('contentinfo').getByRole('button', { name: t('support.button') })
@@ -47,7 +49,14 @@ test('the Support Button is in the Footer on Welcome, and holding it opens the s
   await expect(page.getByRole('contentinfo').getByText(t('support.hold'))).toBeVisible()
 
   await button.hover()
-  const [supportPage] = await Promise.all([page.context().waitForEvent('page'), page.mouse.down()])
+  // A short press opens nothing.
+  await page.mouse.down()
+  await page.clock.runFor(500)
   await page.mouse.up()
+  // A full 2 s hold opens the link on release (the release is the user gesture browsers need).
+  await page.mouse.down()
+  await page.clock.runFor(2000)
+  expect(page.context().pages()).toHaveLength(1)
+  const [supportPage] = await Promise.all([page.context().waitForEvent('page'), page.mouse.up()])
   await expect(supportPage).toHaveURL(SUPPORT_URL)
 })

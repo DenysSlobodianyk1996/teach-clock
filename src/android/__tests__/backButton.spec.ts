@@ -89,6 +89,18 @@ describe('the Android back button', () => {
     expect(popupTitle().text()).toBe(t('leave.title'))
   })
 
+  it('in a finished Round still on screen, goes on to its Summary, as the router does', async () => {
+    const { at, exit, back } = await open('/round', startRound())
+    const play = usePlayStore()
+    // Answered behind the screen's back: the Round is done, the Summary not yet shown.
+    for (let i = 0; i < 10; i++) play.submitAnswer(currentTask(play.round!)!.answer)
+    expect(at()).toBe('round')
+    await back()
+    expect(at()).toBe('summary')
+    expect(popupTitle().exists()).toBe(false)
+    expect(exit).not.toHaveBeenCalled()
+  })
+
   it('goes from Summary to Welcome', async () => {
     const { at, back } = await open('/summary', () => {
       startRound()()
