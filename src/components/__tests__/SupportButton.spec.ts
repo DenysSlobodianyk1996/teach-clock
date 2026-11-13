@@ -18,6 +18,7 @@ beforeEach(() => {
 afterEach(() => {
   wrapper.unmount()
   vi.unstubAllGlobals()
+  vi.restoreAllMocks()
   vi.useRealTimers()
 })
 
@@ -29,17 +30,24 @@ describe('SupportButton', () => {
     expect(wrapper.text()).toContain(t('support.hold'))
   })
 
-  it('opens nothing after a 1.9 s hold', async () => {
+  it('opens nothing on release after a 1.9 s hold', async () => {
     await button().trigger('pointerdown')
     vi.advanceTimersByTime(1900)
+    await button().trigger('pointerup')
+    vi.advanceTimersByTime(5000)
     expect(open).not.toHaveBeenCalled()
   })
 
-  it('opens the url once after a 2 s hold', async () => {
+  it('opens the url once, on the release that follows a full 2 s hold', async () => {
     await button().trigger('pointerdown')
     vi.advanceTimersByTime(2000)
+    // Still held: the ring is full, but browsers only allow a new tab on a user gesture.
     vi.advanceTimersByTime(5000)
+    expect(open).not.toHaveBeenCalled()
+    await button().trigger('pointerup')
     expect(open).toHaveBeenCalledExactlyOnceWith(url, '_blank', 'noopener')
+    await button().trigger('pointerup')
+    expect(open).toHaveBeenCalledOnce()
   })
 
   it('shows the ring filling while held, and resets on early release', async () => {
@@ -53,27 +61,68 @@ describe('SupportButton', () => {
     // A new hold starts from zero.
     await button().trigger('pointerdown')
     vi.advanceTimersByTime(1900)
+    await button().trigger('pointerup')
     expect(open).not.toHaveBeenCalled()
-    vi.advanceTimersByTime(100)
+    await button().trigger('pointerdown')
+    vi.advanceTimersByTime(2000)
+    await button().trigger('pointerup')
     expect(open).toHaveBeenCalledOnce()
   })
 
-  it('cancels when the pointer leaves', async () => {
+  it('takes a new hold after one has opened the url', async () => {
+    await button().trigger('pointerdown')
+    vi.advanceTimersByTime(2000)
+    await button().trigger('pointerup')
+    expect(button().classes()).not.toContain('holding')
+    await button().trigger('pointerdown')
+    expect(button().classes()).toContain('holding')
+    vi.advanceTimersByTime(2000)
+    await button().trigger('pointerup')
+    expect(open).toHaveBeenCalledTimes(2)
+  })
+
+  it.each(['pointerleave', 'pointercancel'])('cancels on %s, even after a full hold', async (event) => {
     await button().trigger('pointerdown')
     vi.advanceTimersByTime(1000)
-    await button().trigger('pointerleave')
+    await button().trigger(event)
     vi.advanceTimersByTime(2000)
+    await button().trigger('pointerup')
+    expect(open).not.toHaveBeenCalled()
+
+    await button().trigger('pointerdown')
+    vi.advanceTimersByTime(2000)
+    await button().trigger(event)
+    expect(button().classes()).not.toContain('holding')
+    await button().trigger('pointerup')
     expect(open).not.toHaveBeenCalled()
   })
 
-  it.each(['Enter', ' '])('opens after holding %j for 2 s', async (key) => {
+  it('resets when the page is hidden, so the next hold works', async () => {
+    await button().trigger('pointerdown')
+    vi.advanceTimersByTime(2000)
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden')
+    document.dispatchEvent(new Event('visibilitychange'))
+    await wrapper.vm.$nextTick()
+    expect(button().classes()).not.toContain('holding')
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible')
+    document.dispatchEvent(new Event('visibilitychange'))
+    expect(open).not.toHaveBeenCalled()
+
+    await button().trigger('pointerdown')
+    vi.advanceTimersByTime(2000)
+    await button().trigger('pointerup')
+    expect(open).toHaveBeenCalledOnce()
+  })
+
+  it.each(['Enter', ' '])('opens on keyup after holding %j for 2 s', async (key) => {
     await button().trigger('keydown', { key })
     vi.advanceTimersByTime(1000)
     // Key repeat while held does not restart the hold.
     await button().trigger('keydown', { key, repeat: true })
     vi.advanceTimersByTime(1000)
-    expect(open).toHaveBeenCalledOnce()
+    expect(open).not.toHaveBeenCalled()
     await button().trigger('keyup', { key })
+    expect(open).toHaveBeenCalledOnce()
   })
 
   it('cancels when the key is let go early', async () => {

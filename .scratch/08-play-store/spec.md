@@ -65,7 +65,8 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - letting go early cancels;
   - Enter or Space held from the keyboard works the same;
   - a small hint under it reads "Утримуй, щоб відкрити" ("Hold to open");
-  - when the hold completes, `window.open(url, '_blank', 'noopener')`.
+  - after a full 2 s hold the ring stays full, and the release that follows (pointer up, or keyup of Enter/Space) calls `window.open(url, '_blank', 'noopener')`, once per hold. It opens on the release, not when the 2 s run out, because browsers (Safari, touch screens) only allow a new tab during a user gesture and a timer is none;
+  - the hold resets when the page is hidden, the pointer leaves or is cancelled, or the button loses focus.
   - With `prefers-reduced-motion`, the ring still fills (it shows progress), just without easing.
 - `deploy.yml` passes `VITE_SUPPORT_URL: ${{ vars.VITE_SUPPORT_URL }}` to `npm run build`.
 
@@ -120,7 +121,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 
 - Vitest:
   - Footer shows Privacy and Contact, and shows the Support Button only for the Web App with an `https://` URL (three cases: Web App with URL, Web App with `unset`, Android App with URL);
-  - Support Button: a hold under 2 s does nothing, a 2 s hold opens the URL, keyboard hold works (fake timers);
+  - Support Button: a hold under 2 s does nothing, the release after a 2 s hold opens the URL, keyboard hold works (fake timers);
   - back-button handler per screen: route logic tested without Capacitor (the handler takes the router state).
 - Playwright (Web App): the Footer is on Welcome and Settings, not in a Round or on Summary; the Privacy Page loads offline after the first visit (it is in the precache); `fits-small-phone` still passes with the Footer.
 - Android: a CI step lists the merged manifest permissions and fails if location or `AD_ID` appear; a manual check on a device or emulator in airplane mode on first launch (ticket 10 checklist).
