@@ -146,7 +146,7 @@ Google only accepts automatic (API) uploads after the app has one build. So:
 > 3. Install the game from Google Play and **keep it installed for 14 days**. Playing it once or twice helps too!
 >    Thanks! 🙌
 
-Ask a few more than 12 (say 15): the rule needs **12 opted in for 14 days in a row**, and someone always drops out.
+Ask a few more than 12 (say 15): the rule needs **12 opted in for 14 days in a row**, and someone always drops out. Track who opted in, and the dates, in [`store/closed-test.md`](store/closed-test.md).
 
 ## 6. Let CI upload every merge (service account)
 
@@ -159,6 +159,8 @@ Ask a few more than 12 (say 15): the rule needs **12 opted in for 14 days in a r
 From now on, each merge to `main` that changes the app uploads a new build to closed testing (ticket 12). Your testers get it as an update.
 
 ## 7. Apply for production (after 14 days)
+
+Check the progress on the Dashboard; your log and draft answers are in [`store/closed-test.md`](store/closed-test.md).
 
 Dashboard › **Apply for production**. Google asks about:
 
