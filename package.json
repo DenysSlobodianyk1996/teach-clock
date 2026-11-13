@@ -17,7 +17,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/ e2e/",
     "generate-pwa-assets": "pwa-assets-generator",
-    "generate-android-assets": "node scripts/generate-android-assets.ts"
+    "generate-android-assets": "node scripts/generate-android-assets.ts",
+    "store-shots": "playwright test -c playwright.config.store.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",
