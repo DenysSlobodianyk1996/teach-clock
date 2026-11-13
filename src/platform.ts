@@ -1,6 +1,6 @@
 /**
  * Which build is running: the Web App (website and installed PWA) or the Android App (Capacitor,
- * ADR 0004). This is the only place that reads these build env vars; components import
+ * ADR 0004). This is the only place that reads these build env vars (bar one test in main.ts); components import
  * `isAndroidApp` and `supportUrl` from here and never read `import.meta.env` themselves.
  */
 
