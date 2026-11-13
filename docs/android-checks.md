@@ -37,11 +37,11 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 - [x] **Background and resume:** Home in the middle of a Round, then opened the app again. Same Task.
 - [x] **No Support Button** on Welcome or Settings (the Android build never renders it).
 - [x] **Footer links leave the app:** Privacy opens Chrome (the public Privacy Page URL); Contact opens the mail app (Gmail). The app stays on its own page underneath.
-- [x] **Launcher icon:** the teal circle with the clock, label "Вчимо годи…" (Pixel launcher, circle mask).
+- [x] **Launcher icon:** the teal circle with the clock, label "Годинник" in full (Pixel launcher, circle mask). The launcher shows the short label `title_activity_main`; the full name "Вчимо годинник" stays in app settings and on Play.
 - [x] **Android 12+ splash:** teal background with the clock in the middle, then Welcome.
 
-| Splash | Welcome, offline | Back in a Round | Launcher icon |
-| --- | --- | --- | --- |
+| Splash                                                    | Welcome, offline                                                                     | Back in a Round                                                                       | Launcher icon                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | ![Splash](../.scratch/08-play-store/images/10-splash.png) | ![Welcome in airplane mode](../.scratch/08-play-store/images/10-welcome-offline.png) | ![Leave dialog after back](../.scratch/08-play-store/images/10-back-leave-dialog.png) | ![Launcher icon](../.scratch/08-play-store/images/10-launcher-icon.png) |
 
 ![Set Time Round in landscape](../.scratch/08-play-store/images/10-landscape.png)

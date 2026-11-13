@@ -72,7 +72,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 
 ### Android App
 
-- `capacitor.config.ts`: `appId: 'app.teachclockforkids'`, `appName: 'Вчимо годинник'`, `webDir: 'dist'`.
+- `capacitor.config.ts`: `appId: 'app.teachclockforkids'`, `appName: 'Вчимо годинник'`, `webDir: 'dist'`. The launcher label (`title_activity_main` in `android/app/src/main/res/values/strings.xml`) is the short "Годинник", like the manifest `short_name`, so it is not cut off under the icon.
 - `android/` is committed. Target and compile SDK **36**; min SDK as Capacitor's default. JDK **21** (CI and local).
 - Permissions: only what Capacitor needs. **No location, no `AD_ID`**, no internet-dependent plugins. Apps aimed only at children must not request these.
 - Icons and splash: adaptive icon and splash generated from `public/favicon.svg` (`@capacitor/assets` or a script next to `generate-pwa-assets`).
