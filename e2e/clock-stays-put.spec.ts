@@ -8,7 +8,7 @@ import { dragNumber, tapNumber } from './numbers.ts'
 
 async function start(
   page: Page,
-  game: 'dragHours' | 'dragArrows' | 'setTime',
+  game: 'dragHours' | 'dragMinutes' | 'dragArrows' | 'setTime',
   mode: 'teach' | 'test',
 ) {
   await page.goto('/')
@@ -17,7 +17,7 @@ async function start(
   await page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) }).check()
   await page.getByRole('radio', { name: startingWith(t(`modes.${mode}.name`)) }).check()
   // 15 minutes, so the wrong Answers typed below (12:01) can never be a Task.
-  if (game !== 'dragHours') {
+  if (game === 'dragArrows' || game === 'setTime') {
     await page.getByRole('radio', { name: startingWith(t('levels.15.name')) }).check()
   }
   await page.getByRole('button', { name: t('settings.play') }).click()
@@ -102,33 +102,33 @@ test('Set Time Teach: the clock stays put for the time-box error and the wrong-A
   expect(await spot(clock), 'next Task').toEqual(before)
 })
 
-test.describe('desktop size', () => {
-  // On a phone the drag Games' inline hint still moves the face, until they get the wrong-Answer
-  // popup too (batch 07, ticket 02); then this runs at every size like the clock tests above.
-  test.use({ viewport: { width: 1280, height: 720 } })
-
-  test('Drag Hours Teach: the face stays put when a Hint appears and goes', async ({ page }) => {
-    await start(page, 'dragHours', 'teach')
-    const face = page.locator('svg.number-face')
+for (const game of ['dragHours', 'dragMinutes'] as const) {
+  test(`${game} Teach: the face stays put through the wrong-drop popup`, async ({ page }) => {
+    await start(page, game, 'teach')
+    const face = page.locator('.board svg.number-face')
     const before = await spot(face)
 
+    // 7 (35 in Drag Minutes) dropped where 1 goes.
     await dragNumber(page, 7, 1)
-    await expect(page.getByRole('status')).toHaveText(
-      t('numbers.between', { number: 7, before: 6, after: 8 }),
-    )
-    expect(await spot(face)).toEqual(before)
+    await expect(wrongPopup(page)).toBeVisible()
+    expect(await spot(face), 'popup open').toEqual(before)
+    await closeWrongPopup(page, 'gotIt')
+    expect(await spot(face), 'after Got it').toEqual(before)
 
-    await dragNumber(page, 7, 7)
-    await expect(page.getByRole('status')).toHaveText('')
-    expect(await spot(face)).toEqual(before)
+    await dragNumber(page, 7, 2)
+    await closeWrongPopup(page, 'setCorrect')
+    expect(await spot(face), 'after Set correct answer').toEqual(before)
+
+    await dragNumber(page, 1, 1)
+    expect(await spot(face), 'after a right drop').toEqual(before)
   })
-})
+}
 
 test('Drag Hours Test: the face stays put as the tray empties and Submit appears', async ({
   page,
 }) => {
   await start(page, 'dragHours', 'test')
-  const face = page.locator('svg.number-face')
+  const face = page.locator('.board svg.number-face')
   const before = await spot(face)
   for (let n = 1; n <= 12; n++) {
     await tapNumber(page, n, n)

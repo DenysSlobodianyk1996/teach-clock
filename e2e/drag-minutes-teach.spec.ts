@@ -15,7 +15,7 @@ async function startDragMinutesTeach(page: Page) {
   await expect(page.getByRole('heading', { name: t('numbers.heading') })).toBeVisible()
 }
 
-test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, the Place-It button, the Summary', async ({
+test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, Set correct answer, the Summary', async ({
   page,
 }) => {
   await startDragMinutesTeach(page)
@@ -25,29 +25,31 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, the Place-It button
   expect(tray.map(Number).sort((a, b) => a - b)).toEqual([
     5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
   ])
-  await expect(page.locator('.hour-badge')).toHaveCount(12)
-  await expect(page.locator('.hour-badge').nth(11)).toHaveText('12')
+  const badges = page.locator('.board .hour-badge')
+  await expect(badges).toHaveCount(12)
+  await expect(badges.nth(11)).toHaveText('12')
 
-  // 60 dropped where 20 goes: it goes back with the wrap-around hint.
+  // 60 dropped where 20 goes: the popup shows 60 lit at the top, with Hour Badges.
   await dragNumber(page, 12, 4)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 60, before: 55, after: 5 }),
-  )
+  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  await expect(popup).toContainText(t('numbers.between', { number: 60, before: 55, after: 5 }))
+  await expect(popup.locator('[data-slot="12"]')).toHaveText('60')
+  await expect(popup.locator('.hour-badge')).toHaveCount(12)
   await expect(tile(page, 12)).toBeVisible()
 
-  // The Place-It button puts 60 at the top, and the Hint closes.
-  await page.getByRole('button', { name: t('numbers.placeIt', { number: 60 }) }).click()
+  // Set correct answer puts 60 at the top, and the popup closes.
+  await popup.getByRole('button', { name: t('teach.setCorrect') }).click()
+  await expect(popup).toBeHidden()
   await expect(slot(page, 12)).toHaveText('60')
   await expect(tile(page, 12)).toBeHidden()
-  await expect(page.getByRole('status')).toHaveText('')
   // The badge stays visible beside the placed minute.
-  await expect(page.locator('.hour-badge').nth(11)).toBeVisible()
+  await expect(badges.nth(11)).toBeVisible()
 
-  // 10 dropped on the 5's slot: "10 goes between 5 and 15".
+  // 10 dropped on the 5's slot: "10 goes between 5 and 15"; Got it, and the Player fixes it.
   await dragNumber(page, 2, 5)
-  await expect(page.getByRole('status')).toHaveText(
-    t('numbers.between', { number: 10, before: 5, after: 15 }),
-  )
+  await expect(popup).toContainText(t('numbers.between', { number: 10, before: 5, after: 15 }))
+  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+  await expect(popup).toBeHidden()
 
   for (const n of [1, 2, 3, 5, 7, 9, 11]) {
     await dragNumber(page, n, n)

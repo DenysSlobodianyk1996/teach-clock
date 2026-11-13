@@ -105,7 +105,6 @@ export default {
     tray: 'Numbers',
     help: 'Drag a number to its place, or tap a number and then a place.',
     between: '{number} goes between {before} and {after}',
-    placeIt: 'Put {number} in its place',
   },
   leave: {
     title: 'Leave this Round?',

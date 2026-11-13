@@ -67,7 +67,7 @@ describe('Drag Minutes Round', () => {
     expect([...round.tray].sort((a, b) => a - b)).toEqual(ONE_TO_TWELVE)
   })
 
-  it('places a minute with the Place-It button after a wrong drop, as helped', () => {
+  it('places a minute with Set correct answer after a wrong drop, as helped', () => {
     const round = startRound(MINUTES_TEACH, seededRandom(1))
     const wrongDrop = dropNumber(round, 2, 5)
     expect(wrongDrop.outcome.hint).toEqual(neighbours(2))
@@ -203,7 +203,7 @@ describe('Drag Hours in Teach', () => {
   })
 })
 
-describe('Drag Hours Place-It in Teach', () => {
+describe('Drag Hours Set correct answer in Teach', () => {
   it('puts a hinted number on its own slot, and it stays helped', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 2, 9).round

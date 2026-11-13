@@ -106,7 +106,6 @@ export default {
     tray: 'Числа',
     help: 'Перетягни число на його місце або торкнись числа, а потім місця.',
     between: '{number} стоїть між {before} і {after}',
-    placeIt: 'Постав {number} на місце',
   },
   leave: {
     title: 'Покинути раунд?',

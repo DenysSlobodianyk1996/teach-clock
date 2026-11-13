@@ -24,9 +24,7 @@ const props = defineProps<{
   /** Numbers on the face can be moved, and dropped on a taken slot. */
   movable?: boolean
   disabled?: boolean
-  /** A hint shows above the face: on a phone the face shrinks to keep the tray on screen. */
-  hinted?: boolean
-  /** A slot whose number just landed for the Player (the Place-It button): it flashes green. */
+  /** A slot whose number just landed for the Player (Set correct answer): it flashes green. */
   flash?: number | null
 }>()
 const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number: number] }>()
@@ -69,7 +67,7 @@ let dragged = false
 /** The Player can still pick this number up: on the tray, or on the face in Test. */
 const pickable = (n: number) =>
   props.tray.includes(n) || (!!props.movable && props.slots.includes(n))
-// A number can leave the tray without the Player (the Place-It button): let go of it.
+// A number can leave the tray without the Player (Set correct answer): let go of it.
 watch([() => props.tray, () => props.slots], () => {
   if (selected.value !== null && !pickable(selected.value)) selected.value = null
   if (held.value && !pickable(held.value.number)) held.value = null
@@ -237,10 +235,8 @@ function tapTray() {
 </script>
 
 <template>
-  <section class="board" :class="{ test: movable, hinted }" :style="numberSize">
+  <section class="board" :class="{ test: movable }" :style="numberSize">
     <div class="clock-side">
-      <!-- Above the face: the parent's toast. -->
-      <slot name="clock" />
       <div class="clock-wrap">
         <svg
           ref="face"
@@ -465,7 +461,7 @@ function tapTray() {
 .placed.ghost {
   opacity: 0.3;
 }
-/* The Place-It button put this number here: a green ring that swells and fades. */
+/* Set correct answer put this number here: a green ring that swells and fades. */
 .c-flash {
   fill: none;
   stroke: var(--good);
@@ -537,17 +533,15 @@ function tapTray() {
   }
   /*
    * The face takes the height the rest of the screen leaves, up to the full width. Each number is
-   * the height of everything else on a 360 × 720 phone (see RoundView); with a hint showing, or in
-   * Test where Submit can appear, the face leaves more room.
+   * the height of everything else on a 360 × 720 phone (see RoundView); in Test, where Submit can
+   * appear, the face leaves more room. A wrong drop only opens a popup, so the size never changes
+   * during a Round.
    */
   .number-face {
     width: clamp(200px, 100svh - 346px, 100vw - 40px);
   }
   .board.test .number-face {
     width: clamp(200px, 100svh - 366px, 100vw - 40px);
-  }
-  .board.hinted .number-face {
-    width: clamp(200px, 100svh - 388px, 100vw - 40px);
   }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {

@@ -6,13 +6,13 @@ Covers: P1, P2, P4
 
 **Blocked by:** 01
 
-**Status:** todo
+**Status:** done
 
-- [ ] `WrongAnswerPopup` takes a drag picture: a small `NumberFace` with the right slot lit in green showing its value (Hour Badges in Drag Minutes), its neighbours visible, and `numbers.between` as the line
-- [ ] `DragRound.vue`: a wrong drop opens the popup; `placeIt()` runs from Set correct answer (green flash, focus to the next tray tile); `.toast-row`, the Place-It button and the `NumberBoard` `.board.hinted` sizing are gone
-- [ ] Desktop and 4:3 too: the 48 px row above the face is gone; the face and tray use the freed room, and the face still never moves during a Round
-- [ ] Got it, Escape and the scrim close it; the number counts as helped either way; a new wrong drop opens it again
-- [ ] `numbers.placeIt` removed from `en.ts` and `uk.ts`
-- [ ] Vitest: `RoundView.spec.ts` Drag Hours, Drag Minutes and Place-It blocks rewritten against the popup
-- [ ] Playwright: `drag-hours-teach` and `drag-minutes-teach` use the popup buttons via `t`; `clock-stays-put` covers both drag Games on desktop and phone; the `fits-small-phone` tray check passes
-- [ ] All three themes; design boards `DragHoursTeachHint` and `DragHoursPlaceIt` replaced by a wrong-drop popup board for Drag Hours and Drag Minutes, desktop and phone
+- [x] `WrongAnswerPopup` takes a drag picture: a small `NumberFace` with the right slot lit in green showing its value (Hour Badges in Drag Minutes), its neighbours visible, and `numbers.between` as the line
+- [x] `DragRound.vue`: a wrong drop opens the popup; `placeIt()` runs from Set correct answer (green flash, focus to the next tray tile); `.toast-row`, the Place-It button and the `NumberBoard` `.board.hinted` sizing are gone
+- [x] Desktop and 4:3 too: the 48 px row above the face is gone; the face and tray use the freed room, and the face still never moves during a Round
+- [x] Got it, Escape and the scrim close it; the number counts as helped either way; a new wrong drop opens it again
+- [x] `numbers.placeIt` removed from `en.ts` and `uk.ts`
+- [x] Vitest: `RoundView.spec.ts` Drag Hours, Drag Minutes and Place-It blocks rewritten against the popup
+- [x] Playwright: `drag-hours-teach` and `drag-minutes-teach` use the popup buttons via `t`; `clock-stays-put` covers both drag Games on desktop and phone; the `fits-small-phone` tray check passes
+- [x] All three themes; design boards `DragHoursTeachHint` and `DragHoursPlaceIt` replaced by a wrong-drop popup board for Drag Hours and Drag Minutes, desktop and phone (`DragHoursTeachWrong`, `PhoneDragHoursTeachWrong`; `DesktopDragMinutes` and `PhoneDragMinutes` now show the popup; the hint row is gone from `PhoneDragHours` and `theme.css`)

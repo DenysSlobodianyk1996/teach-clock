@@ -81,24 +81,35 @@ for (const game of ['setTime', 'dragArrows'] as const) {
   })
 }
 
-test('Drag Hours Teach: a big face, and the tray stays on screen with a hint', async ({ page }) => {
+test('Drag Hours Teach: a big face, the popup fits, and the tray stays on screen', async ({
+  page,
+}) => {
   await toSettings(page)
   await page.getByRole('radio', { name: startingWith(t('games.dragHours.name')) }).check()
   await page.getByRole('radio', { name: startingWith(t('modes.teach.name')) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
-  const face = page.locator('svg.number-face')
+  const face = page.locator('.board svg.number-face')
   await expect(face).toBeVisible()
   expect(await face.evaluate((e) => e.getBoundingClientRect().width)).toBeGreaterThanOrEqual(300)
+  const height = page.viewportSize()!.height
+  expect(await bottomFromPageTop(page.locator('.tray')), 'tray fits').toBeLessThanOrEqual(height)
 
-  // Tap a number, then the slot after its own: a wrong drop brings the hint.
+  // Tap a number, then the slot after its own: a wrong drop opens the popup.
   const n = Number(await page.locator('.tray [data-number]').first().getAttribute('data-number'))
   await page.locator(`.tray [data-number="${n}"]`).click()
-  await page.locator(`[data-slot="${(n % 12) + 1}"]`).click()
-  await expect(page.getByRole('status')).not.toHaveText('')
-  const height = page.viewportSize()!.height
+  await page.locator(`.board [data-slot="${(n % 12) + 1}"]`).click()
+  const popup = page.getByRole('dialog', { name: t('teach.wrongTitle') })
+  await expect(popup).toBeVisible()
+  const setCorrect = (await popup
+    .getByRole('button', { name: t('teach.setCorrect') })
+    .boundingBox())!
+  expect(setCorrect.y + setCorrect.height).toBeLessThanOrEqual(height)
+  expect(setCorrect.x + setCorrect.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+  await expect(popup).toBeHidden()
   expect(
     await bottomFromPageTop(page.locator('.tray')),
-    'tray fits with the hint',
+    'tray fits after the popup',
   ).toBeLessThanOrEqual(height)
 })
 
@@ -109,7 +120,7 @@ test('Drag Hours Test: Готово fits once all 12 numbers are placed', async 
   await page.getByRole('button', { name: t('settings.play') }).click()
   for (let n = 1; n <= 12; n++) {
     await page.locator(`.tray [data-number="${n}"]`).click()
-    await page.locator(`[data-slot="${n}"]`).click()
+    await page.locator(`.board [data-slot="${n}"]`).click()
   }
   const submit = page.getByRole('button', { name: t('numbers.submit') })
   await expect(submit).toBeVisible()

@@ -424,8 +424,12 @@ describe('Round screen, Drag Arrows in Teach', () => {
 /** Taps a tray number, then a slot. */
 async function place(number: number, slot: number) {
   await wrapper.get(`.tray [data-number="${number}"]`).trigger('click')
-  await wrapper.get(`[data-slot="${slot}"]`).trigger('click')
+  await wrapper.get(`.board [data-slot="${slot}"]`).trigger('click')
 }
+
+/** The wrong-drop popup, and the Round's own face (the popup draws a small face too). */
+const popup = () => wrapper.find('[role="dialog"]')
+const board = () => wrapper.get('.board')
 
 describe('Round screen, Drag Hours in Teach', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
@@ -443,24 +447,56 @@ describe('Round screen, Drag Hours in Teach', () => {
     )
   })
 
-  it('sends a wrong drop back to the tray with the neighbour hint', async () => {
+  it('a wrong drop opens the popup with the right slot lit and the neighbour line', async () => {
     await open('dragHours', 'teach')
+    expect(popup().exists()).toBe(false)
     await place(12, 4)
-    expect(wrapper.get('[role="status"]').text()).toBe(
+    expect(popup().get('h2').text()).toBe(t('teach.wrongTitle'))
+    expect(popup().get('#wrong-why').text()).toBe(
       t('numbers.between', { number: 12, before: 11, after: 1 }),
     )
+    expect(popup().get('[data-slot="12"]').classes()).toContain('good')
+    expect(
+      popup()
+        .findAll('[data-slot]')
+        .map((g) => g.text()),
+    ).toEqual(['1', '11', '12'])
     expect(wrapper.get('.tray [data-number="12"]').classes()).toContain('marked')
-    expect(wrapper.find('[data-slot="4"] .c-slot').exists()).toBe(true)
+    expect(board().find('[data-slot="4"] .c-slot').exists()).toBe(true)
   })
 
-  it('locks a right drop on the face, clears the hint and colours its dot', async () => {
+  it('Got it, Escape and the scrim close the popup; a new wrong drop opens it again', async () => {
+    await open('dragHours', 'teach')
+    await place(12, 4)
+    await button(t('teach.gotIt'))!.trigger('click')
+    expect(popup().exists()).toBe(false)
+    expect(wrapper.find('.tray [data-number="12"]').exists()).toBe(true)
+    await place(12, 4)
+    await popup().trigger('keydown', { key: 'Escape' })
+    expect(popup().exists()).toBe(false)
+    await place(12, 5)
+    await wrapper.get('.scrim').trigger('click')
+    expect(popup().exists()).toBe(false)
+    expect(board().find('[data-slot="12"] .c-slot').exists()).toBe(true)
+  })
+
+  it('a number fixed after Got it still counts as helped', async () => {
+    await open('dragHours', 'teach')
+    await place(12, 4)
+    await button(t('teach.gotIt'))!.trigger('click')
+    await place(12, 12)
+    expect(dotClasses()[11]).toBe('help')
+  })
+
+  it('locks a right drop on the face, opens no popup and colours its dot', async () => {
     await open('dragHours', 'teach')
     await place(7, 4)
+    await button(t('teach.gotIt'))!.trigger('click')
     await place(7, 7)
     await place(3, 3)
-    expect(wrapper.get('[data-slot="7"]').text()).toBe('7')
+    expect(popup().exists()).toBe(false)
+    expect(board().get('[data-slot="7"]').text()).toBe('7')
     expect(wrapper.find('.tray [data-number="7"]').exists()).toBe(false)
-    expect(wrapper.get('[role="status"]').text()).toBe('')
     expect(dotClasses()[6]).toBe('help')
     expect(dotClasses()[2]).toBe('ok')
     expect(wrapper.text()).toContain(t('numbers.progress', { n: 2, total: 12 }))
@@ -475,42 +511,29 @@ describe('Round screen, Drag Hours in Teach', () => {
   })
 })
 
-const placeIt = (number: number) =>
-  wrapper.find(`button[aria-label="${t('numbers.placeIt', { number })}"]`)
-
-describe('Round screen, Drag Hours Place-It button', () => {
+describe('Round screen, Drag Hours Set correct answer', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
   afterEach(() => vi.useRealTimers())
 
-  it('shows only beside a Hint', async () => {
-    await open('dragHours', 'teach')
-    expect(wrapper.find('.place-it').exists()).toBe(false)
-    await place(12, 4)
-    expect(placeIt(12).exists()).toBe(true)
-    await place(12, 12)
-    expect(wrapper.find('.place-it').exists()).toBe(false)
-  })
-
-  it('puts the hinted number on its slot, flashes it green and closes the Hint', async () => {
+  it('puts the number on its slot, flashes it green and closes the popup', async () => {
     await open('dragHours', 'teach')
     await place(12, 4)
-    await placeIt(12).trigger('click')
-    expect(wrapper.get('[data-slot="12"]').text()).toBe('12')
-    expect(wrapper.get('[data-slot="12"]').classes()).toContain('flash')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    expect(popup().exists()).toBe(false)
+    expect(board().get('[data-slot="12"]').text()).toBe('12')
+    expect(board().get('[data-slot="12"]').classes()).toContain('flash')
     expect(wrapper.find('.tray [data-number="12"]').exists()).toBe(false)
-    expect(wrapper.get('[role="status"]').text()).toBe('')
-    expect(wrapper.find('.place-it').exists()).toBe(false)
     expect(dotClasses()[11]).toBe('help')
     vi.runAllTimers()
     await wrapper.vm.$nextTick()
-    expect(wrapper.get('[data-slot="12"]').classes()).not.toContain('flash')
+    expect(board().get('[data-slot="12"]').classes()).not.toContain('flash')
   })
 
   it('counts the number it placed as Wrong in the Summary', async () => {
     const { router } = await open('dragHours', 'teach')
     for (let n = 1; n <= 10; n++) await place(n, n)
     await place(12, 11)
-    await placeIt(12).trigger('click')
+    await button(t('teach.setCorrect'))!.trigger('click')
     await place(11, 11)
     vi.runAllTimers()
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('summary'))
@@ -520,10 +543,10 @@ describe('Round screen, Drag Hours Place-It button', () => {
     })
   })
 
-  it('never shows in Test', async () => {
+  it('never opens in Test', async () => {
     await open('dragHours', 'test')
     await place(12, 4)
-    expect(wrapper.find('.place-it').exists()).toBe(false)
+    expect(popup().exists()).toBe(false)
   })
 })
 
@@ -539,23 +562,27 @@ describe('Round screen, Drag Minutes in Teach', () => {
     expect(dotClasses()).toEqual(Array(12).fill(undefined))
   })
 
-  it('hints a wrong drop in minutes, wrapping round the top', async () => {
+  it('a wrong drop opens the popup in minutes, with Hour Badges, wrapping round the top', async () => {
     await open('dragMinutes', 'teach')
     await place(2, 5)
-    expect(wrapper.get('[role="status"]').text()).toBe(
+    expect(popup().get('#wrong-why').text()).toBe(
       t('numbers.between', { number: 10, before: 5, after: 15 }),
     )
+    expect(popup().findAll('.hour-badge')).toHaveLength(12)
+    await button(t('teach.gotIt'))!.trigger('click')
     await place(12, 5)
-    expect(wrapper.get('[role="status"]').text()).toBe(
+    expect(popup().get('#wrong-why').text()).toBe(
       t('numbers.between', { number: 60, before: 55, after: 5 }),
     )
+    expect(popup().get('[data-slot="12"]').text()).toBe('60')
+    expect(popup().get('[data-slot="12"]').classes()).toContain('good')
   })
 
-  it('places the hinted minute with the Place-It button, as helped', async () => {
+  it('Set correct answer places the minute, as helped', async () => {
     await open('dragMinutes', 'teach')
     await place(12, 4)
-    await placeIt(60).trigger('click')
-    expect(wrapper.get('[data-slot="12"] .c-tile-num').text()).toBe('60')
+    await button(t('teach.setCorrect'))!.trigger('click')
+    expect(board().get('[data-slot="12"] .c-tile-num').text()).toBe('60')
     expect(dotClasses()[11]).toBe('help')
   })
 })
@@ -568,7 +595,7 @@ describe('Round screen, Drag Hours in Test', () => {
     await open('dragHours', 'test')
     await place(12, 4)
     expect(placedAt(4)).toBe('12')
-    expect(wrapper.get('[role="status"]').text()).toBe('')
+    expect(popup().exists()).toBe(false)
     expect(dotClasses()).toEqual(['placed', ...Array(11).fill(undefined)])
     expect(wrapper.text()).toContain(
       `${t('numbers.placedCount', { n: 1, total: 12 })} · ${t('modes.test.name')}`,
@@ -601,12 +628,11 @@ describe('Round screen, Drag Hours in Test', () => {
 })
 
 describe('Round screen, Drag Minutes in Test', () => {
-  it('takes a wrong minute with no hint and no Place-It button, keeping the Hour Badges', async () => {
+  it('takes a wrong minute with no popup, keeping the Hour Badges', async () => {
     await open('dragMinutes', 'test')
     await place(12, 4)
     expect(placedAt(4)).toBe('60')
-    expect(wrapper.get('[role="status"]').text()).toBe('')
-    expect(placeIt(60).exists()).toBe(false)
+    expect(popup().exists()).toBe(false)
     expect(wrapper.findAll('.hour-badge').map((b) => b.text())).toEqual([
       '1',
       '2',

@@ -85,7 +85,7 @@ export function dropNumber(
 }
 
 /**
- * Teach, the Place-It button: puts a number on its own slot for the Player, after a wrong drop.
+ * Teach, the popup's Set correct answer: puts a number on its own slot for the Player, after a wrong drop.
  * The number stays helped, since the wrong drop already happened. A number still on the tray
  * with no wrong drop yet, or one already placed, is left alone.
  */

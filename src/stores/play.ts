@@ -53,7 +53,7 @@ export const usePlayStore = defineStore('play', () => {
     return result.outcome
   }
 
-  /** The drag Games in Teach, the Place-It button: puts a hinted number on its slot. */
+  /** The drag Games in Teach, the popup's Set correct answer: puts a hinted number on its slot. */
   function placeForMe(number: number) {
     const result = placeNumber(numbersRound(), number)
     round.value = result.round
