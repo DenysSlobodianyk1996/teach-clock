@@ -39,6 +39,48 @@ describe('AppFooter', () => {
     vi.doUnmock('@/platform')
   })
 
+  describe('Support Button', () => {
+    const SUPPORT_URL = 'https://example.com/support'
+
+    async function mountWith(platform: { isAndroidApp: boolean; supportUrl: string | null }) {
+      vi.resetModules()
+      vi.doMock('@/platform', () => platform)
+      const { default: Footer } = await import('../AppFooter.vue')
+      wrapper = mountComponent(Footer)
+      vi.doUnmock('@/platform')
+    }
+
+    const supportButton = () =>
+      wrapper.findAll('button').find((b) => b.attributes('aria-label') === t('support.button'))
+
+    it('shows in the Web App with a link', async () => {
+      await mountWith({ isAndroidApp: false, supportUrl: SUPPORT_URL })
+      expect(supportButton()).toBeDefined()
+      expect(wrapper.text()).toContain(t('support.hold'))
+    })
+
+    it('hides in the Web App with no link (unset, empty or not https)', async () => {
+      await mountWith({ isAndroidApp: false, supportUrl: null })
+      expect(supportButton()).toBeUndefined()
+    })
+
+    it('hides in the Android App even with a link', async () => {
+      await mountWith({ isAndroidApp: true, supportUrl: SUPPORT_URL })
+      expect(supportButton()).toBeUndefined()
+    })
+
+    it('opens its link after a hold', async () => {
+      vi.useFakeTimers()
+      const open = vi.spyOn(window, 'open').mockReturnValue(null)
+      await mountWith({ isAndroidApp: false, supportUrl: SUPPORT_URL })
+      await supportButton()!.trigger('pointerdown')
+      vi.advanceTimersByTime(2000)
+      expect(open).toHaveBeenCalledWith(SUPPORT_URL, '_blank', 'noopener')
+      open.mockRestore()
+      vi.useRealTimers()
+    })
+  })
+
   it('is the page footer', () => {
     wrapper = mountComponent(AppFooter)
     expect(wrapper.element.tagName).toBe('FOOTER')
