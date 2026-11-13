@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import AppFooter from '@/components/AppFooter.vue'
 import ChoiceCard from '@/components/ChoiceCard.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
 import { GAMES, LEVELS, MODES, hasLevel } from '@/game/settings'
@@ -127,6 +128,7 @@ function startRound() {
       </button>
     </div>
   </div>
+  <AppFooter />
 </template>
 
 <style scoped>

@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import AppFooter from '@/components/AppFooter.vue'
 import { NAME_MAX_LENGTH, usePlayerStore } from '@/stores/player'
 
 const { t } = useI18n()
@@ -94,6 +95,7 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
       </svg>
     </div>
   </div>
+  <AppFooter />
 </template>
 
 <style scoped>

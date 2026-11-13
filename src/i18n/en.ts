@@ -134,4 +134,8 @@ export default {
     yourFaceLabel: 'Your clock face, in the wrong place: {numbers}',
     correctFaceLabel: 'The correct clock face',
   },
+  footer: {
+    privacy: 'Privacy',
+    contact: 'Contact',
+  },
 } satisfies typeof uk
