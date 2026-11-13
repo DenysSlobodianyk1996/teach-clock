@@ -32,7 +32,7 @@ async function open(path: string, arrange?: () => void) {
     await flushPromises()
   }
   const at = () => screen.router.currentRoute.value.name
-  return { at, exit, back }
+  return { at, exit, back, router: screen.router }
 }
 
 const popupTitle = () => wrapper.find('[role="dialog"] h2')
@@ -60,6 +60,23 @@ describe('the Android back button', () => {
 
   it('goes from Settings to Welcome', async () => {
     const { at, exit, back } = await open('/settings', () => usePlayerStore().setName('Оля'))
+    await back()
+    expect(at()).toBe('welcome')
+    expect(exit).not.toHaveBeenCalled()
+  })
+
+  it('goes from the Privacy Page back to the screen that opened it', async () => {
+    const { at, exit, back, router } = await open('/settings', () =>
+      usePlayerStore().setName('Оля'),
+    )
+    await router.push({ name: 'privacy' })
+    await back()
+    expect(at()).toBe('settings')
+    expect(exit).not.toHaveBeenCalled()
+  })
+
+  it('goes from a Privacy Page opened straight from its address to Welcome', async () => {
+    const { at, exit, back } = await open('/privacy')
     await back()
     expect(at()).toBe('welcome')
     expect(exit).not.toHaveBeenCalled()

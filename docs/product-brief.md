@@ -48,11 +48,13 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 Welcome and Settings end with the **Footer**, a plain bar after the screen's content (not sticky;
 on a phone it is below the fold). It is never shown in a Round or on the Summary. It holds:
 
-- **Privacy**: opens the **Privacy Page** in a new tab (in the Android App, in the system browser).
-  The Privacy Page is a static page outside the game, Ukrainian then English, at
-  https://denysslobodianyk1996.github.io/teach-clock/privacy.html. It says nothing is collected or
+- **Privacy**: opens the **Privacy Page**, an app screen like the others (in the Android App too,
+  never the browser), in the interface language, with no Footer. It says nothing is collected or
   sent: no accounts, ads or analytics; only the Preferences and the last name stay on the device;
-  results are not kept after a Round. It also works offline in the Web App.
+  results are not kept after a Round. It also gives the web version of the game and the contact
+  email. Its button goes back to the screen that opened it. It works offline. For Google Play's
+  listing the Web App build also writes the same text as a static page, Ukrainian then English, at
+  https://denysslobodianyk1996.github.io/teach-clock/privacy.html.
 - **Contact**: a `mailto:` link to the author with the subject "Contact support from teach clock
   for kids" (set in `src/config.ts`).
 - **Support Button** (Web App only, and only when the build has an `https://` support link in

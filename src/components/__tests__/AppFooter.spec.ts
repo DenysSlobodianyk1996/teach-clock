@@ -1,9 +1,21 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { VueWrapper } from '@vue/test-utils'
+import { mount, type VueWrapper } from '@vue/test-utils'
+import type { Component } from 'vue'
+import { createMemoryHistory } from 'vue-router'
 import AppFooter from '../AppFooter.vue'
-import { CONTACT_EMAIL, CONTACT_SUBJECT, PRIVACY_URL } from '@/config'
-import { mountComponent } from '@/test/mountComponent'
+import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
+import { createAppI18n } from '@/i18n'
+import { createAppRouter } from '@/router'
 import { t } from '@/test/i18n'
+
+/** The Footer with the app's i18n and router (its Privacy link is a router link). */
+function mountComponent(component: Component) {
+  const router = createAppRouter(createMemoryHistory())
+  return mount(component, {
+    global: { plugins: [createAppI18n(), router] },
+    attachTo: document.body,
+  })
+}
 
 let wrapper: VueWrapper
 afterEach(() => wrapper.unmount())
@@ -15,12 +27,11 @@ function link(text: string) {
 }
 
 describe('AppFooter', () => {
-  it('links to the Privacy Page under the app base, in a new tab', () => {
+  it('opens the Privacy Page as an app screen, not a new tab', () => {
     wrapper = mountComponent(AppFooter)
     const privacy = link(t('footer.privacy'))
-    expect(privacy.attributes('href')).toBe(`${import.meta.env.BASE_URL}privacy.html`)
-    expect(privacy.attributes('target')).toBe('_blank')
-    expect(privacy.attributes('rel')).toContain('noopener')
+    expect(privacy.attributes('href')).toBe('/privacy')
+    expect(privacy.attributes('target')).toBeUndefined()
   })
 
   it('writes to the author with a fixed subject', () => {
@@ -30,12 +41,13 @@ describe('AppFooter', () => {
     )
   })
 
-  it('in the Android App, links to the public Privacy Page, which opens in the system browser', async () => {
+  it('in the Android App, also opens the Privacy Page as an app screen, never the browser', async () => {
     vi.resetModules()
     vi.doMock('@/platform', () => ({ isAndroidApp: true, supportUrl: null }))
     const { default: AndroidFooter } = await import('../AppFooter.vue')
     wrapper = mountComponent(AndroidFooter)
-    expect(link(t('footer.privacy')).attributes('href')).toBe(PRIVACY_URL)
+    expect(link(t('footer.privacy')).attributes('href')).toBe('/privacy')
+    expect(link(t('footer.privacy')).attributes('target')).toBeUndefined()
     vi.doUnmock('@/platform')
   })
 

@@ -273,17 +273,17 @@ After the first production release: Play Console › **Grow › Teacher Approved
 
 ## What lives where
 
-| Thing                       | Where                                                                                                                                    | Secret? |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                    | no      |
-| Support link (Web App only) | repo variable `VITE_SUPPORT_URL` (`unset` until you fill it)                                                                             | no      |
-| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | **yes** |
-| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                       | **yes** |
-| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                      | no      |
-| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                    | no      |
-| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                | no      |
-| Store texts and graphics    | `docs/store/`                                                                                                                            | no      |
-| Privacy Page                | `public/privacy.html` → `https://denysslobodianyk1996.github.io/teach-clock/privacy.html`                                                | no      |
+| Thing                       | Where                                                                                                                                                    | Secret? |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                    | no      |
+| Support link (Web App only) | repo variable `VITE_SUPPORT_URL` (`unset` until you fill it)                                                                                             | no      |
+| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                 | **yes** |
+| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                       | **yes** |
+| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                      | no      |
+| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                                    | no      |
+| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                                | no      |
+| Store texts and graphics    | `docs/store/`                                                                                                                                            | no      |
+| Privacy Page                | text in `src/i18n` (`privacy.*`); the build writes `privacy.html` (`src/privacy.ts`) → `https://denysslobodianyk1996.github.io/teach-clock/privacy.html` | no      |
 
 ## Android words you'll meet
 

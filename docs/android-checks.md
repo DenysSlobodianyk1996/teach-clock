@@ -36,7 +36,7 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 - [x] **Rotate:** in a Set Time Round, turned to landscape and back. Same Task, same clock, no reload, no white screen. Landscape on a phone scrolls (the pad is below the fold), which is fine.
 - [x] **Background and resume:** Home in the middle of a Round, then opened the app again. Same Task.
 - [x] **No Support Button** on Welcome or Settings (the Android build never renders it).
-- [x] **Footer links leave the app:** Privacy opens Chrome (the public Privacy Page URL); Contact opens the mail app (Gmail). The app stays on its own page underneath.
+- [x] **Footer links:** Privacy opens the Privacy Page inside the app, and the back button returns to the screen that opened it (batch 09). On it, the web version link opens Chrome. Contact opens the mail app (Gmail). The app stays on its own page underneath.
 - [x] **Launcher icon:** the teal circle with the clock, label "Годинник" in full (Pixel launcher, circle mask). The launcher shows the short label `title_activity_main`; the full name "Вчимо годинник" stays in app settings and on Play.
 - [x] **Android 12+ splash:** teal background with the clock in the middle, then Welcome.
 

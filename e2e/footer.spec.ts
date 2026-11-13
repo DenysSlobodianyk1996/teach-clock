@@ -10,23 +10,30 @@ const footer = (page: Page) => page.getByRole('contentinfo')
 test('Welcome and Settings have the Footer with Privacy and Contact', async ({ page }) => {
   await page.goto('/')
   const privacy = footer(page).getByRole('link', { name: t('footer.privacy') })
-  await expect(privacy).toHaveAttribute('target', '_blank')
   await expect(footer(page).getByRole('link', { name: t('footer.contact') })).toHaveAttribute(
     'href',
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`,
   )
 
-  // Privacy opens the Privacy Page in a new tab.
-  const [privacyPage] = await Promise.all([page.context().waitForEvent('page'), privacy.click()])
-  await expect(privacyPage).toHaveURL(/\/privacy\.html$/)
-  await expect(privacyPage.locator('h1#privacy-uk')).toBeVisible()
-  await privacyPage.close()
+  // Privacy opens the Privacy Page as an app screen, and its button comes back.
+  await privacy.click()
+  await expect(page).toHaveURL(/\/privacy$/)
+  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
+  await expect(footer(page)).toHaveCount(0)
+  await page.getByRole('button', { name: t('privacy.back') }).click()
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
 
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
   await page.getByRole('button', { name: t('welcome.start') }).click()
   await expect(page).toHaveURL(/\/settings$/)
-  await expect(footer(page).getByRole('link', { name: t('footer.privacy') })).toBeVisible()
   await expect(footer(page).getByRole('link', { name: t('footer.contact') })).toBeVisible()
+
+  // From Settings, the Privacy Page goes back to Settings.
+  await footer(page)
+    .getByRole('link', { name: t('footer.privacy') })
+    .click()
+  await page.getByRole('button', { name: t('privacy.back') }).click()
+  await expect(page).toHaveURL(/\/settings$/)
 })
 
 test('a Round and the Summary have no Footer', async ({ page }) => {

@@ -7,11 +7,14 @@ describe('backAction: what the Android back button does', () => {
     ['settings', false, 'goWelcome'],
     ['round', false, 'openLeaveDialog'],
     ['summary', false, 'goWelcome'],
+    // Opened from a Footer: back to Welcome or Settings, wherever it came from.
+    ['privacy', false, 'goBack'],
     // Any open popup closes first; in a Round that includes the leave dialog itself.
     ['welcome', true, 'closePopup'],
     ['settings', true, 'closePopup'],
     ['round', true, 'closePopup'],
     ['summary', true, 'closePopup'],
+    ['privacy', true, 'closePopup'],
   ]
 
   it.each(rows)('on %s, popup open %s: %s', (screen, popupOpen, action) => {
