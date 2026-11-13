@@ -134,6 +134,10 @@ export default {
     yourFaceLabel: 'Your clock face, in the wrong place: {numbers}',
     correctFaceLabel: 'The correct clock face',
   },
+  footer: {
+    privacy: 'Privacy',
+    contact: 'Contact',
+  },
   support: {
     button: 'Support the author',
     hold: 'Hold to open',

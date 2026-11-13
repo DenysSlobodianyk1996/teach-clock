@@ -22,6 +22,19 @@ async function sidewaysScroll(page: Page) {
   return page.evaluate(() => document.scrollingElement!.scrollWidth - innerWidth)
 }
 
+test('Welcome on a 360 × 640 phone: the Footer comes after the start button', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  const start = page.getByRole('button', { name: t('welcome.start') })
+  const footer = page.getByRole('contentinfo')
+  await expect(footer).toBeAttached()
+  // The Footer sits below the start button, so it never pushes the button further down.
+  expect(
+    await footer.evaluate((e) => e.getBoundingClientRect().top + scrollY),
+  ).toBeGreaterThanOrEqual(await bottomFromPageTop(start))
+  expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+})
+
 test('Settings fits: no sideways scroll, Back and Play side by side in full', async ({ page }) => {
   await toSettings(page)
   expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
