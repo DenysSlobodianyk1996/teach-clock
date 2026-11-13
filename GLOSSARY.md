@@ -19,7 +19,7 @@ How a Round treats wrong Answers: Teach or Test.
 _Avoid_: Game type
 
 **Teach**:
-The Mode where a wrong Answer shows the correct one and the Player must fix it before moving on.
+The Mode where a wrong Answer opens a popup with a Hint, and the Player must put it right before moving on: by themselves after **Got it**, or with the popup's **Set correct answer**.
 _Avoid_: Practice, learn mode
 
 **Test**:
@@ -42,12 +42,8 @@ _Avoid_: Question, puzzle
 The Player's response to a Task, submitted with a button and marked right or wrong.
 
 **Hint**:
-What a Player in Teach is shown after a wrong try: the correct Answer, or in Drag Hours and Drag Minutes where the number goes ("7 goes between 6 and 8", "10 goes between 5 and 15"). A Task that needed a Hint counts as wrong.
-_Avoid_: Tip, solution
-
-**Place-It button**:
-In Teach, the button beside a Hint that puts the number on its right place for the Player. The number still counts as helped.
-_Avoid_: Auto-place, solve
+What the wrong-answer popup shows a Player in Teach: in Set Time and Drag Arrows a small clock with the correct Clock Time and its digits; in Drag Hours and Drag Minutes a small face with the number's slot lit and "7 goes between 6 and 8" ("10 goes between 5 and 15"). Its **Set correct answer** button puts the Answer right for the Player (fills the digits, turns the hands, or places the number). A Task or number that needed a Hint counts as wrong.
+_Avoid_: Tip, solution, Place-It button (retired: its action is now **Set correct answer**)
 
 **Summary**:
 The read-only screen at the end of a Round, grouping Tasks into right and wrong and showing the Player's first Answer next to the correct one.

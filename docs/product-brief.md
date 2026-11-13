@@ -101,19 +101,25 @@ Rules shared by Drag Arrows and Set Time:
 
 ### Teach
 
-- Wrong Answer → a popup shows the correct Answer (digits plus a small clock). The Player's hands or
-  digits stay where they were.
-- After the first wrong try a **Set correct answer** button appears, with the Hint (the correct
-  Answer) under it. Pressing it fills in the Answer (digits appear or hands animate); the Player
-  still presses Submit.
+- Every Game shows a wrong Answer the same way: a popup ("Almost! Here's how it is:") with the
+  Hint and two buttons. Nothing about the Hint is added to the Round's layout.
+- Set Time and Drag Arrows: the popup shows the correct Answer (a small clock with the Lit Place,
+  plus the digits) and a teaching line for the kind of mistake. The Player's hands or digits stay
+  where they were.
+- **Got it** (first and focused) closes the popup; the Player fixes it themselves. Escape or a tap on
+  the scrim does the same. Another wrong try opens the popup again.
+- **Set correct answer** closes the popup and puts it right: in Set Time the digits appear, in Drag
+  Arrows the hands animate; the Player still presses Submit.
 - The Round moves on only after a right Answer. Dots: green = right first time, yellow = needed help.
   A Task that needed help is listed under **Wrong** in the Summary.
 - Drag Hours and Drag Minutes: a number dropped on the wrong slot goes straight back to the tray
-  with a hint "7 goes between 6 and 8" (Drag Minutes: "10 goes between 5 and 15"; across the top
-  it wraps: "60 goes between 55 and 5", "5 goes between 60 and 10"). Beside the hint a round
-  lightbulb **Place-It button** puts that number on its slot for the Player: the slot rings green
-  for a moment (a still ring with reduced motion) and the hint closes. The number stays helped (yellow dot, under **Wrong** in the Summary), since
-  the wrong drop already happened. The hint and the button close at the next drop.
+  and the same popup opens. Its picture is a small face with that number's slot lit green between
+  its two neighbours (Hour Badges in Drag Minutes), and its line is "7 goes between 6 and 8" (Drag
+  Minutes: "10 goes between 5 and 15"; across the top it wraps: "60 goes between 55 and 5", "5 goes
+  between 60 and 10"). **Got it** leaves the number in the tray. **Set correct answer** puts it on
+  its slot for the Player: the slot rings green for a moment (a still ring with reduced motion) and
+  focus moves to the next tray tile. Either way the number stays helped (yellow dot, under
+  **Wrong** in the Summary), since the wrong drop already happened.
 
 ### Test
 
@@ -138,12 +144,11 @@ Rules shared by Drag Arrows and Set Time:
   than wide (an upright tablet too), or 500 px tall or less (a phone held sideways). There the
   screen stacks and scrolls, and the clock sits above the answer area (beside it on a sideways
   phone wider than 600 px). The breakpoint is defined once, in `src/styles/media.ts`.
-- In the 4:3 layout (desktop, landscape tablet) the clock never moves during a Round. Anything that
-  can appear around it (the Hint, an error, the drag Games' hint, Submit) has its space kept from
-  the first Task, empty until needed.
-- On a phone the clock is as big as the screen allows: no empty space is kept, so the clock may
-  shrink or move only when a Hint, a hint note or Submit appears. Everything still fits a
-  360 × 720 screen without scrolling.
+- The clock never moves during a Round, on any screen. The Hint opens in a popup over it, so no
+  space is kept around the clock for it. Anything else that can appear beside it (a Set Time error,
+  the drag Games' Submit) has its space kept from the first Task, empty until needed.
+- On a phone the clock is as big as the screen allows, one size for the whole Round. Everything
+  still fits a 360 × 720 screen without scrolling.
 - All art is original SVG. The 2019 palette and images are not reused.
 
 ## Out of scope

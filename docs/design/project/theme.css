@@ -102,7 +102,6 @@
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; padding: 0 34px; border: 0; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: 900 22px "Nunito", sans-serif; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18); text-decoration: none; }
 .btn[disabled] { opacity: 0.45; box-shadow: none; }
 .btn-soft { background: var(--surface-2); color: var(--text); }
-.btn-help { background: var(--pop); color: var(--pop-ink); border: 3px dashed var(--accent); box-shadow: none; }
 .btn svg { width: 24px; height: 24px; }
 
 /* ---------- progress dots ---------- */

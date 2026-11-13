@@ -1,6 +1,6 @@
 ---
 title: One wrong-answer popup for every Game in Teach
-status: planned
+status: done
 ---
 
 # One wrong-answer popup for every Game in Teach

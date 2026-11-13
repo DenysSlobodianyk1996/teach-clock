@@ -10,11 +10,11 @@ Covers: P1–P4 (closing step for the batch)
 
 **Blocked by:** 01, 02
 
-**Status:** todo
+**Status:** done, except the online canvas (republish was not permitted from the agent session; run it by hand)
 
-- [ ] Boards match the app in all three themes, desktop and phone
-- [ ] Every board string is in `src/i18n/uk.ts`
-- [ ] Screenshots of the changed screens compared with the running app
+- [x] Boards match the app in all three themes, desktop and phone
+- [x] Every board string is in `src/i18n/uk.ts`
+- [x] Screenshots of the changed screens compared with the running app
 - [ ] Online canvas republished
-- [ ] Product brief, glossary and CLAUDE.md updated; no "Place-It button" or Hint panel left in the docs except history (`.scratch/0[1-6]-*`, `docs/original/`)
-- [ ] `.scratch/README.md` marks 07-teach-popup done with its PRs
+- [x] Product brief, glossary and CLAUDE.md updated; no "Place-It button" or Hint panel left in the docs except history (`.scratch/0[1-6]-*`, `docs/original/`)
+- [x] `.scratch/README.md` marks 07-teach-popup done with its PRs
