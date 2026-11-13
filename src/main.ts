@@ -19,4 +19,9 @@ app.use(createAppI18n())
 app.mount('#app')
 
 // The Android App packages the game inside it, so it has no service worker (ADR 0004).
-if (!isAndroidApp) registerServiceWorker(router)
+// Its hardware back button acts per screen and never drops a Player out of a Round.
+if (isAndroidApp) {
+  void import('./android/backButton').then(({ listenToBackButton }) => listenToBackButton(router))
+} else {
+  registerServiceWorker(router)
+}

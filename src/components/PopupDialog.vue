@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { trackPopup } from './openPopups'
 
 /**
  * A modal popup on a scrim. Its first button, or the one marked `data-autofocus`, gets the focus
  * (given back on close), Tab stays
  * inside, and Escape or a click on the scrim emits `dismiss`. The content is the slot; label it
- * with `labelledby`. `wide` gives room for two long buttons side by side.
+ * with `labelledby`. `wide` gives room for two long buttons side by side. While open, it is in
+ * `openPopups`, so the Android back button dismisses it too.
  */
 defineProps<{ labelledby: string; describedby?: string; wide?: boolean }>()
 const emit = defineEmits<{ dismiss: [] }>()
@@ -15,6 +17,7 @@ const popup = ref<HTMLElement>()
 const buttons = () => [...(popup.value?.querySelectorAll('button') ?? [])]
 
 let focusedBefore: Element | null = null
+const untrack = trackPopup(() => emit('dismiss'))
 
 onMounted(() => {
   focusedBefore = document.activeElement
@@ -22,6 +25,7 @@ onMounted(() => {
   first?.focus()
 })
 onBeforeUnmount(() => {
+  untrack()
   if (focusedBefore instanceof HTMLElement && focusedBefore.isConnected) focusedBefore.focus()
 })
 
