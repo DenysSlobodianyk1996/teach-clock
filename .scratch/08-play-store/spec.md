@@ -105,7 +105,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - full description up to 4000 characters.
 - No donation, jar or payment wording, and no email in the description (Play shows the contact email itself). Website field: the Web App's home page.
 - Graphics, drawn by script (Playwright), committed to `docs/store/`:
-  - at least 4 phone screenshots per language at 1080×1920 (9:16), so the game is eligible for promotion;
+  - 8 phone screenshots per language at 1080×1920 (9:16), covering all four Games and both Modes (Teach and Test), so the game is eligible for promotion;
   - a 1024×500 feature graphic (original SVG to PNG, no alpha);
   - a 512×512 icon (32-bit PNG).
 - Play Console answers (the wizard walks through them):
