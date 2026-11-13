@@ -10,6 +10,7 @@ Covers: P1, P2, P4
 
 - [ ] `WrongAnswerPopup.vue` has Got it (first, focused) and Set correct answer; emits `dismiss` and `setCorrect`; buttons side by side on desktop, stacked on a 360 px phone
 - [ ] `RoundView.vue` runs `setCorrectAnswer()` from the popup; `HintPanel.vue`, `.waiting`, `.has-hint` and the hint clock sizes are gone
+- [ ] Desktop and 4:3 too: no space is kept under the clock for a Hint any more; the clock and the layout use the freed room, and the clock still never moves during a Round
 - [ ] Got it, Escape and the scrim close the popup and leave the hands or digits where they were; a second wrong try opens it again; the Task ends helped either way
 - [ ] `teach.hint` removed from `en.ts` and `uk.ts` (and from `messages.spec.ts`)
 - [ ] Vitest: popup component spec; `RoundView.spec.ts` Set Time and Drag Arrows Teach blocks rewritten

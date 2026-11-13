@@ -18,7 +18,7 @@ So the same moment looks and acts differently per Game, and the "set it for me" 
 
 ## Solution
 
-Every Game in Teach shows a wrong Answer in **one popup**, and nothing about the hint is added to the Round layout, so the clock never moves on any screen.
+Every Game in Teach shows a wrong Answer in **one popup**, and nothing about the hint is added to the Round layout, so the clock never moves on any screen. The space desktop keeps for the hint today (the hidden Hint panel under the clock, the 48 px row above the number face) is removed too, and the clock gets that room.
 
 The popup:
 

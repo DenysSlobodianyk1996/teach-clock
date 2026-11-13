@@ -10,6 +10,7 @@ Covers: P1, P2, P4
 
 - [ ] `WrongAnswerPopup` takes a drag picture: a small `NumberFace` with the right slot lit in green showing its value (Hour Badges in Drag Minutes), its neighbours visible, and `numbers.between` as the line
 - [ ] `DragRound.vue`: a wrong drop opens the popup; `placeIt()` runs from Set correct answer (green flash, focus to the next tray tile); `.toast-row`, the Place-It button and the `NumberBoard` `.board.hinted` sizing are gone
+- [ ] Desktop and 4:3 too: the 48 px row above the face is gone; the face and tray use the freed room, and the face still never moves during a Round
 - [ ] Got it, Escape and the scrim close it; the number counts as helped either way; a new wrong drop opens it again
 - [ ] `numbers.placeIt` removed from `en.ts` and `uk.ts`
 - [ ] Vitest: `RoundView.spec.ts` Drag Hours, Drag Minutes and Place-It blocks rewritten against the popup
