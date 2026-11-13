@@ -19,18 +19,15 @@ instead of a teaching moment.
 ## Solution
 
 Teach Clock is an installable, offline web game with three Games:
-
 - **Drag Numbers**: put 1–12 on an empty face.
 - **Drag Arrows**: drag the hands to a given Clock Time.
 - **Set Time**: read the clock and enter the time.
 
 Each Game runs in one of two Modes:
-
 - **Teach**: a wrong Answer shows the right one, and the Player must fix it before moving on.
 - **Test**: every Answer moves on with no feedback until the Summary.
 
 How it works:
-
 - The Player types a name and picks a Game, Mode and Level (minute step 1/5/15, 1 by default).
 - A Round is 10 Tasks, or the 12 numbers in Drag Numbers.
 - The Round ends with a read-only Summary of what was right and what was wrong.
