@@ -22,6 +22,6 @@
 - [ ] i18n `uk` and `en`: drop `themes.middle` and `header.nextTheme.*`; keep only what the toggle needs.
 - [ ] Tests (Vitest and Playwright): saved light/dark is kept; nothing saved or `middle` follows the device (`colorScheme` in Playwright, a stubbed `matchMedia` in Vitest); one tap switches and is remembered after a reload; the toggle is the same on phone and desktop. Text looked up with `t`.
 - [ ] `e2e/store-shots.ts`: shoot in light (it forced middle).
-- [ ] Android: check on the emulator that dark mode on the phone opens the game dark and light mode opens it light; the splash and launcher icon stay teal (brand, not a theme).
+- [ ] Android: check on the emulator that dark mode on the phone opens the game dark and light mode opens it light; the splash and launcher icon are ticket 03.
 
-**Out of scope:** design boards, docs and the store-shots rerun (ticket 02); new colours for light or dark; the teal brand colour in the icon, splash and store art.
+**Out of scope:** design boards, docs and the store-shots rerun (ticket 02); new colours for light or dark; the icon and splash background (ticket 03).
