@@ -118,10 +118,11 @@ function leaveRound() {
 /* Phones: room only for icons, as in the design. Names stay for screen readers. */
 @media (--phone) {
   .hdr {
+    gap: 8px;
     padding: 0 14px;
   }
   .hdr-tools {
-    gap: 8px;
+    gap: 6px;
   }
   .brand {
     font-size: 18px;
