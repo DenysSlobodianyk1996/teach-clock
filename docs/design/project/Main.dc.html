@@ -58,18 +58,16 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
 
     <div style="display: flex; flex-direction: column; gap: 22px">
       <div class="label">Теми</div>
-      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
-        <div style="border-radius: 22px; padding: 14px; background: #1d4b5c; color: #fdf6e9; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(253,246,233,.22)">
-          <b style="font-size: 16px">Середня</b><span style="font-size: 13px">за замовчуванням</span>
-          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #fff3dd"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f2b84b"></span></div>
-        </div>
-        <div style="border-radius: 22px; padding: 14px; background: #121a24; color: #eef2f6; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(238,242,246,.16)">
-          <b style="font-size: 16px">Темна</b><span style="font-size: 13px">для вечора</span>
-          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #f1e6cf"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f0b444"></span></div>
-        </div>
-        <div style="border-radius: 22px; padding: 14px; background: #f5efe3; color: #1f2d3a; display: flex; flex-direction: column; gap: 10px; border: 2px solid rgba(31,45,58,.14)">
-          <b style="font-size: 16px">Світла</b><span style="font-size: 13px">для яскравого дня</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+        <div class="tc" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 2px solid var(--line)">
+          <b style="font-size: 16px">Світла</b><span style="font-size: 13px; color: var(--muted)">якщо пристрій у світлому режимі</span>
           <div style="display: flex; gap: 6px"><span class="swatch" style="background: #fffaf0"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #11727a"></span><span class="swatch" style="background: #1d4b5c"></span></div>
+          <div><button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Темна тема"><span class="tt-knob"></span><span class="tt-icon tt-sun"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><line x1="12" y1="4.5" x2="12" y2="2"></line><line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line><line x1="19.5" y1="12" x2="22" y2="12"></line><line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line><line x1="12" y1="19.5" x2="12" y2="22"></line><line x1="6.7" y1="17.3" x2="4.93" y2="19.07"></line><line x1="4.5" y1="12" x2="2" y2="12"></line><line x1="6.7" y1="6.7" x2="4.93" y2="4.93"></line></svg></span><span class="tt-icon tt-moon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M 11.24 3.04 A 9 9 0 1 0 20.97 12.77 A 7 7 0 0 1 11.24 3.04 Z"></path></svg></span></button></div>
+        </div>
+        <div class="tc dark" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 2px solid var(--line)">
+          <b style="font-size: 16px">Темна</b><span style="font-size: 13px; color: var(--muted)">якщо пристрій у темному режимі</span>
+          <div style="display: flex; gap: 6px"><span class="swatch" style="background: #f1e6cf"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f0b444"></span></div>
+          <div><button class="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Темна тема"><span class="tt-knob"></span><span class="tt-icon tt-sun"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><line x1="12" y1="4.5" x2="12" y2="2"></line><line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line><line x1="19.5" y1="12" x2="22" y2="12"></line><line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line><line x1="12" y1="19.5" x2="12" y2="22"></line><line x1="6.7" y1="17.3" x2="4.93" y2="19.07"></line><line x1="4.5" y1="12" x2="2" y2="12"></line><line x1="6.7" y1="6.7" x2="4.93" y2="4.93"></line></svg></span><span class="tt-icon tt-moon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M 11.24 3.04 A 9 9 0 1 0 20.97 12.77 A 7 7 0 0 1 11.24 3.04 Z"></path></svg></span></button></div>
         </div>
       </div>
 
@@ -87,7 +85,6 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
       </div>
       <div style="display: flex; gap: 14px; align-items: center">
         <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
-        <div class="seg" role="group" aria-label="Тема"><button type="button" aria-pressed="true" aria-label="Середня тема"><span class="swatch sw-middle"></span></button><button type="button" aria-pressed="false" aria-label="Темна тема"><span class="swatch sw-dark"></span></button><button type="button" aria-pressed="false" aria-label="Світла тема"><span class="swatch sw-light"></span></button></div>
       </div>
     </div>
   </div>

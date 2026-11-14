@@ -58,8 +58,10 @@ on a phone it is below the fold). It is never shown in a Round or on the Summary
   for kids" (set in `src/config.ts`).
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
-English second) and theme (middle by default, dark, light). The device remembers Preferences and
-the last name typed.
+English second) and theme, light or dark. The theme is one sun/moon toggle: a track with a sun on
+the left and a moon on the right, and a round knob under the chosen one; one tap switches. Until
+the Player taps it, the game follows the device (dark when the device is in dark mode, otherwise
+light). The device remembers Preferences and the last name typed.
 
 ## Games
 
@@ -156,9 +158,10 @@ Rules shared by Drag Arrows and Set Time:
 
 ## Look
 
-- Mid-tone, soft but saturated palette as the default "middle" theme (for example deep teal/navy
-  background, warm cream clock face, coral Hour Hand, teal Minute Hand, mustard highlights,
-  softened green/red for right/wrong). Dark and light themes as alternatives.
+- Two themes, light and dark, with a soft but saturated palette (warm cream or white clock face,
+  coral Hour Hand, teal Minute Hand, mustard highlights, softened green/red for right/wrong). The
+  device decides which one comes first; the Player can switch with the toggle. Teal stays the
+  brand colour of the icon, splash and store art.
 - Both hands are thin on every clock, so a number they cross stays readable; they differ by length
   and colour. In Drag Arrows each hand ends in a Grip: both Grips are the same small ring in their
   hand's colour, with a bigger invisible touch area around them, and every number is drawn over the

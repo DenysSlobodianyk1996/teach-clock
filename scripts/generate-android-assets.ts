@@ -5,8 +5,8 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
-/** The middle theme's background (--bg in src/styles/theme.css), as in pwa-assets.config.ts. */
-export const THEME_COLOR = '#1d4b5c'
+/** The dark theme's background (--bg under [data-theme='dark'] in src/styles/theme.css), as in pwa-assets.config.ts. */
+export const THEME_COLOR = '#121a24'
 
 /** Android density buckets and their scale from dp to px. */
 export const DENSITIES = { mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 } as const

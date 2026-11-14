@@ -54,7 +54,7 @@ The choice of Game, Mode and Level the Player makes before a Round.
 _Avoid_: Options, setup
 
 **Preferences**:
-The interface language (Ukrainian or English) and colour theme (middle, dark or light), kept on the device.
+The interface language (Ukrainian or English) and colour theme (light or dark; the device's choice until the Player picks one), kept on the device.
 _Avoid_: Settings, config
 
 ### The clock
