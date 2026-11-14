@@ -21,6 +21,15 @@ async function pixels(file: string) {
   return { info, at }
 }
 
+// The dark theme's background (--bg under [data-theme='dark'] in src/styles/theme.css).
+const DARK_BG = '#121a24'
+
+describe('Theme colour', () => {
+  it("is the dark theme's background", () => {
+    expect(THEME_COLOR).toBe(DARK_BG)
+  })
+})
+
 describe('Android launcher icon', () => {
   it('has the theme colour as its adaptive background', () => {
     const xml = readFileSync(`${res}values/ic_launcher_background.xml`, 'utf8')
@@ -85,5 +94,11 @@ describe('Play Store icon', () => {
       channels: 4,
       depth: 'uchar',
     })
+  })
+
+  it("fills the corners with the dark theme's background", async () => {
+    const { at } = await pixels(`${root}docs/store/icon-512.png`)
+    expect(at(2, 2)).toEqual({ color: DARK_BG, alpha: 255 })
+    expect(at(509, 509)).toEqual({ color: DARK_BG, alpha: 255 })
   })
 })
