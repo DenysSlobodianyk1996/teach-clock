@@ -3,8 +3,6 @@ title: Teach Clock on Google Play, plus a Footer and a Support Button
 status: done
 ---
 
-> **Removed in [batch 10](../10-no-support-button/):** the Support Button, its GitHub variable and every donation mention. The rest of this spec stands.
-
 # Teach Clock on Google Play, plus a Footer and a Support Button
 
 Terms follow [`GLOSSARY.md`](../../GLOSSARY.md). The new terms (Web App, Android App, Footer, Support Button, Privacy Page) are added in ticket 01. Decisions come from a grilling session on 2026-11-13. Google Play facts were checked against Google's own pages that day; see "Play facts" below.
@@ -44,7 +42,6 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 - **Version**: `package.json` goes to `1.0.0`. `versionName` = `package.json` version (raised by hand: 1.0.x fixes, 1.x.0 features). `versionCode` = GitHub run number of the Android workflow (always increasing).
 - **GitHub repo variables** (already created):
   - `ANDROID_PACKAGE_ID` = `app.teachclockforkids`
-  - a support-link variable (removed in batch 10)
 
 ### Footer and Privacy Page
 

@@ -10,4 +10,6 @@ Added during the work:
 
 > also remove link to website in Конфеденційність. also add created by Denys Slobodianyk here. Денис Слободяник in uk version. update design too
 
-> maybe remove VITE_SUPPORT_URL mentions at all in docs
+> maybe remove the support-link variable mentions at all in docs
+
+> remove the "Removed in batch 10" notes, and every mention of the support-link variable
