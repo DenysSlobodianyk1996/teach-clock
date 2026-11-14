@@ -52,7 +52,7 @@ for (const lang of Object.keys(LANGUAGES) as Lang[]) {
       await page.addInitScript(seedRandom, 2026)
       await page.addInitScript((locale) => {
         localStorage.setItem('teach-clock.locale', locale)
-        localStorage.setItem('teach-clock.theme', 'middle')
+        localStorage.setItem('teach-clock.theme', 'light')
       }, lang)
     })
 

@@ -9,18 +9,12 @@ export default {
     home: 'Додому',
     leave: 'Вийти',
     language: 'Мова',
-    theme: 'Тема',
-    /** The phone's theme button: names the current theme; pressing it moves to the next. */
-    nextTheme: {
-      middle: 'Тема: середня. Змінити',
-      dark: 'Тема: темна. Змінити',
-      light: 'Тема: світла. Змінити',
-    },
+    /** The sun/moon toggle: a switch that is on in the dark theme. */
+    darkTheme: 'Темна тема',
   },
   /** Each language by its own name, the same in every interface language. */
   languages: { uk: 'Українська', en: 'English' },
   languageCodes: { uk: 'УК', en: 'EN' },
-  themes: { middle: 'Середня тема', dark: 'Темна тема', light: 'Світла тема' },
   welcome: {
     title: 'Привіт! Навчимося читати годинник',
     intro:

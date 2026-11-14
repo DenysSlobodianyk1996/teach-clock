@@ -1,20 +1,39 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { nextTick } from 'vue'
 import { usePreferencesStore } from '../preferences'
+import { stubDeviceTheme } from '@/test/deviceTheme'
 
 describe('preferences store', () => {
   beforeEach(() => {
     localStorage.clear()
     setActivePinia(createPinia())
   })
+  afterEach(() => vi.unstubAllGlobals())
 
-  it('starts in Ukrainian with the middle theme on a fresh device', () => {
+  it('starts in Ukrainian and light on a fresh device in light mode', () => {
+    stubDeviceTheme('light')
     const preferences = usePreferencesStore()
     expect(preferences.locale).toBe('uk')
-    expect(preferences.theme).toBe('middle')
+    expect(preferences.theme).toBe('light')
+  })
+
+  it('starts dark on a fresh device in dark mode', () => {
+    stubDeviceTheme('dark')
+    expect(usePreferencesStore().theme).toBe('dark')
+  })
+
+  it('follows the device live until the Player picks a theme', async () => {
+    const device = stubDeviceTheme('light')
+    const preferences = usePreferencesStore()
+    device.set('dark')
+    await nextTick()
+    expect(preferences.theme).toBe('dark')
+    expect(localStorage.getItem('teach-clock.theme')).toBeNull()
   })
 
   it('remembers the language and theme on the device', () => {
+    stubDeviceTheme('dark')
     const preferences = usePreferencesStore()
     preferences.locale = 'en'
     preferences.theme = 'light'
@@ -23,20 +42,32 @@ describe('preferences store', () => {
     expect(usePreferencesStore().theme).toBe('light')
   })
 
-  it('falls back to the defaults when the stored values are unknown', () => {
-    localStorage.setItem('teach-clock.locale', 'de')
-    localStorage.setItem('teach-clock.theme', 'neon')
+  it('keeps a saved theme when the device changes', async () => {
+    localStorage.setItem('teach-clock.theme', 'light')
+    const device = stubDeviceTheme('light')
     const preferences = usePreferencesStore()
-    expect(preferences.locale).toBe('uk')
-    expect(preferences.theme).toBe('middle')
+    device.set('dark')
+    await nextTick()
+    expect(preferences.theme).toBe('light')
   })
 
-  it('cycles the theme middle → dark → light → middle', () => {
+  it.each(['middle', 'neon'])('follows the device when the saved theme is %s', (saved) => {
+    localStorage.setItem('teach-clock.locale', 'de')
+    localStorage.setItem('teach-clock.theme', saved)
+    stubDeviceTheme('dark')
     const preferences = usePreferencesStore()
-    const seen = [1, 2, 3].map(() => {
-      preferences.cycleTheme()
-      return preferences.theme
-    })
-    expect(seen).toEqual(['dark', 'light', 'middle'])
+    expect(preferences.locale).toBe('uk')
+    expect(preferences.theme).toBe('dark')
+  })
+
+  it('toggles between light and dark and saves the choice', () => {
+    stubDeviceTheme('light')
+    const preferences = usePreferencesStore()
+    preferences.toggleTheme()
+    expect(preferences.theme).toBe('dark')
+    expect(localStorage.getItem('teach-clock.theme')).toBe('dark')
+    preferences.toggleTheme()
+    expect(preferences.theme).toBe('light')
+    expect(localStorage.getItem('teach-clock.theme')).toBe('light')
   })
 })

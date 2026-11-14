@@ -8,8 +8,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { privacyPageHtml } from './src/privacy.ts'
 
-/** The middle theme's background (--bg in src/styles/theme.css). */
-const themeColor = '#1d4b5c'
+/** The light theme's background (--bg in src/styles/theme.css). */
+const themeColor = '#f5efe3'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
