@@ -1,8 +1,11 @@
 import { t, tEn } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
+import { THEME_BG } from '../src/themeColors.ts'
 
-const LIGHT_BG = 'rgb(245, 239, 227)'
-const DARK_BG = 'rgb(18, 26, 36)'
+/** A `#rrggbb` colour as the browser reports it in computed styles. */
+function rgb(hex: string) {
+  return `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`
+}
 
 /** The header's sun/moon toggle, in the interface language `lookup` reads. */
 function themeToggle(page: Page, lookup = t) {
@@ -12,14 +15,8 @@ function themeToggle(page: Page, lookup = t) {
 /** Checks `<html>`, the page and the browser bar are all in `theme`. */
 async function expectTheme(page: Page, theme: 'light' | 'dark') {
   await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
-  await expect(page.locator('body')).toHaveCSS(
-    'background-color',
-    theme === 'dark' ? DARK_BG : LIGHT_BG,
-  )
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
-    'content',
-    theme === 'dark' ? '#121a24' : '#f5efe3',
-  )
+  await expect(page.locator('body')).toHaveCSS('background-color', rgb(THEME_BG[theme]))
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', THEME_BG[theme])
 }
 
 /** Saves `theme` on the device before the page loads, as an earlier visit would have. */
@@ -99,5 +96,5 @@ test('the first frame is already in the device theme', async ({ page }) => {
   await page.route('**/src/main.ts', (route) => route.abort())
   await page.goto('/')
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#121a24')
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', THEME_BG.dark)
 })

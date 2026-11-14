@@ -3,9 +3,10 @@ import {
   defineConfig,
   minimal2023Preset,
 } from '@vite-pwa/assets-generator/config'
+import { THEME_BG } from './src/themeColors.ts'
 
-/** The dark theme's background (--bg under [data-theme='dark'] in src/styles/theme.css). */
-const background = '#121a24'
+/** The dark theme's background, so the clock mark reads clearly. */
+const background = THEME_BG.dark
 
 // Generates the app icons in public/ from the brand mark: `npm run generate-pwa-assets`.
 export default defineConfig({

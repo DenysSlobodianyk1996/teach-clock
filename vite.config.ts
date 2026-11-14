@@ -7,9 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { privacyPageHtml } from './src/privacy.ts'
-
-/** The light theme's background (--bg in src/styles/theme.css). */
-const themeColor = '#f5efe3'
+import { THEME_BG } from './src/themeColors.ts'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
@@ -41,6 +39,21 @@ function privacyPagePlugin(): Plugin {
   }
 }
 
+/**
+ * Fills the theme backgrounds into index.html (`__THEME_BG_LIGHT__`, `__THEME_BG_DARK__`), from the
+ * same module as the manifest and the icons, so the pre-paint script never drifts from theme.css.
+ */
+function themeColorsPlugin(): Plugin {
+  return {
+    name: 'teach-clock-theme-colors',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html) =>
+        html.replaceAll('__THEME_BG_LIGHT__', THEME_BG.light).replaceAll('__THEME_BG_DARK__', THEME_BG.dark),
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
@@ -50,6 +63,7 @@ export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
+    themeColorsPlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
@@ -67,8 +81,10 @@ export default defineConfig({
         short_name: 'Годинник',
         description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
         lang: 'uk',
-        theme_color: themeColor,
-        background_color: themeColor,
+        // The browser bar starts light, the default theme; index.html repaints it per theme.
+        theme_color: THEME_BG.light,
+        // The launch screen matches the maskable and Apple icons, which sit on the dark background.
+        background_color: THEME_BG.dark,
         display: 'standalone',
         start_url: base,
         scope: base,
