@@ -1,6 +1,6 @@
 # 05: Hold-to-open Support Button component
 
-> **Removed in [batch 10](../../10-no-support-button/):** the app no longer has a Support Button or `VITE_SUPPORT_URL`.
+> **Removed in [batch 10](../../10-no-support-button/):** the app no longer has a Support Button or its GitHub variable.
 
 Covers: P6
 

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { t, tEn } from './i18n.ts'
-import { CONTACT_EMAIL, WEB_APP_URL } from '../src/config.ts'
+import { CONTACT_EMAIL } from '../src/config.ts'
 
 // privacy.html is the static copy of the Privacy Page for Google Play's listing. The build writes it
 // from the same i18n text as the app screen (src/privacy.ts), Ukrainian then English.
@@ -17,18 +17,17 @@ test('the static Privacy Page has a Ukrainian and an English section and a way b
   // Ukrainian comes first.
   expect((await uk.boundingBox())!.y).toBeLessThan((await en.boundingBox())!.y)
 
-  for (const [section, back] of [
-    [uk, t('privacy.back')],
-    [en, tEn('privacy.back')],
+  for (const [section, back, createdBy] of [
+    [uk, t('privacy.back'), t('privacy.createdBy')],
+    [en, tEn('privacy.back'), tEn('privacy.createdBy')],
   ] as const) {
     await expect(section.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute(
       'href',
       `mailto:${CONTACT_EMAIL}`,
     )
-    await expect(section.getByRole('link', { name: WEB_APP_URL })).toHaveAttribute(
-      'href',
-      WEB_APP_URL,
-    )
+    await expect(section.getByText(createdBy)).toBeVisible()
+    // The contact email and the way back are the only links.
+    await expect(section.getByRole('link')).toHaveCount(2)
     await expect(section.locator('time[datetime]')).toHaveCount(1)
     await expect(section.getByRole('link', { name: back })).toHaveAttribute('href', './')
   }

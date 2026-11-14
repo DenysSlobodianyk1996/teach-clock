@@ -3,7 +3,7 @@ title: Teach Clock on Google Play, plus a Footer and a Support Button
 status: done
 ---
 
-> **Removed in [batch 10](../10-no-support-button/):** the Support Button, its `VITE_SUPPORT_URL` variable and every donation mention. The rest of this spec stands.
+> **Removed in [batch 10](../10-no-support-button/):** the Support Button, its GitHub variable and every donation mention. The rest of this spec stands.
 
 # Teach Clock on Google Play, plus a Footer and a Support Button
 
@@ -44,7 +44,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 - **Version**: `package.json` goes to `1.0.0`. `versionName` = `package.json` version (raised by hand: 1.0.x fixes, 1.x.0 features). `versionCode` = GitHub run number of the Android workflow (always increasing).
 - **GitHub repo variables** (already created):
   - `ANDROID_PACKAGE_ID` = `app.teachclockforkids`
-  - `VITE_SUPPORT_URL` = `unset` placeholder; the author fills in the monobank link (send.monobank.ua)
+  - a support-link variable (removed in batch 10)
 
 ### Footer and Privacy Page
 
@@ -61,7 +61,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
 
 ### Support Button
 
-- Shown only when the Web App is running **and** `VITE_SUPPORT_URL` starts with `https://`. So `unset`, empty or the Android App hides it.
+- Shown only when the Web App is running **and** the support link starts with `https://`. So `unset`, empty or the Android App hides it.
 - **Hold to open**:
   - press and hold for 2 s; a ring fills around a heart icon;
   - letting go early cancels;
@@ -70,7 +70,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - after a full 2 s hold the ring stays full, and the release that follows (pointer up, or keyup of Enter/Space) calls `window.open(url, '_blank', 'noopener')`, once per hold. It opens on the release, not when the 2 s run out, because browsers (Safari, touch screens) only allow a new tab during a user gesture and a timer is none;
   - the hold resets when the page is hidden, the pointer leaves or is cancelled, or the button loses focus.
   - With `prefers-reduced-motion`, the ring still fills (it shows progress), just without easing.
-- `deploy.yml` passes `VITE_SUPPORT_URL: ${{ vars.VITE_SUPPORT_URL }}` to `npm run build`.
+- `deploy.yml` passes the support link from a repo variable to `npm run build`.
 
 ### Android App
 
