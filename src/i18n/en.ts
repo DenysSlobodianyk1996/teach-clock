@@ -151,8 +151,4 @@ export default {
     updated: 'Updated:',
     back: 'Back to the game',
   },
-  support: {
-    button: 'Support the author',
-    hold: 'Hold to open',
-  },
 } satisfies typeof uk

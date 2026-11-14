@@ -115,12 +115,8 @@ Teach Clock as an app installed from Google Play, with the whole game inside it 
 _Avoid_: mobile app, native app, Play version, APK
 
 **Footer**:
-The plain bar at the bottom of Welcome and Settings with the links to the Privacy Page and to contact the author, and, in the Web App only, the Support Button. Never shown during a Round or on the Summary.
+The plain bar at the bottom of Welcome and Settings with the links to the Privacy Page and to contact the author. Never shown during a Round or on the Summary.
 _Avoid_: bottom bar, links bar
-
-**Support Button**:
-The heart button in the Web App's Footer that opens the author's donation page after the Player holds it for 2 seconds, so a child tapping by accident opens nothing. Never in the Android App.
-_Avoid_: donate button, tip jar, jar
 
 **Privacy Page**:
 The app screen, opened from the Footer, that says in the interface language that nothing about the Player is collected or sent. The Web App build also writes a static copy, `privacy.html` (Ukrainian, then English), from the same text: that is the public URL in Google Play's listing.

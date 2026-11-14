@@ -13,4 +13,4 @@ Teach Clock goes on Google Play as an Android App built with Capacitor: the same
 ## Consequences
 
 - Every change to the Android App is a Play release (built and uploaded by CI, then reviewed by Google), not an instant web deploy. The Web App still updates on every merge.
-- One codebase, two builds: `VITE_TARGET=android` marks the Android build, and the app reads it from one place (`src/platform.ts`). Anything the two builds do differently (no service worker, no Support Button) hangs off that flag.
+- One codebase, two builds: `VITE_TARGET=android` marks the Android build, and the app reads it from one place (`src/platform.ts`). Anything the two builds do differently (no service worker) hangs off that flag.

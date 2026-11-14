@@ -6,8 +6,6 @@
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
-import { isAndroidApp, supportUrl } from '@/platform'
-import SupportButton from './SupportButton.vue'
 
 const { t } = useI18n()
 
@@ -21,18 +19,13 @@ const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTAC
       <RouterLink :to="{ name: 'privacy' }">{{ t('footer.privacy') }}</RouterLink>
       <a :href="contactHref">{{ t('footer.contact') }}</a>
     </nav>
-    <!-- Web App only: Google Play forbids outside payments. No https:// link set, no button. -->
-    <SupportButton v-if="!isAndroidApp && supportUrl" :url="supportUrl" />
   </footer>
 </template>
 
 <style scoped>
 .footer {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 8px 24px;
   padding: 8px 20px 12px;
   border-top: 1px solid var(--line);
 }

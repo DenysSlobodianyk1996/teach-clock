@@ -152,8 +152,4 @@ export default {
     updated: 'Оновлено:',
     back: 'До гри',
   },
-  support: {
-    button: 'Підтримати автора',
-    hold: 'Утримуй, щоб відкрити',
-  },
 }

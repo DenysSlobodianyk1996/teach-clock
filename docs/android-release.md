@@ -38,7 +38,7 @@ Days are rough: Google's checks set the pace. The wizard's stages follow the sam
 | Day 0–3, while Google checks | JDK 21 and Android SDK 36 on your machine                                        | 3            | [2](#2-your-machine-day-03)            |
 |                              | Make the upload key                                                              | 4            | [3](#3-upload-key-day-03)              |
 |                              | Put the four signing secrets in GitHub                                           | 5            | [4](#4-signing-secrets-day-03)         |
-|                              | Check the repo variables; set the support link                                   | 6            | [5](#5-repository-variables-day-03)    |
+|                              | Check the repo variable                                                          | 6            | [5](#5-repository-variable-day-03)     |
 | Day ~3, identity verified    | Create the app in Play Console                                                   | 7            | [6](#6-create-the-app-day-3)           |
 |                              | Answer every App content form                                                    | 8            | [7](#7-app-content-day-3)              |
 |                              | Fill in the store listing and upload the graphics                                | 9            | [8](#8-store-listing-day-3)            |
@@ -132,17 +132,11 @@ gh secret set ANDROID_KEY_PASSWORD      # the same password
 
 All four or none: with none, CI builds an unsigned bundle and warns; with only some, the build fails. From the next merge to `main` that changes the app, the run's artifact is a signed bundle named `teach-clock-<run number>` (kept 14 days).
 
-## 5. Repository variables (day 0–3)
+## 5. Repository variable (day 0–3)
 
 GitHub › Settings › Secrets and variables › Actions › Variables:
 
 - `ANDROID_PACKAGE_ID` = `app.teachclockforkids`. Already set; CI uploads to this app.
-- `VITE_SUPPORT_URL` = your monobank jar link (`https://send.monobank.ua/…`). It is `unset` until you fill it, and then the Web App shows the Support Button from its next deploy. Web App only: the Android App and the Play listing never show it.
-
-```bash
-gh variable set VITE_SUPPORT_URL --body "https://send.monobank.ua/…"
-gh workflow run deploy.yml --ref main   # redeploy the website now, or wait for the next app change
-```
 
 ## 6. Create the app (day ~3)
 
@@ -182,7 +176,7 @@ Grow users › Store presence › **Main store listing**. Ukrainian is the defau
 | App icon (512×512)                   | `store/icon-512.png`                                   | the same                               |
 | Feature graphic (1024×500)           | `store/feature-graphic.png`                            | the same                               |
 
-Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. **No donation or jar text anywhere in the listing.** `npm run store-shots` redraws the screenshots and the feature graphic after UI or text changes.
+Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots and the feature graphic after UI or text changes.
 
 ## 9. First upload, by hand (day ~3)
 
@@ -276,7 +270,6 @@ After the first production release: Play Console › **Grow › Teacher Approved
 | Thing                       | Where                                                                                                                                                    | Secret? |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                    | no      |
-| Support link (Web App only) | repo variable `VITE_SUPPORT_URL` (`unset` until you fill it)                                                                                             | no      |
 | Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                 | **yes** |
 | Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                       | **yes** |
 | CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                      | no      |

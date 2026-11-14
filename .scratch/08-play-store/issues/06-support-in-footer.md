@@ -1,5 +1,7 @@
 # 06: Support Button in the Footer, Web App only
 
+> **Removed in [batch 10](../../10-no-support-button/):** the app no longer has a Support Button or `VITE_SUPPORT_URL`.
+
 Covers: P6
 
 **What to build:** the Footer shows the Support Button only in the Web App with a real link.

@@ -3,6 +3,8 @@ title: Teach Clock on Google Play, plus a Footer and a Support Button
 status: done
 ---
 
+> **Removed in [batch 10](../10-no-support-button/):** the Support Button, its `VITE_SUPPORT_URL` variable and every donation mention. The rest of this spec stands.
+
 # Teach Clock on Google Play, plus a Footer and a Support Button
 
 Terms follow [`GLOSSARY.md`](../../GLOSSARY.md). The new terms (Web App, Android App, Footer, Support Button, Privacy Page) are added in ticket 01. Decisions come from a grilling session on 2026-11-13. Google Play facts were checked against Google's own pages that day; see "Play facts" below.

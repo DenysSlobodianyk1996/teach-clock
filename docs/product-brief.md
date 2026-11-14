@@ -25,8 +25,7 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
   on Settings and Summary it goes to Welcome, in a Round it opens "Leave this Round?" (or closes
   it), and an open popup closes first. Every change is a Play release: CI uploads each merge to
   closed testing, and production is released by hand (`docs/android-release.md`).
-- The two differ only through `src/platform.ts`: no service worker and no Support Button in the
-  Android App.
+- The two differ only through `src/platform.ts`: no service worker in the Android App.
 
 ## Screens
 
@@ -57,12 +56,6 @@ on a phone it is below the fold). It is never shown in a Round or on the Summary
   https://denysslobodianyk1996.github.io/teach-clock/privacy.html.
 - **Contact**: a `mailto:` link to the author with the subject "Contact support from teach clock
   for kids" (set in `src/config.ts`).
-- **Support Button** (Web App only, and only when the build has an `https://` support link in
-  `VITE_SUPPORT_URL`): a round heart button with "Hold to open" under it. Holding it for 2 seconds
-  (pointer, Enter or Space) fills a ring round the heart and then opens the author's support page
-  in a new tab; letting go early cancels, so a child tapping by accident opens nothing. Google Play
-  forbids leading users to outside payments, so the Android App never shows it. On a desktop it
-  sits beside the links; on a phone it wraps to its own row under them.
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
 English second) and theme (middle by default, dark, light). The device remembers Preferences and
@@ -187,5 +180,5 @@ Rules shared by Drag Arrows and Set Time:
 ## Out of scope
 
 Accounts, admin, stored results and statistics, e-mail from the app (Contact only opens the
-Player's own mail app), payments inside the Android App, iOS, timers, sound, telling the time in a
+Player's own mail app), iOS, timers, sound, telling the time in a
 foreign language.
