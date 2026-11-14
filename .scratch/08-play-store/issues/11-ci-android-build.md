@@ -1,6 +1,6 @@
 # 11: CI builds a signed app bundle
 
-Covers: P7
+Covers: P6
 
 **What to build:** `.github/workflows/android.yml` builds a signed `.aab` on each app-changing merge to `main`.
 

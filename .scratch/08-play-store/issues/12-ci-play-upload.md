@@ -1,6 +1,6 @@
 # 12: CI uploads to closed testing; manual production release
 
-Covers: P7
+Covers: P6
 
 **What to build:** each merge's `.aab` goes to Play closed testing; production is a "Run workflow" button with release notes.
 

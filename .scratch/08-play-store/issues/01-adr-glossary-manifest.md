@@ -9,8 +9,8 @@ Covers: P1, P2
 **Status:** done
 
 - [x] `docs/adr/0004-android-app-via-capacitor.md`: Capacitor with the packaged game; TWA rejected (offline first launch, `assetlinks.json` at the github.io root, address bar, Chrome dependency); cost: each update is a Play release
-- [x] `GLOSSARY.md`: **Web App**, **Android App**, **Footer**, **Support Button**, **Privacy Page**
+- [x] `GLOSSARY.md`: **Web App**, **Android App**, **Footer**, **Privacy Page**
 - [x] `vite.config.ts` manifest: name "Вчимо годинник", `lang: 'uk'`, Ukrainian description, a `short_name` that fits under an icon
 - [x] `package.json` version `1.0.0`
-- [x] `src/platform.ts`: `isAndroidApp` from `VITE_TARGET`, `supportUrl` (only an `https://` value counts); the single place that reads these env vars; typed in `env.d.ts`
+- [x] `src/platform.ts`: `isAndroidApp` from `VITE_TARGET`; the single place that reads the env var; typed in `env.d.ts`
 - [x] Vitest for the helper; type-check, lint, existing tests pass

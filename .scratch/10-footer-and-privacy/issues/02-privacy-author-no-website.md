@@ -10,4 +10,4 @@
 - [x] `PRIVACY_UPDATED` bumped to 2026-11-14.
 - [x] Unit and e2e tests: the author line shows in both languages; the email (and, on the static page, the way back) are the only links.
 - [x] Product brief and `docs/android-checks.md` follow.
-- [x] Design: new `Privacy.dc.html` board in the first row of the gallery and `canvas.json`; every board's Footer Privacy link opens it. `canvas.json` also loses the deleted Support boards (missed in 01).
+- [x] Design: new `Privacy.dc.html` board in the first row of the gallery and `canvas.json`; every board's Footer Privacy link opens it.
