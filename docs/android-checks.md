@@ -1,6 +1,6 @@
 # Android checks
 
-The checks that show the Android App is fit for Google Play review (batch 08, ticket 10). Run them again before each release that changes `android/`, Capacitor or a plugin.
+The checks that show the Android App is fit for Google Play review (batch 08, ticket 08). Run them again before each release that changes `android/`, Capacitor or a plugin.
 
 ## Permission check (automatic)
 
@@ -27,7 +27,7 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 
 - [x] **Fresh install, airplane mode, first launch.** Uninstalled, turned airplane mode on (`adb shell cmd connectivity airplane-mode enable`, no active network), installed, opened. Welcome came up with the font and art; nothing needed the internet.
 - [x] **A full Round in each Game, offline, on that first run:** Set Time (Test, Level 5), Drag Arrows (Test, Level 15), Drag Hours (Teach, with a wrong drop), Drag Minutes (Test). Each reached its Summary.
-- [x] **Back button, as ticket 09 says:**
+- [x] **Back button, as ticket 07 says:**
   - Settings → Welcome.
   - In a Round, back opens the leave dialog; back again closes it (Keep playing) and the Round goes on at the same Task. Back never leaves a Round.
   - Teach wrong-answer popup: back closes the popup first; the Round stays.
@@ -41,9 +41,9 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 
 | Splash                                                    | Welcome, offline                                                                     | Back in a Round                                                                       | Launcher icon                                                           |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| ![Splash](../.scratch/08-play-store/images/10-splash.png) | ![Welcome in airplane mode](../.scratch/08-play-store/images/10-welcome-offline.png) | ![Leave dialog after back](../.scratch/08-play-store/images/10-back-leave-dialog.png) | ![Launcher icon](../.scratch/08-play-store/images/10-launcher-icon.png) |
+| ![Splash](../.scratch/08-play-store/images/08-splash.png) | ![Welcome in airplane mode](../.scratch/08-play-store/images/08-welcome-offline.png) | ![Leave dialog after back](../.scratch/08-play-store/images/08-back-leave-dialog.png) | ![Launcher icon](../.scratch/08-play-store/images/08-launcher-icon.png) |
 
-![Set Time Round in landscape](../.scratch/08-play-store/images/10-landscape.png)
+![Set Time Round in landscape](../.scratch/08-play-store/images/08-landscape.png)
 
 ## What the emulator does not prove
 

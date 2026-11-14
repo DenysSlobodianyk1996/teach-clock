@@ -108,7 +108,7 @@ A merge to `main` that changes the app deploys the Web App and uploads a signed 
   - Footer shows Privacy and Contact;
   - back-button handler per screen: route logic tested without Capacitor (the handler takes the router state).
 - Playwright (Web App): the Footer is on Welcome and Settings, not in a Round or on Summary; the Privacy Page loads offline after the first visit (it is in the precache); `fits-small-phone` still passes with the Footer.
-- Android: a CI step lists the merged manifest permissions and fails if location or `AD_ID` appear; a manual check on a device or emulator in airplane mode on first launch (ticket 10 checklist).
+- Android: a CI step lists the merged manifest permissions and fails if location or `AD_ID` appear; a manual check on a device or emulator in airplane mode on first launch (ticket 08 checklist).
 - Tests look up text with `t`, as always.
 
 ## Play facts (checked 2026-11-13, official Google pages)

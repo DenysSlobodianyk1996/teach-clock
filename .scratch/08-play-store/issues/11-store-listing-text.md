@@ -1,4 +1,4 @@
-# 13: Store listing text
+# 11: Store listing text
 
 Covers: P1
 

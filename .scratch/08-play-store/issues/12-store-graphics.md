@@ -1,10 +1,10 @@
-# 14: Store screenshots and feature graphic
+# 12: Store screenshots and feature graphic
 
 Covers: P1
 
 **What to build:** the Play graphics, made by script and committed to `docs/store/`.
 
-**Blocked by:** 08
+**Blocked by:** 06
 
 **Status:** done
 

@@ -1,10 +1,10 @@
-# 16: Sync design and docs with the app
+# 14: Sync design and docs with the app
 
 Covers: P1–P6 (closing step for the batch)
 
-**What to build:** once tickets 01–15 are done, the design and docs describe what the app now does. The app is the reference, so change the docs, not the code.
+**What to build:** once tickets 01–13 are done, the design and docs describe what the app now does. The app is the reference, so change the docs, not the code.
 
-**Blocked by:** 01–15
+**Blocked by:** 01–13
 
 **Status:** done
 

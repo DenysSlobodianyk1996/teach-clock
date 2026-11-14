@@ -192,7 +192,7 @@ finish() {
 }
 
 # ──────────────────────────────────────────────────────────────────────────
-# STAGES: Teach Clock on Google Play (batch 08, ticket 15).
+# STAGES: Teach Clock on Google Play (batch 08, ticket 13).
 #
 # Walks the author through every step of docs/android-release.md that only a
 # person can do, in timeline order: the Play developer account, the machine,
