@@ -1,4 +1,4 @@
-# 07: Capacitor Android project
+# 05: Capacitor Android project
 
 Covers: P2
 

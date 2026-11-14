@@ -14,7 +14,7 @@ Play Console › your app › **Dashboard**. The "Apply for production" section 
 - The test only counts while it is running on a **closed testing** track. Internal testing doesn't count.
 - If fewer than 12 testers are opted in, the 14 days count from when there are 12 again. So recruit about **15**, and check the Dashboard every few days.
 - Uninstalling the app doesn't opt someone out. Leaving the test does. Ask testers to keep the app installed and to open it now and then: Google asks what testers did.
-- New builds during the test are fine and expected; CI uploads every merge (ticket 12). Testers get them as updates.
+- New builds during the test are fine and expected; CI uploads every merge (ticket 10). Testers get them as updates.
 
 ## Key dates
 

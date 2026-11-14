@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { CONTACT_EMAIL, PRIVACY_UPDATED, WEB_APP_URL } from '@/config'
+import { CONTACT_EMAIL, PRIVACY_UPDATED } from '@/config'
 import { formatPrivacyDate, privacyPageHtml } from '@/privacy'
 import { t, tEn } from '@/test/i18n'
 
@@ -9,7 +9,7 @@ const KEYS = [
   'nothingSent',
   'onDevice',
   'results',
-  'webVersion',
+  'createdBy',
   'questions',
   'updated',
   'back',
@@ -46,8 +46,8 @@ describe('the static privacy.html for Google Play', () => {
     expect(sectionText(html, 'en')).toContain(formatPrivacyDate('en'))
   })
 
-  it('links to the web version of the game in each language', () => {
-    expect(html.match(new RegExp(`<a href="${WEB_APP_URL}">`, 'g'))).toHaveLength(2)
+  it('has no link to the website', () => {
+    expect(html).not.toContain('github.io')
   })
 
   it('links back to the game', () => {

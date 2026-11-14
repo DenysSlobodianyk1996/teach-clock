@@ -4,7 +4,7 @@
  * listing needs a public URL that works without the app. Plain TypeScript with relative imports, so
  * vite.config.ts can load it.
  */
-import { CONTACT_EMAIL, PRIVACY_UPDATED, WEB_APP_URL } from './config.ts'
+import { CONTACT_EMAIL, PRIVACY_UPDATED } from './config.ts'
 import uk from './i18n/uk.ts'
 import en from './i18n/en.ts'
 
@@ -34,9 +34,9 @@ function section(locale: PrivacyLocale, heading: 'h1' | 'h2'): string {
           <li>${escape(p.nothingSent)}</li>
           <li>${escape(p.onDevice)}</li>
           <li>${escape(p.results)}</li>
-          <li>${escape(p.webVersion)} <a href="${WEB_APP_URL}">${WEB_APP_URL}</a></li>
           <li>${escape(p.questions)} ${mail}</li>
         </ul>
+        <p class="author">${escape(p.createdBy)}</p>
         <p class="updated">${escape(p.updated)} <time datetime="${PRIVACY_UPDATED}">${escape(formatPrivacyDate(locale))}</time></p>
         <a class="back" href="./">${escape(p.back)}</a>
       </section>`
@@ -98,6 +98,7 @@ export function privacyPageHtml(): string {
       ul { padding-left: 1.2em; }
       li { margin-bottom: 8px; }
       a { color: var(--link); }
+      .author { font-weight: 700; margin-bottom: 0; }
       .updated { color: var(--muted); font-size: 0.95rem; }
       a.back {
         display: inline-block;

@@ -6,7 +6,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { CONTACT_EMAIL, PRIVACY_UPDATED, WEB_APP_URL } from '@/config'
+import { CONTACT_EMAIL, PRIVACY_UPDATED } from '@/config'
 import { formatPrivacyDate } from '@/privacy'
 import { goBack } from '@/router'
 
@@ -25,15 +25,11 @@ const updated = computed(() => formatPrivacyDate(locale.value === 'en' ? 'en' : 
       <li>{{ t('privacy.onDevice') }}</li>
       <li>{{ t('privacy.results') }}</li>
       <li>
-        {{ t('privacy.webVersion') }}
-        <!-- In the Android App an outside link opens in the system browser. -->
-        <a :href="WEB_APP_URL" target="_blank" rel="noopener">{{ WEB_APP_URL }}</a>
-      </li>
-      <li>
         {{ t('privacy.questions') }}
         <a :href="`mailto:${CONTACT_EMAIL}`">{{ CONTACT_EMAIL }}</a>
       </li>
     </ul>
+    <p class="author">{{ t('privacy.createdBy') }}</p>
     <p class="updated">
       {{ t('privacy.updated') }} <time :datetime="PRIVACY_UPDATED">{{ updated }}</time>
     </p>
@@ -78,6 +74,11 @@ a {
   font-weight: 700;
   text-underline-offset: 3px;
   overflow-wrap: anywhere;
+}
+.author {
+  margin: 0;
+  font-size: clamp(17px, 1.9cqi, 19px);
+  font-weight: 700;
 }
 .updated {
   margin: 0;

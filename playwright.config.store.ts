@@ -21,7 +21,7 @@ export default defineConfig({
     hasTouch: true,
   },
   webServer: {
-    // The Android App's build: no Support Button, no service worker. Its own folder.
+    // The Android App's build: no service worker. Its own folder.
     command: `VITE_TARGET=android npx vite build --outDir dist-store && npx vite preview --outDir dist-store --port ${port} --strictPort`,
     port,
     reuseExistingServer: false,

@@ -2,7 +2,7 @@
 
 Paste each block into Play Console › Grow users › Store presence › Main store listing. Ukrainian is the default language; the English translation is in [`listing.en.md`](listing.en.md). Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
 
-Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text. No donation, jar or payment wording anywhere in the listing (Play payments policy).
+Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text.
 
 ## App name (30 / 30)
 

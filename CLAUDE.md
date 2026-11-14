@@ -5,8 +5,8 @@ Rebuild of a 2019 master's-thesis project ("Time Teacher") as an HTML5 game.
 
 ## Status
 
-Design approved (ticket 01). App skeleton in place (ticket 02). All four Games playable in Test and Teach (tickets 03–08, Drag Minutes in batch 06), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11), one two-button wrong-answer popup in Teach for every Game (batch 07), Android App on Google Play with a Footer, Privacy Page and Web-only Support Button (batch 08), Privacy Page as an app screen (batch 09): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
-Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `09-privacy-in-app` (the Privacy Page is a Vue screen at `/privacy` in both builds; `src/privacy.ts` writes the static `privacy.html` for Play from the same i18n text). Before it, `08-play-store` (Capacitor Android App with back button, icons and store art; CI builds a signed bundle and uploads it to Play closed testing; Footer on Welcome and Settings; `src/platform.ts` is the one place that tells the two builds apart).
+Design approved (ticket 01). App skeleton in place (ticket 02). All four Games playable in Test and Teach (tickets 03–08, Drag Minutes in batch 06), full Summary (ticket 09), English and themes (ticket 10), offline and installable (ticket 11), one two-button wrong-answer popup in Teach for every Game (batch 07), Android App on Google Play with a Footer and Privacy Page (batch 08), Privacy Page as an app screen (batch 09), Footer with Privacy and Contact only and the author on the Privacy Page (batch 10): Welcome → Settings → Round → Summary. Stack: Vue 3 + Vite + TypeScript + SVG (see `docs/tech-stack.md`).
+Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` lists every batch with its status and PRs, and sets the naming and file rules. Last done: `10-footer-and-privacy` (the Footer is Privacy and Contact only; the Privacy Page names the author and links only the contact email). Before it, `09-privacy-in-app` (the Privacy Page is a Vue screen at `/privacy` in both builds; `src/privacy.ts` writes the static `privacy.html` for Play from the same i18n text). Before that, `08-play-store` (Capacitor Android App with back button, icons and store art; CI builds a signed bundle and uploads it to Play closed testing; Footer on Welcome and Settings; `src/platform.ts` is the one place that tells the two builds apart).
 
 ## Commands
 
@@ -17,7 +17,6 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `npx playwright test`: browser flows (desktop + phone, plus an offline check on a fresh build)
 - `npm run build`: type-check and build (with the offline service worker)
 - `npm run generate-pwa-assets`: redraw the app icons in `public/` from `public/favicon.svg`
-- `VITE_SUPPORT_URL=https://… npm run dev`: shows the Support Button (hidden without an `https://` link)
 - Android (Gradle needs `ANDROID_HOME=~/Library/Android/sdk` and `JAVA_HOME=/opt/homebrew/opt/openjdk@21`):
   - `npm run build:android`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
   - `npm run build:apk`: `build:android` then `assembleDebug` (fills in `ANDROID_HOME`/`JAVA_HOME` if unset); the APK to sideload is `android/app/build/outputs/apk/debug/app-debug.apk`
@@ -36,7 +35,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).
 - `docs/android-release.md` — publishing on Google Play step by step (account, keys, secrets, Play Console, testers, releases); `docs/android-checks.md` — the device checklist.
 - `docs/store/` — Play listing text (`listing.uk.md`, `listing.en.md`, with character counts), screenshots, feature graphic, icon, closed-test tracker.
-- `src/platform.ts` — `isAndroidApp` and `supportUrl`; components read the build target only from here.
+- `src/platform.ts` — `isAndroidApp`; components read the build target only from here.
 - `docs/design/` — ticket 01 design prototype: open `gallery.html` locally; `project/theme.css` has the theme tokens.
 - `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
 

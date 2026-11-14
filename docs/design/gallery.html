@@ -32,7 +32,7 @@
   // Same boards and groups as project/canvas.json (kept inline so the page works from file://).
   const groups = [
     ["Стиль і елементи", [["Main", 1024, 768, "Стиль: кольори, годинник, елементи"]]],
-    ["Вітання і налаштування", [["Welcome", 1024, 768, "Вітання"], ["Settings", 1024, 768, "Налаштування (чотири гри, Розстав години, без кроку)"], ["SettingsSetTime", 1024, 768, "Налаштування (Який час?, з кроком)"], ["LeaveRound", 1024, 768, "Вийти з раунду?"]]],
+    ["Вітання, налаштування і конфіденційність", [["Welcome", 1024, 768, "Вітання"], ["Settings", 1024, 768, "Налаштування (чотири гри, Розстав години, без кроку)"], ["SettingsSetTime", 1024, 768, "Налаштування (Який час?, з кроком)"], ["LeaveRound", 1024, 768, "Вийти з раунду?"], ["Privacy", 1024, 768, "Конфіденційність"]]],
     ["Який час? (Set Time)", [["SetTimeTest", 1024, 768, "Перевірка"], ["SetTimeTeachWrong", 1024, 768, "Навчання: помилка"]]],
     ["Постав стрілки (Drag Arrows)", [["DragArrowsTest", 1024, 768, "Перевірка"], ["DragArrowsTeachWrong", 1024, 768, "Навчання: помилка"]]],
     ["Розстав години і хвилини (Drag Hours, Drag Minutes)", [["DragHoursDrag", 1024, 768, "Перетягування"], ["DragHoursTeachWrong", 1024, 768, "Навчання: помилка"], ["PhoneDragHoursTeachWrong", 390, 844, "Телефон · Навчання: помилка"], ["DragHoursTestSubmit", 1024, 768, "Перевірка: усі 12"], ["DragMinutesTestSubmit", 1024, 768, "Розстав хвилини · Перевірка: усі 12"]]],
@@ -40,7 +40,6 @@
     ["Телефон: до 768 px завширшки або вертикально", [["PhoneWelcome", 390, 906, "Вітання"], ["PhoneSettings", 390, 1002, "Налаштування"], ["PhoneSetTime", 390, 844, "Який час?"], ["PhoneDragArrows", 390, 844, "Постав стрілки"], ["PhoneDragHours", 390, 844, "Розстав години"], ["PhoneDragMinutes", 390, 844, "Розстав хвилини: помилка"], ["PhoneSummary", 390, 1700, "Підсумок"]]],
     ["Комп’ютер: ігрова зона до 1024 px", [["DesktopWelcome", 1440, 900, "Вітання"], ["DesktopSettings", 1440, 900, "Налаштування"], ["DesktopSetTime", 1440, 900, "Який час?"], ["DesktopDragArrows", 1440, 900, "Постав стрілки"], ["DesktopDragHours", 1440, 900, "Розстав години"], ["DesktopDragMinutes", 1440, 900, "Розстав хвилини: помилка"], ["DesktopSummary", 1440, 900, "Підсумок"]]],
     ["Темна і світла теми", [["DarkSettings", 1024, 768, "Темна · Налаштування"], ["DarkSetTime", 1024, 768, "Темна · Який час?"], ["DarkSummary", 1024, 1100, "Темна · Підсумок"], ["LightSettings", 1024, 768, "Світла · Налаштування"], ["LightDragArrows", 1024, 768, "Світла · Постав стрілки"], ["LightSummary", 1024, 1100, "Світла · Підсумок"]]],
-    ["Футер з кнопкою підтримки (лише вебзастосунок)", [["SupportDesktopWelcome", 1440, 900, "Комп’ютер · Вітання"], ["SupportDarkDesktopSettings", 1440, 939, "Темна · Комп’ютер · Налаштування"], ["SupportLightDesktopWelcome", 1440, 900, "Світла · Комп’ютер · Вітання"], ["SupportPhoneSettings", 390, 1098, "Телефон · Налаштування"], ["SupportDarkPhoneWelcome", 390, 1002, "Темна · Телефон · Вітання"], ["SupportLightPhoneSettings", 390, 1098, "Світла · Телефон · Налаштування"]]]
   ];
 
   const out = document.getElementById("out");

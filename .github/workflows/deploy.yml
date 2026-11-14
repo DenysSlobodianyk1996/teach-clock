@@ -41,7 +41,6 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: '1'
-          VITE_SUPPORT_URL: ${{ vars.VITE_SUPPORT_URL }}
       # Pages has no SPA fallback: serve the app for deep links like /teach-clock/settings.
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v5

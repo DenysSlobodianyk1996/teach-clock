@@ -146,13 +146,9 @@ export default {
     onDevice:
       'Only the game settings and the last name entered stay on the device. To erase them, clear the app’s or the site’s data.',
     results: 'Results are not kept after a round ends.',
-    webVersion: 'Web version of the game:',
+    createdBy: 'Created by Denys Slobodianyk',
     questions: 'Questions:',
     updated: 'Updated:',
     back: 'Back to the game',
-  },
-  support: {
-    button: 'Support the author',
-    hold: 'Hold to open',
   },
 } satisfies typeof uk

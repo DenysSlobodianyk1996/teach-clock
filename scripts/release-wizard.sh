@@ -192,7 +192,7 @@ finish() {
 }
 
 # ──────────────────────────────────────────────────────────────────────────
-# STAGES: Teach Clock on Google Play (batch 08, ticket 15).
+# STAGES: Teach Clock on Google Play (batch 08, ticket 13).
 #
 # Walks the author through every step of docs/android-release.md that only a
 # person can do, in timeline order: the Play developer account, the machine,
@@ -225,7 +225,7 @@ SDK_DIR="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
 
 # Values filled in along the way (globals, so set -u never trips on them).
 JDK="" SECRET_NAMES="" VARS="" GH_OK=0 REPO=""
-KEYSTORE_PATH="" KEY_PW="" SUPPORT_URL="" GROUP_URL="" OPTIN_URL=""
+KEYSTORE_PATH="" KEY_PW="" GROUP_URL="" OPTIN_URL=""
 JSON_PATH="" CI_RUN="" CI_ARTIFACT="" NOTES_UK="" NOTES_EN=""
 
 usage() {
@@ -491,9 +491,7 @@ stage_start() {
   for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON; do
     if has_secret "$name"; then step "secret $name ✓"; else step "secret $name: not set"; fi
   done
-  for name in ANDROID_PACKAGE_ID VITE_SUPPORT_URL; do
-    step "variable $name = $(var_value "$name" || true)"
-  done
+  step "variable ANDROID_PACKAGE_ID = $(var_value ANDROID_PACKAGE_ID || true)"
   while IFS= read -r label; do
     when=$(date_of "$label")
     step "$label: ${when:-—}"
@@ -621,7 +619,7 @@ stage_key_secrets() {
 }
 
 stage_variables() {
-  stage "Repository variables"
+  stage "Repository variable"
   local current
   current=$(var_value ANDROID_PACKAGE_ID || true)
   if [[ "$current" == "$PACKAGE_ID" ]]; then
@@ -630,25 +628,6 @@ stage_variables() {
     say "ANDROID_PACKAGE_ID is '${current:-not set}'; CI needs $PACKAGE_ID to upload."
     if offer "Set it?" gh variable set ANDROID_PACKAGE_ID --body "$PACKAGE_ID"; then
       if (( ! DRY_RUN )); then refresh_gh; fi
-    fi
-  fi
-  say ""
-  current=$(var_value VITE_SUPPORT_URL || true)
-  if [[ "$current" =~ ^https:// ]]; then
-    say "${GREEN}✓${RESET} VITE_SUPPORT_URL = $current"
-    if ! confirm "Change the support link?"; then pause; return 0; fi
-  else
-    say "VITE_SUPPORT_URL is '${current:-not set}', so the Web App shows no Support Button."
-    say "It is the link to your monobank jar (it starts with https://send.monobank.ua/)."
-    note "Web App only: the Android App and the Play listing never show it (Play payments policy)."
-  fi
-  if ! confirm "Set the support link now?"; then pause; return 0; fi
-  if ask_https SUPPORT_URL "Your monobank jar link:"; then
-    write_env SUPPORT_URL "$SUPPORT_URL"
-    if offer "Set it?" gh variable set VITE_SUPPORT_URL --body "$SUPPORT_URL"; then
-      if (( ! DRY_RUN )); then refresh_gh; fi
-      say "The website picks it up at its next deploy."
-      offer "Redeploy the website now?" gh workflow run deploy.yml --ref main || true
     fi
   fi
   pause
@@ -709,7 +688,7 @@ stage_listing() {
   step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/feature-graphic.png"
   step "Phone screenshots: docs/store/screenshots/uk/1-welcome.png … 8-summary.png (all 8)"
   step "Add a translation › English (en-US): docs/store/listing.en.md and screenshots/en/"
-  step "Website: $WEBSITE_URL. No donation or jar text anywhere."
+  step "Website: $WEBSITE_URL."
   if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
     offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
   fi
