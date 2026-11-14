@@ -6,18 +6,21 @@
     <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#1d4b5c" />
+    <meta name="theme-color" content="#f5efe3" />
     <meta name="description" content="Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками." />
     <title>Вчимо годинник</title>
     <script>
-      // Paint the remembered theme before the app loads. src/stores/preferences.ts owns the key;
-      // the colours are each theme's --bg in src/styles/theme.css.
+      // Paint the theme before the app loads, by the rule in src/stores/preferences.ts: a saved
+      // light or dark, else the device's dark mode. The colours are each theme's --bg in
+      // src/styles/theme.css.
       try {
-        var bg = { dark: '#121a24', light: '#f5efe3' }[localStorage.getItem('teach-clock.theme')]
-        if (bg) {
-          document.documentElement.dataset.theme = localStorage.getItem('teach-clock.theme')
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', bg)
+        var colours = { dark: '#121a24', light: '#f5efe3' }
+        var theme = localStorage.getItem('teach-clock.theme')
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
         }
+        document.documentElement.dataset.theme = theme
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', colours[theme])
       } catch (e) {}
     </script>
   </head>

@@ -11,16 +11,10 @@ export default {
     home: 'Home',
     leave: 'Leave',
     language: 'Language',
-    theme: 'Theme',
-    nextTheme: {
-      middle: 'Theme: middle. Change',
-      dark: 'Theme: dark. Change',
-      light: 'Theme: light. Change',
-    },
+    darkTheme: 'Dark theme',
   },
   languages: { uk: 'Українська', en: 'English' },
   languageCodes: { uk: 'УК', en: 'EN' },
-  themes: { middle: 'Middle theme', dark: 'Dark theme', light: 'Light theme' },
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
