@@ -5,6 +5,7 @@
  * vite.config.ts can load it.
  */
 import { CONTACT_EMAIL, PRIVACY_UPDATED } from './config.ts'
+import { THEME_BG } from './themeColors.ts'
 import uk from './i18n/uk.ts'
 import en from './i18n/en.ts'
 
@@ -55,10 +56,11 @@ export function privacyPageHtml(): string {
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <style>
       /* Colours from src/styles/theme.css: the light theme, and the dark theme when the device
-         prefers dark. This page is outside the Vue app, so it cannot import that file. */
+         prefers dark. This page is outside the Vue app, so it cannot import that file; the
+         backgrounds come from src/themeColors.ts. */
       :root {
         color-scheme: light dark;
-        --bg: #f5efe3;
+        --bg: ${THEME_BG.light};
         --surface: #ffffff;
         --line: rgba(31, 45, 58, 0.14);
         --text: #1f2d3a;
@@ -69,7 +71,7 @@ export function privacyPageHtml(): string {
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #121a24;
+          --bg: ${THEME_BG.dark};
           --surface: #1c2633;
           --line: rgba(238, 242, 246, 0.16);
           --text: #eef2f6;

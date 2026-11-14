@@ -72,15 +72,18 @@ const dark = computed(() => preferences.theme === 'dark')
   color: var(--text);
 }
 
+/* The knob is as wide as each icon's slot, so it sits right under the sun or the moon. */
 .theme-toggle {
+  --knob: 40px;
+  --pad: 4px;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  width: 88px;
-  height: 48px;
-  padding: 4px;
+  width: calc(2 * var(--knob) + 2 * var(--pad));
+  height: calc(var(--knob) + 2 * var(--pad));
+  padding: var(--pad);
   border: 0;
   border-radius: 999px;
   background: var(--bg-deep);
@@ -88,10 +91,10 @@ const dark = computed(() => preferences.theme === 'dark')
 }
 .knob {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 40px;
-  height: 40px;
+  top: var(--pad);
+  left: var(--pad);
+  width: var(--knob);
+  height: var(--knob);
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
@@ -100,12 +103,12 @@ const dark = computed(() => preferences.theme === 'dark')
     background-color 0.25s ease;
 }
 .dark .knob {
-  transform: translateX(40px);
+  transform: translateX(var(--knob));
   background: var(--surface-2);
 }
 .icon {
   position: relative;
-  width: 40px;
+  width: var(--knob);
   height: 22px;
   color: var(--muted);
   transition: color 0.25s ease;
@@ -127,6 +130,13 @@ const dark = computed(() => preferences.theme === 'dark')
 }
 .dark .moon {
   color: var(--accent);
+}
+
+/* Phones: compact, so the header fits a 320px screen; still 44px to tap. */
+@media (--phone) {
+  .theme-toggle {
+    --knob: 36px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

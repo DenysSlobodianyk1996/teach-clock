@@ -6,15 +6,15 @@
     <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f5efe3" />
+    <meta name="theme-color" content="__THEME_BG_LIGHT__" />
     <meta name="description" content="Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками." />
     <title>Вчимо годинник</title>
     <script>
       // Paint the theme before the app loads, by the rule in src/stores/preferences.ts: a saved
-      // light or dark, else the device's dark mode. The colours are each theme's --bg in
-      // src/styles/theme.css.
+      // light or dark, else the device's dark mode. The colours are each theme's --bg, filled in
+      // from src/themeColors.ts by vite.config.ts.
       try {
-        var colours = { dark: '#121a24', light: '#f5efe3' }
+        var colours = { dark: '__THEME_BG_DARK__', light: '__THEME_BG_LIGHT__' }
         var theme = localStorage.getItem('teach-clock.theme')
         if (theme !== 'light' && theme !== 'dark') {
           theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
