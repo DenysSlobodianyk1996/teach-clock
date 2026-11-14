@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { DENSITIES, THEME_COLOR } from '../generate-android-assets.ts'
+import { THEME_BG } from '../../src/themeColors.ts'
 
 // Checks the files written by `npm run generate-android-assets` (committed in android/ and docs/store/).
 const root = fileURLToPath(new URL('../../', import.meta.url))
@@ -20,6 +21,15 @@ async function pixels(file: string) {
   }
   return { info, at }
 }
+
+// The dark theme's background; src/__tests__/themeColors.spec.ts ties it to theme.css.
+const DARK_BG = THEME_BG.dark
+
+describe('Theme colour', () => {
+  it("is the dark theme's background", () => {
+    expect(THEME_COLOR).toBe(DARK_BG)
+  })
+})
 
 describe('Android launcher icon', () => {
   it('has the theme colour as its adaptive background', () => {
@@ -85,5 +95,11 @@ describe('Play Store icon', () => {
       channels: 4,
       depth: 'uchar',
     })
+  })
+
+  it("fills the corners with the dark theme's background", async () => {
+    const { at } = await pixels(`${root}docs/store/icon-512.png`)
+    expect(at(2, 2)).toEqual({ color: DARK_BG, alpha: 255 })
+    expect(at(509, 509)).toEqual({ color: DARK_BG, alpha: 255 })
   })
 })

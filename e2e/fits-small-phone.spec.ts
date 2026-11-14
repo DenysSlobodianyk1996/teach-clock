@@ -125,3 +125,57 @@ test('Drag Hours Test: Готово fits once all 12 numbers are placed', async 
     page.viewportSize()!.height,
   )
 })
+
+/**
+ * How far the header's contents stick out past its padding on the right (0 when they fit), so
+ * nothing runs into the screen's edge.
+ */
+async function headerOverflow(page: Page) {
+  return page.locator('header').evaluate((header) => {
+    const box = header.getBoundingClientRect()
+    const edge = Math.min(box.right, innerWidth) - parseFloat(getComputedStyle(header).paddingRight)
+    const right = Math.max(
+      ...[...header.querySelectorAll('*')].map((e) => e.getBoundingClientRect().right),
+    )
+    return Math.max(0, right - edge)
+  })
+}
+
+test.describe('a 320px-wide phone', () => {
+  test.use({ viewport: { width: 320, height: 640 } })
+
+  test('the header fits on Settings', async ({ page }) => {
+    await toSettings(page)
+    await expect(page.getByRole('link', { name: t('header.home') })).toBeVisible()
+    expect(await headerOverflow(page)).toBeLessThanOrEqual(0)
+    expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+  })
+
+  test('the header fits in a Round', async ({ page }) => {
+    await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
+    await expect(page.getByRole('button', { name: t('header.leave') })).toBeVisible()
+    expect(await headerOverflow(page)).toBeLessThanOrEqual(0)
+    expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+  })
+
+  test('the theme toggle is easy to tap, the knob under the sun or the moon', async ({ page }) => {
+    // A light device, and no sliding, so the knob is measured where it rests.
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' })
+    await toSettings(page)
+    const toggle = page.getByRole('switch', { name: t('header.darkTheme') })
+    const centre = (b: { x: number; width: number }) => b.x + b.width / 2
+    for (const [icon, dark] of [
+      ['.sun', 'false'],
+      ['.moon', 'true'],
+    ] as const) {
+      await expect(toggle).toHaveAttribute('aria-checked', dark)
+      const box = (await toggle.boundingBox())!
+      expect(box.width).toBeGreaterThanOrEqual(44)
+      expect(box.height).toBeGreaterThanOrEqual(44)
+      const knob = (await toggle.locator('.knob').boundingBox())!
+      const under = (await toggle.locator(icon).boundingBox())!
+      expect(Math.abs(centre(knob) - centre(under)), icon).toBeLessThanOrEqual(1)
+      await toggle.click()
+    }
+  })
+})

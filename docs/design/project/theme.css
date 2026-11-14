@@ -1,36 +1,36 @@
 /* Teach Clock design prototype: shared tokens and parts.
-   Themes: .tc (middle, default), .tc.dark, .tc.light. */
+   Themes: .tc (light, default when the device is light), .tc.dark (when the device is dark). */
 
 .tc {
-  --bg: #1d4b5c;
-  --bg-deep: #163b49;
-  --surface: #27606f;
-  --surface-2: #2f6e7e;
-  --line: rgba(253, 246, 233, 0.22);
-  --text: #fdf6e9;
-  --muted: #dae9e9;
-  --face: #fff3dd;
-  --rim: #f2b84b;
+  --bg: #f5efe3;
+  --bg-deep: #ebe2d1;
+  --surface: #ffffff;
+  --surface-2: #fbf6ec;
+  --line: rgba(31, 45, 58, 0.14);
+  --text: #1f2d3a;
+  --muted: #4c5b69;
+  --face: #fffaf0;
+  --rim: #1d4b5c;
   --tick: #6b5a49;
   --num: #2a2633;
   --hour: #e5604b;
-  --minute: #157f86;
+  --minute: #11727a;
   --pin: #2a2633;
   --accent: #f2b84b;
   --accent-ink: #2a2214;
-  --tile: #fff3dd;
+  --tile: #ffffff;
   --tile-ink: #2a2633;
   --slot: rgba(42, 38, 51, 0.35);
-  --good: #7fd49a;
+  --good: #3f9e5e;
   /* Green text, such as a right Answer in the Summary; --good is for dots and shapes. */
-  --good-text: #a2e0b5;
-  --help: #f5cf5a;
+  --good-text: #34834e;
+  --help: #e9b928;
   --bad: #c2453f;
-  --todo: rgba(253, 246, 233, 0.28);
-  --scrim: rgba(10, 30, 38, 0.62);
+  --todo: rgba(31, 45, 58, 0.18);
+  --scrim: rgba(31, 45, 58, 0.45);
   --pop: #fffaf0;
   --pop-ink: #2a2633;
-  --shadow: 0 10px 0 rgba(0, 0, 0, 0.14), 0 18px 40px rgba(0, 0, 0, 0.22);
+  --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
 
   box-sizing: border-box;
   position: relative;
@@ -53,34 +53,17 @@
   --muted: #b3c0cd;
   --face: #f1e6cf;
   --rim: #d9a441;
+  --minute: #157f86;
   --accent: #f0b444;
+  --tile: #f1e6cf;
+  --good: #7fd49a;
+  --good-text: #a2e0b5;
+  --help: #f5cf5a;
   --todo: rgba(238, 242, 246, 0.24);
   --scrim: rgba(4, 8, 12, 0.7);
   --pop: #1f2a37;
   --pop-ink: #eef2f6;
-  --tile: #f1e6cf;
-}
-
-.tc.light {
-  --bg: #f5efe3;
-  --bg-deep: #ebe2d1;
-  --surface: #ffffff;
-  --surface-2: #fbf6ec;
-  --line: rgba(31, 45, 58, 0.14);
-  --text: #1f2d3a;
-  --muted: #4c5b69;
-  --face: #fffaf0;
-  --rim: #1d4b5c;
-  --minute: #11727a;
-  --accent: #f2b84b;
-  --good: #3f9e5e;
-  --good-text: #34834e;
-  --help: #e9b928;
-  --bad: #c2453f;
-  --todo: rgba(31, 45, 58, 0.18);
-  --scrim: rgba(31, 45, 58, 0.45);
-  --tile: #ffffff;
-  --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
+  --shadow: 0 10px 0 rgba(0, 0, 0, 0.14), 0 18px 40px rgba(0, 0, 0, 0.22);
 }
 
 /* ---------- header ---------- */
@@ -92,9 +75,18 @@
 .seg button { min-width: 48px; height: 40px; padding: 0 10px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 800 15px "Nunito", sans-serif; }
 .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
 .swatch { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); vertical-align: middle; }
-.sw-middle { background: linear-gradient(135deg, #1d4b5c 50%, #fff3dd 50%); }
-.sw-dark { background: linear-gradient(135deg, #121a24 50%, #f1e6cf 50%); }
-.sw-light { background: linear-gradient(135deg, #f5efe3 50%, #1d4b5c 50%); }
+/* Theme toggle: a track with a sun (light) on the left and a moon (dark) on the right; the knob sits under the chosen one. */
+.theme-toggle { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 48px; padding: 4px; border: 0; border-radius: 999px; background: var(--bg-deep); color: var(--muted); cursor: pointer; }
+.theme-toggle .tt-knob { position: absolute; top: 4px; left: 4px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.14); transition: transform 0.2s ease, background-color 0.2s ease; }
+.theme-toggle[aria-checked="true"] .tt-knob { transform: translateX(44px); background: var(--surface-2); }
+.theme-toggle .tt-icon { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+.theme-toggle svg { width: 22px; height: 22px; }
+.theme-toggle .tt-sun circle { fill: currentColor; }
+.theme-toggle .tt-sun line { stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.theme-toggle .tt-moon path { fill: currentColor; }
+.theme-toggle[aria-checked="false"] .tt-sun { color: var(--accent-ink); }
+.theme-toggle[aria-checked="true"] .tt-moon { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .theme-toggle .tt-knob { transition: none; } }
 .icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; min-width: 48px; padding: 0 16px; border: 2px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 800 16px "Nunito", sans-serif; }
 .icon-btn svg { width: 22px; height: 22px; }
 

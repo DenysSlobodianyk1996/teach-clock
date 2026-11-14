@@ -16,7 +16,7 @@ Teach Clock — clock for kids
 A calm game where kids learn to read a clock and set its hands. No ads.
 ```
 
-## Full description (1838 / 4000)
+## Full description (1873 / 4000)
 
 ```text
 Teach Clock is a calm game that helps children understand an ordinary clock with hands: where the numbers go, how to count the minutes, how to set the hands to a time, and how to read what time the clock shows.
@@ -46,7 +46,7 @@ CALM AND SAFE
 • Works offline from the very first launch.
 • No timer and no sounds: your child plays at their own pace.
 • For phones and tablets, upright or sideways.
-• Ukrainian and English, and three themes: middle, dark and light.
+• Ukrainian and English, and two themes, light and dark: it follows the device, and one tap switches.
 
 Have fun, and enjoy the time together!
 ```

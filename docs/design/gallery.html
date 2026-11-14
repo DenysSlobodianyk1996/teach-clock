@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Teach Clock design</title>
 <style>
-  :root { --bg: #0f2a33; --text: #fdf6e9; --muted: #b9d0d2; --card: #163b49; --accent: #f2b84b; }
+  :root { --bg: #121a24; --text: #eef2f6; --muted: #b3c0cd; --card: #1c2633; --accent: #f0b444; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, sans-serif; }
-  header { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 12px 16px; background: rgba(15, 42, 51, 0.95); border-bottom: 1px solid rgba(255,255,255,.1); }
+  header { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 12px 16px; background: rgba(18, 26, 36, 0.95); border-bottom: 1px solid rgba(255,255,255,.1); }
   header h1 { margin: 0; font-size: 18px; }
   header a { color: var(--accent); text-decoration: none; font-weight: 600; }
   header label { margin-left: auto; color: var(--muted); }
@@ -32,14 +32,13 @@
   // Same boards and groups as project/canvas.json (kept inline so the page works from file://).
   const groups = [
     ["Стиль і елементи", [["Main", 1024, 768, "Стиль: кольори, годинник, елементи"]]],
-    ["Вітання, налаштування і конфіденційність", [["Welcome", 1024, 768, "Вітання"], ["Settings", 1024, 768, "Налаштування (чотири гри, Розстав години, без кроку)"], ["SettingsSetTime", 1024, 768, "Налаштування (Який час?, з кроком)"], ["LeaveRound", 1024, 768, "Вийти з раунду?"], ["Privacy", 1024, 768, "Конфіденційність"]]],
-    ["Який час? (Set Time)", [["SetTimeTest", 1024, 768, "Перевірка"], ["SetTimeTeachWrong", 1024, 768, "Навчання: помилка"]]],
-    ["Постав стрілки (Drag Arrows)", [["DragArrowsTest", 1024, 768, "Перевірка"], ["DragArrowsTeachWrong", 1024, 768, "Навчання: помилка"]]],
+    ["Вітання, налаштування і конфіденційність", [["Welcome", 1024, 768, "Вітання"], ["Settings", 1024, 768, "Налаштування (чотири гри, Розстав години, без кроку)"], ["DarkSettings", 1024, 768, "Темна · Налаштування"], ["SettingsSetTime", 1024, 768, "Налаштування (Який час?, з кроком)"], ["LeaveRound", 1024, 768, "Вийти з раунду?"], ["Privacy", 1024, 768, "Конфіденційність"]]],
+    ["Який час? (Set Time)", [["SetTimeTest", 1024, 768, "Перевірка"], ["SetTimeTeachWrong", 1024, 768, "Навчання: помилка"], ["DarkSetTime", 1024, 768, "Темна · Навчання"]]],
+    ["Постав стрілки (Drag Arrows)", [["DragArrowsTest", 1024, 768, "Перевірка"], ["DragArrowsTeachHelp", 1024, 768, "Навчання"], ["DragArrowsTeachWrong", 1024, 768, "Навчання: помилка"]]],
     ["Розстав години і хвилини (Drag Hours, Drag Minutes)", [["DragHoursDrag", 1024, 768, "Перетягування"], ["DragHoursTeachWrong", 1024, 768, "Навчання: помилка"], ["PhoneDragHoursTeachWrong", 390, 844, "Телефон · Навчання: помилка"], ["DragHoursTestSubmit", 1024, 768, "Перевірка: усі 12"], ["DragMinutesTestSubmit", 1024, 768, "Розстав хвилини · Перевірка: усі 12"]]],
-    ["Підсумок (Summary)", [["Summary", 1024, 1100, "Підсумок"], ["SummaryDragHours", 1024, 768, "Підсумок: Розстав години"], ["SummaryDragMinutes", 1024, 768, "Підсумок: Розстав хвилини"]]],
+    ["Підсумок (Summary)", [["Summary", 1024, 1100, "Підсумок"], ["DarkSummary", 1024, 1100, "Темна · Підсумок"], ["SummaryDragHours", 1024, 768, "Підсумок: Розстав години"], ["SummaryDragMinutes", 1024, 768, "Підсумок: Розстав хвилини"]]],
     ["Телефон: до 768 px завширшки або вертикально", [["PhoneWelcome", 390, 906, "Вітання"], ["PhoneSettings", 390, 1002, "Налаштування"], ["PhoneSetTime", 390, 844, "Який час?"], ["PhoneDragArrows", 390, 844, "Постав стрілки"], ["PhoneDragHours", 390, 844, "Розстав години"], ["PhoneDragMinutes", 390, 844, "Розстав хвилини: помилка"], ["PhoneSummary", 390, 1700, "Підсумок"]]],
     ["Комп’ютер: ігрова зона до 1024 px", [["DesktopWelcome", 1440, 900, "Вітання"], ["DesktopSettings", 1440, 900, "Налаштування"], ["DesktopSetTime", 1440, 900, "Який час?"], ["DesktopDragArrows", 1440, 900, "Постав стрілки"], ["DesktopDragHours", 1440, 900, "Розстав години"], ["DesktopDragMinutes", 1440, 900, "Розстав хвилини: помилка"], ["DesktopSummary", 1440, 900, "Підсумок"]]],
-    ["Темна і світла теми", [["DarkSettings", 1024, 768, "Темна · Налаштування"], ["DarkSetTime", 1024, 768, "Темна · Який час?"], ["DarkSummary", 1024, 1100, "Темна · Підсумок"], ["LightSettings", 1024, 768, "Світла · Налаштування"], ["LightDragArrows", 1024, 768, "Світла · Постав стрілки"], ["LightSummary", 1024, 1100, "Світла · Підсумок"]]],
   ];
 
   const out = document.getElementById("out");

@@ -14,10 +14,10 @@ function tokensOf(selector: string): Record<string, string> {
   return Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2]]))
 }
 
-/** The tokens a theme ends up with: middle on `:root`, the others override it. */
+/** The tokens a theme ends up with: light on `:root`, dark overrides it. */
 function tokens(theme: Theme): Record<string, string> {
   const root = tokensOf(':root')
-  return theme === 'middle' ? root : { ...root, ...tokensOf(`:root[data-theme='${theme}']`) }
+  return theme === 'light' ? root : { ...root, ...tokensOf(`:root[data-theme='${theme}']`) }
 }
 
 /** WCAG relative luminance of a `#rrggbb` colour. */

@@ -4,9 +4,10 @@ import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { THEME_BG } from '../src/themeColors.ts'
 
-/** The middle theme's background (--bg in src/styles/theme.css), as in pwa-assets.config.ts. */
-export const THEME_COLOR = '#1d4b5c'
+/** The dark theme's background, as in pwa-assets.config.ts. */
+export const THEME_COLOR = THEME_BG.dark
 
 /** Android density buckets and their scale from dp to px. */
 export const DENSITIES = { mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 } as const

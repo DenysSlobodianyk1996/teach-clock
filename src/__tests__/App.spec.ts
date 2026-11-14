@@ -1,9 +1,10 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 import App from '../App.vue'
 import { mountScreen } from '@/test/mountScreen'
 import { t, tEn } from '@/test/i18n'
 import { usePlayerStore } from '@/stores/player'
+import { stubDeviceTheme } from '@/test/deviceTheme'
 
 type Screen = Awaited<ReturnType<typeof mountScreen>>['wrapper']
 
@@ -17,6 +18,11 @@ function switchButton(wrapper: Screen, group: string, name: string) {
   return found
 }
 
+/** The header's sun/moon toggle. */
+function themeToggle(wrapper: Screen) {
+  return wrapper.get(`[role="switch"][aria-label="${t('header.darkTheme')}"]`)
+}
+
 async function open() {
   const screen = await mountScreen(App, '/')
   await flushPromises()
@@ -28,17 +34,24 @@ describe('Preferences in the header', () => {
     localStorage.clear()
     delete document.documentElement.dataset.theme
   })
+  afterEach(() => vi.unstubAllGlobals())
 
-  it('starts in Ukrainian with the middle theme', async () => {
+  it('starts in Ukrainian and light on a device in light mode', async () => {
+    stubDeviceTheme('light')
     const wrapper = await open()
     expect(document.documentElement.lang).toBe('uk')
-    expect(document.documentElement.dataset.theme).toBe('middle')
+    expect(document.documentElement.dataset.theme).toBe('light')
     expect(
       switchButton(wrapper, t('header.language'), t('languages.uk')).attributes('aria-pressed'),
     ).toBe('true')
-    expect(
-      switchButton(wrapper, t('header.theme'), t('themes.middle')).attributes('aria-pressed'),
-    ).toBe('true')
+    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('false')
+  })
+
+  it('starts dark on a device in dark mode', async () => {
+    stubDeviceTheme('dark')
+    const wrapper = await open()
+    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('true')
   })
 
   it('switches the interface to English', async () => {
@@ -50,23 +63,21 @@ describe('Preferences in the header', () => {
     expect(localStorage.getItem('teach-clock.locale')).toBe('en')
   })
 
-  it('switches the theme', async () => {
+  it('switches between light and dark with one tap and saves the choice', async () => {
+    stubDeviceTheme('light')
     const wrapper = await open()
-    await switchButton(wrapper, t('header.theme'), t('themes.light')).trigger('click')
+    await themeToggle(wrapper).trigger('click')
+    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('true')
+    expect(localStorage.getItem('teach-clock.theme')).toBe('dark')
+    await themeToggle(wrapper).trigger('click')
     expect(document.documentElement.dataset.theme).toBe('light')
     expect(localStorage.getItem('teach-clock.theme')).toBe('light')
   })
 
-  it('has one button that cycles the theme, for phones', async () => {
+  it('has one theme control for every screen size', async () => {
     const wrapper = await open()
-    const cycle = () =>
-      wrapper
-        .findAll('button')
-        .find((b) => b.attributes('aria-label')?.startsWith(t('header.theme')))!
-    expect(cycle().attributes('aria-label')).toBe(t('header.nextTheme.middle'))
-    await cycle().trigger('click')
-    expect(document.documentElement.dataset.theme).toBe('dark')
-    expect(cycle().attributes('aria-label')).toBe(t('header.nextTheme.dark'))
+    expect(wrapper.findAll('[role="switch"]')).toHaveLength(1)
   })
 })
 

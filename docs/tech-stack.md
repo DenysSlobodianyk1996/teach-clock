@@ -24,7 +24,7 @@ No physics, no game loop, no backend.
 | Routing | **Vue Router** | Welcome, Settings, Round, Summary |
 | Interface text | **vue-i18n** | `uk` default, `en` |
 | Preferences + last name | `localStorage` (via VueUse `useStorage`) | The only thing kept on the device |
-| Themes | CSS custom properties per theme (`middle`, `dark`, `light`) | |
+| Themes | CSS custom properties: light on `:root`, dark under `[data-theme='dark']` | Each background is also in `src/themeColors.ts` for the manifest, icons and pre-paint script; a test keeps the two equal |
 | Breakpoints | **Custom media** such as `@media (--phone)`, expanded at build time by a few-line PostCSS plugin in `src/styles/media.ts` | One definition for every screen. No new dependency: `postcss-custom-media` / `postcss-preset-env` would add packages for one replace, and Lightning CSS custom media can't see a definition from another `<style>` block |
 | Offline / install | **vite-plugin-pwa** | Web App only; left out of the Android build |
 | Android App | **Capacitor** (`@capacitor/android`, `@capacitor/app` for the back button) | Packages the same Vite build inside the app (ADR 0004). `VITE_TARGET=android` marks that build; `src/platform.ts` is the one place that reads it. `android/` is committed; Gradle builds the signed `.aab` in CI (`.github/workflows/android.yml`) and uploads it to Play with `r0adkll/upload-google-play` |
