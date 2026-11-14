@@ -2,7 +2,7 @@
 
 **Blocked by:** 01 (only the store-shots rerun; the boards and docs can start at once)
 
-**Status:** todo
+**Status:** done
 
 **What to build:** the design prototype and the docs match the app after 01: two themes, light and dark, and the sun/moon toggle in every header. The middle (teal) theme is gone from the boards.
 
@@ -13,6 +13,6 @@
 - [x] `Main.dc.html` shows the two themes; `gallery.html` and `canvas.json` follow; the "Темна і світла теми" row is no longer separate.
 - [x] Docs: `docs/product-brief.md` (two themes, device default, the toggle; the look section no longer calls teal the default), `GLOSSARY.md` (Preferences: light or dark), CLAUDE.md status line.
 - [x] Rerun `npm run store-shots` so `docs/store/` shows the new look.
-- [ ] `.scratch/README.md`: the batch row and its PR.
+- [x] `.scratch/README.md`: the batch row and its PR.
 
 **Out of scope:** the teal brand colour in the icon, splash and store art.
