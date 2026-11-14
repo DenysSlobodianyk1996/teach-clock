@@ -21,9 +21,7 @@
 - [ ] `PreferenceSwitches.vue`: the toggle. A `button` with `role="switch"`, `aria-checked` true in dark, `aria-label` "Темна тема" / "Dark theme"; the sun and moon icons are original SVG; the knob slides (no motion with `prefers-reduced-motion`); 44 px or more to tap; visible focus ring.
 - [ ] i18n `uk` and `en`: drop `themes.middle` and `header.nextTheme.*`; keep only what the toggle needs.
 - [ ] Tests (Vitest and Playwright): saved light/dark is kept; nothing saved or `middle` follows the device (`colorScheme` in Playwright, a stubbed `matchMedia` in Vitest); one tap switches and is remembered after a reload; the toggle is the same on phone and desktop. Text looked up with `t`.
-- [ ] `e2e/store-shots.ts`: shoot in light (it forced middle); rerun `npm run store-shots` so `docs/store/` shows the new look.
-- [ ] Docs: `docs/product-brief.md` (two themes, device default, the toggle; the look section no longer calls teal the default), `GLOSSARY.md` (Preferences: light or dark), CLAUDE.md status line.
-- [ ] Design: `docs/design/project/theme.css` and the boards drawn in the middle theme move to light (or dark where a dark board is missing); every header shows the toggle; `Main.dc.html` shows the two themes; `gallery.html` and `canvas.json` follow; the "Темна і світла теми" row is no longer separate.
+- [ ] `e2e/store-shots.ts`: shoot in light (it forced middle).
 - [ ] Android: check on the emulator that dark mode on the phone opens the game dark and light mode opens it light; the splash and launcher icon stay teal (brand, not a theme).
 
-**Out of scope:** new colours for light or dark; the teal brand colour in the icon, splash and store art.
+**Out of scope:** design boards, docs and the store-shots rerun (ticket 02); new colours for light or dark; the teal brand colour in the icon, splash and store art.
