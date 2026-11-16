@@ -4,6 +4,7 @@ import type uk from './uk.ts'
 export default {
   app: {
     name: 'Teach Clock',
+    description: 'A game that teaches children to read and set the time on a clock with hands.',
     clockShows: 'The clock shows {time}',
     clockDrag: 'Clock with the hands at {time}. Drag the hands.',
   },

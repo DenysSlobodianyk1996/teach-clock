@@ -1,5 +1,5 @@
-import { t, startingWith } from './i18n.ts'
-import { expect, test } from '@playwright/test'
+import { t, tEn, startingWith } from './i18n.ts'
+import { expect, test, type Page } from '@playwright/test'
 
 test('after the first visit the whole app works with no internet', async ({ page, context }) => {
   await page.goto('/')
@@ -49,22 +49,82 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   await expect(page.locator('article[lang="en"]')).toBeVisible()
 })
 
-test('the app can be installed as "Вчимо годинник" with its own icons', async ({
-  page,
-  request,
-}) => {
-  await page.goto('/')
-  const href = await page.locator('link[rel="manifest"]').getAttribute('href')
-  const manifest = await (await request.get(href!)).json()
-  expect(manifest).toMatchObject({
-    name: 'Вчимо годинник',
-    lang: 'uk',
-    display: 'standalone',
-    start_url: '/',
+/** The manifest the page links, fetched through the page (and so its service worker). */
+async function linkedManifest(page: Page) {
+  return page.evaluate(async () => {
+    const href = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')!.href
+    return (await fetch(href)).json()
   })
-  const sizes = manifest.icons.map((icon: { sizes: string }) => icon.sizes)
-  expect(sizes).toEqual(expect.arrayContaining(['192x192', '512x512']))
-  for (const icon of manifest.icons) {
-    expect((await request.get(icon.src)).ok()).toBe(true)
-  }
+}
+
+/** A browser whose language list is `locale`, and the language the app starts in. */
+const browsers = [
+  { locale: 'uk-UA', lang: 'uk', lookup: t },
+  { locale: 'en-US', lang: 'en', lookup: tEn },
+] as const
+
+for (const { locale, lang, lookup } of browsers) {
+  test.describe(`in a ${locale} browser`, () => {
+    test.use({ locale })
+
+    test('the app installs with the full Game Name and its own icons, offline too', async ({
+      page,
+      context,
+      request,
+    }) => {
+      await page.goto('/')
+      await expect(page.getByRole('heading', { name: lookup('welcome.title') })).toBeVisible()
+      const manifest = await linkedManifest(page)
+      expect(manifest).toMatchObject({
+        name: lookup('app.name'),
+        short_name: lookup('app.name'),
+        lang,
+        display: 'standalone',
+        start_url: '/',
+      })
+      const sizes = manifest.icons.map((icon: { sizes: string }) => icon.sizes)
+      expect(sizes).toEqual(expect.arrayContaining(['192x192', '512x512']))
+      for (const icon of manifest.icons) {
+        expect((await request.get(icon.src)).ok()).toBe(true)
+      }
+
+      // Both manifests are in the offline copy, so installing works with no internet.
+      await page.evaluate(() => navigator.serviceWorker.ready)
+      await context.setOffline(true)
+      await page.reload()
+      expect(await linkedManifest(page)).toMatchObject({ name: lookup('app.name'), lang })
+    })
+  })
+}
+
+test('the installed name follows a УК/EN tap', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+  expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
+
+  await page
+    .getByRole('group', { name: t('header.language') })
+    .getByRole('button', { name: t('languages.en') })
+    .click()
+  await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
+  expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
+
+  await page
+    .getByRole('group', { name: tEn('header.language') })
+    .getByRole('button', { name: tEn('languages.uk') })
+    .click()
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+  expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
+})
+
+test.describe('before the app loads', () => {
+  // No service worker, so the app's script can be held back and only index.html runs.
+  test.use({ serviceWorkers: 'block' })
+
+  test('a saved language picks the manifest', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('teach-clock.locale', 'en'))
+    await page.route(/\/assets\/index-.*\.js$/, (route) => route.abort())
+    await page.goto('/')
+    expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
+  })
 })

@@ -8,6 +8,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { THEME_BG } from './src/themeColors.ts'
+import { webManifestFile, webManifests } from './src/webManifest.ts'
 import { deviceLocale } from './src/i18n/deviceLocale.ts'
 import uk from './src/i18n/uk.ts'
 import en from './src/i18n/en.ts'
@@ -110,6 +111,63 @@ function gameNamePlugin(): Plugin {
   }
 }
 
+/**
+ * The Web App's manifests, one per interface language (src/webManifest.ts). The build writes both
+ * and the dev server serves them; index.html links one, and its pre-paint script and App.vue
+ * point the link at the interface language's (`__WEB_MANIFESTS__`, their addresses). The Android
+ * App gets no manifest and no link (ADR 0004): `__WEB_MANIFESTS__` is `null` there.
+ */
+function webManifestPlugin(): Plugin {
+  let base = '/'
+  const locales = ['uk', 'en'] as const
+  const href = (locale: (typeof locales)[number]) => `${base}${webManifestFile(locale)}`
+  return {
+    name: 'teach-clock-web-manifest',
+    configResolved(config) {
+      base = config.base
+    },
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html) => {
+        if (isAndroidApp) return html.replaceAll('__WEB_MANIFESTS__', 'null')
+        const hrefs = JSON.stringify({ uk: href('uk'), en: href('en') })
+        return {
+          html: html.replaceAll('__WEB_MANIFESTS__', hrefs),
+          // Before the pre-paint script, which points it at the interface language's manifest.
+          tags: [
+            {
+              tag: 'link',
+              attrs: { rel: 'manifest', href: href('en') },
+              injectTo: 'head-prepend',
+            },
+          ],
+        }
+      },
+    },
+    configureServer(server) {
+      if (isAndroidApp) return
+      server.middlewares.use((req, res, next) => {
+        const url = req.url?.split('?')[0]
+        const locale = locales.find((l) => url === href(l))
+        if (!locale) return next()
+        res.setHeader('Content-Type', 'application/manifest+json')
+        res.end(JSON.stringify(webManifests(base)[locale]))
+      })
+    },
+    generateBundle() {
+      if (isAndroidApp) return
+      const manifests = webManifests(base)
+      for (const locale of locales) {
+        this.emitFile({
+          type: 'asset',
+          fileName: webManifestFile(locale),
+          source: JSON.stringify(manifests[locale]),
+        })
+      }
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
@@ -121,6 +179,7 @@ export default defineConfig({
     vueDevTools(),
     themeColorsPlugin(),
     gameNamePlugin(),
+    webManifestPlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
@@ -132,34 +191,12 @@ export default defineConfig({
       disable: isAndroidApp,
       registerType: 'prompt',
       injectRegister: false,
-      manifest: {
-        name: 'Вчимо годинник',
-        // Short enough to fit under a home-screen icon.
-        short_name: 'Годинник',
-        description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
-        lang: 'uk',
-        // The browser bar starts light, the default theme; index.html repaints it per theme.
-        theme_color: THEME_BG.light,
-        // The launch screen matches the maskable and Apple icons, which sit on the dark background.
-        background_color: THEME_BG.dark,
-        display: 'standalone',
-        start_url: base,
-        scope: base,
-        icons: [
-          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
+      // One manifest per interface language, written by webManifestPlugin above.
+      manifest: false,
       workbox: {
-        // Everything the build emits, fonts included, so every Game works offline.
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // Everything the build emits, fonts and both manifests included, so every Game works and
+        // the app installs offline.
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
       },
     }),
   ],
