@@ -17,7 +17,7 @@ const escape = (text: string) =>
 
 /** The whole page, with `css` (the app's styles for it) inlined: no script, no other request. */
 export async function renderPrivacyPage(css: string): Promise<string> {
-  const body = await renderToString(createSSRApp(PrivacyStaticPage).use(createAppI18n()))
+  const body = await renderToString(createSSRApp(PrivacyStaticPage).use(createAppI18n('uk')))
   return `<!doctype html>
 <html lang="uk">
   <head>

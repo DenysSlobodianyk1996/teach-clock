@@ -128,3 +128,29 @@ test.describe('before the app loads', () => {
     expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
   })
 })
+
+test.describe('an installed Web App', () => {
+  // Opened from the home screen: the page matches `(display-mode: standalone)`.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      const device = window.matchMedia.bind(window)
+      window.matchMedia = (query: string) =>
+        query.includes('display-mode: standalone')
+          ? ({ ...device(query), media: query, matches: true } as MediaQueryList)
+          : device(query)
+    })
+  })
+
+  test('links no manifest, so a УК/EN tap never renames it', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+    await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
+
+    await page
+      .getByRole('group', { name: t('header.language') })
+      .getByRole('button', { name: t('languages.en') })
+      .click()
+    await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
+    await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
+  })
+})

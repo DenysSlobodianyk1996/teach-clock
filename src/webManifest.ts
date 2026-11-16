@@ -2,14 +2,18 @@ import type { ManifestOptions } from 'vite-plugin-pwa'
 import { THEME_BG } from './themeColors.ts'
 import uk from './i18n/uk.ts'
 import en from './i18n/en.ts'
-
-type Locale = 'uk' | 'en'
+import { LOCALES, type Locale } from './i18n/locales.ts'
 
 const messages = { uk, en }
 
 /** The manifest file for `locale`, at the site root next to index.html. */
 export function webManifestFile(locale: Locale): string {
   return `manifest.${locale}.webmanifest`
+}
+
+/** The address the page links for `locale`'s manifest, under the site's `base`. */
+export function webManifestHref(base: string, locale: Locale): string {
+  return `${base}${webManifestFile(locale)}`
 }
 
 /**
@@ -43,5 +47,8 @@ export function webManifests(base: string): Record<Locale, Partial<ManifestOptio
       },
     ],
   })
-  return { uk: manifest('uk'), en: manifest('en') }
+  return Object.fromEntries(LOCALES.map((lang) => [lang, manifest(lang)])) as Record<
+    Locale,
+    Partial<ManifestOptions>
+  >
 }
