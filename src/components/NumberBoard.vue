@@ -78,9 +78,12 @@ const faceLabel = computed(() => t('numbers.face', { n: placed.value }))
 /** Where N sits on the face, or null when it is on the tray. */
 const slotOf = (number: number) => props.slots.indexOf(number) + 1 || null
 
-/** A slot `number` can be dropped on: a free one, or in Test any other. */
+/**
+ * A slot `number` can be dropped on: any but its own. A taken one too: in Test the numbers swap,
+ * in Teach it is a wrong drop like any other.
+ */
 function takes(slot: number, number: number) {
-  return props.slots[slot - 1] === null || (props.movable && slotOf(number) !== slot)
+  return slotOf(number) !== slot
 }
 
 function slotUnder(number: number, clientX: number, clientY: number): number | null {
@@ -106,6 +109,8 @@ function overTray(clientX: number, clientY: number) {
 }
 
 function press(number: number, event: PointerEvent) {
+  // A second finger (the hand holding the phone) must not take over the drag under the first.
+  if (held.value && !event.isPrimary) return
   // A drag that ended away from its tile got no click to clear this.
   dragged = false
   if (props.disabled || event.button !== 0) return

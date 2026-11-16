@@ -205,12 +205,14 @@ describe('Drag Hours in Teach', () => {
     expect(round.tasks[11]).toMatchObject({ status: 'helped', firstAnswer: 3 })
   })
 
-  it('ignores a drop on a slot that is already filled', () => {
+  it('counts a drop on a filled slot as wrong: the hint, and the number ends helped', () => {
     let round = startRound(TEACH, seededRandom(1))
     round = dropNumber(round, 5, 5).round
     const { round: next, outcome } = dropNumber(round, 6, 5)
-    expect(outcome).toEqual({ placed: false, hint: null, finished: false })
-    expect(next).toBe(round)
+    expect(outcome).toEqual({ placed: false, hint: neighbours(6), finished: false })
+    expect(next.slots).toEqual(round.slots)
+    expect(next.tray).toEqual(round.tray)
+    expect(next.tasks[5]).toMatchObject({ status: 'pending', firstAnswer: 5 })
   })
 
   it('finishes the Round when all 12 are placed', () => {
