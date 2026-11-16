@@ -40,7 +40,7 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
    one-line description; each Game and Mode also has an icon (Teach: a lightbulb, Test: a check
    mark in a circle). Drag Hours in Teach with Hours 1–12 is picked when Settings opens. Drag Hours
    shows **Hours**: **1–12** "first half of the day" or **13–24** "second half of the day" (uk:
-   "Години", "перша / друга половина доби"; no AM/PM). Picking Drag Arrows or Set Time shows the
+   "Години", "перша / друга половина доби"; no AM/PM); the Drag Hours card then says "Drag the numbers 13–24 to their places". Picking Drag Arrows or Set Time shows the
    Level, set to 1 minute. Choices are kept until a reload: "Play again" and "Choose game" on the
    Summary keep them. Back returns to Welcome.
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the

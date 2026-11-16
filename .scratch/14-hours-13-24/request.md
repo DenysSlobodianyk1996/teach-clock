@@ -18,6 +18,7 @@ See `GLOSSARY.md` (Hours).
 6. Summary: the line names Hours where other Games name Level ("Drag Hours · Teach · 13–24"); the faces show the 13–24 tiles with badges. No "try 13–24" suggestion.
 7. Hours is kept like Game, Mode and Level: "Play again" and "Choose game" both keep it; a reload starts at 1–12.
 8. **Clock Time** stays 1–12: Hours only changes the tiles.
+9. The Drag Hours card's description follows Hours: "Перетягни числа 1–12 на їхні місця." or "…13–24…" (asked after review, 2026-11-16).
 
 ## Later (out of scope)
 

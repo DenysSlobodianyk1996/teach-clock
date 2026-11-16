@@ -34,7 +34,7 @@ export default {
     play: 'Грати',
   },
   games: {
-    dragHours: { name: 'Розстав години', description: 'Перетягни числа 1–12 на їхні місця.' },
+    dragHours: { name: 'Розстав години', description: 'Перетягни числа {range} на їхні місця.' },
     dragMinutes: { name: 'Розстав хвилини', description: 'Перетягни хвилини 5–60 на їхні місця.' },
     dragArrows: { name: 'Постав стрілки', description: 'Покажи на годиннику заданий час.' },
     setTime: { name: 'Який час?', description: 'Подивись на годинник і введи час.' },

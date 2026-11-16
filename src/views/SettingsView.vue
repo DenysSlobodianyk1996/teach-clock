@@ -15,6 +15,8 @@ const play = usePlayStore()
 
 const showLevel = computed(() => hasLevel(play.settings.game))
 const showHours = computed(() => hasHours(play.settings.game))
+/** Drag Hours says which numbers it places: 1–12 or 13–24, as Hours is picked. */
+const hoursRange = computed(() => t(`hours.${play.settings.hours}.name`))
 
 function startRound() {
   play.startRound()
@@ -33,7 +35,7 @@ function startRound() {
           v-for="game in GAMES"
           :key="game"
           :title="t(`games.${game}.name`)"
-          :description="t(`games.${game}.description`)"
+          :description="t(`games.${game}.description`, { range: hoursRange })"
           name="game"
           :checked="play.settings.game === game"
           @select="play.settings.game = game"

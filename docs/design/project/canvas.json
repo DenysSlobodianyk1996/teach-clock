@@ -13,6 +13,7 @@
     "SettingsSetTime.dc.html": { "x": 3312, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?, з кроком)" },
     "LeaveRound.dc.html": { "x": 4416, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вийти з раунду?" },
     "Privacy.dc.html": { "x": 5520, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Конфіденційність" },
+    "SettingsHours24.dc.html": { "x": 6624, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Розстав години, Години 13–24)" },
 
     "SetTimeTest.dc.html": { "x": 0, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Перевірка" },
     "SetTimeTeachWrong.dc.html": { "x": 1104, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Навчання: помилка" },
@@ -52,7 +53,7 @@
   },
   "order": [
     "Main.dc.html",
-    "Welcome.dc.html", "Settings.dc.html", "LightSettings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html", "Privacy.dc.html",
+    "Welcome.dc.html", "Settings.dc.html", "LightSettings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html", "Privacy.dc.html", "SettingsHours24.dc.html",
     "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "LightSetTime.dc.html",
     "DragArrowsTest.dc.html", "DragArrowsTeachHelp.dc.html", "DragArrowsTeachWrong.dc.html",
     "DragHoursDrag.dc.html", "DragHoursTeachWrong.dc.html", "PhoneDragHoursTeachWrong.dc.html", "DragHoursTestSubmit.dc.html", "DragMinutesTestSubmit.dc.html",
@@ -62,7 +63,7 @@
   ],
   "notes": {
     "rowStyle": { "x": 0, "y": -260, "text": "Стиль і елементи", "kind": "title1", "maxW": 1024 },
-    "rowEntry": { "x": 0, "y": 908, "text": "Вітання, налаштування і конфіденційність", "kind": "title1", "maxW": 6544 },
+    "rowEntry": { "x": 0, "y": 908, "text": "Вітання, налаштування і конфіденційність", "kind": "title1", "maxW": 7648 },
     "rowSetTime": { "x": 0, "y": 2076, "text": "Який час? (Set Time)", "kind": "title1", "maxW": 3232 },
     "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
     "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав години і хвилини (Drag Hours, Drag Minutes)", "kind": "title1", "maxW": 5440 },

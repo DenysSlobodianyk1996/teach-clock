@@ -118,6 +118,17 @@ describe('Settings screen', () => {
     }
   })
 
+  it("names the picked Hours in the Drag Hours card's description", async () => {
+    const { wrapper } = await open()
+    const card = () => choice(wrapper, t('games.dragHours.name')).element.closest('label')!
+    const describes = (hours: 12 | 24) =>
+      t('games.dragHours.description', { range: t(`hours.${hours}.name`) })
+    expect(card().textContent).toContain(describes(12))
+    await choice(wrapper, t('hours.24.name')).setValue(true)
+    expect(card().textContent).toContain(describes(24))
+    expect(describes(24)).toContain('13–24')
+  })
+
   it('starts a Drag Hours Round in 13–24', async () => {
     const { wrapper } = await open()
     await choice(wrapper, t('hours.24.name')).setValue(true)
