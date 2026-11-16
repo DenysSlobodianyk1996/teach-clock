@@ -35,15 +35,19 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 ## Screens
 
 1. **Welcome**: a short description of what the app teaches, a name field, Start.
-2. **Settings**: choose the Game, Mode and Level. Four Games, in this order: Drag Hours, Drag
-   Minutes, Drag Arrows, Set Time (no Level for Drag Hours or Drag Minutes). Each option has a
+2. **Settings**: choose the Game, Mode and Level (or Hours). Four Games, in this order: Drag Hours,
+   Drag Minutes, Drag Arrows, Set Time (no Level for Drag Hours or Drag Minutes). Each option has a
    one-line description; each Game and Mode also has an icon (Teach: a lightbulb, Test: a check
-   mark in a circle). Drag Hours in Teach is picked when Settings opens; picking Drag Arrows
-   or Set Time shows the Level, set to 1 minute. Back returns to Welcome.
+   mark in a circle). Drag Hours in Teach with Hours 1–12 is picked when Settings opens. Drag Hours
+   shows **Hours**: **1–12** "first half of the day" or **13–24** "second half of the day" (uk:
+   "Години", "перша / друга половина доби"; no AM/PM). Picking Drag Arrows or Set Time shows the
+   Level, set to 1 minute. Choices are kept until a reload: "Play again" and "Choose game" on the
+   Summary keep them. Back returns to Welcome.
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the
    dots, "Task 1 of 10 · Teach" with the Mode's icon before its name.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
-4. **Summary**: read-only. A line with the Player's name, Game, Mode and Level, the score and the
+4. **Summary**: read-only. A line with the Player's name, Game, Mode and Level (Hours in Drag
+   Hours), the score and the
    Round's dots; then Tasks grouped into **Right** (first) and **Wrong**. Right Tasks are drawn as
    big clocks with their times. Each wrong Task shows the Player's first Answer next to the correct
    one, both as big clocks (on a phone the pair stacks: the Player's Answer, a down arrow, then the
@@ -74,12 +78,12 @@ Player picked and the last name typed.
 
 ## Games
 
-| Game             | Player sees                                                                                   | Player does                                                             | Round          | Levels         |
-| ---------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------- | -------------- |
-| **Drag Hours**   | An empty clock face with 12 slots and a tray of shuffled numbers                              | Drags each number 1–12 onto its slot                                    | All 12 numbers | —              |
-| **Drag Minutes** | An empty clock face with 12 slots, an Hour Badge 1–12 by each, and a tray of shuffled minutes | Drags each minute 5, 10, … 60 onto the slot of its hour (60 at the top) | All 12 minutes | —              |
-| **Drag Arrows**  | A target Clock Time `H:MM` and a clock with hands at 12:00                                    | Drags the hands to show the target, presses Submit                      | 10 Tasks       | 1 / 5 / 15 min |
-| **Set Time**     | A clock showing a Clock Time                                                                  | Enters `H:MM` on an on-screen number pad, presses Submit                | 10 Tasks       | 1 / 5 / 15 min |
+| Game             | Player sees                                                                                     | Player does                                                                               | Round          | Levels              |
+| ---------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------- | ------------------- |
+| **Drag Hours**   | An empty clock face with 12 slots and a tray of shuffled numbers (13–24: an Hour Badge by each) | Drags each number 1–12 onto its slot (13–24: hour N + 12 on the slot of N, 24 at the top) | All 12 numbers | Hours: 1–12 / 13–24 |
+| **Drag Minutes** | An empty clock face with 12 slots, an Hour Badge 1–12 by each, and a tray of shuffled minutes   | Drags each minute 5, 10, … 60 onto the slot of its hour (60 at the top)                   | All 12 minutes | —                   |
+| **Drag Arrows**  | A target Clock Time `H:MM` and a clock with hands at 12:00                                      | Drags the hands to show the target, presses Submit                                        | 10 Tasks       | 1 / 5 / 15 min      |
+| **Set Time**     | A clock showing a Clock Time                                                                    | Enters `H:MM` on an on-screen number pad, presses Submit                                  | 10 Tasks       | 1 / 5 / 15 min      |
 
 2019 screenshots of the original games are in `docs/original/screenshots/` (reference for mechanics
 only, not for look).
@@ -88,12 +92,12 @@ Drag Hours and Drag Minutes share one set of rules and one board, in both Modes:
 by dragging it, or by tapping it and then a slot. While a number is picked by a tap or held in a
 drag, every free slot turns from grey dashes to orange; the slot under the finger gets a stronger
 orange ring. Letting go or cancelling turns them grey again. On the Drag Minutes face each slot has
-an Hour Badge (the hour 1–12 in a soft circle, towards the centre from the slot). The Badges are
-part of the face, not a Hint: they stay visible after a minute is placed, in Teach and in Test, and
-in the Summary.
+an Hour Badge (the hour 1–12 in a soft circle, towards the centre from the slot), and so does the
+Drag Hours face in 13–24. The Badges are part of the face, not a Hint: they stay visible after a
+tile is placed, in Teach and in Test, and in the Summary.
 
-The Summary of Drag Minutes looks like Drag Hours, with the minute tiles and the Hour Badges on
-every face. In Teach the right numbers are listed as chips, and each helped number shows the
+The Summary of Drag Minutes and of Drag Hours in 13–24 looks like Drag Hours, with their own tiles
+and the Hour Badges on every face. In Teach the right numbers are listed as chips, and each helped number shows the
 Player's first drop next to its slot. In Test the Player's face sits next to the correct one.
 
 Rules shared by Drag Arrows and Set Time:
@@ -151,9 +155,9 @@ Rules shared by Drag Arrows and Set Time:
   A Task that needed help is listed under **Wrong** in the Summary.
 - Drag Hours and Drag Minutes: a number dropped on the wrong slot goes straight back to the tray
   and the same popup opens. Its picture is a small face with that number's slot lit green between
-  its two neighbours (Hour Badges in Drag Minutes), and its line is "7 goes between 6 and 8" (Drag
-  Minutes: "10 goes between 5 and 15"; across the top it wraps: "60 goes between 55 and 5", "5 goes
-  between 60 and 10"). **Got it** leaves the number in the tray. **Set correct answer** puts it on
+  its two neighbours (Hour Badges in Drag Minutes and 13–24), and its line is "7 goes between 6 and 8"
+  (Drag Minutes: "10 goes between 5 and 15"; 13–24: "15 goes between 14 and 16"; across the top it
+  wraps: "60 goes between 55 and 5", "24 goes between 23 and 13"). **Got it** leaves the number in the tray. **Set correct answer** puts it on
   its slot for the Player: the slot rings green for a moment (a still ring with reduced motion) and
   focus moves to the next tray tile. Either way the number stays helped (yellow dot, under
   **Wrong** in the Summary), since the wrong drop already happened.
