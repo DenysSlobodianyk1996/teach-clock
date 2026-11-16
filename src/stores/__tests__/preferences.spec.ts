@@ -30,6 +30,12 @@ describe('preferences store', () => {
     expect(localStorage.getItem('teach-clock.locale')).toBeNull()
   })
 
+  it('reads the single device language when the list is empty', () => {
+    stubDeviceLanguages([])
+    vi.spyOn(navigator, 'language', 'get').mockReturnValue('uk_UA')
+    expect(usePreferencesStore().locale).toBe('uk')
+  })
+
   it('follows the device language live until the Player picks one', () => {
     const device = stubDeviceLanguages(['en'])
     const preferences = usePreferencesStore()

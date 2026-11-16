@@ -7,11 +7,8 @@
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="__THEME_BG_LIGHT__" />
-    <meta
-      name="description"
-      content="A game that teaches children to read and set the time on a clock with hands."
-    />
-    <title>Teach Clock</title>
+    <meta name="description" content="__APP_DESCRIPTION__" />
+    <title>__APP_NAME__</title>
     <script>
       // Paint the theme before the app loads, by the rule in src/stores/preferences.ts: a saved
       // light or dark, else the device's dark mode. The colours are each theme's --bg, filled in
@@ -25,21 +22,27 @@
         document.documentElement.dataset.theme = theme
         document.querySelector('meta[name="theme-color"]').setAttribute('content', colours[theme])
       } catch (e) {}
-      // Name the tab and set the language before the app loads, by the rule in
-      // src/stores/preferences.ts: a saved uk or en, else the device's language list by
-      // src/i18n/deviceLocale.ts. vite.config.ts fills in that rule and each Game Name.
+      // Name and describe the page and set the language before the app loads, by the rule in
+      // src/stores/preferences.ts: a saved uk or en, else the device's languages by
+      // src/i18n/deviceLocale.ts. vite.config.ts fills in that rule and each language's text.
       try {
-        var names = __GAME_NAMES__
+        var text = __APP_TEXT__
         var locale = localStorage.getItem('teach-clock.locale')
         if (locale !== 'uk' && locale !== 'en') {
-          locale = __DEVICE_LOCALE__(navigator.languages || [navigator.language])
+          locale = __DEVICE_LOCALE__(navigator.languages, navigator.language)
         }
         document.documentElement.lang = locale
-        document.title = names[locale]
+        document.title = text[locale].name
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute('content', text[locale].description)
         // The Web App installs under the Game Name in this language (src/webManifest.ts); the
-        // Android App has no manifest.
+        // Android App has no manifest. An installed Web App keeps its name (decision 8, batch 13):
+        // it links no manifest, so the browser never offers to rename it.
         var manifests = __WEB_MANIFESTS__
-        if (manifests) document.querySelector('link[rel="manifest"]').href = manifests[locale]
+        var manifest = document.querySelector('link[rel="manifest"]')
+        if (manifest && matchMedia('(display-mode: standalone)').matches) manifest.remove()
+        else if (manifest && manifests) manifest.href = manifests[locale]
       } catch (e) {}
     </script>
   </head>

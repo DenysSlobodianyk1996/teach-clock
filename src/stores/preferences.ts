@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { useStorage, usePreferredDark, usePreferredLanguages } from '@vueuse/core'
-import { deviceLocale } from '@/i18n/deviceLocale'
+import { deviceLocale } from '../i18n/deviceLocale'
+import { LOCALES, type Locale } from '../i18n/locales'
 
-export const LOCALES = ['uk', 'en'] as const
-export type Locale = (typeof LOCALES)[number]
+export { LOCALES, type Locale }
+
+const LOCALE_KEY = 'teach-clock.locale'
 
 export const THEMES = ['light', 'dark'] as const
 export type Theme = (typeof THEMES)[number]
@@ -26,6 +28,26 @@ function useChoice<T extends string, F extends T | null>(
   })
 }
 
+/** The device's single language, read when its language list is empty. */
+function deviceLanguage(): string | undefined {
+  return typeof navigator === 'undefined' ? undefined : navigator.language
+}
+
+/**
+ * The interface language the app starts in, by the store's rule below, without a store: a saved
+ * uk or en, else the device's languages. src/i18n/index.ts starts vue-i18n in it.
+ */
+export function startingLocale(): Locale {
+  try {
+    const saved = localStorage.getItem(LOCALE_KEY)
+    if (LOCALES.includes(saved as Locale)) return saved as Locale
+  } catch {
+    // No storage: the device decides.
+  }
+  if (typeof navigator === 'undefined') return deviceLocale(undefined)
+  return deviceLocale(navigator.languages, navigator.language)
+}
+
 /**
  * The Preferences: interface language and colour theme, kept on the device. Until the Player
  * picks one, each follows the device: the language its language list (src/i18n/deviceLocale.ts),
@@ -34,13 +56,13 @@ function useChoice<T extends string, F extends T | null>(
  */
 export const usePreferencesStore = defineStore('preferences', () => {
   // A `uk` saved before ADR 0005 was the old default, saved automatically; it is kept.
-  const chosenLocale = useChoice<Locale, null>('teach-clock.locale', LOCALES, null)
+  const chosenLocale = useChoice<Locale, null>(LOCALE_KEY, LOCALES, null)
   const deviceLanguages = usePreferredLanguages()
   const chosenTheme = useChoice<Theme, null>('teach-clock.theme', THEMES, null)
   const deviceIsDark = usePreferredDark()
 
   const locale = computed<Locale>({
-    get: () => chosenLocale.value ?? deviceLocale(deviceLanguages.value),
+    get: () => chosenLocale.value ?? deviceLocale(deviceLanguages.value, deviceLanguage()),
     set: (value) => {
       chosenLocale.value = value
     },
