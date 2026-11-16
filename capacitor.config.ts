@@ -6,7 +6,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
  */
 const config: CapacitorConfig = {
   appId: 'app.teachclockforkids',
-  appName: 'Вчимо годинник',
+  appName: 'Teach Clock',
   webDir: 'dist',
 }
 
