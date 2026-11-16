@@ -4,15 +4,32 @@
  * returns a new Round plus an outcome; the Round passed in is never changed. Plain TypeScript.
  */
 import { isFinished, type NumbersGame, type NumbersRound, type TaskStatus } from './round'
+import type { Hours } from './settings'
 
-/** What tile N shows in a drag Game: the hour N in Drag Hours, N × 5 minutes in Drag Minutes. */
-export function tileValue(game: NumbersGame, n: number): number {
-  return game === 'dragMinutes' ? n * 5 : n
+/**
+ * What a drag Round's tiles show: the Game, and in Drag Hours its Hours (null in Drag Minutes).
+ * A drag Round and its Summary are both one.
+ */
+export interface TileSet {
+  readonly game: NumbersGame
+  readonly hours: Hours | null
 }
 
-/** Drag Minutes shows an Hour Badge by each slot, so the Player sees which hour each minute sits by. */
-export function hasHourBadges(game: NumbersGame): boolean {
-  return game === 'dragMinutes'
+/**
+ * What tile N shows: the hour N in Drag Hours (N + 12 in 13–24, so 24 sits at the top), N × 5
+ * minutes in Drag Minutes.
+ */
+export function tileValue({ game, hours }: TileSet, n: number): number {
+  if (game === 'dragMinutes') return n * 5
+  return hours === 24 ? n + 12 : n
+}
+
+/**
+ * Drag Minutes and Drag Hours in 13–24 show an Hour Badge by each slot, so the Player sees which
+ * hour each tile sits by.
+ */
+export function hasHourBadges({ game, hours }: TileSet): boolean {
+  return game === 'dragMinutes' || hours === 24
 }
 
 /** "N goes between `before` and `after`", wrapping round the top: 12 sits between 11 and 1. */
@@ -38,14 +55,11 @@ export function hintSlots(number: number): (number | null)[] {
 }
 
 /** The hint as the Player reads it: the values the three tiles show, not their slot ids. */
-export function shownNeighbours(
-  game: NumbersGame,
-  { number, before, after }: Neighbours,
-): Neighbours {
+export function shownNeighbours(tiles: TileSet, { number, before, after }: Neighbours): Neighbours {
   return {
-    number: tileValue(game, number),
-    before: tileValue(game, before),
-    after: tileValue(game, after),
+    number: tileValue(tiles, number),
+    before: tileValue(tiles, before),
+    after: tileValue(tiles, after),
   }
 }
 

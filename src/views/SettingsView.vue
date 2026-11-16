@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ChoiceCard from '@/components/ChoiceCard.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
-import { GAMES, LEVELS, MODES, hasLevel } from '@/game/settings'
+import { GAMES, HOURS, LEVELS, MODES, hasHours, hasLevel } from '@/game/settings'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -14,6 +14,7 @@ const player = usePlayerStore()
 const play = usePlayStore()
 
 const showLevel = computed(() => hasLevel(play.settings.game))
+const showHours = computed(() => hasHours(play.settings.game))
 
 function startRound() {
   play.startRound()
@@ -103,6 +104,21 @@ function startRound() {
       </div>
     </fieldset>
 
+    <fieldset v-if="showHours" class="group">
+      <legend class="label">{{ t('settings.hours') }}</legend>
+      <div class="row hours">
+        <ChoiceCard
+          v-for="hours in HOURS"
+          :key="hours"
+          :title="t(`hours.${hours}.name`)"
+          :description="t(`hours.${hours}.description`)"
+          name="hours"
+          :checked="play.settings.hours === hours"
+          @select="play.settings.hours = hours"
+        />
+      </div>
+    </fieldset>
+
     <div class="spacer" />
     <div class="actions">
       <button class="btn btn-soft" type="button" @click="router.push({ name: 'welcome' })">
@@ -170,6 +186,9 @@ h1 {
 }
 .levels {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.hours {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .spacer {
   flex-grow: 1;

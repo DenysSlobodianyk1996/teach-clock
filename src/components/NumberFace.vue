@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS } from '@/game/clockFace'
-import { hasHourBadges, tileValue } from '@/game/dragNumbers'
+import { hasHourBadges, tileValue, type TileSet } from '@/game/dragNumbers'
 import HourBadges from './HourBadges.vue'
-import type { NumbersGame } from '@/game/round'
 
 /**
  * A read-only drag Game face, as in the Summary: each slot shows the tile on it, or an empty
@@ -11,7 +10,7 @@ import type { NumbersGame } from '@/game/round'
 withDefaults(
   defineProps<{
     /** Says what each tile shows (`tileValue`). Numbers below are slot ids 1–12. */
-    game: NumbersGame
+    tiles: TileSet
     /** What each slot holds: index N−1 is the slot where N belongs. */
     slots: readonly (number | null)[]
     marked?: readonly number[]
@@ -36,7 +35,7 @@ const places = numberPositions(SLOT_RADIUS)
   >
     <circle class="c-face" r="94" />
     <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
-    <HourBadges v-if="hasHourBadges(game)" :large="small" />
+    <HourBadges v-if="hasHourBadges(tiles)" :large="small" />
     <template v-for="{ n, x, y } in places" :key="n">
       <g
         v-if="slots[n - 1] !== null"
@@ -44,7 +43,7 @@ const places = numberPositions(SLOT_RADIUS)
         :class="{ marked: marked.includes(n), good: good.includes(slots[n - 1]!) }"
       >
         <circle class="c-tile" :cx="x" :cy="y" r="15" />
-        <text class="c-tile-num" :x="x" :y="y">{{ tileValue(game, slots[n - 1]!) }}</text>
+        <text class="c-tile-num" :x="x" :y="y">{{ tileValue(tiles, slots[n - 1]!) }}</text>
       </g>
       <circle v-else class="c-slot" :cx="x" :cy="y" r="14" />
     </template>

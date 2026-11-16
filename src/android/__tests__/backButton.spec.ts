@@ -17,7 +17,7 @@ function startRound(mode: Mode = 'test') {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    play.settings = { game: 'setTime', mode, level: 15 }
+    play.settings = { game: 'setTime', mode, level: 15, hours: 12 }
     play.startRound(seededRandom(5))
   }
 }

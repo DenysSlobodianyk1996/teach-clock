@@ -16,41 +16,68 @@ import { isFinished, startRound } from '../round'
 import { summarize } from '../summary'
 import { seededRandom } from '../tasks'
 
-const TEACH = { game: 'dragHours', mode: 'teach', level: 15 } as const
+const TEACH = { game: 'dragHours', mode: 'teach', level: 15, hours: 12 } as const
 const TEST = { ...TEACH, mode: 'test' } as const
 const ONE_TO_TWELVE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+const HOURS_1_12 = { game: 'dragHours', hours: 12 } as const
+const HOURS_13_24 = { game: 'dragHours', hours: 24 } as const
+const MINUTES = { game: 'dragMinutes', hours: null } as const
+
 describe('Drag Hours tile value', () => {
   it('shows the hour of its slot', () => {
-    expect([1, 6, 12].map((n) => tileValue('dragHours', n))).toEqual([1, 6, 12])
+    expect([1, 6, 12].map((n) => tileValue(HOURS_1_12, n))).toEqual([1, 6, 12])
   })
 
   it('has no Hour Badges on its face', () => {
-    expect(hasHourBadges('dragHours')).toBe(false)
+    expect(hasHourBadges(HOURS_1_12)).toBe(false)
+  })
+})
+
+describe('Drag Hours in 13–24', () => {
+  it('shows the hour of its slot plus 12: 13 at the 1, 24 at the top', () => {
+    expect([1, 6, 11, 12].map((n) => tileValue(HOURS_13_24, n))).toEqual([13, 18, 23, 24])
+  })
+
+  it('has Hour Badges on its face', () => {
+    expect(hasHourBadges(HOURS_13_24)).toBe(true)
+  })
+
+  it('says the hint in 13–24, wrapping round the top', () => {
+    expect(shownNeighbours(HOURS_13_24, neighbours(3))).toEqual({
+      number: 15,
+      before: 14,
+      after: 16,
+    })
+    expect(shownNeighbours(HOURS_13_24, neighbours(12))).toEqual({
+      number: 24,
+      before: 23,
+      after: 13,
+    })
   })
 })
 
 describe('Drag Minutes tile value', () => {
   it('has Hour Badges on its face', () => {
-    expect(hasHourBadges('dragMinutes')).toBe(true)
+    expect(hasHourBadges(MINUTES)).toBe(true)
   })
 
   it('shows the minutes of its slot: 5 at the 1, 30 at the 6, 60 at the top', () => {
-    expect([1, 2, 6, 11, 12].map((n) => tileValue('dragMinutes', n))).toEqual([5, 10, 30, 55, 60])
+    expect([1, 2, 6, 11, 12].map((n) => tileValue(MINUTES, n))).toEqual([5, 10, 30, 55, 60])
   })
 
   it('says the hint in minutes, wrapping round the top', () => {
-    expect(shownNeighbours('dragMinutes', neighbours(2))).toEqual({
+    expect(shownNeighbours(MINUTES, neighbours(2))).toEqual({
       number: 10,
       before: 5,
       after: 15,
     })
-    expect(shownNeighbours('dragMinutes', neighbours(12))).toEqual({
+    expect(shownNeighbours(MINUTES, neighbours(12))).toEqual({
       number: 60,
       before: 55,
       after: 5,
     })
-    expect(shownNeighbours('dragMinutes', neighbours(1))).toEqual({
+    expect(shownNeighbours(MINUTES, neighbours(1))).toEqual({
       number: 5,
       before: 60,
       after: 10,
@@ -59,11 +86,11 @@ describe('Drag Minutes tile value', () => {
 })
 
 describe('Drag Minutes Round', () => {
-  const MINUTES_TEACH = { game: 'dragMinutes', mode: 'teach', level: 5 } as const
+  const MINUTES_TEACH = { game: 'dragMinutes', mode: 'teach', level: 5, hours: 12 } as const
 
   it('starts like Drag Hours: no Level, 12 empty slots and a shuffled tray of slot ids', () => {
     const round = startRound(MINUTES_TEACH, seededRandom(1))
-    expect(round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null })
+    expect(round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null, hours: null })
     expect(round.slots).toEqual(Array(12).fill(null))
     expect([...round.tray].sort((a, b) => a - b)).toEqual(ONE_TO_TWELVE)
   })
@@ -86,7 +113,7 @@ describe('Drag Minutes Round', () => {
 })
 
 describe('Drag Minutes in Test', () => {
-  const MINUTES_TEST = { game: 'dragMinutes', mode: 'test', level: 5 } as const
+  const MINUTES_TEST = { game: 'dragMinutes', mode: 'test', level: 5, hours: 12 } as const
 
   it('moves minutes freely with no feedback, and scores each minute by its slot at Submit', () => {
     let round = startRound(MINUTES_TEST, seededRandom(1))
@@ -116,7 +143,7 @@ describe('Drag Hours neighbour hint', () => {
   })
 
   it('says the hint with the values the tiles show', () => {
-    expect(shownNeighbours('dragHours', neighbours(12))).toEqual({
+    expect(shownNeighbours(HOURS_1_12, neighbours(12))).toEqual({
       number: 12,
       before: 11,
       after: 1,
@@ -360,6 +387,7 @@ describe('Drag Hours Summary', () => {
     for (const n of ONE_TO_TWELVE) round = dropNumber(round, n, n).round
     expect(summarize(round)).toEqual({
       game: 'dragHours',
+      hours: 12,
       mode: 'teach',
       level: null,
       statuses: ONE_TO_TWELVE.map((n) => (n === 4 || n === 9 ? 'helped' : 'right')),

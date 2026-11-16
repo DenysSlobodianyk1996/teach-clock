@@ -11,7 +11,7 @@ afterEach(() => wrapper.unmount())
 /** The face drawn 220 px across at the page's top left, so 1 px is 1 clock unit from (110, 110). */
 function mountBoard(props: Record<string, unknown> = {}) {
   wrapper = mountComponent(NumberBoard, {
-    game: 'dragHours',
+    tiles: { game: 'dragHours', hours: 12 },
     slots: Array(12).fill(null),
     tray: [7, 3, 12],
     ...props,
@@ -263,7 +263,11 @@ describe('NumberBoard in Test (movable)', () => {
 
 describe('NumberBoard in Drag Minutes', () => {
   it('shows minute values on every tile, and Hour Badges 1–12, only in Drag Minutes', async () => {
-    mountBoard({ game: 'dragMinutes', slots: [null, 2, ...Array(10).fill(null)], tray: [12, 1] })
+    mountBoard({
+      tiles: { game: 'dragMinutes', hours: null },
+      slots: [null, 2, ...Array(10).fill(null)],
+      tray: [12, 1],
+    })
     expect(wrapper.findAll('.tray .tile').map((b) => b.text())).toEqual(['60', '5'])
     expect(slot(2).text()).toBe('10')
     const badges = wrapper.findAll('.hour-badge')
@@ -291,7 +295,7 @@ describe('NumberBoard in Drag Minutes', () => {
 
   it('names empty and placed slots by the minutes they hold, not by slot id', () => {
     mountBoard({
-      game: 'dragMinutes',
+      tiles: { game: 'dragMinutes', hours: null },
       slots: [null, 2, ...Array(10).fill(null)],
       tray: [12, 1],
       movable: true,
@@ -305,8 +309,19 @@ describe('NumberBoard in Drag Minutes', () => {
     expect(wrapper.find('.hour-badge').exists()).toBe(false)
   })
 
+  it('shows 13–24 and Hour Badges in Drag Hours 13–24', () => {
+    mountBoard({
+      tiles: { game: 'dragHours', hours: 24 },
+      slots: [null, 2, ...Array(10).fill(null)],
+      tray: [12, 1],
+    })
+    expect(wrapper.findAll('.tray .tile').map((b) => b.text())).toEqual(['24', '13'])
+    expect(slot(2).text()).toBe('14')
+    expect(wrapper.findAll('.hour-badge')).toHaveLength(12)
+  })
+
   it('never catches a pointer: a tile let go on the badge of 3 lands on slot 3', async () => {
-    mountBoard({ game: 'dragMinutes' })
+    mountBoard({ tiles: { game: 'dragMinutes', hours: null } })
     const badges = wrapper.get('.hour-badges')
     expect(badges.attributes('pointer-events')).toBe('none')
     expect(badges.attributes('aria-hidden')).toBe('true')

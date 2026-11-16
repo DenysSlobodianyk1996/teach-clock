@@ -29,6 +29,7 @@ export default {
     game: 'Game',
     mode: 'Mode',
     level: 'Minute step',
+    hours: 'Hours',
     back: 'Back',
     play: 'Play',
   },
@@ -49,6 +50,10 @@ export default {
     '15': { name: '15 min', description: ':00, :15, :30, :45' },
     '5': { name: '5 min', description: 'Every 5 minutes' },
     '1': { name: '1 min', description: 'Any minute' },
+  },
+  hours: {
+    '12': { name: '1–12', description: 'First half of the day' },
+    '24': { name: '13–24', description: 'Second half of the day' },
   },
   round: {
     progress: 'Task {n} of {total}',

@@ -29,6 +29,7 @@ export default {
     game: 'Гра',
     mode: 'Режим',
     level: 'Крок хвилин',
+    hours: 'Години',
     back: 'Назад',
     play: 'Грати',
   },
@@ -49,6 +50,10 @@ export default {
     '15': { name: '15 хв', description: ':00, :15, :30, :45' },
     '5': { name: '5 хв', description: 'Кожні 5 хвилин' },
     '1': { name: '1 хв', description: 'Будь-яка хвилина' },
+  },
+  hours: {
+    '12': { name: '1–12', description: 'Перша половина доби' },
+    '24': { name: '13–24', description: 'Друга половина доби' },
   },
   round: {
     progress: 'Завдання {n} з {total}',

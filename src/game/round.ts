@@ -3,7 +3,15 @@
  * the Round passed in is never changed. Plain TypeScript, no Vue.
  */
 import { sameClockTime, type ClockTime } from './clockTime'
-import { isNumbersGame, taskCount, type Game, type NumbersGame, type Settings } from './settings'
+import {
+  hasHours,
+  isNumbersGame,
+  taskCount,
+  type Game,
+  type Hours,
+  type NumbersGame,
+  type Settings,
+} from './settings'
 import { generateClockTimes, shuffledNumbers, type Random } from './tasks'
 
 /** `helped`: right only after a wrong try in Teach. It counts as wrong in the Summary. */
@@ -43,6 +51,8 @@ export interface NumbersRound {
   readonly game: NumbersGame
   readonly mode: Settings['mode']
   readonly level: null
+  /** Drag Hours: 1–12 or 13–24. Null in Drag Minutes. */
+  readonly hours: Hours | null
   /** Task N−1 is the number N. */
   readonly tasks: readonly Task<number>[]
   /** What each slot holds: index N−1 is the slot where N belongs. */
@@ -69,7 +79,7 @@ export interface Outcome {
 export function startRound(settings: Settings & { game: ClockGame }, random: Random): ClockRound
 export function startRound(settings: Settings & { game: NumbersGame }, random: Random): NumbersRound
 export function startRound(settings: Settings, random: Random): Round
-export function startRound({ game, mode, level }: Settings, random: Random): Round {
+export function startRound({ game, mode, level, hours }: Settings, random: Random): Round {
   if (isNumbersGame(game)) {
     const tasks = Array.from({ length: taskCount(game) }, (_, i): Task<number> => ({
       answer: i + 1,
@@ -81,6 +91,7 @@ export function startRound({ game, mode, level }: Settings, random: Random): Rou
       game,
       mode,
       level: null,
+      hours: hasHours(game) ? hours : null,
       tasks,
       slots,
       tray: shuffledNumbers(random),
