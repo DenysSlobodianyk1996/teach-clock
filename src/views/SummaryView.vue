@@ -9,7 +9,7 @@ import SummaryConfetti from '@/components/SummaryConfetti.vue'
 import { formatClockTime } from '@/game/clockTime'
 import { neighbours, shownNeighbours, tileValue } from '@/game/dragNumbers'
 import { isNumbersSummary, type WrongTask } from '@/game/summary'
-import type { NumbersGame } from '@/game/round'
+import type { TileSet } from '@/game/dragNumbers'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -23,8 +23,8 @@ const player = usePlayerStore()
 // one even while "Play again" replaces the Round under it.
 const summary = play.summary
 /** "N goes between…", for tile N, in the values the tiles show. */
-const between = (game: NumbersGame, n: number) =>
-  t('numbers.between', { ...shownNeighbours(game, neighbours(n)) })
+const between = (tiles: TileSet, n: number) =>
+  t('numbers.between', { ...shownNeighbours(tiles, neighbours(n)) })
 
 const headline = computed(() => {
   if (!summary) return ''
@@ -42,6 +42,9 @@ const details = computed(() => {
     t(`modes.${summary.mode}.name`),
   ]
   if (summary.level !== null) parts.push(t(`levels.${summary.level}.name`))
+  if (isNumbersSummary(summary) && summary.hours !== null) {
+    parts.push(t(`hours.${summary.hours}.name`))
+  }
   return parts.join(' · ')
 })
 
@@ -63,14 +66,14 @@ function clockPair({ answer, firstAnswer }: WrongTask) {
   })
 }
 
-function numberPair(game: NumbersGame, { answer, firstAnswer }: WrongTask<number>) {
+function numberPair(tiles: TileSet, { answer, firstAnswer }: WrongTask<number>) {
   // The place is named by what belongs there, as the face shows it.
   const first = t('summary.numberFirst', {
     caption: caption.value,
-    number: tileValue(game, answer),
-    slot: tileValue(game, firstAnswer),
+    number: tileValue(tiles, answer),
+    slot: tileValue(tiles, firstAnswer),
   })
-  return `${first}. ${between(game, answer)}`
+  return `${first}. ${between(tiles, answer)}`
 }
 
 /** A drag Game in Test: the Player's face against the correct one. */
@@ -78,14 +81,14 @@ const faces = computed(() => {
   if (!summary || !isNumbersSummary(summary) || summary.mode !== 'test') return null
   const misplaced = summary.wrong.map((w) => w.answer)
   return {
-    game: summary.game,
+    tiles: summary,
     placements: summary.placements,
     // The slots where a number does not belong.
     marked: summary.wrong.map((w) => w.firstAnswer),
     misplaced,
     correct: Array.from({ length: 12 }, (_, i) => i + 1),
     label: t('summary.yourFaceLabel', {
-      numbers: misplaced.map((n) => tileValue(summary.game, n)).join(', '),
+      numbers: misplaced.map((n) => tileValue(summary, n)).join(', '),
     }),
   }
 })
@@ -119,7 +122,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.yourFace') }}</figcaption>
         <NumberFace
-          :game="faces.game"
+          :tiles="faces.tiles"
           class="big-face"
           :slots="faces.placements"
           :marked="faces.marked"
@@ -130,7 +133,7 @@ function toSettings() {
       <figure class="card face-card">
         <figcaption>{{ t('summary.correctFace') }}</figcaption>
         <NumberFace
-          :game="faces.game"
+          :tiles="faces.tiles"
           class="big-face"
           :slots="faces.correct"
           :good="faces.misplaced"
@@ -138,7 +141,7 @@ function toSettings() {
         />
         <ul v-if="faces.misplaced.length" class="face-note">
           <li v-for="n in faces.misplaced" :key="n">
-            {{ between(faces.game, n) }}
+            {{ between(faces.tiles, n) }}
           </li>
         </ul>
       </figure>
@@ -154,7 +157,7 @@ function toSettings() {
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
         <ul v-else-if="isNumbersSummary(summary)" class="chips">
-          <li v-for="n in summary.right" :key="n" class="chip">{{ tileValue(summary.game, n) }}</li>
+          <li v-for="n in summary.right" :key="n" class="chip">{{ tileValue(summary, n) }}</li>
         </ul>
         <ul v-else class="right-clocks">
           <li v-for="time in summary.right" :key="formatClockTime(time)">
@@ -171,10 +174,10 @@ function toSettings() {
         <ul v-if="isNumbersSummary(summary)" class="pairs">
           <li v-for="task in summary.wrong" :key="task.answer" class="pair">
             <!-- The pictures are hidden from screen readers; this says the same in words. -->
-            <span class="sr-only">{{ numberPair(summary.game, task) }}</span>
+            <span class="sr-only">{{ numberPair(summary, task) }}</span>
             <div class="side" aria-hidden="true">
               <NumberFace
-                :game="summary.game"
+                :tiles="summary"
                 class="pair-clock"
                 small
                 :slots="only(task.answer, task.firstAnswer)"
@@ -188,13 +191,13 @@ function toSettings() {
             </svg>
             <div class="side" aria-hidden="true">
               <NumberFace
-                :game="summary.game"
+                :tiles="summary"
                 class="pair-clock"
                 small
                 :slots="only(task.answer, task.answer)"
                 label=""
               />
-              <span class="caption good">{{ between(summary.game, task.answer) }}</span>
+              <span class="caption good">{{ between(summary, task.answer) }}</span>
             </div>
           </li>
         </ul>

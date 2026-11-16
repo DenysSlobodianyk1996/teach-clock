@@ -3,9 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { FACE_VIEW as VIEW, numberPositions, SLOT_RADIUS, slotAt } from '@/game/clockFace'
-import { hasHourBadges, tileValue } from '@/game/dragNumbers'
+import { hasHourBadges, tileValue, type TileSet } from '@/game/dragNumbers'
 import HourBadges from './HourBadges.vue'
-import type { NumbersGame } from '@/game/round'
 
 /**
  * The drag Games: an empty clock face with 12 slots, and the tray of numbers still to place. Drag a
@@ -15,7 +14,7 @@ import type { NumbersGame } from '@/game/round'
  */
 const props = defineProps<{
   /** Says what each tile shows (`tileValue`). Numbers below are slot ids 1–12, not tile values. */
-  game: NumbersGame
+  tiles: TileSet
   /** What each slot holds: index N−1 is the slot where N belongs. */
   slots: readonly (number | null)[]
   tray: readonly number[]
@@ -31,7 +30,7 @@ const emit = defineEmits<{ drop: [number: number, slot: number]; toTray: [number
 
 const { t } = useI18n()
 /** What tile N shows. */
-const value = (n: number) => tileValue(props.game, n)
+const value = (n: number) => tileValue(props.tiles, n)
 
 const places = numberPositions(SLOT_RADIUS)
 /** A placed number's radius in face units. Tray and dragged numbers are drawn the same size. */
@@ -248,7 +247,7 @@ function tapTray() {
         >
           <circle class="c-face" r="94" />
           <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5" />
-          <HourBadges v-if="hasHourBadges(game)" />
+          <HourBadges v-if="hasHourBadges(tiles)" />
           <!-- One element per slot, whatever it holds, so keyboard focus stays put through a move. -->
           <g
             v-for="{ n, x, y } in places"

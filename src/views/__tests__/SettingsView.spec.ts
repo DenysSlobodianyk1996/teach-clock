@@ -57,7 +57,12 @@ describe('Settings screen', () => {
     await choice(wrapper, t('games.dragMinutes.name')).setValue(true)
     expect(wrapper.text()).not.toContain(t('settings.level'))
     await button(wrapper, t('settings.play')).trigger('click')
-    expect(usePlayStore().round).toMatchObject({ game: 'dragMinutes', mode: 'teach', level: null })
+    expect(usePlayStore().round).toMatchObject({
+      game: 'dragMinutes',
+      mode: 'teach',
+      level: null,
+      hours: null,
+    })
   })
 
   it.each(['dragArrows', 'setTime'] as const)(
@@ -98,6 +103,37 @@ describe('Settings screen', () => {
 
     await choice(wrapper, t('games.dragArrows.name')).setValue(true)
     expect(wrapper.text()).toContain(t('settings.level'))
+  })
+
+  it('shows Hours for Drag Hours only, with 1–12 checked', async () => {
+    const { wrapper } = await open()
+    expect(wrapper.text()).toContain(t('settings.hours'))
+    const hours = wrapper.findAll('.hours label.choice b').map((b) => b.text())
+    expect(hours).toEqual([t('hours.12.name'), t('hours.24.name')])
+    expect(choice(wrapper, t('hours.12.name')).element.checked).toBe(true)
+
+    for (const game of ['dragMinutes', 'dragArrows', 'setTime'] as const) {
+      await choice(wrapper, t(`games.${game}.name`)).setValue(true)
+      expect(wrapper.text()).not.toContain(t('settings.hours'))
+    }
+  })
+
+  it("names the picked Hours in the Drag Hours card's description", async () => {
+    const { wrapper } = await open()
+    const card = () => choice(wrapper, t('games.dragHours.name')).element.closest('label')!
+    const describes = (hours: 12 | 24) =>
+      t('games.dragHours.description', { range: t(`hours.${hours}.name`) })
+    expect(card().textContent).toContain(describes(12))
+    await choice(wrapper, t('hours.24.name')).setValue(true)
+    expect(card().textContent).toContain(describes(24))
+    expect(describes(24)).toContain('13–24')
+  })
+
+  it('starts a Drag Hours Round in 13–24', async () => {
+    const { wrapper } = await open()
+    await choice(wrapper, t('hours.24.name')).setValue(true)
+    await button(wrapper, t('settings.play')).trigger('click')
+    expect(usePlayStore().round).toMatchObject({ game: 'dragHours', hours: 24 })
   })
 
   it('starts a Round with the chosen Settings and opens it', async () => {

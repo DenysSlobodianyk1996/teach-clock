@@ -29,11 +29,12 @@ export default {
     game: 'Гра',
     mode: 'Режим',
     level: 'Крок хвилин',
+    hours: 'Години',
     back: 'Назад',
     play: 'Грати',
   },
   games: {
-    dragHours: { name: 'Розстав години', description: 'Перетягни числа 1–12 на їхні місця.' },
+    dragHours: { name: 'Розстав години', description: 'Перетягни числа {range} на їхні місця.' },
     dragMinutes: { name: 'Розстав хвилини', description: 'Перетягни хвилини 5–60 на їхні місця.' },
     dragArrows: { name: 'Постав стрілки', description: 'Покажи на годиннику заданий час.' },
     setTime: { name: 'Який час?', description: 'Подивись на годинник і введи час.' },
@@ -49,6 +50,10 @@ export default {
     '15': { name: '15 хв', description: ':00, :15, :30, :45' },
     '5': { name: '5 хв', description: 'Кожні 5 хвилин' },
     '1': { name: '1 хв', description: 'Будь-яка хвилина' },
+  },
+  hours: {
+    '12': { name: '1–12', description: 'Перша половина доби' },
+    '24': { name: '13–24', description: 'Друга половина доби' },
   },
   round: {
     progress: 'Завдання {n} з {total}',

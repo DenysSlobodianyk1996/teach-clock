@@ -11,7 +11,12 @@ describe('play store', () => {
   })
 
   it('opens Settings on Drag Hours, Teach, 1 minute', () => {
-    expect(usePlayStore().settings).toEqual({ game: 'dragHours', mode: 'teach', level: 1 })
+    expect(usePlayStore().settings).toEqual({
+      game: 'dragHours',
+      mode: 'teach',
+      level: 1,
+      hours: 12,
+    })
   })
 
   it('has no Round until the Player starts one', () => {
@@ -32,7 +37,7 @@ describe('play store', () => {
     const play = usePlayStore()
     play.settings.game = 'dragHours'
     play.startRound()
-    expect(play.round).toMatchObject({ game: 'dragHours', mode: 'teach', level: null })
+    expect(play.round).toMatchObject({ game: 'dragHours', mode: 'teach', level: null, hours: 12 })
     expect(play.round?.tasks).toHaveLength(12)
   })
 

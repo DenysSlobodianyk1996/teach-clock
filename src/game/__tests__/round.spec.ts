@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { clockTime, type ClockTime } from '../clockTime'
 import { currentTask, isFinished, startRound, submitAnswer, type ClockRound } from '../round'
 import { summarize } from '../summary'
+import { dropNumber, submitPlacements } from '../dragNumbers'
 import { seededRandom } from '../tasks'
 import type { Level } from '../settings'
 
-const SET_TIME_TEST = { game: 'setTime', mode: 'test', level: 15 } as const
+const SET_TIME_TEST = { game: 'setTime', mode: 'test', level: 15, hours: 12 } as const
 
 /** A Clock Time that is not the given one. */
 function wrong(time: ClockTime): ClockTime {
@@ -30,16 +31,47 @@ describe('Round', () => {
   })
 
   it('keeps the Settings it started with, with no Level for Drag Hours', () => {
-    expect(startRound(SET_TIME_TEST, seededRandom(1))).toMatchObject(SET_TIME_TEST)
-    const dragHours = startRound({ game: 'dragHours', mode: 'teach', level: 5 }, seededRandom(1))
+    expect(startRound(SET_TIME_TEST, seededRandom(1))).toMatchObject({
+      game: 'setTime',
+      mode: 'test',
+      level: 15,
+    })
+    const dragHours = startRound(
+      { game: 'dragHours', mode: 'teach', level: 5, hours: 12 },
+      seededRandom(1),
+    )
     expect(dragHours.level).toBeNull()
     expect(dragHours.tasks).toHaveLength(12)
     const dragMinutes = startRound(
-      { game: 'dragMinutes', mode: 'test', level: 15 },
+      { game: 'dragMinutes', mode: 'test', level: 15, hours: 12 },
       seededRandom(1),
     )
     expect(dragMinutes).toMatchObject({ game: 'dragMinutes', level: null, submitted: false })
     expect(dragMinutes.tasks).toHaveLength(12)
+  })
+
+  it('keeps Hours in Drag Hours only', () => {
+    const late = startRound(
+      { game: 'dragHours', mode: 'teach', level: 1, hours: 24 },
+      seededRandom(1),
+    )
+    expect(late.hours).toBe(24)
+    const minutes = startRound(
+      { game: 'dragMinutes', mode: 'teach', level: 1, hours: 24 },
+      seededRandom(1),
+    )
+    expect(minutes.hours).toBeNull()
+    const setTime = startRound({ ...SET_TIME_TEST, hours: 24 }, seededRandom(1))
+    expect(setTime).not.toHaveProperty('hours')
+  })
+
+  it('carries Hours into the Summary', () => {
+    let round = startRound(
+      { game: 'dragHours', mode: 'test', level: 1, hours: 24 },
+      seededRandom(1),
+    )
+    for (const n of round.tray) round = dropNumber(round, n, n).round
+    expect(summarize(submitPlacements(round).round).hours).toBe(24)
   })
 
   it('records a right Answer and moves on', () => {
@@ -81,7 +113,7 @@ describe('Round', () => {
   })
 })
 
-const SET_TIME_TEACH = { game: 'setTime', mode: 'teach', level: 15 } as const
+const SET_TIME_TEACH = { game: 'setTime', mode: 'teach', level: 15, hours: 12 } as const
 
 describe('Round in Teach', () => {
   it('stays on the Task after a wrong Answer and keeps it as the first Answer', () => {

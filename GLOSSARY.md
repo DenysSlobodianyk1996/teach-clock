@@ -30,6 +30,10 @@ _Avoid_: Exam, challenge
 The minute step that Clock Times in a Round snap to: 1, 5 or 15 minutes (1 by default). Drag Hours and Drag Minutes have no Level.
 _Avoid_: Priority, difficulty
 
+**Hours**:
+The numbers Drag Hours places, picked in Settings: **1–12** ("first half of the day", the default) or **13–24** ("second half of the day"), where hour N + 12 goes on the slot of N, 24 at the top, with an Hour Badge by every slot. Only Drag Hours has Hours. It changes only the tiles: a Clock Time stays 1–12.
+_Avoid_: AM/PM, 24-hour mode, Day Half
+
 **Round**:
 One playthrough of a Game in a Mode: ten Tasks, or the twelve numbers in Drag Hours or Drag Minutes. A Round only moves forward.
 _Avoid_: Session, level
@@ -50,7 +54,7 @@ The read-only screen at the end of a Round, grouping Tasks into right and wrong 
 _Avoid_: Results, report
 
 **Settings**:
-The choice of Game, Mode and Level the Player makes before a Round.
+The choice of Game, Mode and Level (or Hours, in Drag Hours) the Player makes before a Round. Kept until a reload.
 _Avoid_: Options, setup
 
 **Preferences**:
@@ -82,14 +86,14 @@ _Avoid_: Highlight, pointed place, target, ring
 ### Games
 
 **Drag Hours**:
-The Game where the Player drags the numbers 1–12 onto an empty clock face.
+The Game where the Player drags the numbers 1–12 (or 13–24, by Hours) onto an empty clock face.
 _Avoid_: Drag Numbers
 
 **Drag Minutes**:
 The Game where the Player drags the minutes 5, 10, … 60 onto an empty clock face: minute N×5 goes on the slot of hour N (60 at the top).
 
 **Hour Badge**:
-The small hour 1–12 by each slot on the Drag Minutes face. It is part of the face, so it shows in both Modes; it is not a Hint.
+The small hour 1–12 by each slot on the Drag Minutes face, and on the Drag Hours face in 13–24. It is part of the face, so it shows in both Modes; it is not a Hint.
 _Avoid_: hint, label
 
 **Drag Arrows**:

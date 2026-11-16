@@ -29,11 +29,12 @@ export default {
     game: 'Game',
     mode: 'Mode',
     level: 'Minute step',
+    hours: 'Hours',
     back: 'Back',
     play: 'Play',
   },
   games: {
-    dragHours: { name: 'Drag Hours', description: 'Drag the numbers 1–12 to their places.' },
+    dragHours: { name: 'Drag Hours', description: 'Drag the numbers {range} to their places.' },
     dragMinutes: { name: 'Drag Minutes', description: 'Drag the minutes 5–60 to their places.' },
     dragArrows: { name: 'Drag Arrows', description: 'Show the given time on the clock.' },
     setTime: { name: 'Set Time', description: 'Look at the clock and enter the time.' },
@@ -49,6 +50,10 @@ export default {
     '15': { name: '15 min', description: ':00, :15, :30, :45' },
     '5': { name: '5 min', description: 'Every 5 minutes' },
     '1': { name: '1 min', description: 'Any minute' },
+  },
+  hours: {
+    '12': { name: '1–12', description: 'First half of the day' },
+    '24': { name: '13–24', description: 'Second half of the day' },
   },
   round: {
     progress: 'Task {n} of {total}',

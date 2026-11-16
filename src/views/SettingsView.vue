@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ChoiceCard from '@/components/ChoiceCard.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
-import { GAMES, LEVELS, MODES, hasLevel } from '@/game/settings'
+import { GAMES, HOURS, LEVELS, MODES, hasHours, hasLevel } from '@/game/settings'
 import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 
@@ -14,6 +14,9 @@ const player = usePlayerStore()
 const play = usePlayStore()
 
 const showLevel = computed(() => hasLevel(play.settings.game))
+const showHours = computed(() => hasHours(play.settings.game))
+/** Drag Hours says which numbers it places: 1–12 or 13–24, as Hours is picked. */
+const hoursRange = computed(() => t(`hours.${play.settings.hours}.name`))
 
 function startRound() {
   play.startRound()
@@ -32,7 +35,7 @@ function startRound() {
           v-for="game in GAMES"
           :key="game"
           :title="t(`games.${game}.name`)"
-          :description="t(`games.${game}.description`)"
+          :description="t(`games.${game}.description`, { range: hoursRange })"
           name="game"
           :checked="play.settings.game === game"
           @select="play.settings.game = game"
@@ -99,6 +102,21 @@ function startRound() {
           name="level"
           :checked="play.settings.level === level"
           @select="play.settings.level = level"
+        />
+      </div>
+    </fieldset>
+
+    <fieldset v-if="showHours" class="group">
+      <legend class="label">{{ t('settings.hours') }}</legend>
+      <div class="row hours">
+        <ChoiceCard
+          v-for="hours in HOURS"
+          :key="hours"
+          :title="t(`hours.${hours}.name`)"
+          :description="t(`hours.${hours}.description`)"
+          name="hours"
+          :checked="play.settings.hours === hours"
+          @select="play.settings.hours = hours"
         />
       </div>
     </fieldset>
@@ -170,6 +188,9 @@ h1 {
 }
 .levels {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.hours {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .spacer {
   flex-grow: 1;

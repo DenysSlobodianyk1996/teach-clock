@@ -11,7 +11,7 @@ import {
   type Task,
   type TaskStatus,
 } from './round'
-import { LEVELS, isNumbersGame, type Level, type Mode } from './settings'
+import { LEVELS, isNumbersGame, type Hours, type Level, type Mode } from './settings'
 
 /** A Task that was wrong or helped: its correct Answer and the Player's first one. */
 export interface WrongTask<A = ClockTime> {
@@ -41,6 +41,8 @@ export interface ClockSummary extends Grouped<ClockTime> {
 export interface NumbersSummary extends Grouped<number> {
   game: NumbersGame
   level: null
+  /** Drag Hours: 1–12 or 13–24. Null in Drag Minutes. */
+  hours: Hours | null
   /** What each slot held at the end: index N−1 is the slot where N belongs. */
   placements: (number | null)[]
 }
@@ -57,7 +59,13 @@ export function summarize(round: Round): Summary
 export function summarize(round: Round): Summary {
   if (!isFinished(round)) throw new Error('The Round is not finished')
   if (isNumbersRound(round)) {
-    return { game: round.game, level: null, ...group(round), placements: [...round.slots] }
+    return {
+      game: round.game,
+      level: null,
+      hours: round.hours,
+      ...group(round),
+      placements: [...round.slots],
+    }
   }
   return { game: round.game, level: round.level, ...group(round) }
 }

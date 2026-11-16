@@ -4,10 +4,18 @@ import type { Page } from '@playwright/test'
 
 type Game = 'setTime' | 'dragArrows' | 'dragHours' | 'dragMinutes'
 
-/** Enters a name, picks the Game, the Mode and (for the clock Games) the Level, and presses Play. */
+/**
+ * Enters a name, picks the Game, the Mode and (for the clock Games) the Level or (for Drag Hours)
+ * the Hours, and presses Play.
+ */
 export async function startRound(
   page: Page,
-  { game, mode, level }: { game: Game; mode: 'teach' | 'test'; level?: 5 | 15 },
+  {
+    game,
+    mode,
+    level,
+    hours,
+  }: { game: Game; mode: 'teach' | 'test'; level?: 5 | 15; hours?: 12 | 24 },
 ) {
   await page.goto('/')
   await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
@@ -16,5 +24,6 @@ export async function startRound(
   await page.getByRole('radio', { name: startingWith(t(`modes.${mode}.name`)) }).check()
   if (level)
     await page.getByRole('radio', { name: startingWith(t(`levels.${level}.name`)) }).check()
+  if (hours) await page.getByRole('radio', { name: startingWith(t(`hours.${hours}.name`)) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
 }

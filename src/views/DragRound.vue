@@ -28,7 +28,7 @@ const hint = ref<Neighbours | null>(null)
 /** Teach: the wrong-drop popup is open (for `hint`). */
 const popupOpen = ref(false)
 /** The popup's line, in the values the tiles show. */
-const shownHint = computed(() => hint.value && shownNeighbours(props.round.game, hint.value))
+const shownHint = computed(() => hint.value && shownNeighbours(props.round, hint.value))
 /** The slot Set correct answer just filled, ringed green for a moment. */
 const flash = ref<number | null>(null)
 const root = ref<HTMLElement>()
@@ -117,7 +117,7 @@ function submit() {
       </div>
     </div>
     <NumberBoard
-      :game="round.game"
+      :tiles="round"
       :slots="round.slots"
       :tray="round.tray"
       :marked="hint?.number"
@@ -162,7 +162,7 @@ function submit() {
       @dismiss="popupOpen = false"
       @set-correct="setCorrectAnswer"
     >
-      <HintFace :game="round.game" :number="hint.number" />
+      <HintFace :tiles="round" :number="hint.number" />
     </WrongAnswerPopup>
   </div>
 </template>

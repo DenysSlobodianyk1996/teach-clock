@@ -6,7 +6,7 @@ import { usePlayerStore } from '@/stores/player'
 import { usePlayStore } from '@/stores/play'
 import { clockTime, formatClockTime } from '@/game/clockTime'
 import { currentTask, type ClockRound } from '@/game/round'
-import type { Level, Mode } from '@/game/settings'
+import type { Hours, Level, Mode } from '@/game/settings'
 import { seededRandom } from '@/game/tasks'
 import { t } from '@/test/i18n'
 
@@ -27,11 +27,15 @@ function playRound(mode: Mode, wrong: number, level: Level = 15) {
 }
 
 /** A drag Game in Test: fills the face with 4 and 5 swapped, or perfectly, then submits. */
-function submitDragHours(swap: boolean, game: 'dragHours' | 'dragMinutes' = 'dragHours') {
+function submitDragHours(
+  swap: boolean,
+  game: 'dragHours' | 'dragMinutes' = 'dragHours',
+  hours: Hours = 12,
+) {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    Object.assign(play.settings, { game, mode: 'test' })
+    Object.assign(play.settings, { game, mode: 'test', hours })
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) play.dropNumber(n, swap && n === 4 ? 5 : swap && n === 5 ? 4 : n)
     play.submitPlacements()
@@ -240,6 +244,38 @@ describe('Summary screen', () => {
         '12',
       ])
     }
+  })
+
+  it('for Drag Hours in 13–24, names Hours and shows 13–24 with Hour Badges on both faces', async () => {
+    const { wrapper } = await mountScreen(
+      SummaryView,
+      '/summary',
+      submitDragHours(true, 'dragHours', 24),
+    )
+    expect(wrapper.get('.details').text()).toBe(
+      [
+        t('summary.cheer', { name: 'Оля' }),
+        t('games.dragHours.name'),
+        t('modes.test.name'),
+        t('hours.24.name'),
+      ].join(' · '),
+    )
+    const [mine, correct] = wrapper.findAll('.face-card')
+    expect(mine!.get('svg').attributes('aria-label')).toBe(
+      t('summary.yourFaceLabel', { numbers: '16, 17' }),
+    )
+    expect(mine!.get('[data-slot="4"]').text()).toBe('17')
+    expect(correct!.get('[data-slot="12"]').text()).toBe('24')
+    expect(correct!.findAll('li').map((li) => li.text())).toEqual([
+      t('numbers.between', { number: 16, before: 15, after: 17 }),
+      t('numbers.between', { number: 17, before: 16, after: 18 }),
+    ])
+    for (const face of [mine!, correct!]) expect(face.findAll('.hour-badge')).toHaveLength(12)
+  })
+
+  it('names Hours 1–12 in the Drag Hours line', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', submitDragHours(false))
+    expect(wrapper.get('.details').text()).toContain(t('hours.12.name'))
   })
 
   it('shows no Hour Badges on the Drag Hours Test faces', async () => {
