@@ -20,7 +20,7 @@ Play Console › your app › **Dashboard**. The "Apply for production" section 
 
 | What                                     | Date |
 | ---------------------------------------- | ---- |
-| Developer account verified               |      |
+| Developer account verified               | 2026-11-16 |
 | First build live on closed testing       |      |
 | Tester invite sent                       |      |
 | 12th tester opted in (day 1)             |      |
