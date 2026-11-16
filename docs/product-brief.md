@@ -181,8 +181,8 @@ Rules shared by Drag Arrows and Set Time:
 - Two themes, light and dark, with a soft but saturated palette (warm cream or white clock face,
   coral Hour Hand, teal Minute Hand, mustard highlights, softened green/red for right/wrong). The
   device decides which one comes first; the Player can switch with the toggle. The app icon and
-  the Android splash sit on the dark theme's background; the store screenshots show the light
-  theme, and the store feature graphic keeps its teal background.
+  the Android splash sit on the dark theme's background; the store screenshots and the store
+  feature graphic show the light theme.
 - Both hands are thin on every clock, so a number they cross stays readable; they differ by length
   and colour. In Drag Arrows each hand ends in a Grip: both Grips are the same small ring in their
   hand's colour, with a bigger invisible touch area around them, and every number is drawn over the
