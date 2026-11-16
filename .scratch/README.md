@@ -19,7 +19,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [12-privacy-one-page](12-privacy-one-page/)                             | fixes         | done    | no   | #53 (plan), #54          |
 | [13-app-name](13-app-name/)                                             | feature       | done    | no   | #55 (plan), #56          |
 | [14-hours-13-24](14-hours-13-24/)                                       | feature       | done    | no   | #58                      |
-| [15-drag-hours-minutes-summary-fix](15-drag-hours-minutes-summary-fix/) | fixes         | planned | no   |                          |
+| [15-drag-hours-minutes-summary-fix](15-drag-hours-minutes-summary-fix/) | fixes         | planned | no   | #59                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
