@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * The Privacy Page inside the app, in the interface language, with a Back button. The build renders
- * the same content into the static `privacy.html` for Google Play's listing (src/privacyPage.ts).
+ * the same content into the static `privacy.html` for Google Play's listing (src/privacyStatic.ts).
  */
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

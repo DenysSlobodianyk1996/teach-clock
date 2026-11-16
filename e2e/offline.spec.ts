@@ -41,6 +41,12 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   // The static copy for Google Play is in the offline copy too.
   await page.goto('/privacy.html')
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
+
+  // The old in-app address (before batch 12) gets no redirect: like GitHub Pages, the service
+  // worker answers it with privacy.html, never the app (which would send it to Welcome).
+  await page.goto('/privacy')
+  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
+  await expect(page.locator('article[lang="en"]')).toBeVisible()
 })
 
 test('the app can be installed as "Вчимо годинник" with its own icons', async ({

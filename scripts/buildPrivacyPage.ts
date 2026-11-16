@@ -4,15 +4,21 @@
  * Ukrainian and English, and the page gets the CSS that build produces, inlined, so it needs no
  * JavaScript. vite.config.ts calls this for the build and for the dev server.
  */
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { build, type Rollup } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { customMediaPlugin } from '../src/styles/media.ts'
 
-/** The theme switch on <html> needs JavaScript; this page follows the device's light or dark. */
-const DARK_SELECTOR = ":root[data-theme='dark']"
+/**
+ * The dark theme's rule in theme.css, whatever its quotes. The theme switch on <html> needs
+ * JavaScript; this page follows the device's light or dark instead.
+ */
+const DARK_SELECTOR = /^:root\[data-theme=(['"]?)dark\1\]$/
+
+/** What the copy below produces; the build fails without it, so the page never loses dark. */
+const DARK_BY_DEVICE = /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*:root\s*\{/
 
 /**
  * PostCSS plugin: copies the dark theme's tokens (src/styles/theme.css) into a
@@ -21,7 +27,7 @@ const DARK_SELECTOR = ":root[data-theme='dark']"
 const darkByDevicePlugin = {
   postcssPlugin: 'teach-clock-dark-by-device',
   Rule(rule: PostcssRule, { AtRule }: { AtRule: new (props: AtRuleProps) => PostcssNode }) {
-    if (rule.selector !== DARK_SELECTOR) return
+    if (!DARK_SELECTOR.test(rule.selector.trim())) return
     const media = new AtRule({ name: 'media', params: '(prefers-color-scheme: dark)' })
     media.append(rule.clone({ selector: ':root' }))
     rule.after(media)
@@ -56,7 +62,19 @@ export async function buildPrivacyPage({
   root: string
   base: string
 }): Promise<PrivacyPage> {
-  const outDir = path.join(root, 'node_modules/.cache/teach-clock-privacy')
+  // Its own folder per build, inside the project so the chunks find vue in node_modules; parallel
+  // builds (dev server, tests) never share files, and the folder goes once the page is rendered.
+  const cache = path.join(root, 'node_modules/.cache/teach-clock-privacy')
+  await mkdir(cache, { recursive: true })
+  const outDir = await mkdtemp(path.join(cache, 'build-'))
+  try {
+    return await buildInto(outDir, root, base)
+  } finally {
+    await rm(outDir, { recursive: true, force: true })
+  }
+}
+
+async function buildInto(outDir: string, root: string, base: string): Promise<PrivacyPage> {
   const result = await build({
     configFile: false,
     root,
@@ -89,12 +107,16 @@ export async function buildPrivacyPage({
       assets.set(file.fileName, file.source)
     }
   }
-  if (!css.includes('prefers-color-scheme')) throw new Error('privacy.html: no dark theme in CSS')
+  if (!DARK_BY_DEVICE.test(css)) {
+    throw new Error(
+      "privacy.html: no device dark theme; is theme.css still :root[data-theme='dark']?",
+    )
+  }
 
   const entry = files.find((file) => file.type === 'chunk' && file.isEntry)
   if (!entry) throw new Error('privacy.html: the build has no entry')
-  // A fresh URL each time, so the dev server picks up edits.
-  const url = `${pathToFileURL(path.join(outDir, entry.fileName)).href}?t=${Date.now()}`
+  // Each build has its own folder, so its URL is new and the dev server picks up edits.
+  const url = pathToFileURL(path.join(outDir, entry.fileName)).href
   const { renderPrivacyPage } = (await import(url)) as {
     renderPrivacyPage: (css: string) => Promise<string>
   }

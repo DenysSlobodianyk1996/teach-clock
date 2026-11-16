@@ -17,12 +17,18 @@ function filesAtSiteRoot(): string[] {
     '404.html',
     // The static Privacy Page for Google Play (vite.config.ts).
     'privacy.html',
-    // The service worker and the manifest (vite-plugin-pwa).
+    // The service worker, its loader and the manifest (vite-plugin-pwa).
     'sw.js',
+    'registerSW.js',
     'manifest.webmanifest',
+    // The bundled scripts, styles and fonts.
+    'assets',
     ...readdirSync(publicDir),
   ]
 }
+
+/** Root files whose names carry a hash, so only their start is known. */
+const HASHED_AT_SITE_ROOT = [/^workbox-/]
 
 describe('app routes and the files the build writes', () => {
   it('never share an address, so a reload always opens the app', () => {
@@ -35,9 +41,11 @@ describe('app routes and the files the build writes', () => {
     expect(paths.length).toBeGreaterThan(1)
 
     const clashes = paths.flatMap((path) => {
-      const name = path.replace(/^\//, '')
+      // The first segment: `/assets/x` would sit inside the assets folder.
+      const name = path.replace(/^\//, '').split('/')[0]!
+      if (!name) return []
       return [name, `${name}.html`]
-        .filter((file) => name && files.has(file))
+        .filter((file) => files.has(file) || HASHED_AT_SITE_ROOT.some((re) => re.test(file)))
         .map((file) => `${path} → ${file}`)
     })
     expect(clashes).toEqual([])

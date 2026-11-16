@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
-import { buildPrivacyPage } from './scripts/buildPrivacyPage.ts'
+import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { THEME_BG } from './src/themeColors.ts'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
@@ -34,19 +34,28 @@ function privacyPagePlugin(): Plugin {
       base = config.base
     },
     configureServer(server) {
-      // The fonts of the last page served, which the dev server does not have under these names.
-      let assets = new Map<string, string | Uint8Array>()
+      // Built once and kept until a source file changes, so reloads stay fast. Its fonts are served
+      // from here: the dev server does not have them under these names.
+      let page: Promise<PrivacyPage> | undefined
+      server.watcher.on('all', () => (page = undefined))
+      const fontTypes: Record<string, string> = { woff2: 'font/woff2', woff: 'font/woff' }
       server.middlewares.use(async (req, res, next) => {
         const url = req.url?.split('?')[0] ?? ''
-        const asset = assets.get(url.slice(base.length))
-        if (url.startsWith(base) && asset) return res.end(asset)
+        if (url.startsWith(`${base}assets/`) && page) {
+          const asset = (await page.catch(() => undefined))?.assets.get(url.slice(base.length))
+          if (!asset) return next()
+          const type = fontTypes[url.split('.').pop()!]
+          if (type) res.setHeader('Content-Type', type)
+          return res.end(asset)
+        }
         if (url !== `${base}privacy.html`) return next()
         try {
-          const page = await buildPrivacyPage({ root, base })
-          assets = page.assets
+          page ??= buildPrivacyPage({ root, base })
+          const { html } = await page
           res.setHeader('Content-Type', 'text/html; charset=utf-8')
-          res.end(page.html)
+          res.end(html)
         } catch (error) {
+          page = undefined
           next(error)
         }
       })
