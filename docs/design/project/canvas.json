@@ -9,14 +9,14 @@
 
     "Welcome.dc.html": { "x": 0, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вітання" },
     "Settings.dc.html": { "x": 1104, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (чотири гри, Розстав години, без кроку)" },
-    "DarkSettings.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Темна тема · Налаштування" },
+    "LightSettings.dc.html": { "x": 2208, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Світла тема · Налаштування" },
     "SettingsSetTime.dc.html": { "x": 3312, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Налаштування (Який час?, з кроком)" },
     "LeaveRound.dc.html": { "x": 4416, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Вийти з раунду?" },
     "Privacy.dc.html": { "x": 5520, "y": 1168, "w": 1024, "h": 768, "title": "Планшет · Конфіденційність" },
 
     "SetTimeTest.dc.html": { "x": 0, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Перевірка" },
     "SetTimeTeachWrong.dc.html": { "x": 1104, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Який час? · Навчання: помилка" },
-    "DarkSetTime.dc.html": { "x": 2208, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Темна тема · Який час? · Навчання" },
+    "LightSetTime.dc.html": { "x": 2208, "y": 2336, "w": 1024, "h": 768, "title": "Планшет · Світла тема · Який час? · Навчання" },
 
     "DragArrowsTest.dc.html": { "x": 0, "y": 3504, "w": 1024, "h": 768, "title": "Планшет · Постав стрілки · Перевірка" },
     "DragArrowsTeachHelp.dc.html": { "x": 1104, "y": 3504, "w": 1024, "h": 768, "title": "Планшет · Постав стрілки · Навчання" },
@@ -29,7 +29,7 @@
     "DragMinutesTestSubmit.dc.html": { "x": 4416, "y": 4672, "w": 1024, "h": 768, "title": "Планшет · Розстав хвилини · Перевірка: усі 12" },
 
     "Summary.dc.html": { "x": 0, "y": 5840, "w": 1024, "h": 1100, "title": "Планшет · Підсумок" },
-    "DarkSummary.dc.html": { "x": 1104, "y": 5840, "w": 1024, "h": 1100, "title": "Планшет · Темна тема · Підсумок" },
+    "LightSummary.dc.html": { "x": 1104, "y": 5840, "w": 1024, "h": 1100, "title": "Планшет · Світла тема · Підсумок" },
     "SummaryDragHours.dc.html": { "x": 2208, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав години" },
     "SummaryDragMinutes.dc.html": { "x": 3312, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав хвилини" },
 
@@ -51,11 +51,11 @@
   },
   "order": [
     "Main.dc.html",
-    "Welcome.dc.html", "Settings.dc.html", "DarkSettings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html", "Privacy.dc.html",
-    "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "DarkSetTime.dc.html",
+    "Welcome.dc.html", "Settings.dc.html", "LightSettings.dc.html", "SettingsSetTime.dc.html", "LeaveRound.dc.html", "Privacy.dc.html",
+    "SetTimeTest.dc.html", "SetTimeTeachWrong.dc.html", "LightSetTime.dc.html",
     "DragArrowsTest.dc.html", "DragArrowsTeachHelp.dc.html", "DragArrowsTeachWrong.dc.html",
     "DragHoursDrag.dc.html", "DragHoursTeachWrong.dc.html", "PhoneDragHoursTeachWrong.dc.html", "DragHoursTestSubmit.dc.html", "DragMinutesTestSubmit.dc.html",
-    "Summary.dc.html", "DarkSummary.dc.html", "SummaryDragHours.dc.html", "SummaryDragMinutes.dc.html",
+    "Summary.dc.html", "LightSummary.dc.html", "SummaryDragHours.dc.html", "SummaryDragMinutes.dc.html",
     "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html",
     "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html"
   ],
