@@ -23,12 +23,12 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /offline\.spec|small-phone|phone-layout-768/,
+      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
-      testIgnore: /offline\.spec|small-phone|phone-layout-768/,
+      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768/,
     },
     {
       // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when
@@ -45,10 +45,11 @@ export default defineConfig({
       testMatch: /phone-layout-768\.spec/,
     },
     {
-      // The built app: the offline check, and checks that minified CSS has broken before.
+      // The built app: the offline check, checks that minified CSS has broken before, and a reload
+      // on the Privacy Page (only the build writes privacy.html, which could shadow an app route).
       name: 'offline',
       use: { ...devices['Pixel 7'], baseURL: `http://localhost:${offlinePort}` },
-      testMatch: /offline\.spec|dragged-number\.spec/,
+      testMatch: /offline\.spec|dragged-number\.spec|privacy-reload\.spec/,
     },
   ],
   webServer: [

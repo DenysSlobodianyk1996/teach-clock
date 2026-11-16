@@ -17,7 +17,7 @@ test('Welcome and Settings have the Footer with Privacy and Contact', async ({ p
 
   // Privacy opens the Privacy Page as an app screen, and its button comes back.
   await privacy.click()
-  await expect(page).toHaveURL(/\/privacy$/)
+  await expect(page).toHaveURL(/\/privacy-policy$/)
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
   await expect(footer(page)).toHaveCount(0)
   await page.getByRole('button', { name: t('privacy.back') }).click()

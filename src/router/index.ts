@@ -44,7 +44,7 @@ export function createAppRouter(
         meta: { needs: 'summary' },
       },
       {
-        path: '/privacy',
+        path: '/privacy-policy',
         name: 'privacy',
         component: () => import('@/views/PrivacyView.vue'),
       },

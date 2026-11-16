@@ -153,7 +153,7 @@ Once the "identity verified" email has come: Play Console › **Home › Create 
 
 | Form                        | Answer                                                                                                                                                         |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Privacy policy              | `https://denysslobodianyk1996.github.io/teach-clock/privacy.html` (live once batch 08 is merged to `main`)                                                     |
+| Privacy policy              | `https://denysslobodianyk1996.github.io/teach-clock/privacy.html` (unchanged since batch 08; from batch 12 rendered from the app's Privacy Page)               |
 | App access                  | All functionality is available without special access                                                                                                          |
 | Ads                         | **No**, the app contains no ads                                                                                                                                |
 | Content rating              | Fill in the questionnaire honestly: category Game/Education; no violence, no user interaction, no sharing, no purchases. You'll get a 3+ / PEGI 3 style rating |
@@ -267,16 +267,16 @@ After the first production release: Play Console › **Grow › Teacher Approved
 
 ## What lives where
 
-| Thing                       | Where                                                                                                                                                    | Secret? |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                    | no      |
-| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                 | **yes** |
-| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                       | **yes** |
-| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                      | no      |
-| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                                    | no      |
-| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                                | no      |
-| Store texts and graphics    | `docs/store/`                                                                                                                                            | no      |
-| Privacy Page                | text in `src/i18n` (`privacy.*`); the build writes `privacy.html` (`src/privacy.ts`) → `https://denysslobodianyk1996.github.io/teach-clock/privacy.html` | no      |
+| Thing                       | Where                                                                                                                                                                                                                | Secret? |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                                                                                | no      |
+| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                                                                             | **yes** |
+| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                                                                                   | **yes** |
+| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                                                                                  | no      |
+| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                                                                                                | no      |
+| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                                                                                            | no      |
+| Store texts and graphics    | `docs/store/`                                                                                                                                                                                                        | no      |
+| Privacy Page                | text in `src/i18n` (`privacy.*`), look in `PrivacyContent.vue`; the Web App build renders `privacy.html` from it (`scripts/buildPrivacyPage.ts`) → `https://denysslobodianyk1996.github.io/teach-clock/privacy.html` | no      |
 
 ## Android words you'll meet
 
