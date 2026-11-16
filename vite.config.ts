@@ -1,13 +1,18 @@
 import { fileURLToPath, URL } from 'node:url'
+import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, transformWithOxc, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { THEME_BG } from './src/themeColors.ts'
+import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
+import { LOCALES } from './src/i18n/locales.ts'
+import uk from './src/i18n/uk.ts'
+import en from './src/i18n/en.ts'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
@@ -88,6 +93,132 @@ function themeColorsPlugin(): Plugin {
   }
 }
 
+/**
+ * src/i18n/deviceLocale.ts as plain JavaScript for the pre-paint script: an expression that is the
+ * `deviceLocale` function. The file is compiled from its source (types stripped), not taken from
+ * the config's own bundle, so no bundler helper or outside name can slip in. It is run once here
+ * and the build fails if it does not give the language the store's rule gives.
+ */
+async function deviceLocaleScript(): Promise<string> {
+  const file = fileURLToPath(new URL('./src/i18n/deviceLocale.ts', import.meta.url))
+  const { code } = await transformWithOxc(await readFile(file, 'utf8'), file, {
+    lang: 'ts',
+    target: 'es2015',
+  })
+  if (/^\s*import\s/m.test(code)) throw new Error(`${file} must have no imports but types`)
+  const body = code.replace(/\/\*[\s\S]*?\*\/\s*/g, '').replace(/^export function/m, 'function')
+  const script = `(function () {\n${body}\nreturn deviceLocale\n})()`
+  const rule = new Function(`return ${script}`)() as (
+    languages?: string[],
+    language?: string,
+  ) => string
+  const checks: [string[], string | undefined, string][] = [
+    [['ru', 'uk-UA', 'en'], undefined, 'uk'],
+    [['de', 'en_US'], undefined, 'en'],
+    [[], 'uk_UA', 'uk'],
+    [['pl'], undefined, 'en'],
+  ]
+  for (const [languages, language, expected] of checks) {
+    if (rule(languages, language) !== expected) {
+      throw new Error(`The pre-paint deviceLocale gives the wrong language for ${languages}`)
+    }
+  }
+  return script
+}
+
+/**
+ * Fills index.html: its static Game Name and description in English (`__APP_NAME__`,
+ * `__APP_DESCRIPTION__`, decision 7 of batch 13), and the pre-paint script's interface-language
+ * rule (`__DEVICE_LOCALE__`, src/i18n/deviceLocale.ts) and each language's Game Name and
+ * description (`__APP_TEXT__`, from i18n). So the tab is named in the language the app will start
+ * in and never drifts from the Preferences store.
+ */
+function appTextPlugin(): Plugin {
+  const messages = { uk, en }
+  // `<` escaped, so no text can close the script.
+  const text = JSON.stringify(
+    Object.fromEntries(
+      LOCALES.map((locale) => [
+        locale,
+        { name: messages[locale].app.name, description: messages[locale].app.description },
+      ]),
+    ),
+  ).replaceAll('<', '\\u003c')
+  const escape = (value: string) =>
+    value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
+  let script: Promise<string> | undefined
+  return {
+    name: 'teach-clock-app-text',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: async (html) =>
+        html
+          .replaceAll('__APP_NAME__', escape(en.app.name))
+          .replaceAll('__APP_DESCRIPTION__', escape(en.app.description))
+          .replaceAll('__APP_TEXT__', text)
+          .replaceAll('__DEVICE_LOCALE__', await (script ??= deviceLocaleScript())),
+    },
+  }
+}
+
+/**
+ * The Web App's manifests, one per interface language (src/webManifest.ts). The build writes both
+ * and the dev server serves them; index.html links one, and its pre-paint script and App.vue
+ * point the link at the interface language's (`__WEB_MANIFESTS__`, their addresses), except in an
+ * installed Web App, which links none so its name never changes. The Android
+ * App gets no manifest and no link (ADR 0004): `__WEB_MANIFESTS__` is `null` there.
+ */
+function webManifestPlugin(): Plugin {
+  let base = '/'
+  return {
+    name: 'teach-clock-web-manifest',
+    configResolved(config) {
+      base = config.base
+    },
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html) => {
+        if (isAndroidApp) return html.replaceAll('__WEB_MANIFESTS__', 'null')
+        const hrefs = JSON.stringify(
+          Object.fromEntries(LOCALES.map((locale) => [locale, webManifestHref(base, locale)])),
+        )
+        return {
+          html: html.replaceAll('__WEB_MANIFESTS__', hrefs),
+          // Before the pre-paint script, which points it at the interface language's manifest.
+          tags: [
+            {
+              tag: 'link',
+              attrs: { rel: 'manifest', href: webManifestHref(base, 'en') },
+              injectTo: 'head-prepend',
+            },
+          ],
+        }
+      },
+    },
+    configureServer(server) {
+      if (isAndroidApp) return
+      server.middlewares.use((req, res, next) => {
+        const url = req.url?.split('?')[0]
+        const locale = LOCALES.find((l) => url === webManifestHref(base, l))
+        if (!locale) return next()
+        res.setHeader('Content-Type', 'application/manifest+json')
+        res.end(JSON.stringify(webManifests(base)[locale]))
+      })
+    },
+    generateBundle() {
+      if (isAndroidApp) return
+      const manifests = webManifests(base)
+      for (const locale of LOCALES) {
+        this.emitFile({
+          type: 'asset',
+          fileName: webManifestFile(locale),
+          source: JSON.stringify(manifests[locale]),
+        })
+      }
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
@@ -98,6 +229,8 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     themeColorsPlugin(),
+    appTextPlugin(),
+    webManifestPlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
@@ -109,34 +242,12 @@ export default defineConfig({
       disable: isAndroidApp,
       registerType: 'prompt',
       injectRegister: false,
-      manifest: {
-        name: 'Вчимо годинник',
-        // Short enough to fit under a home-screen icon.
-        short_name: 'Годинник',
-        description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
-        lang: 'uk',
-        // The browser bar starts light, the default theme; index.html repaints it per theme.
-        theme_color: THEME_BG.light,
-        // The launch screen matches the maskable and Apple icons, which sit on the dark background.
-        background_color: THEME_BG.dark,
-        display: 'standalone',
-        start_url: base,
-        scope: base,
-        icons: [
-          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
+      // One manifest per interface language, written by webManifestPlugin above.
+      manifest: false,
       workbox: {
-        // Everything the build emits, fonts included, so every Game works offline.
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // Everything the build emits, fonts and both manifests included, so every Game works and
+        // the app installs offline.
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
       },
     }),
   ],

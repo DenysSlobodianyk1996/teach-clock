@@ -19,13 +19,18 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 
 - **Web App**: the website on GitHub Pages, installable from the browser. A service worker keeps it
   playable offline after the first visit. Every merge to `main` that changes the app redeploys it.
+  Installed, it keeps the Game Name in the interface language at install time (ADR 0005).
 - **Android App**: Google Play, package `app.teachclockforkids`, built with Capacitor (ADR 0004).
   The whole game is packaged inside, so it plays with no internet from the first launch; there is
   no service worker. The Android back button never leaves a Round by accident: on Welcome it exits,
   on Settings and Summary it goes to Welcome, in a Round it opens "Leave this Round?" (or closes
   it), and an open popup closes first. Every change is a Play release: CI uploads each merge to
-  closed testing, and production is released by hand (`docs/android-release.md`).
+  closed testing, and production is released by hand (`docs/android-release.md`). The name under
+  its icon follows the phone's languages, not the in-app switch: "Вчимо годинник" when Ukrainian
+  comes before English, "Teach Clock" otherwise (ADR 0005). One Play listing: English is the
+  default, Ukrainian a translation (`docs/store/`).
 - The two differ only through `src/platform.ts`: no service worker in the Android App.
+- The Game Name is "Teach Clock" in English and "Вчимо годинник" in Ukrainian, never shortened.
 
 ## Screens
 
@@ -63,7 +68,9 @@ A small header on every screen holds the Preferences: interface language (Ukrain
 English second) and theme, light or dark. The theme is one sun/moon toggle: a track with a sun on
 the left and a moon on the right, and a round knob under the chosen one; one tap switches. Until
 the Player taps it, the game follows the device (dark when the device is in dark mode, otherwise
-light). The device remembers Preferences and the last name typed.
+light). The language too follows the device until the Player taps УК/EN: Ukrainian when it comes
+before English in the device's languages, otherwise English. The device remembers Preferences the
+Player picked and the last name typed.
 
 ## Games
 

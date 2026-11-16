@@ -5,6 +5,8 @@ import { mountScreen } from '@/test/mountScreen'
 import { t, tEn } from '@/test/i18n'
 import { usePlayerStore } from '@/stores/player'
 import { stubDeviceTheme } from '@/test/deviceTheme'
+import { stubInstalledWebApp } from '@/test/installedWebApp'
+import { webManifestHref } from '@/webManifest'
 
 type Screen = Awaited<ReturnType<typeof mountScreen>>['wrapper']
 
@@ -29,10 +31,20 @@ async function open() {
   return screen.wrapper
 }
 
+const base = import.meta.env.BASE_URL
+
+/** The page's manifest link, as index.html has it. */
+function manifestLink() {
+  return document.head.querySelector('link[rel="manifest"]')!
+}
+
 describe('Preferences in the header', () => {
   beforeEach(() => {
     localStorage.clear()
     delete document.documentElement.dataset.theme
+    // index.html's head: the Web App's manifest link and the page description.
+    document.head.innerHTML =
+      '<link rel="manifest" href="start.webmanifest" /><meta name="description" content="" />'
   })
   afterEach(() => vi.unstubAllGlobals())
 
@@ -61,6 +73,30 @@ describe('Preferences in the header', () => {
     expect(document.documentElement.lang).toBe('en')
     expect(document.title).toBe(tEn('app.name'))
     expect(localStorage.getItem('teach-clock.locale')).toBe('en')
+  })
+
+  it('describes the page in the interface language', async () => {
+    const wrapper = await open()
+    const description = () => document.head.querySelector('meta[name="description"]')
+    expect(description()?.getAttribute('content')).toBe(t('app.description'))
+    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    expect(description()?.getAttribute('content')).toBe(tEn('app.description'))
+  })
+
+  it('links the manifest in the interface language, to install under that Game Name', async () => {
+    const wrapper = await open()
+    expect(manifestLink().getAttribute('href')).toBe(webManifestHref(base, 'uk'))
+    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    expect(manifestLink().getAttribute('href')).toBe(webManifestHref(base, 'en'))
+  })
+
+  it('never changes the manifest of an installed Web App, so its name stays', async () => {
+    stubInstalledWebApp()
+    manifestLink().setAttribute('href', 'installed.webmanifest')
+    const wrapper = await open()
+    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    expect(wrapper.find('h1').text()).toBe(tEn('welcome.title'))
+    expect(manifestLink().getAttribute('href')).toBe('installed.webmanifest')
   })
 
   it('switches between light and dark with one tap and saves the choice', async () => {
