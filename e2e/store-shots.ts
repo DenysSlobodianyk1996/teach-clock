@@ -1,16 +1,20 @@
 /**
  * The Play Store graphics: `npm run store-shots` (playwright.config.store.ts). Not a test and not
  * part of `npx playwright test`. Shoots the Android build at 1080 × 1920 in each language into
- * docs/store/screenshots/<lang>/, and draws docs/store/feature-graphic.svg into a 1024 × 500 PNG.
+ * docs/store/screenshots/<lang>/, and draws the feature graphic in each language
+ * (scripts/featureGraphic.ts) into docs/store/feature-graphic.<lang>.png, 1024 × 500.
  * Every file is a PNG without alpha, as Play asks.
  */
 import { mkdirSync, readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { expect, test, type Page } from '@playwright/test'
 import { startingWith, t as tUk, tEn } from './i18n.ts'
 import { setHands } from './hands.ts'
 import { dragNumber, tapNumber } from './numbers.ts'
+import { featureGraphicSvg } from '../scripts/featureGraphic.ts'
 
 const STORE = fileURLToPath(new URL('../docs/store/', import.meta.url))
 
@@ -165,7 +169,9 @@ for (const lang of Object.keys(LANGUAGES) as Lang[]) {
 
 /** @font-face rules for the app's Nunito, inlined, so the SVG draws in the app's own font. */
 function nunitoFaces() {
-  const files = fileURLToPath(new URL('../node_modules/@fontsource/nunito/files/', import.meta.url))
+  // Resolved like an import, so it works wherever node_modules is (a worktree uses its parent's).
+  const pkg = createRequire(import.meta.url).resolve('@fontsource/nunito/package.json')
+  const files = `${dirname(pkg)}/files/`
   return [700, 900]
     .flatMap((weight) =>
       ['cyrillic', 'latin'].map((subset) => {
@@ -176,18 +182,21 @@ function nunitoFaces() {
     .join('')
 }
 
-test('feature graphic', async ({ page }) => {
-  await page.setViewportSize({ width: 1024, height: 500 })
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  const svg = readFileSync(`${STORE}feature-graphic.svg`, 'utf8')
-  await page.setContent(
-    `<style>${nunitoFaces()}html,body{margin:0}svg{display:block}</style>${svg}`,
-  )
-  await page.evaluate(async () => {
-    await Promise.all([700, 900].map((w) => document.fonts.load(`${w} 20px Nunito`, 'Вчимо')))
+for (const lang of Object.keys(LANGUAGES) as Lang[]) {
+  test(`feature graphic, ${lang}`, async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 500 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.setContent(
+      `<style>${nunitoFaces()}html,body{margin:0}svg{display:block}</style>${featureGraphicSvg(lang)}`,
+    )
+    await page.evaluate(async () => {
+      await Promise.all(
+        [700, 900].map((w) => document.fonts.load(`${w} 20px Nunito`, 'Вчимо Teach')),
+      )
+    })
+    const shot = await page.locator('svg').first().screenshot({ scale: 'css' })
+    const png = sharp(shot).removeAlpha().png({ compressionLevel: 9 })
+    expect((await png.clone().metadata()).width).toBe(1024)
+    await png.toFile(`${STORE}feature-graphic.${lang}.png`)
   })
-  const shot = await page.locator('svg').first().screenshot({ scale: 'css' })
-  const png = sharp(shot).removeAlpha().png({ compressionLevel: 9 })
-  expect((await png.clone().metadata()).width).toBe(1024)
-  await png.toFile(`${STORE}feature-graphic.png`)
-})
+}
