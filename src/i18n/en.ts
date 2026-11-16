@@ -133,6 +133,7 @@ export default {
     misplacedNote: 'Ringed numbers are in the wrong place',
     yourFaceLabel: 'Your clock face, in the wrong place: {numbers}',
     correctFaceLabel: 'The correct clock face',
+    rightFaceLabel: 'Right: {numbers}',
   },
   footer: {
     privacy: 'Privacy',

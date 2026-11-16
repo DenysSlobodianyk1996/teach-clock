@@ -25,6 +25,9 @@ const summary = play.summary
 /** "N goes between…", for tile N, in the values the tiles show. */
 const between = (tiles: TileSet, n: number) =>
   t('numbers.between', { ...shownNeighbours(tiles, neighbours(n)) })
+/** "14, 15, …": tiles 2, 3, … in the values the tiles show. */
+const shownList = (tiles: TileSet, numbers: readonly number[]) =>
+  numbers.map((n) => tileValue(tiles, n)).join(', ')
 
 const headline = computed(() => {
   if (!summary) return ''
@@ -87,9 +90,7 @@ const faces = computed(() => {
     marked: summary.wrong.map((w) => w.firstAnswer),
     misplaced,
     correct: Array.from({ length: 12 }, (_, i) => i + 1),
-    label: t('summary.yourFaceLabel', {
-      numbers: misplaced.map((n) => tileValue(summary, n)).join(', '),
-    }),
+    label: t('summary.yourFaceLabel', { numbers: shownList(summary, misplaced) }),
   }
 })
 
@@ -97,6 +98,20 @@ const faces = computed(() => {
 function only(number: number, slot: number) {
   return Array.from({ length: 12 }, (_, i) => (i === slot - 1 ? number : null))
 }
+
+/** A drag Game in Teach: each right number on its own slot; the others stay empty rings. */
+const rightFace = computed(() => {
+  if (!summary || !isNumbersSummary(summary) || summary.mode !== 'teach') return null
+  const slots: (number | null)[] = Array(12).fill(null)
+  for (const n of summary.right) slots[n - 1] = n
+  return {
+    tiles: summary,
+    slots,
+    right: summary.right,
+    // "Right: 14, 15, …"
+    label: t('summary.rightFaceLabel', { numbers: shownList(summary, summary.right) }),
+  }
+})
 
 function playAgain() {
   play.startRound()
@@ -156,10 +171,15 @@ function toSettings() {
           <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
-        <ul v-else-if="isNumbersSummary(summary)" class="chips">
-          <li v-for="n in summary.right" :key="n" class="chip">{{ tileValue(summary, n) }}</li>
-        </ul>
-        <ul v-else class="right-clocks">
+        <NumberFace
+          v-else-if="rightFace"
+          :tiles="rightFace.tiles"
+          class="big-face right-face"
+          :slots="rightFace.slots"
+          :good="rightFace.right"
+          :label="rightFace.label"
+        />
+        <ul v-else-if="!isNumbersSummary(summary)" class="right-clocks">
           <li v-for="time in summary.right" :key="formatClockTime(time)">
             <ClockFace class="small" :time="time" aria-hidden="true" />
             <span>{{ formatClockTime(time) }}</span>
@@ -379,22 +399,8 @@ ul {
   width: 128px;
   height: 128px;
 }
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: 22px;
-  font-weight: 900;
+.right-face {
+  align-self: center;
 }
 .pairs {
   display: flex;

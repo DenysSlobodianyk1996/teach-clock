@@ -43,11 +43,15 @@ function submitDragHours(
 }
 
 /** Places every number, the first `wrong` of them after a drop on the slot two along. */
-function playDragHours(wrong: number, game: 'dragHours' | 'dragMinutes' = 'dragHours') {
+function playDragHours(
+  wrong: number,
+  game: 'dragHours' | 'dragMinutes' = 'dragHours',
+  hours: Hours = 12,
+) {
   return () => {
     usePlayerStore().setName('Оля')
     const play = usePlayStore()
-    play.settings.game = game
+    Object.assign(play.settings, { game, hours })
     play.startRound(seededRandom(9))
     for (let n = 1; n <= 12; n++) {
       if (n <= wrong) play.dropNumber(n, ((n + 1) % 12) + 1)
@@ -148,11 +152,32 @@ describe('Summary screen', () => {
     expect(wrapper.get('svg.confetti').attributes('aria-hidden')).toBe('true')
   })
 
-  it('for Drag Hours, lists numbers and shows where a helped number was first dropped', async () => {
+  it('for Drag Hours, puts the right numbers on a green face and shows where a helped number was first dropped', async () => {
     const { wrapper } = await mountScreen(SummaryView, '/summary', playDragHours(1))
     expect(wrapper.get('h1').text()).toBe(t('summary.headline', { right: 11, total: 12 }))
-    const right = wrapper.findAll('[aria-labelledby="right-title"] li').map((li) => li.text())
-    expect(right).toEqual(['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+    const face = wrapper.get('[aria-labelledby="right-title"] .big-face')
+    expect(face.attributes('aria-label')).toBe(
+      t('summary.rightFaceLabel', { numbers: '2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12' }),
+    )
+    expect(face.findAll('.good').map((g) => g.attributes('data-slot'))).toEqual([
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+    ])
+    expect(face.get('[data-slot="5"]').text()).toBe('5')
+    // The helped number's slot stays an empty ring, matching the list under it.
+    expect(face.find('[data-slot="1"]').exists()).toBe(false)
+    expect(face.findAll('.c-slot')).toHaveLength(1)
+    expect(face.find('.hour-badge').exists()).toBe(false)
+    expect(wrapper.find('.chip').exists()).toBe(false)
     const pair = wrapper.get('[aria-labelledby="wrong-title"] li')
     expect(pair.get('.sr-only').text()).toBe(
       `${t('summary.numberFirst', { caption: t('summary.firstTry'), number: 1, slot: 3 })}. ${t('numbers.between', { number: 1, before: 12, after: 2 })}`,
@@ -161,11 +186,19 @@ describe('Summary screen', () => {
     expect(pair.findAll('[data-slot="1"]')).toHaveLength(1)
   })
 
-  it('for Drag Minutes in Teach, lists minutes and says where a helped minute goes', async () => {
+  it('for Drag Minutes in Teach, puts the right minutes on a green face and says where a helped minute goes', async () => {
     const { wrapper } = await mountScreen(SummaryView, '/summary', playDragHours(1, 'dragMinutes'))
     expect(wrapper.get('.details').text()).toContain(t('games.dragMinutes.name'))
-    const right = wrapper.findAll('.chip').map((c) => c.text())
-    expect(right).toEqual(['10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60'])
+    const face = wrapper.get('[aria-labelledby="right-title"] .big-face')
+    const minutes = ['10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60']
+    expect(face.attributes('aria-label')).toBe(
+      t('summary.rightFaceLabel', { numbers: minutes.join(', ') }),
+    )
+    expect(face.findAll('.good').map((g) => g.text())).toEqual(minutes)
+    expect(face.find('[data-slot="1"]').exists()).toBe(false)
+    // One empty ring for each helped minute.
+    expect(face.findAll('.c-slot')).toHaveLength(1)
+    expect(face.findAll('.hour-badge')).toHaveLength(12)
     const wrong = wrapper.get('[aria-labelledby="wrong-title"]')
     expect(wrong.get('.caption.good').text()).toBe(
       t('numbers.between', { number: 5, before: 60, after: 10 }),
@@ -175,6 +208,36 @@ describe('Summary screen', () => {
     expect(wrong.get('.sr-only').text()).toBe(
       `${t('summary.numberFirst', { caption: t('summary.firstTry'), number: 5, slot: 15 })}. ${t('numbers.between', { number: 5, before: 60, after: 10 })}`,
     )
+  })
+
+  it('for Drag Hours in 13–24 Teach, puts the right hours on a green face with Hour Badges', async () => {
+    const { wrapper } = await mountScreen(
+      SummaryView,
+      '/summary',
+      playDragHours(2, 'dragHours', 24),
+    )
+    const face = wrapper.get('[aria-labelledby="right-title"] .big-face')
+    const hours = ['15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+    expect(face.attributes('aria-label')).toBe(
+      t('summary.rightFaceLabel', { numbers: hours.join(', ') }),
+    )
+    expect(face.findAll('.good').map((g) => g.text())).toEqual(hours)
+    // Each hour on its own slot: 15 where 3 is, 24 at the top.
+    const slotOf = (hour: string) => face.findAll('.good').find((g) => g.text() === hour)
+    expect(slotOf('15')?.attributes('data-slot')).toBe('3')
+    expect(slotOf('24')?.attributes('data-slot')).toBe('12')
+    expect(face.find('[data-slot="1"]').exists()).toBe(false)
+    expect(face.find('[data-slot="2"]').exists()).toBe(false)
+    expect(face.findAll('.c-slot')).toHaveLength(2)
+    expect(face.findAll('.hour-badge')).toHaveLength(12)
+  })
+
+  it('after a perfect Drag Hours Teach Round, the face is all green', async () => {
+    const { wrapper } = await mountScreen(SummaryView, '/summary', playDragHours(0))
+    const face = wrapper.get('[aria-labelledby="right-title"] .big-face')
+    expect(face.findAll('.good')).toHaveLength(12)
+    expect(face.find('.c-slot').exists()).toBe(false)
+    expect(wrapper.find('[aria-labelledby="wrong-title"]').exists()).toBe(false)
   })
 
   it('for Drag Hours in Test, shows the Player’s face next to the correct one', async () => {

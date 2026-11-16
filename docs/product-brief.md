@@ -97,8 +97,9 @@ Drag Hours face in 13–24. The Badges are part of the face, not a Hint: they st
 tile is placed, in Teach and in Test, and in the Summary.
 
 The Summary of Drag Minutes and of Drag Hours in 13–24 looks like Drag Hours, with their own tiles
-and the Hour Badges on every face. In Teach the right numbers are listed as chips, and each helped number shows the
-Player's first drop next to its slot. In Test the Player's face sits next to the correct one.
+and the Hour Badges on every face. In Teach the Правильно card shows one face with each right number on its slot,
+filled green, and the slots of the helped numbers left empty (all green after a perfect Round); the Потренуймо ще card
+shows each helped number's first drop next to its slot. In Test the Player's face sits next to the correct one.
 
 Rules shared by Drag Arrows and Set Time:
 

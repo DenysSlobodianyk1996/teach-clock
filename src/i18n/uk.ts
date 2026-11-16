@@ -134,6 +134,7 @@ export default {
     misplacedNote: 'Обведені — не на своєму місці',
     yourFaceLabel: 'Твій циферблат, не на своїх місцях: {numbers}',
     correctFaceLabel: 'Правильний циферблат',
+    rightFaceLabel: 'Правильно: {numbers}',
   },
   footer: {
     privacy: 'Конфіденційність',

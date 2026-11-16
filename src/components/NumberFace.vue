@@ -14,7 +14,10 @@ withDefaults(
     /** What each slot holds: index N−1 is the slot where N belongs. */
     slots: readonly (number | null)[]
     marked?: readonly number[]
-    /** Numbers drawn in green, as the misplaced ones on the correct face. */
+    /**
+     * Numbers drawn on green tiles: the misplaced ones on the Test correct face, the right ones
+     * on the Teach Правильно face.
+     */
     good?: readonly number[]
     label: string
     /** Drawn small, as a Summary pair: the Hour Badges grow so their digits stay readable. */

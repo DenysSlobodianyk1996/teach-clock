@@ -59,9 +59,15 @@ test('a Drag Minutes Teach Round: Hour Badges, a wrong drop, Set correct answer,
   await expect(
     page.getByRole('heading', { name: t('summary.headline', { right: 10, total: 12 }) }),
   ).toBeVisible()
-  // Right minutes show as chips with their minute values.
+  // Right minutes sit green on their own slots of one face; 10 and 60 leave empty rings.
   const right = page.getByRole('region', { name: t('summary.right') })
-  await expect(right.getByRole('listitem').filter({ hasText: /^15$/ })).toBeVisible()
+  const rightFace = right.getByRole('img', {
+    name: t('summary.rightFaceLabel', { numbers: '5, 15, 20, 25, 30, 35, 40, 45, 50, 55' }),
+  })
+  await expect(rightFace).toBeVisible()
+  await expect(rightFace.locator('.good[data-slot="3"]')).toHaveText('15')
+  await expect(rightFace.locator('.good')).toHaveCount(10)
+  await expect(rightFace.locator('.c-slot')).toHaveCount(2)
   const between = t('numbers.between', { number: 60, before: 55, after: 5 })
   await expect(
     page
