@@ -6,6 +6,7 @@ import AppFooter from '@/components/AppFooter.vue'
 import AppFrame from '@/components/AppFrame.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import { usePreferencesStore } from '@/stores/preferences'
+import { webManifestFile } from '@/webManifest'
 
 const { locale, t } = useI18n()
 const preferences = usePreferencesStore()
@@ -18,6 +19,10 @@ watch(
     locale.value = value
     document.documentElement.lang = value
     document.title = t('app.name')
+    // Installing takes the Game Name in this language (src/webManifest.ts). The Android App has
+    // no manifest link.
+    const manifest = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')
+    if (manifest) manifest.href = `${import.meta.env.BASE_URL}${webManifestFile(value)}`
   },
   { immediate: true },
 )

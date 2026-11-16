@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '@/router'
+import { webManifestFile } from '@/webManifest'
 
 /**
  * Every file the Web App build writes at the site root. GitHub Pages serves `name.html` for `/name`,
@@ -17,10 +18,11 @@ function filesAtSiteRoot(): string[] {
     '404.html',
     // The static Privacy Page for Google Play (vite.config.ts).
     'privacy.html',
-    // The service worker, its loader and the manifest (vite-plugin-pwa).
+    // The service worker and its loader (vite-plugin-pwa), and a manifest per language.
     'sw.js',
     'registerSW.js',
-    'manifest.webmanifest',
+    webManifestFile('uk'),
+    webManifestFile('en'),
     // The bundled scripts, styles and fonts.
     'assets',
     ...readdirSync(publicDir),

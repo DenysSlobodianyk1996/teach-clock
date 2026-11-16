@@ -36,6 +36,10 @@
         }
         document.documentElement.lang = locale
         document.title = names[locale]
+        // The Web App installs under the Game Name in this language (src/webManifest.ts); the
+        // Android App has no manifest.
+        var manifests = __WEB_MANIFESTS__
+        if (manifests) document.querySelector('link[rel="manifest"]').href = manifests[locale]
       } catch (e) {}
     </script>
   </head>
