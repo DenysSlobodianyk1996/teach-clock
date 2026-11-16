@@ -2,6 +2,8 @@
 
 A new personal Play account can't publish to production until a closed test has had **at least 12 testers opted in, continuously, for at least 14 days**. Then you press **Apply for production**, and Google usually answers within 7 days. Source: https://support.google.com/googleplay/android-developer/answer/14151465 (checked 2026-11-13). The full steps are in [`../android-release.md`](../android-release.md) §9–§13; `bash scripts/release-wizard.sh` fills in the Key dates below as you go.
 
+What to send testers (testing instructions, the feedback you want, known issues): [`testers.en.md`](testers.en.md), [`testers.uk.md`](testers.uk.md).
+
 > **This repo is public.** Don't write testers' names or emails here. Use labels (T1, T2…). The real list lives in the Google Group, and in a private note if you want one.
 
 ## Where Google shows the progress
@@ -18,17 +20,17 @@ Play Console › your app › **Dashboard**. The "Apply for production" section 
 
 ## Key dates
 
-| What                                     | Date |
-| ---------------------------------------- | ---- |
+| What                                     | Date       |
+| ---------------------------------------- | ---------- |
 | Developer account verified               | 2026-11-16 |
-| First build live on closed testing       |      |
-| Tester invite sent                       |      |
-| 12th tester opted in (day 1)             |      |
-| Day 14 (earliest "Apply for production") |      |
-| Applied for production                   |      |
-| Production access granted                |      |
-| First production release                 |      |
-| Teacher Approved opt-in                  |      |
+| First build live on closed testing       |            |
+| Tester invite sent                       |            |
+| 12th tester opted in (day 1)             |            |
+| Day 14 (earliest "Apply for production") |            |
+| Applied for production                   |            |
+| Production access granted                |            |
+| First production release                 |            |
+| Teacher Approved opt-in                  |            |
 
 ## Testers
 

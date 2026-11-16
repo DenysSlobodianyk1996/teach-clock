@@ -228,6 +228,8 @@ Google only accepts automatic (API) uploads after the app has one build, so this
 > 3. Install the game from Google Play and **keep it installed for 14 days**. Playing it once or twice helps too!
 >    Thanks! 🙌
 
+Once they have opted in, send them the testing instructions, the feedback you want and the known issues: [`store/testers.en.md`](store/testers.en.md) and [`store/testers.uk.md`](store/testers.uk.md).
+
 Ask a few more than 12 (say 15): the rule needs **12 opted in for 14 days in a row**, and someone always drops out. Track who opted in, and the dates, in [`store/closed-test.md`](store/closed-test.md), with labels (T1, T2…) only: the repo is public.
 
 ## 11. Service account (day ~4)
