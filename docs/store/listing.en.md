@@ -16,7 +16,7 @@ Teach Clock — clock for kids
 A calm game where kids learn to read a clock and set its hands. No ads.
 ```
 
-## Full description (1873 / 4000)
+## Full description (2260 / 4000)
 
 ```text
 Teach Clock is a calm game that helps children understand an ordinary clock with hands: where the numbers go, how to count the minutes, how to set the hands to a time, and how to read what time the clock shows.
@@ -25,16 +25,16 @@ For children aged 6–12. No ads, no sign-up, and it works without the internet.
 
 FOUR GAMES
 
-• Drag Hours. Your child drags the numbers 1 to 12 onto an empty clock face and learns where each one belongs.
+• Drag Hours. Your child drags the numbers 1 to 12 onto an empty clock face and learns where each one belongs. Then come the hours 13 to 24, the second half of the day: 24 sits at the top, and a small hour by each place shows that 15 is where the 3 is.
 • Drag Minutes. Your child places the minutes 5, 10, … 60 around the face. Each place shows its hour, so it's easy to see that by the 3 it is 15 minutes.
 • Drag Arrows. The game gives a time, and your child drags the hour hand and the minute hand to show it. The hour hand moves gradually, just like on a real clock.
 • Set Time. The clock shows a time, and your child types it in as digits.
 
-In Drag Arrows and Set Time you can choose the minute step: 15, 5 or 1 minute, from easy to harder.
+In Drag Hours and Drag Minutes a number can be dragged, or tapped and then tapped into its place: easy for small fingers. In Drag Arrows and Set Time you can choose the minute step: 15, 5 or 1 minute, from easy to harder.
 
 TWO MODES
 
-• Teach. A mistake is a chance to learn, not a failure. The game gently shows what's right, and your child fixes it on their own or taps "Set correct answer". In Drag Arrows and Set Time the face lights up where the hands point, so the time is easier to read.
+• Teach. A mistake is a chance to learn, not a failure. The game gently shows what's right, and your child fixes it on their own or taps "Set correct answer". In Drag Hours and Drag Minutes an eye shows the filled clock, every number in its place, whenever your child wants a peek. In Drag Arrows and Set Time the face lights up where the hands point, so the time is easier to read.
 • Test. No hints: your child plays alone and sees at the end how it went, with the correct answer next to each mistake.
 
 After every game there is a summary: what went right first time and what is worth practising again.

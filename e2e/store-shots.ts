@@ -104,11 +104,12 @@ for (const lang of Object.keys(LANGUAGES) as Lang[]) {
 
     test('2 Settings', async ({ page }) => {
       await toSettings(page)
-      // A drag Game has no minute step, so the screen ends cleanly under the Mode cards.
-      await radio(page, t('games.dragHours.name')).check()
+      // Drag Minutes has neither a minute step nor Hours (Drag Hours' 1–12 / 13–24), so the
+      // screen ends cleanly under the Mode cards with Back and Play in view.
+      await radio(page, t('games.dragMinutes.name')).check()
       await radio(page, t('modes.teach.name')).check()
       // The Footer starts just above the screen's bottom edge and would be cut in half.
-      await page.addStyleTag({ content: 'footer[role="contentinfo"] { visibility: hidden }' })
+      await page.addStyleTag({ content: 'footer { visibility: hidden }' })
       await save(page, file(2, 'settings'))
     })
 
