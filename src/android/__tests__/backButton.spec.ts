@@ -76,7 +76,7 @@ describe('the Android back button', () => {
   })
 
   it('goes from a Privacy Page opened straight from its address to Welcome', async () => {
-    const { at, exit, back } = await open('/privacy')
+    const { at, exit, back } = await open('/privacy-policy')
     await back()
     expect(at()).toBe('welcome')
     expect(exit).not.toHaveBeenCalled()

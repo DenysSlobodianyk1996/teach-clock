@@ -44,7 +44,7 @@ test('the Privacy Page screen fits a narrow phone and follows the interface lang
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 720 })
-  await page.goto('/privacy')
+  await page.goto('/privacy-policy')
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

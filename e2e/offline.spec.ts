@@ -35,7 +35,7 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   await page.evaluate(() => navigator.serviceWorker.ready)
 
   await context.setOffline(true)
-  await page.goto('/privacy')
+  await page.goto('/privacy-policy')
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
 
   // The static copy for Google Play is in the offline copy too.

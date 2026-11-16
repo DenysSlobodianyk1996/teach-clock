@@ -30,7 +30,7 @@ describe('AppFooter', () => {
   it('opens the Privacy Page as an app screen, not a new tab', () => {
     wrapper = mountComponent(AppFooter)
     const privacy = link(t('footer.privacy'))
-    expect(privacy.attributes('href')).toBe('/privacy')
+    expect(privacy.attributes('href')).toBe('/privacy-policy')
     expect(privacy.attributes('target')).toBeUndefined()
   })
 
@@ -46,7 +46,7 @@ describe('AppFooter', () => {
     vi.doMock('@/platform', () => ({ isAndroidApp: true }))
     const { default: AndroidFooter } = await import('../AppFooter.vue')
     wrapper = mountComponent(AndroidFooter)
-    expect(link(t('footer.privacy')).attributes('href')).toBe('/privacy')
+    expect(link(t('footer.privacy')).attributes('href')).toBe('/privacy-policy')
     expect(link(t('footer.privacy')).attributes('target')).toBeUndefined()
     vi.doUnmock('@/platform')
   })

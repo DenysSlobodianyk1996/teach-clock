@@ -25,7 +25,7 @@ const backButton = () => wrapper.findAll('button').find((b) => b.text() === t('p
 
 describe('the Privacy Page in the app', () => {
   it('says that nothing is collected, with the author, the contact email and the date of the text', async () => {
-    await open('/privacy')
+    await open('/privacy-policy')
     expect(wrapper.find('h1').text()).toBe(t('privacy.title'))
     for (const key of ['intro', 'nothingSent', 'onDevice', 'results'])
       expect(wrapper.text()).toContain(t(`privacy.${key}`))
@@ -38,7 +38,7 @@ describe('the Privacy Page in the app', () => {
   })
 
   it('is in the interface language', async () => {
-    await open('/privacy', () => (usePreferencesStore().locale = 'en'))
+    await open('/privacy-policy', () => (usePreferencesStore().locale = 'en'))
     expect(wrapper.find('h1').text()).toBe(tEn('privacy.title'))
     expect(wrapper.text()).toContain(tEn('privacy.nothingSent'))
     expect(wrapper.text()).toContain(tEn('privacy.createdBy'))
@@ -46,7 +46,7 @@ describe('the Privacy Page in the app', () => {
   })
 
   it('has no Footer of its own', async () => {
-    await open('/privacy')
+    await open('/privacy-policy')
     expect(wrapper.find('footer').exists()).toBe(false)
   })
 
@@ -60,7 +60,7 @@ describe('the Privacy Page in the app', () => {
   })
 
   it('goes to Welcome when opened straight from its address', async () => {
-    const router = await open('/privacy')
+    const router = await open('/privacy-policy')
     await backButton().trigger('click')
     // Welcome's component loads lazily, which takes longer than a flush.
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('welcome'))
