@@ -93,6 +93,16 @@ const faces = computed(() => {
   }
 })
 
+/** A face with each right number on its own slot; the others stay empty rings. */
+function rightSlots(right: readonly number[]) {
+  return Array.from({ length: 12 }, (_, i) => (right.includes(i + 1) ? i + 1 : null))
+}
+
+/** "Right: 14, 15, …", in the values the tiles show. */
+function rightLabel(tiles: TileSet, right: readonly number[]) {
+  return t('summary.rightFaceLabel', { numbers: right.map((n) => tileValue(tiles, n)).join(', ') })
+}
+
 /** A face with one number on one slot. */
 function only(number: number, slot: number) {
   return Array.from({ length: 12 }, (_, i) => (i === slot - 1 ? number : null))
@@ -156,9 +166,14 @@ function toSettings() {
           <span class="dot ok" />{{ t('summary.right') }} · {{ summary.rightCount }}
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
-        <ul v-else-if="isNumbersSummary(summary)" class="chips">
-          <li v-for="n in summary.right" :key="n" class="chip">{{ tileValue(summary, n) }}</li>
-        </ul>
+        <NumberFace
+          v-else-if="isNumbersSummary(summary)"
+          :tiles="summary"
+          class="big-face right-face"
+          :slots="rightSlots(summary.right)"
+          :good="summary.right"
+          :label="rightLabel(summary, summary.right)"
+        />
         <ul v-else class="right-clocks">
           <li v-for="time in summary.right" :key="formatClockTime(time)">
             <ClockFace class="small" :time="time" aria-hidden="true" />
@@ -379,22 +394,8 @@ ul {
   width: 128px;
   height: 128px;
 }
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: 22px;
-  font-weight: 900;
+.right-face {
+  align-self: center;
 }
 .pairs {
   display: flex;
