@@ -9,6 +9,7 @@ Static boards for every Teach Clock screen and state (ticket 01). They show the 
 - Boards are drawn in the dark theme (root `class="tc dark"`); the `Light*` boards show the light theme next to their dark twin. `Main.dc.html` shows both. The app itself still follows the device until the Player taps the toggle. Every header has the sun/moon toggle (`role="switch"`, `aria-checked` true in dark).
 - Welcome and Settings end with the Footer (Privacy, Contact). Phone boards are taller than 844 px because the Footer sits below the fold. The Privacy Page has one board (`Privacy.dc.html`): a text screen with Welcome's heading and button, the author's name and no Footer. In the app it lives at `/privacy-policy`; the static `privacy.html` for Google Play is rendered from the same screen (header with the brand only, Ukrainian then English, "До гри" as a link to the game).
 - Drag Hours has **Hours** (batch 14): `Settings` and `LightSettings` show the Години group (1–12 picked), `SettingsHours24` has 13–24 picked and the Drag Hours card follows it ("Перетягни числа 13–24…"); `PhoneDragHours24` is a 13–24 Teach Round with the Hour Badges and the wrong-drop popup ("19 стоїть між 18 і 20").
+- `SummaryDragHoursTeach` (batch 15, planned): the Teach Summary of a drag Game shows the right numbers green on a face, the helped ones' slots empty, instead of chips.
 - `project/canvas.json` is the canvas layout. Keep it in sync with `gallery.html` when boards are added or removed.
 
 ## Publishing to the online canvas
