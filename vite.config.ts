@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
-import { privacyPageHtml } from './src/privacy.ts'
+import { buildPrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { THEME_BG } from './src/themeColors.ts'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
@@ -19,22 +19,45 @@ const isAndroidApp = process.env.VITE_TARGET === 'android'
 const base = process.env.GITHUB_PAGES && !isAndroidApp ? '/teach-clock/' : '/'
 
 /**
- * The Web App's static `privacy.html`, the public URL in Google Play's listing. It is written from
- * the same i18n text as the in-app Privacy Page (src/privacy.ts), so the two never drift. The
- * dev server serves it too; the service worker precaches it with the rest of the build.
+ * The Web App's static `privacy.html`, the public URL in Google Play's listing. It is rendered from
+ * the app's own Privacy Page components (scripts/buildPrivacyPage.ts), so the two look alike and
+ * never drift. The dev server serves it too; the service worker precaches it with the rest of the
+ * build.
  */
 function privacyPagePlugin(): Plugin {
+  let root = ''
+  let base = '/'
   return {
     name: 'teach-clock-privacy-page',
+    configResolved(config) {
+      root = config.root
+      base = config.base
+    },
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url?.split('?')[0] !== `${server.config.base}privacy.html`) return next()
-        res.setHeader('Content-Type', 'text/html; charset=utf-8')
-        res.end(privacyPageHtml())
+      // The fonts of the last page served, which the dev server does not have under these names.
+      let assets = new Map<string, string | Uint8Array>()
+      server.middlewares.use(async (req, res, next) => {
+        const url = req.url?.split('?')[0] ?? ''
+        const asset = assets.get(url.slice(base.length))
+        if (url.startsWith(base) && asset) return res.end(asset)
+        if (url !== `${base}privacy.html`) return next()
+        try {
+          const page = await buildPrivacyPage({ root, base })
+          assets = page.assets
+          res.setHeader('Content-Type', 'text/html; charset=utf-8')
+          res.end(page.html)
+        } catch (error) {
+          next(error)
+        }
       })
     },
-    generateBundle() {
-      this.emitFile({ type: 'asset', fileName: 'privacy.html', source: privacyPageHtml() })
+    async generateBundle(_options, bundle) {
+      const page = await buildPrivacyPage({ root, base })
+      this.emitFile({ type: 'asset', fileName: 'privacy.html', source: page.html })
+      // The app's build has these fonts already (same content, same names); emit any it lacks.
+      for (const [fileName, source] of page.assets) {
+        if (!(fileName in bundle)) this.emitFile({ type: 'asset', fileName, source })
+      }
     },
   }
 }
@@ -49,7 +72,9 @@ function themeColorsPlugin(): Plugin {
     transformIndexHtml: {
       order: 'pre',
       handler: (html) =>
-        html.replaceAll('__THEME_BG_LIGHT__', THEME_BG.light).replaceAll('__THEME_BG_DARK__', THEME_BG.dark),
+        html
+          .replaceAll('__THEME_BG_LIGHT__', THEME_BG.light)
+          .replaceAll('__THEME_BG_DARK__', THEME_BG.dark),
     },
   }
 }
