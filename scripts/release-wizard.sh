@@ -642,8 +642,8 @@ stage_create_app() {
   fi
   open_link "$PLAY_CONSOLE"
   step "Home › ${BOLD}Create app${RESET}"
-  step "App name: ${BOLD}Вчимо годинник — гра для дітей${RESET}"
-  step "Default language: ${BOLD}Українська – uk${RESET}"
+  step "App name: ${BOLD}Teach Clock — clock for kids${RESET}"
+  step "Default language: ${BOLD}English (United States) – en-US${RESET} (Ukrainian comes as a translation)"
   step "App or game: ${BOLD}Game${RESET}. Free or paid: ${BOLD}Free${RESET} (can never become paid)."
   step "Tick the declarations (Developer Program Policies, US export laws) › Create app."
   say ""
@@ -679,21 +679,39 @@ stage_app_content() {
 }
 
 stage_listing() {
-  stage "Store listing: texts and graphics"
-  if already DONE_LISTING; then return 0; fi
+  stage "Store listing: English by default, Ukrainian as a translation"
+  # DONE_LISTING was the listing with Ukrainian as the default; English became the default
+  # in batch 13, so a listing done before then goes through this stage once more.
+  if already DONE_LISTING_EN; then return 0; fi
   if ! is_done DONE_CREATE_APP; then not_yet "creating the app in Play Console"; return 0; fi
   open_link "$PLAY_CONSOLE"
-  say "Grow users › Store presence › ${BOLD}Main store listing${RESET} (Ukrainian is the default):"
+  say "Grow users › Store presence › ${BOLD}Main store listing${RESET}."
+  if is_done DONE_LISTING; then
+    say "The listing was made with Ukrainian as the default. Make English the default first:"
+  fi
+  say "${BOLD}Default language${RESET} (Manage translations, top right):"
+  step "If Ukrainian is the default: Manage translations › ${BOLD}Change default language${RESET} ›"
+  say "  English (United States) – en-US. Ukrainian stays, now as a translation."
+  step "Otherwise, with English the default: Manage translations › Add your own translations ›"
+  say "  ${BOLD}Українська – uk${RESET}."
+  pause
+  say "${BOLD}English (en-US), the default${RESET}, for every language without its own listing:"
+  step "App name, short and full description: the text blocks in docs/store/listing.en.md"
+  step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/feature-graphic.en.png"
+  step "Phone screenshots: docs/store/screenshots/en/1-welcome.png … 8-summary.png (all 8)"
+  pause
+  say "${BOLD}Ukrainian (uk), the translation${RESET} (pick it in the language list at the top):"
   step "App name, short and full description: the text blocks in docs/store/listing.uk.md"
-  step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/feature-graphic.png"
+  step "Feature graphic: docs/store/feature-graphic.uk.png (without it Ukrainian users see the English one)"
   step "Phone screenshots: docs/store/screenshots/uk/1-welcome.png … 8-summary.png (all 8)"
-  step "Add a translation › English (en-US): docs/store/listing.en.md and screenshots/en/"
   step "Website: $WEBSITE_URL."
   if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
     offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
   fi
-  pause "Press Enter when the listing is saved"
-  if confirm "Is the listing done in both languages?"; then mark_done DONE_LISTING; fi
+  pause "Press Enter when both languages are saved"
+  if confirm "Is English the default, with Ukrainian as a translation, both with their own graphics?"; then
+    mark_done DONE_LISTING_EN
+  fi
 }
 
 stage_first_bundle() {

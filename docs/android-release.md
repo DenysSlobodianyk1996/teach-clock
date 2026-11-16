@@ -142,8 +142,8 @@ GitHub › Settings › Secrets and variables › Actions › Variables:
 
 Once the "identity verified" email has come: Play Console › **Home › Create app**:
 
-- App name: **Вчимо годинник — гра для дітей**
-- Default language: **Українська – uk**
+- App name: **Teach Clock — clock for kids**
+- Default language: **English (United States) – en-US** (Ukrainian is added as a translation in [step 8](#8-store-listing-day-3))
 - App or game: **Game**. Free or paid: **Free** (this can never change to paid later)
 - Tick the declarations (developer program policies, US export laws)
 
@@ -167,16 +167,23 @@ Once the "identity verified" email has come: Play Console › **Home › Create 
 
 ## 8. Store listing (day ~3)
 
-Grow users › Store presence › **Main store listing**. Ukrainian is the default language; add English as a translation. Everything is in [`docs/store/`](store/):
+Grow users › Store presence › **Main store listing**. English is the default language: Play shows it to everyone whose language has no listing of its own. Ukrainian is a translation, shown to Ukrainian users (ADR 0005). Each language has its own title, texts, screenshots and feature graphic. Everything is in [`docs/store/`](store/):
 
-| Field                                | Ukrainian (default)                                    | English (`en-US`)                      |
+| Field                                | English (`en-US`, default)                             | Ukrainian (`uk`, translation)          |
 | ------------------------------------ | ------------------------------------------------------ | -------------------------------------- |
-| App name, short and full description | [`listing.uk.md`](store/listing.uk.md)                 | [`listing.en.md`](store/listing.en.md) |
-| Phone screenshots (8, 1080×1920)     | `store/screenshots/uk/1-welcome.png` … `8-summary.png` | `store/screenshots/en/…`               |
+| App name, short and full description | [`listing.en.md`](store/listing.en.md)                 | [`listing.uk.md`](store/listing.uk.md) |
+| Phone screenshots (8, 1080×1920)     | `store/screenshots/en/1-welcome.png` … `8-summary.png` | `store/screenshots/uk/…`               |
 | App icon (512×512)                   | `store/icon-512.png`                                   | the same                               |
-| Feature graphic (1024×500)           | `store/feature-graphic.png`                            | the same                               |
+| Feature graphic (1024×500)           | `store/feature-graphic.en.png`                         | `store/feature-graphic.uk.png`         |
 
-Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots and the feature graphic after UI or text changes.
+Setting the default language, in **Manage translations** (top right of the listing):
+
+- **The app was made with Ukrainian as the default** (before batch 13): Manage translations › **Change default language** › English (United States) – en-US. Ukrainian stays, now as a translation. Then check that each language has its own texts, screenshots and feature graphic from the table.
+- **A new app** (English already the default from step 6): Manage translations › Add your own translations › **Українська – uk**, then fill it from the table.
+
+A translation without its own feature graphic shows the default one, so upload `feature-graphic.uk.png` to the Ukrainian listing. Only the author can do this in Play Console; `bash scripts/release-wizard.sh` walks through it (stage "Store listing").
+
+Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots and both feature graphics after UI or text changes; the graphics' text is in `scripts/featureGraphic.ts` (the Game Name from the i18n files).
 
 ## 9. First upload, by hand (day ~3)
 
