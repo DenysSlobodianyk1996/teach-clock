@@ -8,6 +8,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { THEME_BG } from './src/themeColors.ts'
+import { deviceLocale } from './src/i18n/deviceLocale.ts'
+import uk from './src/i18n/uk.ts'
+import en from './src/i18n/en.ts'
 
 /** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
@@ -88,6 +91,25 @@ function themeColorsPlugin(): Plugin {
   }
 }
 
+/**
+ * Fills the interface-language rule (`__DEVICE_LOCALE__`, the source of src/i18n/deviceLocale.ts)
+ * and each Game Name (`__GAME_NAMES__`, from i18n) into index.html's pre-paint script, so the tab
+ * is named in the language the app will start in and never drifts from the Preferences store.
+ */
+function gameNamePlugin(): Plugin {
+  const names = JSON.stringify({ uk: uk.app.name, en: en.app.name })
+  return {
+    name: 'teach-clock-game-name',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html) =>
+        html
+          .replaceAll('__GAME_NAMES__', names)
+          .replaceAll('__DEVICE_LOCALE__', `(${deviceLocale})`),
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
@@ -98,6 +120,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     themeColorsPlugin(),
+    gameNamePlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the

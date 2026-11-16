@@ -26,7 +26,7 @@ export async function renderPrivacyPage(css: string): Promise<string> {
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="${THEME_BG.light}" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="${THEME_BG.dark}" media="(prefers-color-scheme: dark)" />
-    <title>${escape(uk.privacy.title)} · ${escape(en.privacy.title)} — ${escape(uk.app.name)}</title>
+    <title>${escape(uk.privacy.title)} · ${escape(en.privacy.title)} — ${escape(uk.app.name)} · ${escape(en.app.name)}</title>
     <meta name="description" content="${escape(uk.privacy.intro)} ${escape(en.privacy.intro)}" />
     <link rel="icon" href="favicon.ico" sizes="48x48" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />

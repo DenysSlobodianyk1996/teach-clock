@@ -18,6 +18,9 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${port}`,
     trace: 'on-first-retry',
+    // A Ukrainian browser, so a new Player sees the game in Ukrainian, the language `t` reads.
+    // e2e/language.spec.ts sets other browser languages.
+    locale: 'uk-UA',
   },
   projects: [
     {
