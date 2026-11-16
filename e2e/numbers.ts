@@ -39,3 +39,40 @@ export async function tapNumber(page: Page, number: number, onto: number) {
   await tile(page, number).click()
   await slot(page, onto).click()
 }
+
+/**
+ * Drags a tray tile onto a slot with a real finger (Chromium only). With `secondFingerOn`, another
+ * finger, such as the hand holding the phone, touches that tray tile mid-drag and lifts first.
+ */
+export async function touchDragNumber(
+  page: Page,
+  number: number,
+  onto: number,
+  { secondFingerOn }: { secondFingerOn?: number } = {},
+) {
+  const box = (await tile(page, number).boundingBox())!
+  const from = { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+  const to = await slotPoint(page, onto)
+  const other = secondFingerOn ? (await tile(page, secondFingerOn).boundingBox())! : null
+  const cdp = await page.context().newCDPSession(page)
+  const touch = (
+    type: 'touchStart' | 'touchMove' | 'touchEnd',
+    points: { x: number; y: number }[],
+  ) =>
+    cdp.send('Input.dispatchTouchEvent', {
+      type,
+      touchPoints: points.map((p, id) => ({ ...p, id })),
+    })
+  await touch('touchStart', [from])
+  for (let i = 1; i <= 8; i++) {
+    const k = i / 8
+    await touch('touchMove', [{ x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k }])
+  }
+  if (other) {
+    const second = { x: other.x + other.width / 2, y: other.y + other.height / 2 }
+    await touch('touchStart', [to, second])
+    await touch('touchEnd', [to])
+  }
+  await touch('touchEnd', [])
+  await cdp.detach()
+}

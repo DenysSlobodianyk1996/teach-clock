@@ -154,8 +154,9 @@ Rules shared by Drag Arrows and Set Time:
   Arrows the hands animate; the Player still presses Submit.
 - The Round moves on only after a right Answer. Dots: green = right first time, yellow = needed help.
   A Task that needed help is listed under **Wrong** in the Summary.
-- Drag Hours and Drag Minutes: a number dropped on the wrong slot goes straight back to the tray
-  and the same popup opens. Its picture is a small face with that number's slot lit green between
+- Drag Hours and Drag Minutes: a number dropped on the wrong slot (a filled one too) goes straight
+  back to the tray and the same popup opens; a drop is never lost silently. While one finger drags,
+  another finger touching the screen does not take the drag over. Its picture is a small face with that number's slot lit green between
   its two neighbours (Hour Badges in Drag Minutes and 13–24), and its line is "7 goes between 6 and 8"
   (Drag Minutes: "10 goes between 5 and 15"; 13–24: "15 goes between 14 and 16"; across the top it
   wraps: "60 goes between 55 and 5", "24 goes between 23 and 13"). **Got it** leaves the number in the tray. **Set correct answer** puts it on

@@ -73,9 +73,8 @@ export interface DropOutcome {
 
 /**
  * Drops a number on a slot.
- * - Teach: only from the tray, and only the right slot takes it. A wrong drop leaves the number on
- *   the tray with the neighbour hint, and the number ends as helped. A drop on a filled slot is
- *   ignored.
+ * - Teach: only from the tray, and only the right slot takes it. A wrong drop, a filled slot
+ *   included, leaves the number on the tray with the neighbour hint, and the number ends as helped.
  * - Test: any number (from the tray or the face) on any slot, with no feedback. A number already
  *   on the slot swaps places with it, or goes back to the tray if the dropped one came from there.
  */
@@ -85,11 +84,12 @@ export function dropNumber(
   slot: number,
 ): { round: NumbersRound; outcome: DropOutcome } {
   if (round.mode === 'test') return { round: moveFreely(round, number, slot), outcome: PLACED }
-  if (round.slots[slot - 1] !== null || !round.tray.includes(number)) {
+  if (!round.tray.includes(number) || !Number.isInteger(slot) || slot < 1 || slot > 12) {
     return { round, outcome: { placed: false, hint: null, finished: isFinished(round) } }
   }
   const task = round.tasks[number - 1]!
-  const right = slot === task.answer
+  // Only N belongs on slot N, so a filled slot is always a wrong one.
+  const right = slot === task.answer && round.slots[slot - 1] === null
   const status: TaskStatus = right ? (task.firstAnswer ? 'helped' : 'right') : 'pending'
   const tasks = round.tasks.map((t, i) =>
     i === number - 1 ? { ...t, firstAnswer: t.firstAnswer ?? slot, status } : t,
@@ -120,7 +120,7 @@ export function setCorrectNumber(
 ): { round: NumbersRound; outcome: DropOutcome } {
   if (round.mode !== 'teach') throw new Error('Only Teach can place a number for the Player')
   const task = round.tasks[number - 1]
-  if (!task || task.firstAnswer === null) {
+  if (!task || task.firstAnswer === null || round.slots[task.answer - 1] !== null) {
     return { round, outcome: { placed: false, hint: null, finished: isFinished(round) } }
   }
   // A right drop after a wrong one: dropNumber already keeps it helped.
