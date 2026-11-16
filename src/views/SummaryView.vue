@@ -25,6 +25,9 @@ const summary = play.summary
 /** "N goes between…", for tile N, in the values the tiles show. */
 const between = (tiles: TileSet, n: number) =>
   t('numbers.between', { ...shownNeighbours(tiles, neighbours(n)) })
+/** "14, 15, …": tiles 2, 3, … in the values the tiles show. */
+const shownList = (tiles: TileSet, numbers: readonly number[]) =>
+  numbers.map((n) => tileValue(tiles, n)).join(', ')
 
 const headline = computed(() => {
   if (!summary) return ''
@@ -87,26 +90,28 @@ const faces = computed(() => {
     marked: summary.wrong.map((w) => w.firstAnswer),
     misplaced,
     correct: Array.from({ length: 12 }, (_, i) => i + 1),
-    label: t('summary.yourFaceLabel', {
-      numbers: misplaced.map((n) => tileValue(summary, n)).join(', '),
-    }),
+    label: t('summary.yourFaceLabel', { numbers: shownList(summary, misplaced) }),
   }
 })
-
-/** A face with each right number on its own slot; the others stay empty rings. */
-function rightSlots(right: readonly number[]) {
-  return Array.from({ length: 12 }, (_, i) => (right.includes(i + 1) ? i + 1 : null))
-}
-
-/** "Right: 14, 15, …", in the values the tiles show. */
-function rightLabel(tiles: TileSet, right: readonly number[]) {
-  return t('summary.rightFaceLabel', { numbers: right.map((n) => tileValue(tiles, n)).join(', ') })
-}
 
 /** A face with one number on one slot. */
 function only(number: number, slot: number) {
   return Array.from({ length: 12 }, (_, i) => (i === slot - 1 ? number : null))
 }
+
+/** A drag Game in Teach: each right number on its own slot; the others stay empty rings. */
+const rightFace = computed(() => {
+  if (!summary || !isNumbersSummary(summary) || summary.mode !== 'teach') return null
+  const slots: (number | null)[] = Array(12).fill(null)
+  for (const n of summary.right) slots[n - 1] = n
+  return {
+    tiles: summary,
+    slots,
+    right: summary.right,
+    // "Right: 14, 15, …"
+    label: t('summary.rightFaceLabel', { numbers: shownList(summary, summary.right) }),
+  }
+})
 
 function playAgain() {
   play.startRound()
@@ -167,14 +172,14 @@ function toSettings() {
         </h2>
         <p v-if="!summary.right.length" class="none">{{ t('summary.none') }}</p>
         <NumberFace
-          v-else-if="isNumbersSummary(summary)"
-          :tiles="summary"
+          v-else-if="rightFace"
+          :tiles="rightFace.tiles"
           class="big-face right-face"
-          :slots="rightSlots(summary.right)"
-          :good="summary.right"
-          :label="rightLabel(summary, summary.right)"
+          :slots="rightFace.slots"
+          :good="rightFace.right"
+          :label="rightFace.label"
         />
-        <ul v-else class="right-clocks">
+        <ul v-else-if="!isNumbersSummary(summary)" class="right-clocks">
           <li v-for="time in summary.right" :key="formatClockTime(time)">
             <ClockFace class="small" :time="time" aria-hidden="true" />
             <span>{{ formatClockTime(time) }}</span>

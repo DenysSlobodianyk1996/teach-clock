@@ -196,6 +196,8 @@ describe('Summary screen', () => {
     )
     expect(face.findAll('.good').map((g) => g.text())).toEqual(minutes)
     expect(face.find('[data-slot="1"]').exists()).toBe(false)
+    // One empty ring for each helped minute.
+    expect(face.findAll('.c-slot')).toHaveLength(1)
     expect(face.findAll('.hour-badge')).toHaveLength(12)
     const wrong = wrapper.get('[aria-labelledby="wrong-title"]')
     expect(wrong.get('.caption.good').text()).toBe(
@@ -220,6 +222,12 @@ describe('Summary screen', () => {
       t('summary.rightFaceLabel', { numbers: hours.join(', ') }),
     )
     expect(face.findAll('.good').map((g) => g.text())).toEqual(hours)
+    // Each hour on its own slot: 15 where 3 is, 24 at the top.
+    const slotOf = (hour: string) => face.findAll('.good').find((g) => g.text() === hour)
+    expect(slotOf('15')?.attributes('data-slot')).toBe('3')
+    expect(slotOf('24')?.attributes('data-slot')).toBe('12')
+    expect(face.find('[data-slot="1"]').exists()).toBe(false)
+    expect(face.find('[data-slot="2"]').exists()).toBe(false)
     expect(face.findAll('.c-slot')).toHaveLength(2)
     expect(face.findAll('.hour-badge')).toHaveLength(12)
   })
