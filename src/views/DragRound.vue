@@ -7,6 +7,7 @@ import NumberBoard from '@/components/NumberBoard.vue'
 import ProgressDots, { type DotStatus } from '@/components/ProgressDots.vue'
 import WrongAnswerPopup from '@/components/WrongAnswerPopup.vue'
 import HintFace from '@/components/HintFace.vue'
+import FilledClockPopup from '@/components/FilledClockPopup.vue'
 import { canSubmit, shownNeighbours, type DropOutcome, type Neighbours } from '@/game/dragNumbers'
 import type { NumbersRound } from '@/game/round'
 import { usePlayStore } from '@/stores/play'
@@ -31,9 +32,11 @@ const popupOpen = ref(false)
 const shownHint = computed(() => hint.value && shownNeighbours(props.round, hint.value))
 /** The slot Set correct answer just filled, ringed green for a moment. */
 const flash = ref<number | null>(null)
+/** Teach: the Filled Clock popup is open. It only shows the face; it changes nothing. */
+const filledOpen = ref(false)
 const root = ref<HTMLElement>()
 const done = ref(false)
-const busy = computed(() => play.askingToLeave || done.value || popupOpen.value)
+const busy = computed(() => play.askingToLeave || done.value || popupOpen.value || filledOpen.value)
 
 const test = computed(() => props.round.mode === 'test')
 const placed = computed(() => props.round.slots.filter((n) => n !== null).length)
@@ -128,7 +131,31 @@ function submit() {
       @to-tray="toTray"
     >
       <template #heading>
-        <h1>{{ t('numbers.heading') }}</h1>
+        <div class="heading">
+          <h1>{{ t('numbers.heading') }}</h1>
+          <!-- Teach: the eye opens the Filled Clock. -->
+          <button
+            v-if="!test"
+            class="icon-btn eye"
+            type="button"
+            :aria-label="t('numbers.showFilled')"
+            :disabled="busy"
+            @click="filledOpen = true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+              <circle cx="12" cy="12" r="3.2" />
+            </svg>
+          </button>
+        </div>
       </template>
       <template v-if="test">
         <p class="help">
@@ -164,6 +191,7 @@ function submit() {
     >
       <HintFace :tiles="round" :number="hint.number" />
     </WrongAnswerPopup>
+    <FilledClockPopup v-if="filledOpen" :tiles="round" @dismiss="filledOpen = false" />
   </div>
 </template>
 
@@ -185,6 +213,21 @@ function submit() {
   font-size: 15px;
   font-weight: 700;
   color: var(--muted);
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.eye {
+  flex: none;
+  width: 48px;
+  padding: 0;
+}
+.eye:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 h1 {
   margin: 0;

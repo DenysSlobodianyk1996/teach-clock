@@ -162,6 +162,12 @@ Rules shared by Drag Arrows and Set Time:
   its slot for the Player: the slot rings green for a moment (a still ring with reduced motion) and
   focus moves to the next tray tile. Either way the number stays helped (yellow dot, under
   **Wrong** in the Summary), since the wrong drop already happened.
+- Drag Hours and Drag Minutes: an eye button to the right of the heading opens the **Filled Clock**,
+  a popup titled "This is how the clock should look" with the Round's face (the same component, not
+  a picture) and every number yellow on its own slot: 1–12, 13–24 or 5…60, with the Hour Badges
+  where the Round has them. One button, **Got it** (Escape and the scrim too); focus goes back to the
+  eye. Looking is free: nothing in the Round, the dots or the Summary changes. The eye is disabled
+  while the wrong-drop popup is open and after the last number. Teach only.
 
 ### Test
 

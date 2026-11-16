@@ -105,6 +105,9 @@ export default {
     tray: 'Numbers',
     help: 'Drag a number to its place, or tap a number and then a place.',
     between: '{number} goes between {before} and {after}',
+    showFilled: 'Show the filled clock',
+    filledTitle: 'This is how the clock should look',
+    filledFace: 'The filled clock: every number in its place',
   },
   leave: {
     title: 'Leave this Round?',

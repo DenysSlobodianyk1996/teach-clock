@@ -587,6 +587,88 @@ describe('Round screen, Drag Minutes in Teach', () => {
   })
 })
 
+/** The eye by the heading that opens the Filled Clock. */
+const eye = () => wrapper.find(`button[aria-label="${t('numbers.showFilled')}"]`)
+/** What each slot of the popup's face shows, slot 1 to 12. */
+const popupFace = () =>
+  popup()
+    .findAll('[data-slot]')
+    .map((g) => g.text())
+
+describe('Round screen, the Filled Clock in Teach', () => {
+  beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }))
+  afterEach(() => vi.useRealTimers())
+
+  it('has no eye in Test', async () => {
+    await open('dragHours', 'test')
+    expect(eye().exists()).toBe(false)
+    wrapper.unmount()
+    await open('dragMinutes', 'test')
+    expect(eye().exists()).toBe(false)
+  })
+
+  it('Drag Hours: the eye opens a face with 1–12 on their slots, plain yellow', async () => {
+    await open('dragHours', 'teach')
+    expect(popup().exists()).toBe(false)
+    await eye().trigger('click')
+    expect(popup().get('h2').text()).toBe(t('numbers.filledTitle'))
+    expect(popupFace()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+    expect(popup().findAll('.good, .marked')).toHaveLength(0)
+    expect(popup().find('.hour-badge').exists()).toBe(false)
+    expect(button(t('teach.setCorrect'))).toBeUndefined()
+  })
+
+  it('Drag Hours 13–24: the face shows 13–24 with the Hour Badges', async () => {
+    const screen = await mountScreen(RoundView, '/round', () => {
+      usePlayerStore().setName('Оля')
+      const play = usePlayStore()
+      play.settings = { game: 'dragHours', mode: 'teach', level: 15, hours: 24 }
+      play.startRound(seededRandom(5))
+    })
+    wrapper = screen.wrapper
+    await eye().trigger('click')
+    expect(popupFace()).toEqual(Array.from({ length: 12 }, (_, i) => String(i + 13)))
+    expect(popup().findAll('.hour-badge')).toHaveLength(12)
+  })
+
+  it('Drag Minutes: the face shows 5…60 with the Hour Badges', async () => {
+    await open('dragMinutes', 'teach')
+    await eye().trigger('click')
+    expect(popupFace()).toEqual(Array.from({ length: 12 }, (_, i) => String((i + 1) * 5)))
+    expect(popup().findAll('.hour-badge')).toHaveLength(12)
+  })
+
+  it('Got it, Escape and the scrim close it, and nothing in the Round changes', async () => {
+    await open('dragHours', 'teach')
+    await place(3, 3)
+    await place(12, 4)
+    await button(t('teach.gotIt'))!.trigger('click')
+    const before = JSON.stringify(usePlayStore().round)
+    await eye().trigger('click')
+    await button(t('teach.gotIt'))!.trigger('click')
+    expect(popup().exists()).toBe(false)
+    await eye().trigger('click')
+    await popup().trigger('keydown', { key: 'Escape' })
+    expect(popup().exists()).toBe(false)
+    await eye().trigger('click')
+    await wrapper.get('.scrim').trigger('click')
+    expect(popup().exists()).toBe(false)
+    expect(JSON.stringify(usePlayStore().round)).toBe(before)
+    expect(wrapper.get('.tray [data-number="12"]').classes()).toContain('marked')
+    expect(dotClasses()[2]).toBe('ok')
+  })
+
+  it('the eye is disabled under the wrong-drop popup and after the last number', async () => {
+    await open('dragHours', 'teach')
+    expect(eye().attributes('disabled')).toBeUndefined()
+    await place(12, 4)
+    expect(eye().attributes('disabled')).toBeDefined()
+    await button(t('teach.gotIt'))!.trigger('click')
+    for (let n = 1; n <= 12; n++) await place(n, n)
+    expect(eye().attributes('disabled')).toBeDefined()
+  })
+})
+
 const submitButton = () => button(t('numbers.submit'))
 const placedAt = (slot: number) => wrapper.get(`[data-slot="${slot}"]`).text()
 
