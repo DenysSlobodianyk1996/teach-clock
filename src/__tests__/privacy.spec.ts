@@ -38,6 +38,12 @@ describe('the static privacy.html for Google Play, rendered from the app', () =>
     }
   })
 
+  it('names the page and the game in both languages in its title', () => {
+    for (const text of [t('privacy.title'), tEn('privacy.title'), t('app.name'), tEn('app.name')]) {
+      expect(doc.title).toContain(text)
+    }
+  })
+
   it('gives the contact email and the date of the text in each language', () => {
     for (const lang of ['uk', 'en'] as const) {
       const links = [...article(lang).querySelectorAll('a')]

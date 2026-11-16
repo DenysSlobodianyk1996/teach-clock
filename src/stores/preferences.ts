@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { useStorage, usePreferredDark } from '@vueuse/core'
+import { useStorage, usePreferredDark, usePreferredLanguages } from '@vueuse/core'
+import { deviceLocale } from '@/i18n/deviceLocale'
 
 export const LOCALES = ['uk', 'en'] as const
 export type Locale = (typeof LOCALES)[number]
@@ -27,13 +28,23 @@ function useChoice<T extends string, F extends T | null>(
 
 /**
  * The Preferences: interface language and colour theme, kept on the device. Until the Player
- * picks a theme, it follows the device's dark mode (index.html applies the same rule before the
- * app loads).
+ * picks one, each follows the device: the language its language list (src/i18n/deviceLocale.ts),
+ * the theme its dark mode. Only the Player's pick is saved. index.html applies the same rules
+ * before the app loads.
  */
 export const usePreferencesStore = defineStore('preferences', () => {
-  const locale = useChoice<Locale, Locale>('teach-clock.locale', LOCALES, 'uk')
+  // A `uk` saved before ADR 0005 was the old default, saved automatically; it is kept.
+  const chosenLocale = useChoice<Locale, null>('teach-clock.locale', LOCALES, null)
+  const deviceLanguages = usePreferredLanguages()
   const chosenTheme = useChoice<Theme, null>('teach-clock.theme', THEMES, null)
   const deviceIsDark = usePreferredDark()
+
+  const locale = computed<Locale>({
+    get: () => chosenLocale.value ?? deviceLocale(deviceLanguages.value),
+    set: (value) => {
+      chosenLocale.value = value
+    },
+  })
 
   const theme = computed<Theme>({
     get: () => chosenTheme.value ?? (deviceIsDark.value ? 'dark' : 'light'),
