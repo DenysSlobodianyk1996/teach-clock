@@ -119,5 +119,5 @@ The plain bar at the bottom of Welcome and Settings with the links to the Privac
 _Avoid_: bottom bar, links bar
 
 **Privacy Page**:
-The app screen, opened from the Footer, that says in the interface language that nothing about the Player is collected or sent. The Web App build also writes a static copy, `privacy.html` (Ukrainian, then English), from the same text: that is the public URL in Google Play's listing.
+The app screen at `/privacy-policy`, opened from the Footer, that says in the interface language that nothing about the Player is collected or sent. The Web App build also renders it into a static page, `privacy.html`, from the same Vue component: the app's header (brand only), Ukrainian then English, no JavaScript needed. That is the public URL in Google Play's listing. The two live at different addresses, so a reload on the app screen never lands on the static page.
 _Avoid_: privacy policy screen, terms

@@ -6,7 +6,7 @@ Static boards for every Teach Clock screen and state (ticket 01). They show the 
 - **Online canvas** (comments, pan/zoom): https://claude.ai/artifact/7EUG95X5c8toe1Nb1TbGEu (private).
 - `project/theme.css` holds the colour tokens for the two themes (`.tc` light, `.tc.dark` dark; the app puts light on `:root` and dark under `[data-theme='dark']`), the sun/moon theme toggle (`.theme-toggle`) and the shared parts: clock, hands, tiles, dots, number pad, popups.
 - Boards are drawn in the light theme; the `Dark*` boards show the dark theme next to their light twin. Every header has the sun/moon toggle (`role="switch"`, `aria-checked` true in dark).
-- Welcome and Settings end with the Footer (Privacy, Contact). Phone boards are taller than 844 px because the Footer sits below the fold. The Privacy Page has one board (`Privacy.dc.html`): a text screen with Welcome's heading and button, the author's name and no Footer.
+- Welcome and Settings end with the Footer (Privacy, Contact). Phone boards are taller than 844 px because the Footer sits below the fold. The Privacy Page has one board (`Privacy.dc.html`): a text screen with Welcome's heading and button, the author's name and no Footer. In the app it lives at `/privacy-policy`; the static `privacy.html` for Google Play is rendered from the same screen (header with the brand only, Ukrainian then English, "До гри" as a link to the game).
 - `project/canvas.json` is the canvas layout. Keep it in sync with `gallery.html` when boards are added or removed.
 
 The boards are hand-written HTML + inline SVG with no build step. The real app (Vue + SVG, ticket 02 onward) should reuse the tokens and clock geometry, not the markup.
