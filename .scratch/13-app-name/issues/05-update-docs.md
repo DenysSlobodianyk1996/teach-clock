@@ -14,5 +14,7 @@
 - [x] `GLOSSARY.md` still matches (Game Name, Preferences).
 - [x] CLAUDE.md status line.
 - [x] `.scratch/README.md`: the batch row and its PR.
+- [x] Boards drawn in the dark theme instead of light (the middle theme's place); `Dark*` twins become `Light*` twins; `gallery.html`, `canvas.json`, `docs/design/README.md` follow. The app's behaviour does not change.
+- [x] Online canvas mirrors local `project/`: it was still at batch 08 (middle theme, Support Button boards, no Privacy board). `docs/design/README.md` now carries the publish recipe so later batches keep it in sync.
 
 **Out of scope:** Play Console itself.
