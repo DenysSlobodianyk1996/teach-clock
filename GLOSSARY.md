@@ -96,6 +96,10 @@ The Game where the Player drags the minutes 5, 10, … 60 onto an empty clock fa
 The small hour 1–12 by each slot on the Drag Minutes face, and on the Drag Hours face in 13–24. It is part of the face, so it shows in both Modes; it is not a Hint.
 _Avoid_: hint, label
 
+**Filled Clock**:
+The read-only popup that the eye by the heading opens in Drag Hours and Drag Minutes, in Teach only: the Round's face with every number on its own slot, as plain yellow tiles ("This is how the clock should look"). Looking at it changes nothing, so it is not a Hint.
+_Avoid_: Hint, answer key, solution, Заповнений циферблат
+
 **Drag Arrows**:
 The Game where the Player is given a Clock Time and drags the Hour Hand and Minute Hand to show it.
 _Avoid_: Set the Clock, ArrowManipulation

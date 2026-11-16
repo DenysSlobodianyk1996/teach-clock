@@ -20,6 +20,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [13-app-name](13-app-name/)                                             | feature       | done   | no   | #55 (plan), #56          |
 | [14-hours-13-24](14-hours-13-24/)                                       | feature       | done   | no   | #58                      |
 | [15-drag-hours-minutes-summary-fix](15-drag-hours-minutes-summary-fix/) | fixes         | done   | no   | #59 (plan), #60          |
+| [16-filled-clock](16-filled-clock/)                                     | feature       | done   | no   | #62                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 

@@ -93,3 +93,26 @@ test('Drag Minutes tiles show two-digit minutes inside the tile, the same size a
   const textBox = (await placed.locator('.c-tile-num').boundingBox())!
   expect(textBox.width).toBeLessThan(tileBox.width)
 })
+
+test('the eye shows the Filled Clock, and Got it goes back to the Round unchanged', async ({
+  page,
+}) => {
+  await startDragMinutesTeach(page)
+  await dragNumber(page, 3, 3)
+
+  const eye = page.getByRole('button', { name: t('numbers.showFilled') })
+  await eye.click()
+  const popup = page.getByRole('dialog', { name: t('numbers.filledTitle') })
+  await expect(popup).toBeVisible()
+  const face = popup.getByRole('img', { name: t('numbers.filledFace') })
+  for (let n = 1; n <= 12; n++)
+    await expect(face.locator(`[data-slot="${n}"]`)).toHaveText(minutes(n))
+  await expect(face.locator('.hour-badge')).toHaveCount(12)
+
+  await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+  await expect(popup).toBeHidden()
+  await expect(eye).toBeFocused()
+  await expect(slot(page, 3)).toHaveText('15')
+  await expect(slot(page, 4).locator('.c-slot')).toBeVisible()
+  await expect(page.locator('.tray .tile')).toHaveCount(11)
+})
