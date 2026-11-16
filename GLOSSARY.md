@@ -54,7 +54,7 @@ The choice of Game, Mode and Level the Player makes before a Round.
 _Avoid_: Options, setup
 
 **Preferences**:
-The interface language (Ukrainian or English) and colour theme (light or dark; the device's choice until the Player picks one), kept on the device.
+The interface language (Ukrainian or English) and colour theme (light or dark), each the device's choice until the Player picks one, kept on the device. A device in any language other than Ukrainian starts in English.
 _Avoid_: Settings, config
 
 ### The clock
@@ -105,6 +105,10 @@ The numbers a Set Time box accepts, shown under it: "1–12" for the hours, "0�
 _Avoid_: Hint, tooltip
 
 ### Where it runs
+
+**Game Name**:
+What the game is called: "Teach Clock" in English, "Вчимо годинник" in Ukrainian, never shortened. Under the Android App's icon it follows the device's language; everywhere else it follows the language around it.
+_Avoid_: app name, title, Годинник, Clock, Time Teacher
 
 **Web App**:
 Teach Clock as a website, including when installed to a home screen from the browser.
