@@ -26,9 +26,18 @@ async function pointer(
   type: 'pointerdown' | 'pointermove' | 'pointerup' | 'pointercancel',
   clientX: number,
   clientY: number,
+  init: PointerEventInit = {},
 ) {
   target.element.dispatchEvent(
-    new PointerEvent(type, { pointerId: 1, button: 0, clientX, clientY, bubbles: true }),
+    new PointerEvent(type, {
+      pointerId: 1,
+      isPrimary: true,
+      button: 0,
+      clientX,
+      clientY,
+      bubbles: true,
+      ...init,
+    }),
   )
   await nextTick()
 }
@@ -115,12 +124,25 @@ describe('NumberBoard', () => {
     expect(wrapper.emitted('drop')).toBeUndefined()
   })
 
-  it('does not drop on a slot that already holds a number', async () => {
+  it('drops on a slot that already holds a number, so Teach can call it wrong', async () => {
     mountBoard({ slots: [null, null, 3, ...Array(9).fill(null)], tray: [7, 12] })
     await pointer(tile(7), 'pointerdown', 300, 100)
     await pointer(tile(7), 'pointermove', ...AT_3)
+    expect(slot(3).classes()).toContain('target')
     await pointer(tile(7), 'pointerup', ...AT_3)
-    expect(wrapper.emitted('drop')).toBeUndefined()
+    expect(wrapper.emitted('drop')).toEqual([[7, 3]])
+  })
+
+  it('keeps the drag when a second finger touches another tile', async () => {
+    mountBoard()
+    await pointer(tile(7), 'pointerdown', 300, 100)
+    await pointer(tile(7), 'pointermove', ...AT_3)
+    // A second finger, such as the hand holding the phone, lands on tile 3 and lifts.
+    const second = { pointerId: 2, isPrimary: false }
+    await pointer(tile(3), 'pointerdown', 300, 160, second)
+    await pointer(tile(3), 'pointerup', 300, 160, second)
+    await pointer(tile(7), 'pointerup', ...AT_3)
+    expect(wrapper.emitted('drop')).toEqual([[7, 3]])
   })
 
   it('drops a tapped tile on the slot tapped next, by mouse or keyboard', async () => {
