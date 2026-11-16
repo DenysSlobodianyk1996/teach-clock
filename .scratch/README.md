@@ -17,7 +17,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [10-footer-and-privacy](10-footer-and-privacy/) | fixes         | done    | no   | #50                      |
 | [11-theme-switch](11-theme-switch/)             | fixes         | done    | no   | #52                      |
 | [12-privacy-one-page](12-privacy-one-page/)     | fixes         | done    | no   | #53 (plan), #54          |
-| [13-app-name](13-app-name/)                     | feature       | planned | no   |                          |
+| [13-app-name](13-app-name/)                     | feature       | planned | no   | #55                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
