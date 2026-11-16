@@ -1,6 +1,6 @@
-# Play listing: English (`en-US`)
+# Play listing: English (default language, `en-US`)
 
-Add English as a translation in Play Console › Grow users › Store presence › Main store listing (Ukrainian, in [`listing.uk.md`](listing.uk.md), is the default language). Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
+Paste each block into Play Console › Grow users › Store presence › Main store listing. English is the default language, shown to everyone whose language has no listing of its own; the Ukrainian translation is in [`listing.uk.md`](listing.uk.md). The title starts with the Game Name, "Teach Clock". Feature graphic: `feature-graphic.en.png`; screenshots: `screenshots/en/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
 
 Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text.
 

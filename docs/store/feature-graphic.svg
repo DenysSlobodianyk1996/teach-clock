@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
-  <!-- Play Store feature graphic. Colours: the middle theme in src/styles/theme.css.
-       Exported to feature-graphic.png by `npm run store-shots`. -->
+  <!-- Play Store feature graphic, one per listing language. Its text slots are filled by
+       scripts/featureGraphic.ts and `npm run store-shots` draws feature-graphic.<lang>.png. -->
   <rect width="1024" height="500" fill="#1d4b5c"/>
   <circle cx="770" cy="250" r="232" fill="#27606f"/>
   <circle cx="770" cy="250" r="300" fill="none" stroke="#27606f" stroke-width="18" opacity="0.5"/>
@@ -15,10 +15,10 @@
 
   <!-- Title and line -->
   <g font-family="Nunito, 'Arial Rounded MT Bold', sans-serif" fill="#fdf6e9">
-    <text x="72" y="168" font-size="84" font-weight="900">Вчимо</text>
-    <text x="72" y="262" font-size="84" font-weight="900">годинник</text>
-    <text x="74" y="322" font-size="27" font-weight="700" fill="#dae9e9">Чотири ігри, щоб навчитися</text>
-    <text x="74" y="358" font-size="27" font-weight="700" fill="#dae9e9">читати й ставити час</text>
+    <text x="72" y="168" font-size="84" font-weight="900">{title1}</text>
+    <text x="72" y="262" font-size="84" font-weight="900">{title2}</text>
+    <text x="74" y="322" font-size="27" font-weight="700" fill="#dae9e9">{tagline1}</text>
+    <text x="74" y="358" font-size="27" font-weight="700" fill="#dae9e9">{tagline2}</text>
   </g>
 
   <!-- Number tiles, as in Drag Hours -->
