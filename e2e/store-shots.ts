@@ -1,8 +1,10 @@
 /**
  * The Play Store graphics: `npm run store-shots` (playwright.config.store.ts). Not a test and not
- * part of `npx playwright test`. Shoots the Android build at 1080 × 1920 in each language into
- * docs/store/screenshots/<lang>/, and draws the feature graphic in each language
- * (scripts/featureGraphic.ts) into docs/store/feature-graphic.<lang>.png, 1024 × 500.
+ * part of `npx playwright test`. Shoots the Android build in each language, once per project in
+ * playwright.config.store.ts: the phone at 1080 × 1920 into docs/store/screenshots/<lang>/, the
+ * tablets into docs/store/screenshots/<project>/<lang>/ (tablet-7, tablet-10). The phone project
+ * also draws the feature graphic in each language (scripts/featureGraphic.ts) into
+ * docs/store/feature-graphic.<lang>.png, 1024 × 500.
  * Every file is a PNG without alpha, as Play asks.
  */
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -17,6 +19,11 @@ import { dragNumber, tapNumber } from './numbers.ts'
 import { featureGraphicSvg } from '../scripts/featureGraphic.ts'
 
 const STORE = fileURLToPath(new URL('../docs/store/', import.meta.url))
+
+/** The folder for one language's screenshots: the phone's at the top, each tablet's in its own. */
+function shotDir(project: string, lang: string) {
+  return `${STORE}screenshots/${project === 'phone' ? '' : `${project}/`}${lang}/`
+}
 
 const LANGUAGES = {
   uk: { t: tUk, name: 'Оля' },
@@ -47,10 +54,10 @@ function seedRandom(seed: number) {
 for (const lang of Object.keys(LANGUAGES) as Lang[]) {
   test.describe(`screenshots ${lang}`, () => {
     const { t, name } = LANGUAGES[lang]
-    const dir = `${STORE}screenshots/${lang}/`
-    const file = (n: number, slug: string) => `${dir}${n}-${slug}.png`
+    const file = (n: number, slug: string) =>
+      `${shotDir(test.info().project.name, lang)}${n}-${slug}.png`
 
-    test.beforeAll(() => mkdirSync(dir, { recursive: true }))
+    test.beforeAll(() => mkdirSync(shotDir(test.info().project.name, lang), { recursive: true }))
 
     test.beforeEach(async ({ page }) => {
       await page.addInitScript(seedRandom, 2026)
@@ -184,7 +191,8 @@ function nunitoFaces() {
 }
 
 for (const lang of Object.keys(LANGUAGES) as Lang[]) {
-  test(`feature graphic, ${lang}`, async ({ page }) => {
+  test(`feature graphic, ${lang}`, async ({ page }, info) => {
+    test.skip(info.project.name !== 'phone', 'drawn once, by the phone project')
     await page.setViewportSize({ width: 1024, height: 500 })
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.setContent(
