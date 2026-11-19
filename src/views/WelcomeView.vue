@@ -3,12 +3,22 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { NAME_MAX_LENGTH, usePlayerStore } from '@/stores/player'
+import InfoButton from '@/components/InfoButton.vue'
+import InfoPopup from '@/components/InfoPopup.vue'
 
 const { t } = useI18n()
 const router = useRouter()
 const player = usePlayerStore()
 
 const draft = ref(player.name)
+/** On a phone the intro is behind the ⓘ, in an Info Popup. */
+const infoOpen = ref(false)
+/** The heading split before its last word, which the ⓘ keeps company on a phone. */
+const title = computed(() => {
+  const text = t('welcome.title')
+  const at = text.lastIndexOf(' ')
+  return { head: text.slice(0, at + 1), last: text.slice(at + 1) }
+})
 const canStart = computed(() => draft.value.trim() !== '')
 
 function start() {
@@ -28,7 +38,12 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
 <template>
   <div class="welcome">
     <form class="intro" @submit.prevent="start">
-      <h1>{{ t('welcome.title') }}</h1>
+      <div class="heading">
+        <h1>
+          {{ title.head }}<span class="last">{{ title.last }}</span>
+        </h1>
+        <InfoButton @click="infoOpen = true" />
+      </div>
       <p class="lead">{{ t('welcome.intro') }}</p>
       <div class="name">
         <label class="label" for="player-name">{{ t('welcome.nameLabel') }}</label>
@@ -93,6 +108,13 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
         <circle class="c-pin" r="7" />
       </svg>
     </div>
+
+    <InfoPopup
+      v-if="infoOpen"
+      :heading="t('app.name')"
+      :text="t('welcome.intro')"
+      @dismiss="infoOpen = false"
+    />
   </div>
 </template>
 
@@ -165,8 +187,51 @@ h1 {
   .intro {
     gap: 18px;
   }
+  /* The ⓘ follows the heading's last word and never wraps away from it: the word keeps a gap
+     the ⓘ's width after it, and the ⓘ is pulled back over that gap. */
+  .heading h1 {
+    display: inline;
+  }
+  .last {
+    white-space: nowrap;
+  }
+  .last::after {
+    content: '';
+    display: inline-block;
+    width: 48px;
+  }
+  .heading :deep(.info-btn) {
+    margin: -8px 0 -8px -46px;
+    vertical-align: middle;
+  }
+  /* The intro is read in the Info Popup instead. */
+  .lead {
+    display: none;
+  }
   .actions .btn {
     width: 100%;
+  }
+
+  /* Upright: one screen down to Start. The clock takes the height left, from about 120 to 230 px;
+     the Footer follows below. A sideways phone is too short for that and scrolls as before. */
+  @media (min-height: 501px) {
+    .welcome {
+      display: flex;
+      flex-direction: column;
+      height: calc(100dvh - var(--header-height));
+    }
+    .art {
+      flex: 1 1 0;
+      min-height: 120px;
+      max-height: 230px;
+    }
+    .clock {
+      width: auto;
+      height: 100%;
+    }
+    .intro {
+      flex: none;
+    }
   }
 }
 </style>
