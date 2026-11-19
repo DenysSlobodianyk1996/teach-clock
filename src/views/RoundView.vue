@@ -271,7 +271,7 @@ h1 {
   /*
    * A column: the clock side takes the height the rest leaves (header, dots, answer area), up to
    * the full width, and never less than ~150 px. Nothing in the answer area changes height during a
-   * Round (a time-box error borrows room below Submit, see SetTimeAnswer), and a wrong Answer only
+   * Round (a time-box error lies over the foot of the clock, see SetTimeAnswer), and a wrong Answer only
    * opens a popup, so the clock never changes size.
    */
   .play {
@@ -311,8 +311,11 @@ h1 {
     flex-basis: 0;
     min-height: 150px;
   }
+  /* The row keeps the screen's height so the clock stays whole; a taller answer runs past it, and
+     its own padding keeps the Round's bottom room under Submit (the Round's padding stays above). */
   .answer-side {
     align-self: safe center;
+    padding-bottom: 12px;
   }
 }
 </style>

@@ -126,7 +126,7 @@ describe('Settings screen', () => {
     expect(card().textContent).toContain(describes(12))
     await choice(wrapper, t('hours.24.name')).setValue(true)
     expect(card().textContent).toContain(describes(24))
-    expect(describes(24)).toContain('13–24')
+    expect(describes(24)).toContain(t('round.range', { from: 13, to: 24 }))
   })
 
   it('starts a Drag Hours Round in 13–24', async () => {
@@ -148,11 +148,11 @@ describe('Settings screen', () => {
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('round'))
   })
 
-  /** The ⓘ by a section's heading ("Гра" or "Режим"). */
+  /** The ⓘ by a section's heading (Game or Mode), named after its section. */
   function infoButton(wrapper: Screen, section: string) {
     const group = wrapper.findAll('fieldset').find((f) => f.find('legend').text() === section)
     if (!group) throw new Error(`No section "${section}"`)
-    return group.get(`button[aria-label="${t('info.more')}"]`)
+    return group.get(`button[aria-label="${t('info.moreAbout', { section })}"]`)
   }
 
   function gotIt(wrapper: Screen) {
@@ -193,7 +193,7 @@ describe('Settings screen', () => {
     await infoButton(wrapper, t('settings.game')).trigger('click')
     const text = wrapper.get('[role="dialog"]').text()
     expect(text).toContain(describes(24))
-    expect(describes(24)).toContain('13–24')
+    expect(describes(24)).toContain(t('round.range', { from: 13, to: 24 }))
     expect(text).not.toContain(describes(12))
   })
 

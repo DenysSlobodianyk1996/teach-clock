@@ -56,7 +56,7 @@ function startRound() {
     <fieldset class="group" :aria-labelledby="`${id}-game`">
       <legend class="label">
         <span :id="`${id}-game`">{{ t('settings.game') }}</span>
-        <InfoButton @click="info = 'game'" />
+        <InfoButton :about="t('settings.game')" @click="info = 'game'" />
       </legend>
       <div class="row games">
         <ChoiceCard
@@ -103,7 +103,7 @@ function startRound() {
     <fieldset class="group" :aria-labelledby="`${id}-mode`">
       <legend class="label">
         <span :id="`${id}-mode`">{{ t('settings.mode') }}</span>
-        <InfoButton @click="info = 'mode'" />
+        <InfoButton :about="t('settings.mode')" @click="info = 'mode'" />
       </legend>
       <div class="row modes">
         <ChoiceCard
@@ -303,6 +303,24 @@ h1 {
   .modes :deep(.choice b) {
     font-size: 17px;
     line-height: 1.15;
+  }
+  /* A very narrow phone (320 px): a smaller icon and title, so "Перевірка" or "Розстав хвилини"
+     still fit beside the icon. */
+  @media (max-width: 340px) {
+    .games :deep(.choice),
+    .modes :deep(.choice) {
+      gap: 6px;
+      padding: 8px;
+    }
+    .games :deep(.choice svg),
+    .modes :deep(.choice svg) {
+      width: 28px;
+      height: 28px;
+    }
+    .games :deep(.choice b),
+    .modes :deep(.choice b) {
+      font-size: 15px;
+    }
   }
   .levels :deep(.choice),
   .hours :deep(.choice) {

@@ -25,7 +25,7 @@ export default {
     start: 'Start',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
-  info: { more: 'More info' },
+  info: { more: 'More info', moreAbout: 'More info: {section}' },
   settings: {
     greeting: '{name}, what shall we play?',
     game: 'Game',

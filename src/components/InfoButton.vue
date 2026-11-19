@@ -3,13 +3,19 @@ import { useI18n } from 'vue-i18n'
 
 /**
  * The ⓘ after a heading that opens its Info Popup. Shown on the phone layout only: on desktop the
- * text it stands for is on the screen. The parent handles the click.
+ * text it stands for is on the screen. The parent handles the click. `about` names the section
+ * ("More info: Game"), so two ⓘ on one screen have different names.
  */
+defineProps<{ about?: string }>()
 const { t } = useI18n()
 </script>
 
 <template>
-  <button class="icon-btn info-btn" type="button" :aria-label="t('info.more')">
+  <button
+    class="icon-btn info-btn"
+    type="button"
+    :aria-label="about ? t('info.moreAbout', { section: about }) : t('info.more')"
+  >
     <svg
       viewBox="0 0 24 24"
       fill="none"

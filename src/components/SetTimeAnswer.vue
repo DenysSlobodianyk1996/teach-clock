@@ -90,7 +90,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div ref="root" class="answer" :style="{ '--error-lines': errors.length }">
+  <div ref="root" class="answer">
     <div class="entry" :class="{ 'has-error': errors.length }">
       <template v-for="box in ['hour', 'minute'] as const" :key="box">
         <span v-if="box === 'minute'" class="colon" aria-hidden="true">:</span>
@@ -233,7 +233,8 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     width: 100%;
   }
   .entry {
-    grid-template-rows: auto auto auto;
+    position: relative;
+    grid-template-rows: auto auto;
     row-gap: 2px;
     /* Brings the pad up to 4px under the ranges. */
     margin-bottom: -4px;
@@ -241,23 +242,27 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   .range {
     font-size: 14px;
   }
-  /* On a phone the answer sits under the clock, so the error takes its own row under the ranges:
-     a growing error moves nothing above it. */
+  /* On a phone there is no room to spare: the clock above takes every pixel the answer leaves, so
+     a growing error must not take any. It lies over the foot of the clock, just above the boxes,
+     until the Player's next key clears it; nothing in the column moves or changes size. */
   .error {
-    grid-row: 3;
-    gap: var(--error-gap);
-    line-height: var(--error-line);
-  }
-  /* The error takes its room from below Submit, so the answer area keeps its height in the column
-     and the clock above it keeps its size (see RoundView): N lines are N line heights and the N - 1
-     gaps between them (the row gap above the error is there without one, too). */
-  .answer {
-    --error-line: 21px;
-    --error-gap: 2px;
-    margin-bottom: min(
-      0px,
-      var(--error-gap) - var(--error-lines) * (var(--error-line) + var(--error-gap))
-    );
+    /* Out of the grid, so it is placed against the whole entry, not the ranges' row. */
+    grid-area: auto;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    font-size: 15px;
+    /* Only a message: taps reach the clock under it. */
+    pointer-events: none;
+    padding: 6px 14px;
+    border-radius: 16px;
+    background: var(--pop);
+    color: var(--pop-ink);
+    box-shadow: var(--shadow);
   }
   .has-error .range {
     visibility: visible;
