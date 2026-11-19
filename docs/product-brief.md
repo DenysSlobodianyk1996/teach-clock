@@ -25,7 +25,11 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
   no service worker. The Android back button never leaves a Round by accident: on Welcome it exits,
   on Settings and Summary it goes to Welcome, in a Round it opens "Leave this Round?" (or closes
   it), and an open popup closes first. Every change is a Play release: CI uploads each merge to
-  closed testing, and production is released by hand (`docs/android-release.md`). The name under
+  closed testing, and production is released by hand (`docs/android-release.md`). When Play has a
+  newer version, the app opens Play's own "Update available" screen at start, or when it comes back
+  to the front, on Welcome or Settings only, never in a Round; Play draws it in the phone's
+  language, downloads the update and restarts the app. Closed with ✕, it waits for the next start
+  (batch 20, `src/android/playUpdate.ts`). The name under
   its icon follows the phone's languages, not the in-app switch: "Вчимо годинник" when Ukrainian
   comes before English, "Teach Clock" otherwise (ADR 0005). One Play listing: English is the
   default, Ukrainian a translation (`docs/store/`).
