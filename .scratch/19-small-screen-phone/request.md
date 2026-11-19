@@ -17,3 +17,4 @@ Later in the same conversation:
 - Keep current breakpoints. On tablets the same logic is fine. In general, on small-height screens show as much content on one screen as possible.
 - In the end, update design to show such cases too.
 - Also adjust the screenshots for the Android store, since the mobile version looks different.
+- Also the icon itself: right now the Android icon has a black background. Can we make it transparent? (Decided: the clock face's cream fills the shape instead, the same icon everywhere.)
