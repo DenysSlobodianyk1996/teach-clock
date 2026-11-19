@@ -699,11 +699,13 @@ stage_listing() {
   step "App name, short and full description: the text blocks in docs/store/listing.en.md"
   step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/feature-graphic.en.png"
   step "Phone screenshots: docs/store/screenshots/en/1-welcome.png … 8-summary.png (all 8)"
+  step "7-inch and 10-inch tablet screenshots: docs/store/screenshots/tablet-7/en/… and tablet-10/en/…"
   pause
   say "${BOLD}Ukrainian (uk), the translation${RESET} (pick it in the language list at the top):"
   step "App name, short and full description: the text blocks in docs/store/listing.uk.md"
   step "Feature graphic: docs/store/feature-graphic.uk.png (without it Ukrainian users see the English one)"
   step "Phone screenshots: docs/store/screenshots/uk/1-welcome.png … 8-summary.png (all 8)"
+  step "7-inch and 10-inch tablet screenshots: docs/store/screenshots/tablet-7/uk/… and tablet-10/uk/…"
   step "Website: $WEBSITE_URL."
   if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
     offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
@@ -753,6 +755,38 @@ stage_first_upload() {
     record "First build live on closed testing" "Date it went live?"
   fi
   pause
+}
+
+stage_listing_refresh() {
+  stage "Store listing: new icon and screenshots (batch 19, phone layout)"
+  if already DONE_LISTING_SHOTS_19; then return 0; fi
+  if [[ -z "$(date_of "First build live on closed testing")" ]] && ! is_done DONE_FIRST_UPLOAD; then
+    not_yet "the first upload"
+    return 0
+  fi
+  say "Batch 19 redrew the app icon (cream background) and all 48 screenshots in the phone"
+  say "layout. They go up only once the app update with that layout is live on the same track"
+  say "(closed testing now, production later), so the listing never shows a screen testers lack."
+  if ! confirm "Is a build with the batch 19 layout live on the track the listing is for?"; then
+    not_yet "the app update with the new layout reaches that track"
+    return 0
+  fi
+  open_link "$PLAY_CONSOLE"
+  say "Grow users › Store presence › ${BOLD}Main store listing${RESET}. For ${BOLD}English (en-US)${RESET}, then"
+  say "${BOLD}Ukrainian (uk)${RESET} (pick it in the language list at the top), with <lang> = en, then uk:"
+  step "App icon: replace it with docs/store/icon-512.png (the same file for both)"
+  step "Phone screenshots: delete the old 8, add docs/store/screenshots/<lang>/1-welcome.png …"
+  say "  8-summary.png in that order (1 to 8)"
+  step "7-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-7/<lang>/1 … 8"
+  step "10-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-10/<lang>/1 … 8"
+  note "The feature graphic stays as it is. Save each language before switching to the next."
+  if (( DRY_RUN )); then open_link "$ROOT/docs/store/screenshots"; else
+    offer "Open docs/store/screenshots in Finder?" open "$ROOT/docs/store/screenshots" || true
+  fi
+  pause "Press Enter when both languages are saved"
+  if confirm "Do both languages show the new icon and the new 8 screenshots for all three sizes?"; then
+    mark_done DONE_LISTING_SHOTS_19
+  fi
 }
 
 stage_testers() {
@@ -926,7 +960,7 @@ stage_teacher_approved() {
 
 STAGES=(stage_start stage_account stage_machine stage_upload_key stage_key_secrets
   stage_variables stage_create_app stage_app_content stage_listing stage_first_bundle
-  stage_first_upload stage_testers stage_service_account stage_closed_test stage_apply
+  stage_first_upload stage_listing_refresh stage_testers stage_service_account stage_closed_test stage_apply
   stage_production stage_teacher_approved)
 
 run_wizard() {
