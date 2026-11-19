@@ -115,8 +115,7 @@ for (const lang of Object.keys(LANGUAGES) as Lang[]) {
       // screen ends cleanly under the Mode cards with Back and Play in view.
       await radio(page, t('games.dragMinutes.name')).check()
       await radio(page, t('modes.teach.name')).check()
-      // The Footer starts just above the screen's bottom edge and would be cut in half.
-      await page.addStyleTag({ content: 'footer { visibility: hidden }' })
+      // In the phone layout (every store size is portrait) the Footer ends inside the screen.
       await save(page, file(2, 'settings'))
     })
 

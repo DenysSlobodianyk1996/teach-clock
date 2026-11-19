@@ -2,7 +2,7 @@
  * On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view, and the
  * clock as big as the room left allows.
  */
-import { t } from './i18n.ts'
+import { startingWith, t } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { startRound } from './round.ts'
 import { closeWrongPopup, popupButtons, wrongPopup } from './teach.ts'
@@ -33,6 +33,240 @@ test('Welcome on a 360 × 640 phone: the Footer comes after the start button', a
     await footer.evaluate((e) => e.getBoundingClientRect().top + scrollY),
   ).toBeGreaterThanOrEqual(await bottomFromPageTop(start))
   expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+})
+
+test.describe('Welcome on a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  test('Start is in view with nothing scrolled; the intro is behind the ⓘ', async ({ page }) => {
+    await page.goto('/')
+    const start = page.getByRole('button', { name: t('welcome.start') })
+    await expect(start).toBeVisible()
+    expect(await bottomFromPageTop(start), 'Start fits without scrolling').toBeLessThanOrEqual(640)
+    await expect(page.getByText(t('welcome.intro'))).toBeHidden()
+
+    // The clock shrinks to the room left, never below about 120 px.
+    const clock = page.locator('.art svg.clock')
+    expect(await clock.evaluate((e) => e.getBoundingClientRect().height)).toBeGreaterThanOrEqual(
+      118,
+    )
+
+    await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+    await page.getByRole('button', { name: t('info.more') }).click()
+    const popup = page.getByRole('dialog')
+    await expect(popup).toContainText(t('welcome.intro'))
+    await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+    await expect(popup).toBeHidden()
+    await expect(page.getByLabel(t('welcome.nameLabel'))).toHaveValue('Оля')
+    expect(await page.evaluate(() => scrollY)).toBe(0)
+  })
+})
+
+test('Welcome on a 360 × 640 phone with big text: the Footer still follows Start', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  // As with a large font scale: the heading takes far more room than usual.
+  await page.addStyleTag({ content: '.welcome h1 { font-size: 64px !important; }' })
+  const start = page.getByRole('button', { name: t('welcome.start') })
+  const footerTop = await page
+    .getByRole('contentinfo')
+    .evaluate((e) => e.getBoundingClientRect().top + scrollY)
+  expect(footerTop, 'the Footer never covers Start').toBeGreaterThanOrEqual(
+    await bottomFromPageTop(start),
+  )
+})
+
+test('Welcome on a 360 × 640 phone: the on-screen keyboard never makes the clock jump bigger', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).focus()
+  const before = await welcomeClockSize(page)
+  // A keyboard that shrinks the page (Android WebView, Firefox on Android) leaves about 360 px.
+  await page.setViewportSize({ width: 360, height: 360 })
+  expect(await welcomeClockSize(page), 'no bigger than before the keyboard').toBeLessThanOrEqual(
+    before,
+  )
+})
+
+/** The Welcome clock's drawn size: the smaller side of its box, as the face is drawn to fit both. */
+async function welcomeClockSize(page: Page) {
+  return page.locator('.art svg.clock').evaluate((e) => {
+    const box = e.getBoundingClientRect()
+    return Math.min(box.width, box.height)
+  })
+}
+
+test('Welcome on a 412 × 915 phone: a clearly bigger clock than at 360 × 640, Start in view', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  const small = await welcomeClockSize(page)
+
+  await page.setViewportSize({ width: 412, height: 915 })
+  await page.goto('/')
+  const big = await welcomeClockSize(page)
+  expect(big, 'the clock grows into the room').toBeGreaterThanOrEqual(small + 100)
+  expect(big, 'no wider than the column').toBeLessThanOrEqual(412 - 40)
+  const start = page.getByRole('button', { name: t('welcome.start') })
+  expect(await bottomFromPageTop(start), 'Start fits without scrolling').toBeLessThanOrEqual(915)
+  expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+})
+
+for (const locale of ['uk-UA', 'en-US']) {
+  test.describe(`Welcome on an upright 10-inch tablet, ${locale}`, () => {
+    test.use({ viewport: { width: 810, height: 1440 }, locale })
+
+    test('a big clock within the width, the column full width, Start in view', async ({ page }) => {
+      await page.goto('/')
+      const size = await welcomeClockSize(page)
+      expect(size, 'a big clock').toBeGreaterThanOrEqual(500)
+      expect(size, 'within the width').toBeLessThanOrEqual(810 - 40)
+      const field = (await page.locator('#player-name').boundingBox())!
+      expect(field.width, 'the name field spans the column').toBeGreaterThanOrEqual(810 - 60)
+      expect(await bottomFromPageTop(page.locator('form button[type=submit]'))).toBeLessThanOrEqual(
+        1440,
+      )
+    })
+  })
+}
+
+test.describe('Welcome on a desktop', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
+
+  test('shows the intro beside the clock and no ⓘ', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByText(t('welcome.intro'))).toBeVisible()
+    await expect(page.getByRole('button', { name: t('info.more') })).toHaveCount(0)
+  })
+})
+
+/** Scrolls Got it into view if it has to, then checks it lies on the screen and closes the popup. */
+async function expectGotItReachable(page: Page) {
+  const popup = page.getByRole('dialog')
+  const gotIt = popup.getByRole('button', { name: t('teach.gotIt') })
+  await gotIt.scrollIntoViewIfNeeded()
+  const box = (await gotIt.boundingBox())!
+  const height = page.viewportSize()!.height
+  expect(box.y, 'Got it starts on the screen').toBeGreaterThanOrEqual(0)
+  expect(box.y + box.height, 'Got it ends on the screen').toBeLessThanOrEqual(height)
+  await gotIt.click()
+  await expect(popup).toBeHidden()
+}
+
+for (const viewport of [
+  { width: 640, height: 360 },
+  { width: 800, height: 360 },
+]) {
+  test.describe(`a sideways ${viewport.width} × ${viewport.height} phone`, () => {
+    test.use({ viewport })
+
+    test('Got it is reachable in the Welcome and Game Info Popups', async ({ page }) => {
+      await page.goto('/')
+      await page.getByRole('button', { name: t('info.more') }).click()
+      await expectGotItReachable(page)
+
+      await toSettings(page)
+      await page
+        .getByRole('group', { name: t('settings.game') })
+        .getByRole('button', { name: t('info.moreAbout', { section: t('settings.game') }) })
+        .click()
+      await expectGotItReachable(page)
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+    })
+
+    test('Set Time: the page runs on below Submit with room under it', async ({ page }) => {
+      await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
+      const submit = page.getByRole('button', { name: t('round.submit') })
+      await expect(submit).toBeVisible()
+      const pageBottom = await page.evaluate(() => document.scrollingElement!.scrollHeight)
+      expect(
+        pageBottom - (await bottomFromPageTop(submit)),
+        'room under Submit',
+      ).toBeGreaterThanOrEqual(10)
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+    })
+  })
+}
+
+test.describe('Settings on a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  const descriptions = [
+    ...(['dragMinutes', 'dragArrows', 'setTime'] as const).map((g) => t(`games.${g}.description`)),
+    ...(['teach', 'test'] as const).map((m) => t(`modes.${m}.description`)),
+    ...([1, 5, 15] as const).map((l) => t(`levels.${l}.description`)),
+    ...([12, 24] as const).map((h) => t(`hours.${h}.description`)),
+  ]
+
+  for (const game of ['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const) {
+    test(`${game}: Play in view with nothing scrolled, no descriptions, an ⓘ for Game and Mode`, async ({
+      page,
+    }) => {
+      await toSettings(page)
+      const gameCard = page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) })
+      const testCard = page.getByRole('radio', { name: startingWith(t('modes.test.name')) })
+      await gameCard.check()
+      await testCard.check()
+      await page.evaluate(() => scrollTo(0, 0))
+
+      const back = page.getByRole('button', { name: t('settings.back') })
+      const play = page.getByRole('button', { name: t('settings.play') })
+      expect(await bottomFromPageTop(play), 'Play fits without scrolling').toBeLessThanOrEqual(640)
+      const [b, p] = [(await back.boundingBox())!, (await play.boundingBox())!]
+      expect(Math.round(b.y), 'side by side').toBe(Math.round(p.y))
+      expect(b.x + b.width).toBeLessThanOrEqual(p.x)
+      expect(p.x + p.width).toBeLessThanOrEqual(360)
+      for (const text of descriptions) await expect(page.getByText(text)).toBeHidden()
+
+      for (const section of ['settings.game', 'settings.mode'] as const) {
+        await page
+          .getByRole('group', { name: t(section) })
+          .getByRole('button', { name: t('info.moreAbout', { section: t(section) }), exact: true })
+          .click()
+        const popup = page.getByRole('dialog')
+        await expect(popup.getByRole('heading', { name: t(section) })).toBeVisible()
+        await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+        await expect(popup).toBeHidden()
+      }
+      await expect(gameCard).toBeChecked()
+      await expect(testCard).toBeChecked()
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+    })
+  }
+})
+
+for (const size of [
+  { width: 412, height: 915 },
+  { width: 810, height: 1440 },
+]) {
+  test(`Settings on a ${size.width} × ${size.height} screen: Back and Play follow the Mode cards closely`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(size)
+    await toSettings(page)
+    const modes = page.getByRole('group', { name: t('settings.mode') })
+    const play = page.getByRole('button', { name: t('settings.play') })
+    const playTop = await play.evaluate((e) => e.getBoundingClientRect().top + scrollY)
+    // Between them only the Level row (Set Time is the default Game) and the usual gaps.
+    expect(playTop - (await bottomFromPageTop(modes)), 'no big empty gap').toBeLessThanOrEqual(160)
+    expect(await bottomFromPageTop(play)).toBeLessThanOrEqual(size.height)
+  })
+}
+
+test.describe('Settings on a desktop', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
+
+  test('shows the descriptions on the cards and no ⓘ', async ({ page }) => {
+    await toSettings(page)
+    await expect(page.getByText(t('games.setTime.description'))).toBeVisible()
+    await expect(page.getByText(t('modes.teach.description'))).toBeVisible()
+    await expect(page.getByRole('button', { name: startingWith(t('info.more')) })).toHaveCount(0)
+  })
 })
 
 test('Settings fits: no sideways scroll, Back and Play side by side in full', async ({ page }) => {
@@ -172,10 +406,121 @@ test.describe('a 320px-wide phone', () => {
       const box = (await toggle.boundingBox())!
       expect(box.width).toBeGreaterThanOrEqual(44)
       expect(box.height).toBeGreaterThanOrEqual(44)
-      const knob = (await toggle.locator('.knob').boundingBox())!
-      const under = (await toggle.locator(icon).boundingBox())!
-      expect(Math.abs(centre(knob) - centre(under)), icon).toBeLessThanOrEqual(1)
+      // Polled: under a loaded test run the knob can be measured a frame before it settles.
+      await expect
+        .poll(async () => {
+          const knob = (await toggle.locator('.knob').boundingBox())!
+          const under = (await toggle.locator(icon).boundingBox())!
+          return Math.abs(centre(knob) - centre(under))
+        }, icon)
+        .toBeLessThanOrEqual(1)
       await toggle.click()
     }
   })
+})
+
+/**
+ * A 360 × 640 phone: what Chrome leaves for the page on a small phone (an Oppo A series) once its
+ * toolbars are shown. Every Game's Round fits up to its main button, with nothing scrolled, and the
+ * clock stays readable.
+ */
+test.describe('a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  /** The main button ends within the screen, nothing is scrolled, nothing sticks out sideways. */
+  async function expectInView(page: Page, button: Locator, what: string) {
+    await expect(button).toBeVisible()
+    expect(await page.evaluate(() => scrollY), `${what}: nothing scrolled`).toBe(0)
+    expect(await bottomFromPageTop(button), `${what}: ends within the screen`).toBeLessThanOrEqual(
+      640,
+    )
+    expect(await sidewaysScroll(page), `${what}: no sideways scroll`).toBeLessThanOrEqual(0)
+  }
+
+  async function clockWidth(page: Page, selector: string) {
+    return page.locator(selector).evaluate((e) => e.getBoundingClientRect().width)
+  }
+
+  /** A wrong try in Teach: 12:01 is off the 15-minute step; untouched hands are never right. */
+  const tryWrong = {
+    setTime: async (page: Page) => {
+      await page.keyboard.type('1201')
+      await page.keyboard.press('Enter')
+    },
+    dragArrows: async (page: Page) => {
+      await page.getByRole('button', { name: t('round.submit') }).click()
+    },
+  }
+
+  for (const game of ['setTime', 'dragArrows'] as const) {
+    test(`${game} test: Submit is in view`, async ({ page }) => {
+      await startRound(page, { game, mode: 'test', level: 15 })
+      await expectInView(page, page.getByRole('button', { name: t('round.submit') }), 'Submit')
+      expect(await clockWidth(page, '.clock-side svg.clock')).toBeGreaterThanOrEqual(150)
+    })
+
+    test(`${game} teach: Submit is in view, also through the wrong-Answer popup`, async ({
+      page,
+    }) => {
+      await startRound(page, { game, mode: 'teach', level: 15 })
+      const submit = page.getByRole('button', { name: t('round.submit') })
+      await expectInView(page, submit, 'Submit')
+      expect(await clockWidth(page, '.clock-side svg.clock')).toBeGreaterThanOrEqual(150)
+
+      await tryWrong[game](page)
+      await expect(wrongPopup(page)).toBeVisible()
+      const { gotIt } = await popupButtons(page)
+      expect(gotIt.y + gotIt.height, 'the popup fits').toBeLessThanOrEqual(640)
+      await closeWrongPopup(page, 'gotIt')
+      await expectInView(page, submit, 'Submit after the popup')
+    })
+  }
+
+  test('setTime: both time-box errors show and Submit stays in view, the clock keeps its size', async ({
+    page,
+  }) => {
+    await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
+    const submit = page.getByRole('button', { name: t('round.submit') })
+    const before = await clockWidth(page, '.clock-side svg.clock')
+    await page.keyboard.type('9999')
+    await page.keyboard.press('Enter')
+    for (const box of ['hour', 'minute'] as const)
+      await expect(page.getByText(t(`round.errors.${box}`))).toBeVisible()
+    await expectInView(page, submit, 'Submit with both errors')
+    expect(await clockWidth(page, '.clock-side svg.clock'), 'the clock keeps its size').toBe(before)
+  })
+
+  for (const game of ['dragHours', 'dragMinutes'] as const) {
+    test(`${game} teach: the face and the full tray are in view, also through the popup`, async ({
+      page,
+    }) => {
+      await startRound(page, { game, mode: 'teach' })
+      const tray = page.locator('.tray')
+      await expectInView(page, tray, 'tray')
+      expect(await clockWidth(page, '.board svg.number-face')).toBeGreaterThanOrEqual(150)
+
+      // Tap a number, then the slot after its own: a wrong drop opens the popup.
+      const n = Number(
+        await page.locator('.tray [data-number]').first().getAttribute('data-number'),
+      )
+      await page.locator(`.tray [data-number="${n}"]`).click()
+      await page.locator(`.board [data-slot="${(n % 12) + 1}"]`).click()
+      await expect(wrongPopup(page)).toBeVisible()
+      const { gotIt } = await popupButtons(page)
+      expect(gotIt.y + gotIt.height, 'the popup fits').toBeLessThanOrEqual(640)
+      await closeWrongPopup(page, 'gotIt')
+      await expectInView(page, tray, 'tray after the popup')
+    })
+
+    test(`${game} test: Done is in view once all 12 are placed`, async ({ page }) => {
+      await startRound(page, { game, mode: 'test' })
+      await expectInView(page, page.locator('.tray'), 'tray')
+      expect(await clockWidth(page, '.board svg.number-face')).toBeGreaterThanOrEqual(150)
+      for (let n = 1; n <= 12; n++) {
+        await page.locator(`.tray [data-number="${n}"]`).click()
+        await page.locator(`.board [data-slot="${n}"]`).click()
+      }
+      await expectInView(page, page.getByRole('button', { name: t('numbers.submit') }), 'Done')
+    })
+  }
 })

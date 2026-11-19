@@ -35,14 +35,18 @@
     "SummaryDragMinutes.dc.html": { "x": 3312, "y": 5840, "w": 1024, "h": 768, "title": "Планшет · Підсумок · Розстав хвилини" },
     "SummaryDragHoursTeach.dc.html": { "x": 4416, "y": 5840, "w": 1024, "h": 1100, "title": "Планшет · Підсумок · Розстав години 13–24 · Навчання (правильні на циферблаті)" },
 
-    "PhoneWelcome.dc.html": { "x": 0, "y": 7340, "w": 390, "h": 906, "title": "Телефон · Вітання" },
-    "PhoneSettings.dc.html": { "x": 470, "y": 7340, "w": 390, "h": 1002, "title": "Телефон · Налаштування" },
-    "PhoneSetTime.dc.html": { "x": 940, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Який час?" },
-    "PhoneDragArrows.dc.html": { "x": 1410, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Постав стрілки" },
-    "PhoneDragHours.dc.html": { "x": 1880, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав години" },
-    "PhoneDragMinutes.dc.html": { "x": 2350, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав хвилини · Навчання: помилка" },
-    "PhoneSummary.dc.html": { "x": 2820, "y": 7340, "w": 390, "h": 1700, "title": "Телефон · Підсумок" },
-    "PhoneDragHours24.dc.html": { "x": 3290, "y": 7340, "w": 390, "h": 844, "title": "Телефон · Розстав години 13–24 · Навчання: помилка" },
+    "PhoneWelcome.dc.html": { "x": 0, "y": 7340, "w": 360, "h": 701, "title": "Телефон · Вітання (360 × 640, Footer нижче)" },
+    "PhoneWelcomeInfo.dc.html": { "x": 440, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Вітання: ⓘ відкрито" },
+    "PhoneSettings.dc.html": { "x": 880, "y": 7340, "w": 360, "h": 701, "title": "Телефон · Налаштування (360 × 640, Footer нижче)" },
+    "PhoneSettingsGameInfo.dc.html": { "x": 1320, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Налаштування: ⓘ Гра відкрито" },
+    "PhoneSettingsHours.dc.html": { "x": 1760, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Налаштування: Розстав години (Години)" },
+    "PhoneSettingsSetTime.dc.html": { "x": 2200, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Налаштування: Який час? (Крок хвилин)" },
+    "PhoneSetTime.dc.html": { "x": 2640, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Який час?" },
+    "PhoneDragArrows.dc.html": { "x": 3080, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Постав стрілки" },
+    "PhoneDragHours.dc.html": { "x": 3520, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Розстав години" },
+    "PhoneDragMinutes.dc.html": { "x": 3960, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Розстав хвилини · Навчання: помилка" },
+    "PhoneSummary.dc.html": { "x": 4400, "y": 7340, "w": 390, "h": 1700, "title": "Телефон · Підсумок" },
+    "PhoneDragHours24.dc.html": { "x": 4870, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Розстав години 13–24 · Навчання: помилка" },
 
     "DesktopWelcome.dc.html": { "x": 0, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Вітання" },
     "DesktopSettings.dc.html": { "x": 1520, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Налаштування" },
@@ -59,7 +63,7 @@
     "DragArrowsTest.dc.html", "DragArrowsTeachHelp.dc.html", "DragArrowsTeachWrong.dc.html",
     "DragHoursDrag.dc.html", "DragHoursTeachWrong.dc.html", "PhoneDragHoursTeachWrong.dc.html", "DragHoursTestSubmit.dc.html", "DragMinutesTestSubmit.dc.html",
     "Summary.dc.html", "LightSummary.dc.html", "SummaryDragHours.dc.html", "SummaryDragMinutes.dc.html", "SummaryDragHoursTeach.dc.html",
-    "PhoneWelcome.dc.html", "PhoneSettings.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html", "PhoneDragHours24.dc.html",
+    "PhoneWelcome.dc.html", "PhoneWelcomeInfo.dc.html", "PhoneSettings.dc.html", "PhoneSettingsGameInfo.dc.html", "PhoneSettingsHours.dc.html", "PhoneSettingsSetTime.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html", "PhoneDragHours24.dc.html",
     "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html"
   ],
   "notes": {
@@ -69,7 +73,7 @@
     "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
     "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав години і хвилини (Drag Hours, Drag Minutes)", "kind": "title1", "maxW": 5440 },
     "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 5440 },
-    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 3210 },
+    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 5230 },
     "rowDesktop": { "x": 0, "y": 9120, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 10560 }
   },
   "designSystems": []

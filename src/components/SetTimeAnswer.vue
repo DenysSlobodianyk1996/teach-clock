@@ -229,22 +229,40 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 }
 @media (--phone) {
   .answer {
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
   .entry {
-    grid-template-rows: auto auto auto;
+    position: relative;
+    grid-template-rows: auto auto;
     row-gap: 2px;
     /* Brings the pad up to 4px under the ranges. */
-    margin-bottom: -6px;
+    margin-bottom: -4px;
   }
   .range {
     font-size: 14px;
   }
-  /* On a phone the answer sits under the clock, so the error takes its own row under the ranges:
-     a growing error moves nothing above it. */
+  /* On a phone there is no room to spare: the clock above takes every pixel the answer leaves, so
+     a growing error must not take any. It lies over the foot of the clock, just above the boxes,
+     until the Player's next key clears it; nothing in the column moves or changes size. */
   .error {
-    grid-row: 3;
+    /* Out of the grid, so it is placed against the whole entry, not the ranges' row. */
+    grid-area: auto;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    font-size: 15px;
+    /* Only a message: taps reach the clock under it. */
+    pointer-events: none;
+    padding: 6px 14px;
+    border-radius: 16px;
+    background: var(--pop);
+    color: var(--pop-ink);
+    box-shadow: var(--shadow);
   }
   .has-error .range {
     visibility: visible;
@@ -253,14 +271,14 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     display: none;
   }
   .timebox {
-    height: 60px;
+    height: 56px;
     font-size: 38px;
   }
   .colon {
     font-size: 38px;
   }
   .submit {
-    min-height: 52px;
+    min-height: 48px;
   }
   .timebox.hour {
     width: 76px;

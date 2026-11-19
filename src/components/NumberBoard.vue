@@ -537,9 +537,10 @@ function tapTray() {
   }
   /*
    * The face takes the height the rest of the screen leaves, up to the full width. Each number is
-   * the height of everything else on a 360 × 720 phone (see RoundView); in Test, where Submit can
-   * appear, the face leaves more room. A wrong drop only opens a popup, so the size never changes
-   * during a Round.
+   * the height of everything else with a full tray; in Test, where Submit can appear, the face
+   * leaves more room. Not a flexible column as in RoundView: the tray empties and Submit appears
+   * during a Round, and the face must not grow with them. A wrong drop only opens a popup, so the
+   * size never changes during a Round. The small-phone browser tests check it all fits 360 × 640.
    */
   .number-face {
     width: clamp(200px, 100svh - 346px, 100vw - 40px);

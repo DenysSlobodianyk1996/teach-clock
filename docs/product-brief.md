@@ -34,7 +34,10 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 
 ## Screens
 
-1. **Welcome**: a short description of what the app teaches, a name field, Start.
+1. **Welcome**: a short description of what the app teaches, a name field, Start. On a phone held
+   upright it is one screen down to Start (a 360 × 640 phone too): the clock shrinks to the height
+   left (about 120–230 px), the description is hidden and an ⓘ after the heading's last word opens
+   it in an **Info Popup** headed by the Game Name.
 2. **Settings**: choose the Game, Mode and Level (or Hours). Four Games, in this order: Drag Hours,
    Drag Minutes, Drag Arrows, Set Time (no Level for Drag Hours or Drag Minutes). Each option has a
    one-line description; each Game and Mode also has an icon (Teach: a lightbulb, Test: a check
@@ -42,7 +45,12 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
    shows **Hours**: **1–12** "first half of the day" or **13–24** "second half of the day" (uk:
    "Години", "перша / друга половина доби"; no AM/PM); the Drag Hours card then says "Drag the numbers 13–24 to their places". Picking Drag Arrows or Set Time shows the
    Level, set to 1 minute. Choices are kept until a reload: "Play again" and "Choose game" on the
-   Summary keep them. Back returns to Welcome.
+   Summary keep them. Back returns to Welcome. On a phone Settings fits a 360 × 640 screen down to
+   Back and Play for every Game: no card shows its description, the Game and Mode cards are compact
+   (a small icon beside the title; Games two by two, Modes side by side), Level and Hours show their
+   titles only, and the greeting is smaller. The Game and Mode headings each have an ⓘ that opens an
+   Info Popup listing every option by name with its description (the Drag Hours line follows the
+   picked Hours).
 3. **Round**: the Game itself. A row of dots shows progress; a Round only moves forward. Under the
    dots, "Task 1 of 10 · Teach" with the Mode's icon before its name.
    Leaving asks "Leave this Round?" and returns to Settings; nothing is kept.
@@ -52,6 +60,10 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
    big clocks with their times. Each wrong Task shows the Player's first Answer next to the correct
    one, both as big clocks (on a phone the pair stacks: the Player's Answer, a down arrow, then the
    correct one). Buttons: Play again, back to Settings.
+
+The **Info Popup** is the text an ⓘ stands for, on the phone layout only (on desktop the text is on
+the screen and there is no ⓘ): a heading, one paragraph or a list of names with descriptions, and
+one Got it button. Got it, Escape or a tap on the scrim closes it; reading it changes nothing.
 
 Welcome and Settings end with the **Footer**, a plain bar after the screen's content (not sticky;
 on a phone it is below the fold). It is never shown in a Round or on the Summary. It holds:
@@ -181,8 +193,11 @@ Rules shared by Drag Arrows and Set Time:
 
 - Two themes, light and dark, with a soft but saturated palette (warm cream or white clock face,
   coral Hour Hand, teal Minute Hand, mustard highlights, softened green/red for right/wrong). The
-  device decides which one comes first; the Player can switch with the toggle. The app icon and
-  the Android splash sit on the dark theme's background; the store screenshots and the store
+  device decides which one comes first; the Player can switch with the toggle. The Android
+  splash sits on the dark theme's background. The app icon (Android, the Web App's maskable and
+  Apple touch icons, the Play icon) is the clock on the clock face's cream, with no dark tile: the
+  clock fills the launcher's safe circle, so on a round launcher the icon is the clock itself and
+  on a squircle or square one it sits whole on cream; the store screenshots and the store
   feature graphic show the light theme.
 - Both hands are thin on every clock, so a number they cross stays readable; they differ by length
   and colour. In Drag Arrows each hand ends in a Grip: both Grips are the same small ring in their
@@ -198,8 +213,10 @@ Rules shared by Drag Arrows and Set Time:
 - The clock never moves during a Round, on any screen. The Hint opens in a popup over it, so no
   space is kept around the clock for it. Anything else that can appear beside it (a Set Time error,
   the drag Games' Submit) has its space kept from the first Task, empty until needed.
-- On a phone the clock is as big as the screen allows, one size for the whole Round. Everything
-  still fits a 360 × 720 screen without scrolling.
+- On a phone the clock is as big as the screen allows, one size for the whole Round: it takes the
+  height the header, the dots and the answer area leave, never below about 150 px, and grows on
+  taller phones. Every Round fits a 360 × 640 screen without scrolling, Submit or Done in view, in
+  Teach and Test.
 - All art is original SVG. The 2019 palette and images are not reused.
 
 ## Out of scope

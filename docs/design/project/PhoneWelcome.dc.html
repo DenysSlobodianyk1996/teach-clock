@@ -15,7 +15,8 @@ body{margin:0}
 a{color:#f2b84b}a:hover{color:#ffd27a}
 </style>
 </helmet>
-<div class="tc dark" style="width: 390px; height: 906px; display: flex; flex-direction: column">
+<!-- Phone Welcome on 360 × 640: the screen down to Почати, then the Footer below the fold. -->
+<div class="tc dark" style="position: relative; width: 360px; height: 701px; display: flex; flex-direction: column">
   <header class="hdr" style="height: 64px; padding: 0 14px">
     <div class="brand"><svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg></div>
     <div class="hdr-tools" style="gap: 8px">
@@ -24,9 +25,11 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
     </div>
   </header>
 
-  <main style="flex: none; min-height: 780px; display: flex; flex-direction: column; gap: 18px; padding: 8px 20px 28px">
-    <div style="display: flex; justify-content: center">
-      <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 10:10" style="width: 230px; height: 230px">
+  <!-- Upright phone: one screen down to Почати. The clock takes the height left (about 120–230 px);
+       the intro is behind the ⓘ after the heading's last word. -->
+  <main style="flex: none; height: 576px; display: flex; flex-direction: column; gap: 16px; padding: 8px 20px 20px">
+    <div style="flex: 1 1 0; min-height: 120px; max-height: 230px; display: flex; justify-content: center">
+      <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 10:10" style="width: 216px; height: 216px">
         <circle class="c-face" r="94"></circle>
         <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
         <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
@@ -36,19 +39,17 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <circle class="c-pin" r="7"></circle>
       </svg>
     </div>
-    <h1 style="margin: 0; font-size: 32px; font-weight: 900; line-height: 1.1">Привіт! Навчимося читати годинник</h1>
-    <p style="margin: 0; font-size: 17px; line-height: 1.45; color: var(--muted)">Чотири короткі гри: розстав на циферблаті години, потім хвилини, постав стрілки на потрібний час і прочитай, котру годину показує годинник. Без реєстрації — просто грай.</p>
+    <h1 style="margin: 0; font-size: 32px; font-weight: 900; line-height: 1.1">Привіт! Навчимося читати <span style="white-space: nowrap">годинник&nbsp;<button class="icon-btn" type="button" aria-label="Докладніше" style="flex: none; width: 44px; min-width: 44px; height: 44px; padding: 0; border: 0; color: var(--muted); margin: -8px 0; vertical-align: middle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="width: 26px; height: 26px"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 11v6"></path><circle cx="12" cy="7.4" r="0.6" fill="currentColor" stroke-width="1.6"></circle></svg></button></span></h1>
     <div style="display: flex; flex-direction: column; gap: 8px">
       <label class="label" for="name-p">Як тебе звати?</label>
       <input class="field" id="name-p" type="text" value="Оля" placeholder="Твоє ім’я">
     </div>
-    <div style="flex-grow: 1"></div>
     <a class="btn" href="PhoneSettings.dc.html" style="width: 100%">Почати<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
   </main>
   <footer class="ftr" role="contentinfo"><nav class="ftr-links"><a href="Privacy.dc.html">Конфіденційність</a><a href="mailto:denys.slobodianyk@gmail.com?subject=Contact%20support%20from%20teach%20clock%20for%20kids">Зв’язатися</a></nav></footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":906}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":701}}'>
 class Component extends DCLogic {
   renderVals() { return {}; }
 }

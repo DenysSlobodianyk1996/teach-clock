@@ -187,6 +187,18 @@ A translation without its own feature graphic shows the default one, so upload `
 
 Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots (phone and both tablets) and both feature graphics after UI or text changes; the graphics' text is in `scripts/featureGraphic.ts` (the Game Name from the i18n files).
 
+### Replacing the icon and screenshots (batch 19)
+
+Batch 19 gave every portrait screen the phone layout and the icon a cream background, so the icon and all 48 screenshots are new. Upload them **only once the app update with the new layout is live on the same track** (closed testing now, production later): the listing should never show screens the installed app doesn't have yet. The feature graphic stays as it is. The wizard has this as its own stage ("Store listing: new icon and screenshots").
+
+Grow users › Store presence › **Main store listing**, first for **English (en-US)**, then **Ukrainian (uk)** (pick it in the language list at the top), with `<lang>` = `en`, then `uk`:
+
+1. **App icon**: replace it with `store/icon-512.png` (the same file for both languages).
+2. **Phone screenshots**: delete the old 8, then add `store/screenshots/<lang>/1-welcome.png` … `8-summary.png` in order (1 to 8).
+3. **7-inch tablet screenshots**: delete the old 8, then add `store/screenshots/tablet-7/<lang>/1-welcome.png` … `8-summary.png` in order.
+4. **10-inch tablet screenshots**: delete the old 8, then add `store/screenshots/tablet-10/<lang>/1-welcome.png` … `8-summary.png` in order.
+5. **Save**, then switch to the next language.
+
 ## 9. First upload, by hand (day ~3)
 
 Google only accepts automatic (API) uploads after the app has one build, so this one goes by hand.
