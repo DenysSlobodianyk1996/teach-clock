@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { t, tEn } from './i18n.ts'
-import { CONTACT_EMAIL } from '../src/config.ts'
+import { CONTACT_EMAIL, ISSUES_URL } from '../src/config.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
 /** `#rrggbb` as the browser reports a computed colour. */
@@ -42,8 +42,11 @@ test.describe('the static privacy.html, with JavaScript off', () => {
         `mailto:${CONTACT_EMAIL}`,
       )
       await expect(article.getByText(createdBy)).toBeVisible()
-      // The contact email and the way back are the only links.
-      await expect(article.getByRole('link')).toHaveCount(2)
+      await expect(
+        article.getByRole('link', { name: ISSUES_URL.replace('https://', '') }),
+      ).toHaveAttribute('href', ISSUES_URL)
+      // The contact email, the issues and the way back are the only links.
+      await expect(article.getByRole('link')).toHaveCount(3)
       await expect(article.locator('time[datetime]')).toHaveCount(1)
       await expect(article.getByRole('link', { name: back })).toHaveAttribute('href', './')
     }
