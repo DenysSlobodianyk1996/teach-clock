@@ -4,9 +4,10 @@ import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { ICON_BG } from '../src/brandMark.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
-/** The dark theme's background, as in pwa-assets.config.ts. */
+/** The dark theme's background, as in the manifest: the splash's colour. */
 export const THEME_COLOR = THEME_BG.dark
 
 /** Android density buckets and their scale from dp to px. */
@@ -39,20 +40,20 @@ async function png(file: string, image: Buffer): Promise<void> {
   await sharp(image).png({ compressionLevel: 9 }).toFile(file)
 }
 
-const background = (w: number, h: number) =>
-  `<rect width="${w}" height="${h}" fill="${THEME_COLOR}"/>`
+const background = (w: number, h: number) => `<rect width="${w}" height="${h}" fill="${ICON_BG}"/>`
 
 /**
  * Adaptive icon layers are 108dp; launchers show the middle 72dp through their mask and
- * keep a 66dp circle always visible. The clock is 58dp wide, so every mask shows it whole
- * with a ring of theme colour around it.
+ * keep a 66dp circle always visible. The clock fills that circle on a cream background, so a
+ * round mask shows the clock edge to edge and every other mask shows it whole on cream.
+ * A hair under 66dp keeps the anti-aliased rim inside the circle.
  */
-const FOREGROUND_CLOCK = 58
+const FOREGROUND_CLOCK = 64.5
 
 async function launcherIcons(): Promise<void> {
   writeFileSync(
     `${res}values/ic_launcher_background.xml`,
-    `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${THEME_COLOR}</color>\n</resources>\n`,
+    `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${ICON_BG}</color>\n</resources>\n`,
   )
   for (const [name, scale] of Object.entries(DENSITIES)) {
     const dir = `${res}mipmap-${name}/`
@@ -61,7 +62,8 @@ async function launcherIcons(): Promise<void> {
       `${dir}ic_launcher_foreground.png`,
       svg(layer, layer, clock(layer / 2, layer / 2, FOREGROUND_CLOCK * scale)),
     )
-    // Android 7.x (API 24-25) has no adaptive icons: a 48dp square and a round icon.
+    // Android 7.x (API 24-25) has no adaptive icons: a 48dp square and a round icon, the clock
+    // as large as each shape allows (the round one is the clock itself).
     const legacy = 48 * scale
     const c = legacy / 2
     await png(
@@ -69,8 +71,8 @@ async function launcherIcons(): Promise<void> {
       svg(
         legacy,
         legacy,
-        `<rect x="${2 * scale}" y="${2 * scale}" width="${44 * scale}" height="${44 * scale}" rx="${8 * scale}" fill="${THEME_COLOR}"/>` +
-          clock(c, c, 36 * scale),
+        `<rect x="${2 * scale}" y="${2 * scale}" width="${44 * scale}" height="${44 * scale}" rx="${8 * scale}" fill="${ICON_BG}"/>` +
+          clock(c, c, 42 * scale),
       ),
     )
     await png(
@@ -78,8 +80,8 @@ async function launcherIcons(): Promise<void> {
       svg(
         legacy,
         legacy,
-        `<circle cx="${c}" cy="${c}" r="${22 * scale}" fill="${THEME_COLOR}"/>` +
-          clock(c, c, 34 * scale),
+        `<circle cx="${c}" cy="${c}" r="${22 * scale}" fill="${ICON_BG}"/>` +
+          clock(c, c, 44 * scale),
       ),
     )
   }
@@ -123,11 +125,14 @@ async function splash(): Promise<void> {
   }
 }
 
-/** Google Play wants a 512×512 32-bit PNG, full bleed: it rounds the corners itself. */
+/**
+ * Google Play wants a 512×512 32-bit PNG, full bleed: it rounds the corners itself (radius
+ * about a fifth of the side), which never reaches a clock 86% of the side wide.
+ */
 async function storeIcon(): Promise<void> {
   const file = `${root}docs/store/icon-512.png`
   const size = 512
-  const image = svg(size, size, background(size, size) + clock(size / 2, size / 2, size * 0.66))
+  const image = svg(size, size, background(size, size) + clock(size / 2, size / 2, size * 0.86))
   mkdirSync(dirname(file), { recursive: true })
   await sharp(image).ensureAlpha().png({ compressionLevel: 9 }).toFile(file)
 }
