@@ -40,6 +40,12 @@ android {
         }
     }
     buildTypes {
+        // The test APK (npm run android:apk) installs next to the Google Play copy instead of
+        // clashing with its signature.
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
         release {
             if (releaseSigned) {
                 signingConfig signingConfigs.release

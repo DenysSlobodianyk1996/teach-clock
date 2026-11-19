@@ -7,7 +7,7 @@ import { DENSITIES, THEME_COLOR } from '../generate-android-assets.ts'
 import { THEME_BG } from '../../src/themeColors.ts'
 import { ICON_BG } from '../../src/brandMark.ts'
 
-// Checks the files written by `npm run generate-android-assets` (committed in android/ and docs/store/).
+// Checks the files written by `npm run android:assets` (committed in android/ and docs/store/).
 const root = fileURLToPath(new URL('../../', import.meta.url))
 const res = `${root}android/app/src/main/res/`
 
