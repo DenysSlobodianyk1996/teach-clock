@@ -20,17 +20,17 @@ Play Console › your app › **Dashboard**. The "Apply for production" section 
 
 ## Key dates
 
-| What                                     | Date          |
-| ---------------------------------------- | ------------- |
-| Developer account verified               | 2026-11-16    |
-| First build live on closed testing       | by 2026-11-19 |
-| Tester invite sent                       | by 2026-11-19 |
-| 12th tester opted in (day 1)             | 2026-11-19    |
-| Day 14 (earliest "Apply for production") | 2026-12-03    |
-| Applied for production                   |               |
-| Production access granted                |               |
-| First production release                 |               |
-| Teacher Approved opt-in                  |               |
+| What                                     | Date       |
+| ---------------------------------------- | ---------- |
+| Developer account verified               | 2026-11-16 |
+| First build live on closed testing       | 2026-11-17 |
+| Tester invite sent                       | 2026-11-19 |
+| 12th tester opted in (day 1)             | 2026-11-19 |
+| Day 14 (earliest "Apply for production") | 2026-12-03 |
+| Applied for production                   |            |
+| Production access granted                |            |
+| First production release                 |            |
+| Teacher Approved opt-in                  |            |
 
 ## Testers
 
