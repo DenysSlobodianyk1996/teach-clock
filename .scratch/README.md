@@ -25,7 +25,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [18-store-shots](18-store-shots/)                                       | store art     | done        | no   | #64                      |
 | [19-small-screen-phone](19-small-screen-phone/)                         | fixes         | done        | yes  | #68 (plan), #70          |
 | [20-play-update](20-play-update/)                                       | feature       | done        | no   | #73                      |
-| [21-tester-fixes](21-tester-fixes/)                                     | fixes         | in progress | no   |                          |
+| [21-tester-fixes](21-tester-fixes/)                                     | fixes         | in progress | no   | #74                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
