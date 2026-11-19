@@ -72,16 +72,16 @@ one Got it button. Got it, Escape or a tap on the scrim closes it; reading it ch
 Welcome and Settings end with the **Footer**, a plain bar after the screen's content (not sticky;
 on a phone it is below the fold). It is never shown in a Round or on the Summary. It holds:
 
-- **Privacy**: opens the **Privacy Page** at `/privacy-policy`, an app screen like the others (in
-  the Android App too, never the browser), in the interface language, with no Footer. It says nothing is collected or
-  sent: no accounts, ads or analytics; only the Preferences and the last name stay on the device;
-  results are not kept after a Round. It also names the author (Денис Слободяник / Denys
-  Slobodianyk) and gives the contact email. Its "Updated" date is the day of the deploy it came
-  with (the built commit's date, batch 21). Its button goes back to the screen that opened it. It works offline. For Google Play's
-  listing the Web App build also renders the same screen into a static page that needs no
-  JavaScript: the app's header with the logo and title only, Ukrainian then English, the device's
-  light or dark theme, and "До гри" opening the web game. It lives at
-  https://denysslobodianyk1996.github.io/teach-clock/privacy.html, an address no app screen uses.
+- **Privacy**: opens the **Privacy Page**, one static page bundled with the app
+  (`src/static/privacy.html`, written to `privacy/index.html` by every build), in the Web App and
+  in the Android App alike. English first, then Ukrainian, with a link to each at the top; plain
+  text cards in the device's light or dark theme, no app header, no JavaScript. It says nothing
+  is collected or sent: no accounts, ads, analytics or permissions; only the Preferences and the
+  last name stay on the device; results are not kept after a Round. It names the author (Denys
+  Slobodianyk / Денис Слободяник) and gives the contact email. Its "Updated" date is the day of
+  the deploy it came with (the built commit's date, batch 21). The way back is the browser's or
+  the phone's Back. It works offline. Google Play's listing links it at
+  https://denysslobodianyk1996.github.io/teach-clock/privacy/ (batch 23).
 - **Contact**: a `mailto:` link to the author with the subject "Contact support from teach clock
   for kids" (set in `src/config.ts`).
 

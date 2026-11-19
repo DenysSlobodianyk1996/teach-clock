@@ -65,23 +65,6 @@ describe('the Android back button', () => {
     expect(exit).not.toHaveBeenCalled()
   })
 
-  it('goes from the Privacy Page back to the screen that opened it', async () => {
-    const { at, exit, back, router } = await open('/settings', () =>
-      usePlayerStore().setName('Оля'),
-    )
-    await router.push({ name: 'privacy' })
-    await back()
-    expect(at()).toBe('settings')
-    expect(exit).not.toHaveBeenCalled()
-  })
-
-  it('goes from a Privacy Page opened straight from its address to Welcome', async () => {
-    const { at, exit, back } = await open('/privacy-policy')
-    await back()
-    expect(at()).toBe('welcome')
-    expect(exit).not.toHaveBeenCalled()
-  })
-
   it('in a Round opens the leave dialog, and closes it on the next press', async () => {
     const { at, exit, back } = await open('/round', startRound())
     await back()

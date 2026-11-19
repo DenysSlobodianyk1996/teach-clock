@@ -7,6 +7,9 @@ import {
   type AppUpdateInfo,
 } from '@capawesome/capacitor-app-update'
 import { createAppRouter } from '@/router'
+import { usePlayerStore } from '@/stores/player'
+import { usePlayStore } from '@/stores/play'
+import { seededRandom } from '@/game/tasks'
 import { playUpdateOffer, type PlayUpdates } from '../playUpdate'
 
 const UPDATE: AppUpdateInfo = {
@@ -26,8 +29,10 @@ const NO_UPDATE: AppUpdateInfo = {
 /** A fake Play that answers `info` and records each time its update screen opens. */
 function fakePlay(info: () => Promise<AppUpdateInfo>) {
   return {
-    getAppUpdateInfo: vi.fn(info),
-    performImmediateUpdate: vi.fn(async () => ({ code: AppUpdateResultCode.CANCELED })),
+    getAppUpdateInfo: vi.fn<PlayUpdates['getAppUpdateInfo']>(info),
+    performImmediateUpdate: vi.fn<PlayUpdates['performImmediateUpdate']>(async () => ({
+      code: AppUpdateResultCode.CANCELED,
+    })),
   } satisfies PlayUpdates
 }
 
@@ -36,6 +41,14 @@ async function routerOn(path: string) {
   const router = createAppRouter(createMemoryHistory())
   await router.push(path)
   return router
+}
+
+/** A Round in play, so the router lets a push to `/round` through. */
+function startRound() {
+  usePlayerStore().setName('Оля')
+  const play = usePlayStore()
+  play.settings = { game: 'setTime', mode: 'test', level: 15, hours: 12 }
+  play.startRound(seededRandom(5))
 }
 
 describe("Play's update screen in the Android App", () => {
@@ -76,7 +89,10 @@ describe("Play's update screen in the Android App", () => {
 
   it('never opens off Welcome and Settings, so no Round is cut off', async () => {
     const play = fakePlay(async () => UPDATE)
-    await playUpdateOffer(await routerOn('/privacy-policy'), play)()
+    const router = await routerOn('/')
+    startRound()
+    await router.push('/round')
+    await playUpdateOffer(router, play)()
     expect(play.getAppUpdateInfo).not.toHaveBeenCalled()
     expect(play.performImmediateUpdate).not.toHaveBeenCalled()
   })
@@ -84,7 +100,8 @@ describe("Play's update screen in the Android App", () => {
   it('does not open if the Player left Welcome while Play was answering', async () => {
     const router = await routerOn('/')
     const play = fakePlay(async () => {
-      await router.push('/privacy-policy')
+      startRound()
+      await router.push('/round')
       return UPDATE
     })
     await playUpdateOffer(router, play)()

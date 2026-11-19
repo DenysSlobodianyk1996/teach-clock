@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * The header's look: the brand mark and the game's name, with room on the right for tools. The app
- * fills the tools in AppHeader; the static privacy.html shows the brand alone (it has no router).
+ * fills the tools in AppHeader.
  */
 import { useI18n } from 'vue-i18n'
 import BrandMark from './BrandMark.vue'

@@ -1,9 +1,8 @@
 import type { Router } from 'vue-router'
 import { dismissTopPopup, hasOpenPopup } from '@/components/openPopups'
-import { goBack } from '@/router'
 import { backAction, type BackScreen } from './backAction'
 
-const SCREENS: readonly BackScreen[] = ['welcome', 'settings', 'round', 'summary', 'privacy']
+const SCREENS: readonly BackScreen[] = ['welcome', 'settings', 'round', 'summary']
 
 /** Does what `backAction` says for the screen on show. `exit` closes the app. */
 export async function pressBack(router: Router, exit: () => unknown): Promise<void> {
@@ -18,9 +17,6 @@ export async function pressBack(router: Router, exit: () => unknown): Promise<vo
     case 'openLeaveDialog':
     case 'goWelcome':
       await router.push({ name: 'welcome' })
-      return
-    case 'goBack':
-      await goBack(router)
       return
     case 'exit':
       await exit()

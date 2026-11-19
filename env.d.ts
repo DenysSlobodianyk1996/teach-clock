@@ -5,8 +5,6 @@
 interface ImportMetaEnv {
   /** `android` for the Android App build; unset for the Web App. */
   readonly VITE_TARGET?: string
-  /** The Privacy Page's date, set by vite.config.ts; read only through src/privacy.ts. */
-  readonly VITE_PRIVACY_UPDATED?: string
 }
 
 interface ImportMeta {
