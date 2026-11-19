@@ -144,4 +144,27 @@ export default {
     privacy: 'Privacy',
     contact: 'Contact',
   },
+  // The Privacy Page: the app screen (/privacy-policy) and the static privacy/index.html share it.
+  privacy: {
+    title: 'Privacy policy',
+    updated: 'Updated:',
+    noDataTitle: 'No personal data',
+    noData:
+      'Teach Clock is a game for children. It collects no data. It sends nothing to any server, stores nothing remotely and shares nothing with anyone.',
+    onDeviceTitle: 'What stays on your device',
+    onDevice:
+      'Only the game settings and the last name entered stay on the device. Results are not kept after a round ends. To erase them, clear the app’s or the site’s data.',
+    noAdsTitle: 'No ads, analytics, accounts or permissions',
+    noAds:
+      'The game shows no ads, uses no analytics, tracking or third-party services, needs no account and asks for no device permissions.',
+    childrenTitle: 'Children',
+    children:
+      'The game is made for children. Because it collects nothing, it collects nothing from children either.',
+    contactTitle: 'Contact',
+    contactIntro: 'Questions about this policy or the game:',
+    email: 'Email:',
+    developerTitle: 'Developer',
+    createdBy: 'Created by Denys Slobodianyk',
+    back: 'Back to the game',
+  },
 } satisfies typeof uk

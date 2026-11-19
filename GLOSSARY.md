@@ -135,5 +135,5 @@ The plain bar at the bottom of Welcome and Settings with the links to the Privac
 _Avoid_: bottom bar, links bar
 
 **Privacy Page**:
-One static page, `src/static/privacy.html`, that every build writes to `privacy/index.html`: in English, then Ukrainian, it says that nothing about the Player is collected or sent. The Footer opens it in the Web App and in the Android App alike, and its public address, https://denysslobodianyk1996.github.io/teach-clock/privacy/, is the one in Google Play's listing. It needs no JavaScript and follows the device's light or dark (batch 23).
+The screen that says nothing about the Player is collected or sent: `/privacy-policy`, opened from the Footer in the Web App and the Android App, in the interface language, with a way back to the game. Its text is one per language in i18n (`privacy.*`). The Web App build also renders it, English then Ukrainian, into the static `privacy/index.html`, whose public address, https://denysslobodianyk1996.github.io/teach-clock/privacy/, is the one in Google Play's listing (batch 24).
 _Avoid_: privacy policy screen, terms

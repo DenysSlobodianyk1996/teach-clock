@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * The page around every screen: the header on top, then the play area with the screen in it and an
- * optional Footer below. The app (App.vue) wraps every screen in it.
+ * optional Footer below. The app (App.vue) and the static privacy/index.html share it, so they look alike.
  */
 </script>
 

@@ -35,12 +35,17 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   await page.evaluate(() => navigator.serviceWorker.ready)
 
   await context.setOffline(true)
-  // The address the Footer opens, and the one in Google Play's listing: the service worker answers
-  // both with the Privacy Page, never the app (which would send them to Welcome).
-  for (const address of ['/privacy/index.html', '/privacy/']) {
+  // The app screen the Footer opens.
+  await page.goto('/privacy-policy')
+  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
+  await expect(page.locator('article')).toHaveCount(1)
+
+  // The static copy for Google Play is in the offline copy too: the service worker answers its
+  // addresses with the page, never the app (which would send them to Welcome).
+  for (const address of ['/privacy/', '/privacy/index.html']) {
     await page.goto(address)
-    await expect(page.locator('section[lang="en"] h1')).toBeVisible()
-    await expect(page.locator('section[lang="uk"] h1')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: tEn('privacy.title') })).toBeVisible()
+    await expect(page.locator('article[lang="uk"]')).toBeVisible()
   }
 })
 

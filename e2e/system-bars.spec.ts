@@ -133,14 +133,14 @@ test.describe('an upright 360 × 640 phone with system bars', () => {
     })
   }
 
-  test('the Privacy Page: its language links below the status bar', async ({ page }) => {
+  test('the Privacy Page: the header below the status bar', async ({ page }) => {
     await page.goto('/')
     await page
       .getByRole('contentinfo')
       .getByRole('link', { name: t('footer.privacy') })
       .click()
-    await expect(page).toHaveURL(/\/privacy\/index\.html$/)
-    await expectInSafeArea(page, [page.locator('nav a').first()], UPRIGHT, 'language links')
+    await expect(page).toHaveURL(/privacy-policy/)
+    await expectInSafeArea(page, headerControls(page), UPRIGHT, 'header')
   })
 })
 
