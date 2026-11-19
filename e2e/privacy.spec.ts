@@ -5,7 +5,7 @@
  * the tests find it by structure.
  */
 import { expect, test, type Page } from '@playwright/test'
-import { CONTACT_EMAIL } from '../src/config.ts'
+import { CONTACT_EMAIL, ISSUES_URL } from '../src/config.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
 /** `#rrggbb` as the browser reports a computed colour. */
@@ -36,6 +36,9 @@ test.describe('the Privacy Page, with JavaScript off', () => {
           'href',
           `mailto:${CONTACT_EMAIL}`,
         )
+        await expect(
+          section.getByRole('link', { name: ISSUES_URL.replace('https://', '') }),
+        ).toHaveAttribute('href', ISSUES_URL)
         await expect(section.locator('time[datetime]')).toHaveCount(1)
         await expect(section.locator('time')).not.toContainText('%')
       }

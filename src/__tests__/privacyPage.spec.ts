@@ -5,7 +5,7 @@
  */
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { CONTACT_EMAIL } from '@/config'
+import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
 import { fillPrivacyPage } from '../../scripts/privacyUpdated'
 
 // From the project root, where Vitest runs: jsdom's import.meta.url is not a file URL.
@@ -29,11 +29,10 @@ describe('the Privacy Page', () => {
     }
   })
 
-  it('names the contact email in both languages', () => {
+  it('gives the contact email and the GitHub issues in both languages, and no other link', () => {
     for (const lang of ['en', 'uk']) {
-      expect(section(lang).querySelector('a[href^="mailto:"]')!.getAttribute('href')).toBe(
-        `mailto:${CONTACT_EMAIL}`,
-      )
+      const links = [...section(lang).querySelectorAll('a')].map((a) => a.getAttribute('href'))
+      expect(links).toEqual([`mailto:${CONTACT_EMAIL}`, ISSUES_URL])
     }
   })
 
