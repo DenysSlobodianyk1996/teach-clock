@@ -90,7 +90,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div ref="root" class="answer">
+  <div ref="root" class="answer" :style="{ '--error-lines': errors.length }">
     <div class="entry" :class="{ 'has-error': errors.length }">
       <template v-for="box in ['hour', 'minute'] as const" :key="box">
         <span v-if="box === 'minute'" class="colon" aria-hidden="true">:</span>
@@ -229,14 +229,14 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 }
 @media (--phone) {
   .answer {
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
   .entry {
     grid-template-rows: auto auto auto;
     row-gap: 2px;
     /* Brings the pad up to 4px under the ranges. */
-    margin-bottom: -6px;
+    margin-bottom: -4px;
   }
   .range {
     font-size: 14px;
@@ -245,6 +245,19 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
      a growing error moves nothing above it. */
   .error {
     grid-row: 3;
+    gap: var(--error-gap);
+    line-height: var(--error-line);
+  }
+  /* The error takes its room from below Submit, so the answer area keeps its height in the column
+     and the clock above it keeps its size (see RoundView): N lines are N line heights and the N - 1
+     gaps between them (the row gap above the error is there without one, too). */
+  .answer {
+    --error-line: 21px;
+    --error-gap: 2px;
+    margin-bottom: min(
+      0px,
+      var(--error-gap) - var(--error-lines) * (var(--error-line) + var(--error-gap))
+    );
   }
   .has-error .range {
     visibility: visible;
@@ -253,14 +266,14 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     display: none;
   }
   .timebox {
-    height: 60px;
+    height: 56px;
     font-size: 38px;
   }
   .colon {
     font-size: 38px;
   }
   .submit {
-    min-height: 52px;
+    min-height: 48px;
   }
   .timebox.hour {
     width: 76px;

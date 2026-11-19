@@ -179,3 +179,95 @@ test.describe('a 320px-wide phone', () => {
     }
   })
 })
+
+/**
+ * A 360 × 640 phone: what Chrome leaves for the page on a small phone (an Oppo A series) once its
+ * toolbars are shown. Every Game's Round fits up to its main button, with nothing scrolled, and the
+ * clock stays readable.
+ */
+test.describe('a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  /** The main button ends within the screen, nothing is scrolled, nothing sticks out sideways. */
+  async function expectInView(page: Page, button: Locator, what: string) {
+    await expect(button).toBeVisible()
+    expect(await page.evaluate(() => scrollY), `${what}: nothing scrolled`).toBe(0)
+    expect(await bottomFromPageTop(button), `${what}: ends within the screen`).toBeLessThanOrEqual(
+      640,
+    )
+    expect(await sidewaysScroll(page), `${what}: no sideways scroll`).toBeLessThanOrEqual(0)
+  }
+
+  async function clockWidth(page: Page, selector: string) {
+    return page.locator(selector).evaluate((e) => e.getBoundingClientRect().width)
+  }
+
+  /** A wrong try in Teach: 12:01 is off the 15-minute step; untouched hands are never right. */
+  const tryWrong = {
+    setTime: async (page: Page) => {
+      await page.keyboard.type('1201')
+      await page.keyboard.press('Enter')
+    },
+    dragArrows: async (page: Page) => {
+      await page.getByRole('button', { name: t('round.submit') }).click()
+    },
+  }
+
+  for (const game of ['setTime', 'dragArrows'] as const) {
+    test(`${game} test: Submit is in view`, async ({ page }) => {
+      await startRound(page, { game, mode: 'test', level: 15 })
+      await expectInView(page, page.getByRole('button', { name: t('round.submit') }), 'Submit')
+      expect(await clockWidth(page, '.clock-side svg.clock')).toBeGreaterThanOrEqual(150)
+    })
+
+    test(`${game} teach: Submit is in view, also through the wrong-Answer popup`, async ({
+      page,
+    }) => {
+      await startRound(page, { game, mode: 'teach', level: 15 })
+      const submit = page.getByRole('button', { name: t('round.submit') })
+      await expectInView(page, submit, 'Submit')
+      expect(await clockWidth(page, '.clock-side svg.clock')).toBeGreaterThanOrEqual(150)
+
+      await tryWrong[game](page)
+      await expect(wrongPopup(page)).toBeVisible()
+      const { gotIt } = await popupButtons(page)
+      expect(gotIt.y + gotIt.height, 'the popup fits').toBeLessThanOrEqual(640)
+      await closeWrongPopup(page, 'gotIt')
+      await expectInView(page, submit, 'Submit after the popup')
+    })
+  }
+
+  for (const game of ['dragHours', 'dragMinutes'] as const) {
+    test(`${game} teach: the face and the full tray are in view, also through the popup`, async ({
+      page,
+    }) => {
+      await startRound(page, { game, mode: 'teach' })
+      const tray = page.locator('.tray')
+      await expectInView(page, tray, 'tray')
+      expect(await clockWidth(page, '.board svg.number-face')).toBeGreaterThanOrEqual(150)
+
+      // Tap a number, then the slot after its own: a wrong drop opens the popup.
+      const n = Number(
+        await page.locator('.tray [data-number]').first().getAttribute('data-number'),
+      )
+      await page.locator(`.tray [data-number="${n}"]`).click()
+      await page.locator(`.board [data-slot="${(n % 12) + 1}"]`).click()
+      await expect(wrongPopup(page)).toBeVisible()
+      const { gotIt } = await popupButtons(page)
+      expect(gotIt.y + gotIt.height, 'the popup fits').toBeLessThanOrEqual(640)
+      await closeWrongPopup(page, 'gotIt')
+      await expectInView(page, tray, 'tray after the popup')
+    })
+
+    test(`${game} test: Done is in view once all 12 are placed`, async ({ page }) => {
+      await startRound(page, { game, mode: 'test' })
+      await expectInView(page, page.locator('.tray'), 'tray')
+      expect(await clockWidth(page, '.board svg.number-face')).toBeGreaterThanOrEqual(150)
+      for (let n = 1; n <= 12; n++) {
+        await page.locator(`.tray [data-number="${n}"]`).click()
+        await page.locator(`.board [data-slot="${n}"]`).click()
+      }
+      await expectInView(page, page.getByRole('button', { name: t('numbers.submit') }), 'Done')
+    })
+  }
+})

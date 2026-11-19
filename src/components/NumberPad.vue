@@ -78,7 +78,7 @@ const { t } = useI18n()
 }
 @media (--phone) {
   .pad {
-    gap: 6px;
+    gap: 4px;
   }
   /* The smallest touch target allowed, so the whole answer fits a small phone. */
   .key {

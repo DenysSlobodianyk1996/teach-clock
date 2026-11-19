@@ -227,7 +227,9 @@ export default defineConfig({
   css: { postcss: { plugins: [customMediaPlugin] } },
   plugins: [
     vue(),
-    vueDevTools(),
+    // Not under Playwright: its floating button sits over the bottom of the screen, where a phone
+    // Round's Submit can be, and would catch the tests' taps.
+    ...(process.env.PW_TEST ? [] : [vueDevTools()]),
     themeColorsPlugin(),
     appTextPlugin(),
     webManifestPlugin(),
