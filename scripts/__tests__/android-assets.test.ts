@@ -5,6 +5,7 @@ import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { DENSITIES, THEME_COLOR } from '../generate-android-assets.ts'
 import { THEME_BG } from '../../src/themeColors.ts'
+import { ICON_BG } from '../../src/brandMark.ts'
 
 // Checks the files written by `npm run generate-android-assets` (committed in android/ and docs/store/).
 const root = fileURLToPath(new URL('../../', import.meta.url))
@@ -31,28 +32,41 @@ describe('Theme colour', () => {
   })
 })
 
+// The clock face's cream, read from the brand mark itself.
+const FACE = /<circle r="90" fill="(#[0-9a-f]{6})"/.exec(
+  readFileSync(`${root}public/favicon.svg`, 'utf8'),
+)?.[1]
+
+describe('Icon background', () => {
+  it("is the clock face's cream, not a theme background", () => {
+    expect(ICON_BG).toBe('#fff3dd')
+    expect(ICON_BG).toBe(FACE)
+    expect(Object.values(THEME_BG)).not.toContain(ICON_BG)
+  })
+})
+
 describe('Android launcher icon', () => {
-  it('has the theme colour as its adaptive background', () => {
+  it('has the cream as its adaptive background', () => {
     const xml = readFileSync(`${res}values/ic_launcher_background.xml`, 'utf8')
-    expect(xml.toLowerCase()).toContain(`>${THEME_COLOR}<`)
+    expect(xml.toLowerCase()).toContain(`>${ICON_BG}<`)
   })
 
   it.each(Object.entries(DENSITIES))(
-    'keeps the %s foreground inside the 66dp safe zone',
+    'fills the 66dp safe circle with the %s foreground clock, and nothing outside it',
     async (name, scale) => {
       const { info, at } = await pixels(`${res}mipmap-${name}/ic_launcher_foreground.png`)
       expect(info.width).toBe(108 * scale)
       const centre = info.width / 2
-      const safe = 33 * scale
-      let drawn = 0
+      let reach = 0
       for (let y = 0; y < info.height; y++) {
         for (let x = 0; x < info.width; x++) {
           if (at(x, y).alpha === 0) continue
-          drawn++
-          expect(Math.hypot(x + 0.5 - centre, y + 0.5 - centre)).toBeLessThanOrEqual(safe)
+          reach = Math.max(reach, Math.hypot(x + 0.5 - centre, y + 0.5 - centre))
         }
       }
-      expect(drawn).toBeGreaterThan(0)
+      expect(reach).toBeLessThanOrEqual(33 * scale)
+      // The clock grows to the safe circle: at least 64 of its 66dp.
+      expect(reach).toBeGreaterThanOrEqual(32 * scale)
     },
   )
 })
@@ -97,9 +111,9 @@ describe('Play Store icon', () => {
     })
   })
 
-  it("fills the corners with the dark theme's background", async () => {
+  it('fills the corners with the cream', async () => {
     const { at } = await pixels(`${root}docs/store/icon-512.png`)
-    expect(at(2, 2)).toEqual({ color: DARK_BG, alpha: 255 })
-    expect(at(509, 509)).toEqual({ color: DARK_BG, alpha: 255 })
+    expect(at(2, 2)).toEqual({ color: ICON_BG, alpha: 255 })
+    expect(at(509, 509)).toEqual({ color: ICON_BG, alpha: 255 })
   })
 })
