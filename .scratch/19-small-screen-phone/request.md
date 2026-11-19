@@ -16,3 +16,4 @@ Later in the same conversation:
 - The phone is an Oppo A series.
 - Keep current breakpoints. On tablets the same logic is fine. In general, on small-height screens show as much content on one screen as possible.
 - In the end, update design to show such cases too.
+- Also adjust the screenshots for the Android store, since the mobile version looks different.

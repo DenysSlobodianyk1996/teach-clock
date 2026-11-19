@@ -26,6 +26,7 @@ On the phone layout, Welcome, Settings and every Round fit one screen of 360 × 
 - **Settings** on a phone: a smaller greeting; Game and Mode as compact cards (a small icon beside the title, no description), each heading with an ⓘ that opens that section's Info Popup; Level and Hours show their titles only.
 - **Every Round** on a phone: the clock is as big as the height left allows, so Submit or Done is always on screen, in Teach and Test, also through the wrong-Answer popup.
 - **Design**: the phone boards show the new layouts and the Info Popups at 360 × 640.
+- **Play Store screenshots**: the store screenshots are portrait, so they get the phone layout too. All of them are redrawn (phone, 7-inch and 10-inch tablet, Ukrainian and English) and uploaded to the Play listing, so the store shows the app as it now looks.
 
 ## User Stories
 
@@ -61,7 +62,11 @@ On the phone layout, Welcome, Settings and every Round fit one screen of 360 × 
 30. As a Player using a keyboard, I want the ⓘ to be focusable and the Info Popup to close with Escape, as other popups do, so that I am never trapped.
 31. As an English-speaking Player, I want the ⓘ, the Info Popups and their headings in English, so that the phone layout works in both languages.
 32. As the author, I want the phone design boards to show the new Welcome, Settings and Round layouts and both Info Popups at 360 × 640, so that the design matches the app.
-33. As the author, I want the store screenshots redone after the change, so that the Play listing shows the app as it is.
+33. As a parent browsing Google Play, I want the phone screenshots to show the new Welcome, Settings and Rounds, so that what I install looks like what I saw.
+34. As a parent browsing Google Play on a tablet, I want the 7-inch and 10-inch screenshots redone too, so that they also match the app.
+35. As a Ukrainian or English-speaking parent, I want the screenshots in my language redone, so that both listings are up to date.
+36. As the author, I want the screenshots to show the main screens with nothing cut off and no Info Popup covering them, so that the listing sells the Games rather than the help text.
+37. As the author, I want a short checklist of what to upload where in Play Console, so that I replace every old screenshot and none are left behind.
 
 ## Implementation Decisions
 
@@ -78,7 +83,13 @@ On the phone layout, Welcome, Settings and every Round fit one screen of 360 × 
   - The greeting stays, at about 22 px.
 - **New interface text** (uk and en): the ⓘ accessible name and the Got it label. Reuse the existing Got it key if there is one.
 - **Desktop and sideways:** the desktop layout is untouched. The sideways phone layout follows the same `--phone` rules and must not get worse. Existing sideways checks keep passing.
-- **Design sync (last ticket):** update the phone boards in `docs/design/` (Welcome, Settings, Set Time, Drag Arrows, Drag Hours, Drag Hours 13–24, Drag Minutes) and add boards for Welcome with its Info Popup, Settings with the Game Info Popup, Settings for Drag Hours (with Hours) and Settings for Set Time (with Level), all at 360 × 640; put them on the gallery and the online design canvas. Update the product brief, the batch index row, the CLAUDE.md status, and rerun the store screenshots.
+- **Design sync (last ticket):** update the phone boards in `docs/design/` (Welcome, Settings, Set Time, Drag Arrows, Drag Hours, Drag Hours 13–24, Drag Minutes) and add boards for Welcome with its Info Popup, Settings with the Game Info Popup, Settings for Drag Hours (with Hours) and Settings for Set Time (with Level), all at 360 × 640; put them on the gallery and the online design canvas. Update the product brief, the batch index row and the CLAUDE.md status.
+- **Play Store screenshots (own ticket, after the layout tickets):**
+  - The store script shoots the Android build in portrait at 468 × 832 (phone), 608 × 1080 (7-inch) and 810 × 1440 (10-inch), so every size now gets the phone layout. Rerun it for all three sizes and both languages: the same 8 shots each (Welcome, Settings, Set Time Teach and Test, Drag Arrows Teach, Drag Hours Test, Drag Minutes Teach, Summary), same file names, 48 PNGs in all.
+  - Adjust the script where the new layout needs it (for example a Round now reached with less scrolling, or the clock sized differently) so each shot still shows its moment in full. The shots show the screens themselves; no Info Popup open.
+  - Look at every new shot before committing: nothing cut off, nothing awkwardly empty on the taller store sizes. If a tall store size looks empty because the phone layout no longer fills it, the layout tickets get the fix (the clock grows into the room), not the script.
+  - The feature graphic is drawn from its own SVG, not from the screens, so it is not redrawn.
+  - Uploading is a step only the author can do: the ticket ends with the exact Play Console steps (Main store listing, each language, phone, 7-inch and 10-inch screenshots: delete the old 8, add the new 8 in order), added to the store docs if they are not already there. The new screenshots go to the listing after the app update with the new layout reaches the same track.
 
 ## Testing Decisions
 
@@ -91,6 +102,7 @@ On the phone layout, Welcome, Settings and every Round fit one screen of 360 × 
   - Desktop: one check that Welcome and Settings show their descriptions and no ⓘ.
 - **Seam 2, the view component tests (Vitest):** the existing `SettingsView.spec.ts` (and a new `WelcomeView.spec.ts` next to it) check the Info Popups' content: the Game Info Popup lists all four Games, the Drag Hours line follows the picked Hours (1–12 or 13–24), the Mode one lists Teach and Test, and Got it changes no Settings. Prior art: `WrongAnswerPopup.spec.ts`, `LeaveRoundDialog.spec.ts`.
 - No new seam. No unit tests for CSS.
+- **Store screenshots are not tests.** The store script is run by hand and its output is checked by looking at the 48 PNGs. It must still finish without errors in both languages and all three sizes.
 
 ## Out of Scope
 
@@ -99,6 +111,8 @@ On the phone layout, Welcome, Settings and every Round fit one screen of 360 × 
 - The Summary screen and the Privacy Page.
 - Moving or shrinking the Footer, the header or the theme and language toggles.
 - Changing any game rule, Settings default or text other than the new ⓘ and Info Popup strings.
+- Redrawing the feature graphic or the app icon, and changing the store listing text.
+- Adding new store screenshots (such as one with an Info Popup open) or changing which moments the 8 show.
 
 ## Further Notes
 
