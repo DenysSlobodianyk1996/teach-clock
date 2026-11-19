@@ -1,10 +1,9 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import type { Component } from 'vue'
 import { createMemoryHistory } from 'vue-router'
 import AppFooter from '../AppFooter.vue'
 import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
-import { PRIVACY_PAGE } from '@/static/privacy'
 import { createAppI18n } from '@/i18n'
 import { createAppRouter } from '@/router'
 import { t } from '@/test/i18n'
@@ -28,10 +27,10 @@ function link(text: string) {
 }
 
 describe('AppFooter', () => {
-  it('opens the static Privacy Page by its full file name, not in a new tab', () => {
+  it('opens the Privacy Page as an app screen, not a new tab', () => {
     wrapper = mountComponent(AppFooter)
     const privacy = link(t('footer.privacy'))
-    expect(privacy.attributes('href')).toBe(`${import.meta.env.BASE_URL}${PRIVACY_PAGE}`)
+    expect(privacy.attributes('href')).toBe('/privacy-policy')
     expect(privacy.attributes('target')).toBeUndefined()
   })
 
@@ -40,6 +39,16 @@ describe('AppFooter', () => {
     expect(link(t('footer.contact')).attributes('href')).toBe(
       `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`,
     )
+  })
+
+  it('in the Android App, also opens the Privacy Page as an app screen, never the browser', async () => {
+    vi.resetModules()
+    vi.doMock('@/platform', () => ({ isAndroidApp: true }))
+    const { default: AndroidFooter } = await import('../AppFooter.vue')
+    wrapper = mountComponent(AndroidFooter)
+    expect(link(t('footer.privacy')).attributes('href')).toBe('/privacy-policy')
+    expect(link(t('footer.privacy')).attributes('target')).toBeUndefined()
+    vi.doUnmock('@/platform')
   })
 
   it('is the page footer', () => {

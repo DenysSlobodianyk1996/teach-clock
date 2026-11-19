@@ -16,7 +16,7 @@ function filesAtSiteRoot(): string[] {
     'index.html',
     // The deploy copies index.html here, so unknown addresses open the app (deploy.yml).
     '404.html',
-    // The Privacy Page's folder, privacy/index.html (vite.config.ts).
+    // The static Privacy Page for Google Play, privacy/index.html (vite.config.ts).
     'privacy',
     // The service worker and its loader (vite-plugin-pwa), and a manifest per language.
     'sw.js',
