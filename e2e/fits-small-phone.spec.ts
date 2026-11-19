@@ -393,6 +393,20 @@ test.describe('a 360 × 640 phone', () => {
     })
   }
 
+  test('setTime: both time-box errors show and Submit stays in view, the clock keeps its size', async ({
+    page,
+  }) => {
+    await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
+    const submit = page.getByRole('button', { name: t('round.submit') })
+    const before = await clockWidth(page, '.clock-side svg.clock')
+    await page.keyboard.type('9999')
+    await page.keyboard.press('Enter')
+    for (const box of ['hour', 'minute'] as const)
+      await expect(page.getByText(t(`round.errors.${box}`))).toBeVisible()
+    await expectInView(page, submit, 'Submit with both errors')
+    expect(await clockWidth(page, '.clock-side svg.clock'), 'the clock keeps its size').toBe(before)
+  })
+
   for (const game of ['dragHours', 'dragMinutes'] as const) {
     test(`${game} teach: the face and the full tray are in view, also through the popup`, async ({
       page,
