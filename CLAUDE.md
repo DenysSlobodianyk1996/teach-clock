@@ -19,9 +19,11 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `npm run generate-pwa-assets`: redraw the app icons in `public/` from `public/favicon.svg`
 - Android (Gradle needs `ANDROID_HOME=~/Library/Android/sdk` and `JAVA_HOME=/opt/homebrew/opt/openjdk@21`):
   - `npm run build:android`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
-  - `npm run build:apk`: `build:android` then `assembleDebug` (fills in `ANDROID_HOME`/`JAVA_HOME` if unset); the APK to sideload is `android/app/build/outputs/apk/debug/app-debug.apk`
-  - `npm run check:android`: after `bundleRelease`, fails on location or `AD_ID` permissions
-  - `npm run generate-android-assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`
+  - `npm run android:build`: `build:android`, `bundleRelease` (signed only with the key env vars, `docs/android-release.md`), then `android:check`
+  - `npm run android:apk`: `build:android` then a debug APK, `android/app/build/outputs/apk/debug/app-debug.apk`; `npm run android:install` also installs it on the phone plugged in over USB (USB debugging on). The debug app id ends in `.debug`, so it sits next to the Play copy. Both fill in `ANDROID_HOME`/`JAVA_HOME` if unset (`scripts/android-debug-apk.sh`)
+  - `npm run android:open`: open `android/` in Android Studio
+  - `npm run android:check`: after `bundleRelease`, fails on location or `AD_ID` permissions
+  - `npm run android:assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`
   - `PW_PORT=<port> npm run store-shots`: Play screenshots and feature graphic into `docs/store/`; rerun after UI or text changes
   - `bash scripts/release-wizard.sh [--dry-run]`: walks the author through the Play Console steps only a person can do
 - Push to `main` that changes the app also uploads a signed bundle to Play closed testing (`.github/workflows/android.yml`); production is its Run workflow button

@@ -2,8 +2,8 @@
 // apps aimed at children: location or the advertising ID.
 //
 //   cd android && ./gradlew bundleRelease   (or assembleRelease / processReleaseMainManifest)
-//   npm run check:android                   (reads the merged release manifest)
-//   npm run check:android -- <path/to/AndroidManifest.xml>
+//   npm run android:check                   (reads the merged release manifest)
+//   npm run android:check -- <path/to/AndroidManifest.xml>
 //
 // It reads the manifest that Gradle merged from the app and every library, so a permission a
 // plugin brings in is caught too. Without a path it uses the release one, or the debug one if

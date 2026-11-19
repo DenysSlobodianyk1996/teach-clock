@@ -1,5 +1,5 @@
 // Draws the Android launcher icon, splash and Play Store icon from public/favicon.svg:
-// `npm run generate-android-assets`. Commit the files it writes.
+// `npm run android:assets`. Commit the files it writes.
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'

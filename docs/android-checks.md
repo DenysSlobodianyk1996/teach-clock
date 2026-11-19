@@ -4,7 +4,7 @@ The checks that show the Android App is fit for Google Play review (batch 08, ti
 
 ## Permission check (automatic)
 
-`npm run check:android` reads the manifest Gradle merges from the app and every library, lists the permissions it requests, and fails if one is not allowed in an app for children (Families policy):
+`npm run android:check` reads the manifest Gradle merges from the app and every library, lists the permissions it requests, and fails if one is not allowed in an app for children (Families policy):
 
 - any `android.permission.ACCESS_*LOCATION`
 - `com.google.android.gms.permission.AD_ID`
@@ -14,10 +14,10 @@ It needs a Gradle build first, so in CI it runs **after** `./gradlew bundleRelea
 ```sh
 npm run build:android
 (cd android && ./gradlew bundleRelease)
-npm run check:android
+npm run android:check
 ```
 
-By default it reads `android/app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml`, or the debug one if only a debug build exists. Pass a path to check another manifest: `npm run check:android -- path/to/AndroidManifest.xml`. Exit codes: 0 ok, 1 a banned permission, 2 no merged manifest (build first).
+By default it reads `android/app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml`, or the debug one if only a debug build exists. Pass a path to check another manifest: `npm run android:check -- path/to/AndroidManifest.xml`. Exit codes: 0 ok, 1 a banned permission, 2 no merged manifest (build first).
 
 Result on 2026-11-13 (Capacitor 8.6.2, `@capacitor/app` 8.1.2): only `android.permission.INTERNET` and `app.teachclockforkids.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` (from androidx core). Passes.
 

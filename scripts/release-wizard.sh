@@ -454,22 +454,20 @@ find_signed_artifact() {
   return 1
 }
 
-# build_locally: npm run build:android, a signed bundleRelease, then the permission check.
+# build_locally: npm run android:build (build:android, a signed bundleRelease, the permission check).
 build_locally() {
   if ! find_jdk; then warn "JDK 21 not found. Do the stage \"Your machine\" first."; return 1; fi
   if [[ -z "$KEYSTORE_PATH" ]]; then ask_keystore_path; fi
   if [[ ! -f "$KEYSTORE_PATH" ]]; then warn "No upload key at $KEYSTORE_PATH (stage \"Upload key\")."; return 1; fi
   ask_key_password || { warn "No password, no signed build."; return 1; }
   say "The commands (the password is passed through the environment, not shown):"
-  show_cmd npm run build:android
-  show_raw "(cd android && ./gradlew bundleRelease)"
-  show_cmd npm run check:android
+  show_cmd npm run android:build
   if ! confirm "Build the signed bundle now (a few minutes)?"; then KEY_PW=""; return 1; fi
   if (( DRY_RUN )); then note "(dry run: not run)"; KEY_PW=""; return 0; fi
   local rc=0
   ( export JAVA_HOME="$JDK" ANDROID_HOME="$SDK_DIR" ANDROID_KEYSTORE_PATH="$KEYSTORE_PATH" \
       ANDROID_KEY_ALIAS="$KEY_ALIAS" ANDROID_KEYSTORE_PASSWORD="$KEY_PW" ANDROID_KEY_PASSWORD="$KEY_PW"
-    npm run build:android && (cd android && ./gradlew bundleRelease) && npm run check:android ) || rc=$?
+    npm run android:build ) || rc=$?
   KEY_PW=""
   if (( rc )); then warn "The build failed (exit $rc). Fix it, then run this stage again."; return 1; fi
   say "${GREEN}✓${RESET} Signed bundle: $ROOT/$AAB"

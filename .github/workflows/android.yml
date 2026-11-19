@@ -96,7 +96,7 @@ jobs:
         working-directory: android
         run: ./gradlew bundleRelease
       # Fails on location or AD_ID in the merged manifest (Families policy).
-      - run: npm run check:android
+      - run: npm run android:check
 
       - name: Bundle name
         id: name

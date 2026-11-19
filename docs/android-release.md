@@ -84,11 +84,12 @@ The commands (scripts in `package.json`):
 
 ```bash
 npm run build:android        # VITE_TARGET=android type-check and build, then cap sync android
+npm run android:apk          # build:android, then a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
+npm run android:install      # android:apk, then adb install on the phone plugged in over USB (USB debugging on)
+npm run android:open         # open the project in Android Studio
+npm run android:build        # build:android, the app bundle (.aab), then android:check; unsigned unless the env vars below are set
+npm run android:check        # after a Gradle build: fails on location or AD_ID permissions
 npx cap run android          # install and start on the emulator or a USB phone
-npx cap open android         # open the project in Android Studio
-npm run build:apk            # build:android, then a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
-cd android && ./gradlew bundleRelease   # the app bundle (.aab); unsigned unless the env vars below are set
-npm run check:android        # after a Gradle build: fails on location or AD_ID permissions
 ```
 
 Run `npm run build:android` again after every change to the game: Gradle packages whatever is in `dist/` at the last sync. The device checklist for a release that changes `android/`, Capacitor or a plugin is [`android-checks.md`](android-checks.md).
@@ -207,11 +208,9 @@ Google only accepts automatic (API) uploads after the app has one build, so this
    - **From CI**: GitHub › Actions › **Android app bundle** › the latest successful run on `main` › artifact `teach-clock-<run number>` (not `-unsigned`). Or: `gh run download <run id> --name teach-clock-<n>`. A signed one exists once section 4 is done and an app change has been merged since.
    - **Here** (with the key from section 3):
      ```bash
-     npm run build:android
      export ANDROID_KEYSTORE_PATH=~/teach-clock-upload.jks ANDROID_KEY_ALIAS=upload
      read -s ANDROID_KEYSTORE_PASSWORD && export ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_PASSWORD=$ANDROID_KEYSTORE_PASSWORD
-     (cd android && ./gradlew bundleRelease)
-     npm run check:android
+     npm run android:build
      ```
      The file is `android/app/build/outputs/bundle/release/app-release.aab`.
 2. Play Console › **Test and release › Testing › Closed testing** › the default track **Alpha** › **Create release** › upload the `.aab`. Accept Play App Signing when asked. **Keep the track Alpha**: CI uploads every merge to the track id `alpha`, so a new or renamed track would get nothing.
