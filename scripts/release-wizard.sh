@@ -454,7 +454,7 @@ find_signed_artifact() {
   return 1
 }
 
-# build_locally: npm run android:build (build:android, a signed bundleRelease, the permission check).
+# build_locally: npm run android:build (android:sync, a signed bundleRelease, the permission check).
 build_locally() {
   if ! find_jdk; then warn "JDK 21 not found. Do the stage \"Your machine\" first."; return 1; fi
   if [[ -z "$KEYSTORE_PATH" ]]; then ask_keystore_path; fi

@@ -18,9 +18,9 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `npm run build`: type-check and build (with the offline service worker)
 - `npm run generate-pwa-assets`: redraw the app icons in `public/` from `public/favicon.svg`
 - Android (Gradle needs `ANDROID_HOME=~/Library/Android/sdk` and `JAVA_HOME=/opt/homebrew/opt/openjdk@21`):
-  - `npm run build:android`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
-  - `npm run android:build`: `build:android`, `bundleRelease` (signed only with the key env vars, `docs/android-release.md`), then `android:check`
-  - `npm run android:apk`: `build:android` then a debug APK, `android/app/build/outputs/apk/debug/app-debug.apk`; `npm run android:install` also installs it on the phone plugged in over USB (USB debugging on). The debug app id ends in `.debug`, so it sits next to the Play copy. Both fill in `ANDROID_HOME`/`JAVA_HOME` if unset (`scripts/android-debug-apk.sh`)
+  - `npm run android:sync`: Android build into `dist/` and `cap sync`; rerun before every Gradle build (`cd android && ./gradlew assembleDebug|bundleRelease`)
+  - `npm run android:build`: `android:sync`, `bundleRelease` (signed only with the key env vars, `docs/android-release.md`), then `android:check`
+  - `npm run android:apk`: `android:sync` then a debug APK, `android/app/build/outputs/apk/debug/app-debug.apk`; `npm run android:install` also installs it on the phone plugged in over USB (USB debugging on). The debug app id ends in `.debug`, so it sits next to the Play copy. Both fill in `ANDROID_HOME`/`JAVA_HOME` if unset (`scripts/android-debug-apk.sh`)
   - `npm run android:open`: open `android/` in Android Studio
   - `npm run android:check`: after `bundleRelease`, fails on location or `AD_ID` permissions
   - `npm run android:assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`

@@ -14,7 +14,7 @@ import { LOCALES } from './src/i18n/locales.ts'
 import uk from './src/i18n/uk.ts'
 import en from './src/i18n/en.ts'
 
-/** The Android App build (`npm run build:android`); src/platform.ts reads the same var for the app. */
+/** The Android App build (`npm run android:sync`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
 
 /**

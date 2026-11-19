@@ -91,7 +91,7 @@ jobs:
 
       - run: npm ci
       # VITE_TARGET=android build (with type-check), then cap sync android.
-      - run: npm run build:android
+      - run: npm run android:sync
       - name: Gradle bundleRelease
         working-directory: android
         run: ./gradlew bundleRelease
