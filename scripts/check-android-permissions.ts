@@ -42,7 +42,7 @@ if (import.meta.main) {
   const file = process.argv[2] ?? MANIFESTS.find((path) => existsSync(path))
   if (!file || !existsSync(file)) {
     console.error(
-      `No merged manifest found${file ? ` at ${file}` : ''}. Run \`npm run build:android\` and ` +
+      `No merged manifest found${file ? ` at ${file}` : ''}. Run \`npm run android:sync\` and ` +
         '`cd android && ./gradlew bundleRelease` first.',
     )
     process.exit(2)

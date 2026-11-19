@@ -23,7 +23,7 @@ if [ -z "${JAVA_HOME:-}" ] && [ -d /opt/homebrew/opt/openjdk@21 ]; then
   export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 fi
 
-npm run build:android
+npm run android:sync
 (cd android && ./gradlew assembleDebug)
 
 apk="android/app/build/outputs/apk/debug/app-debug.apk"

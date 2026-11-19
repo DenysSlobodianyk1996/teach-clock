@@ -83,16 +83,16 @@ Also create an emulator in Device Manager: a Pixel phone with API 36.
 The commands (scripts in `package.json`):
 
 ```bash
-npm run build:android        # VITE_TARGET=android type-check and build, then cap sync android
-npm run android:apk          # build:android, then a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
+npm run android:sync         # VITE_TARGET=android type-check and build, then cap sync android
+npm run android:apk          # android:sync, then a debug APK: android/app/build/outputs/apk/debug/app-debug.apk
 npm run android:install      # android:apk, then adb install on the phone plugged in over USB (USB debugging on)
 npm run android:open         # open the project in Android Studio
-npm run android:build        # build:android, the app bundle (.aab), then android:check; unsigned unless the env vars below are set
+npm run android:build        # android:sync, the app bundle (.aab), then android:check; unsigned unless the env vars below are set
 npm run android:check        # after a Gradle build: fails on location or AD_ID permissions
 npx cap run android          # install and start on the emulator or a USB phone
 ```
 
-Run `npm run build:android` again after every change to the game: Gradle packages whatever is in `dist/` at the last sync. The device checklist for a release that changes `android/`, Capacitor or a plugin is [`android-checks.md`](android-checks.md).
+Run `npm run android:sync` again after every change to the game: Gradle packages whatever is in `dist/` at the last sync. The device checklist for a release that changes `android/`, Capacitor or a plugin is [`android-checks.md`](android-checks.md).
 
 The release build reads its signing key and version from environment variables:
 

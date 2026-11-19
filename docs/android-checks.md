@@ -12,7 +12,7 @@ The checks that show the Android App is fit for Google Play review (batch 08, ti
 It needs a Gradle build first, so in CI it runs **after** `./gradlew bundleRelease`:
 
 ```sh
-npm run build:android
+npm run android:sync
 (cd android && ./gradlew bundleRelease)
 npm run android:check
 ```
