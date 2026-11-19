@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, useId } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ChoiceCard from '@/components/ChoiceCard.vue'
+import InfoButton from '@/components/InfoButton.vue'
+import InfoPopup from '@/components/InfoPopup.vue'
 import ModeIcon from '@/components/ModeIcon.vue'
 import { GAMES, HOURS, LEVELS, MODES, hasHours, hasLevel } from '@/game/settings'
 import { usePlayerStore } from '@/stores/player'
@@ -17,6 +19,29 @@ const showLevel = computed(() => hasLevel(play.settings.game))
 const showHours = computed(() => hasHours(play.settings.game))
 /** Drag Hours says which numbers it places: 1–12 or 13–24, as Hours is picked. */
 const hoursRange = computed(() => t(`hours.${play.settings.hours}.name`))
+const gameDescription = (game: (typeof GAMES)[number]) =>
+  t(`games.${game}.description`, { range: hoursRange.value })
+
+/** On a phone the cards show no descriptions: the Game and Mode ones are behind an ⓘ. */
+const info = ref<'game' | 'mode' | null>(null)
+const infoPopup = computed(() =>
+  info.value === 'game'
+    ? {
+        heading: t('settings.game'),
+        items: GAMES.map((g) => ({ name: t(`games.${g}.name`), description: gameDescription(g) })),
+      }
+    : info.value === 'mode'
+      ? {
+          heading: t('settings.mode'),
+          items: MODES.map((m) => ({
+            name: t(`modes.${m}.name`),
+            description: t(`modes.${m}.description`),
+          })),
+        }
+      : null,
+)
+/** The section names, so a group is named by its heading alone, not by its ⓘ too. */
+const id = useId()
 
 function startRound() {
   play.startRound()
@@ -28,14 +53,17 @@ function startRound() {
   <div class="settings">
     <h1>{{ t('settings.greeting', { name: player.name }) }}</h1>
 
-    <fieldset class="group">
-      <legend class="label">{{ t('settings.game') }}</legend>
+    <fieldset class="group" :aria-labelledby="`${id}-game`">
+      <legend class="label">
+        <span :id="`${id}-game`">{{ t('settings.game') }}</span>
+        <InfoButton @click="info = 'game'" />
+      </legend>
       <div class="row games">
         <ChoiceCard
           v-for="game in GAMES"
           :key="game"
           :title="t(`games.${game}.name`)"
-          :description="t(`games.${game}.description`, { range: hoursRange })"
+          :description="gameDescription(game)"
           name="game"
           :checked="play.settings.game === game"
           @select="play.settings.game = game"
@@ -72,8 +100,11 @@ function startRound() {
       </div>
     </fieldset>
 
-    <fieldset class="group">
-      <legend class="label">{{ t('settings.mode') }}</legend>
+    <fieldset class="group" :aria-labelledby="`${id}-mode`">
+      <legend class="label">
+        <span :id="`${id}-mode`">{{ t('settings.mode') }}</span>
+        <InfoButton @click="info = 'mode'" />
+      </legend>
       <div class="row modes">
         <ChoiceCard
           v-for="mode in MODES"
@@ -144,6 +175,13 @@ function startRound() {
         </svg>
       </button>
     </div>
+
+    <InfoPopup
+      v-if="infoPopup"
+      :heading="infoPopup.heading"
+      :items="infoPopup.items"
+      @dismiss="info = null"
+    />
   </div>
 </template>
 
@@ -202,34 +240,65 @@ h1 {
   gap: 12px;
 }
 
+.group legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 @media (--phone) {
   .settings {
     padding: 4px 20px 24px;
     gap: 12px;
   }
+  /* The greeting stays, smaller, to leave room for the cards. */
+  h1 {
+    font-size: 22px;
+  }
+  .group,
+  .group legend {
+    gap: 8px;
+  }
+  .group legend {
+    margin-bottom: 8px;
+  }
+  /* The ⓘ is a 44 px target but takes no more height than the heading's line. */
+  .group legend :deep(.info-btn) {
+    margin: -12px 0;
+  }
+  .row {
+    gap: 10px;
+  }
+  /* No descriptions on a phone: the Game and Mode ones are in the Info Popups. */
+  .row :deep(.description) {
+    display: none;
+  }
   /* Two by two: Drag Hours and Drag Minutes share the first row. */
   .games {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Two cards side by side leave no room for the icon beside the text, so it goes on top. */
+  /* Compact cards: a small icon beside the title. */
   .games :deep(.choice),
   .modes :deep(.choice) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 14px 14px;
+    gap: 10px;
+    min-height: 60px;
+    padding: 8px 10px;
+    border-radius: 18px;
   }
   .games :deep(.choice svg),
   .modes :deep(.choice svg) {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
   }
-  .levels :deep(.description) {
-    display: none;
+  .games :deep(.choice b),
+  .modes :deep(.choice b) {
+    font-size: 17px;
+    line-height: 1.15;
   }
-  .levels :deep(.choice) {
+  .levels :deep(.choice),
+  .hours :deep(.choice) {
     justify-content: center;
-    padding: 12px 6px;
+    padding: 8px 6px;
     text-align: center;
   }
   /* Back and Play share the row equally, so both fit a 360 px phone. */
