@@ -34,6 +34,17 @@
 
   --header-height: 72px;
   --stage-max: 1024px;
+
+  /* The system bars and a camera cutout drawn over the page (batch 21). The Android App is edge to
+     edge: Capacitor's SystemBars puts their sizes in --safe-area-inset-* (`insetsHandling: 'css'`,
+     right on every WebView); a browser or an installed Web App gives them through env() with
+     `viewport-fit=cover`; elsewhere they are 0. Backgrounds run under the bars, controls stay inside. */
+  --inset-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --inset-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  --inset-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --inset-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+  /* The screen's height between the bars: what the screens fit into. */
+  --safe-height: calc(100dvh - var(--inset-top) - var(--inset-bottom));
 }
 
 :root[data-theme='dark'] {

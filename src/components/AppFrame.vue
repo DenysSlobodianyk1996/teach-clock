@@ -21,10 +21,13 @@
 </template>
 
 <style scoped>
+/* The page's background runs under the system bars; its content stays between them. The header
+   takes the top inset itself (HeaderBar), so its background runs under the status bar. */
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  padding: 0 var(--inset-right) var(--inset-bottom) var(--inset-left);
 }
 
 .stage-wrap {
@@ -39,7 +42,7 @@
   container-type: inline-size;
   display: flex;
   flex-direction: column;
-  width: min(100%, var(--stage-max), calc((100dvh - var(--header-height)) * 4 / 3));
+  width: min(100%, var(--stage-max), calc((var(--safe-height) - var(--header-height)) * 4 / 3));
   aspect-ratio: 4 / 3;
   background: var(--bg);
 }
@@ -61,7 +64,11 @@
     padding-top: 20px;
   }
   .stage {
-    width: min(100%, var(--stage-max), calc((100dvh - var(--header-height) - 40px) * 4 / 3));
+    width: min(
+      100%,
+      var(--stage-max),
+      calc((var(--safe-height) - var(--header-height) - 40px) * 4 / 3)
+    );
     border-radius: 32px;
     box-shadow: var(--shadow);
   }
@@ -72,7 +79,7 @@
   .stage {
     width: 100%;
     aspect-ratio: auto;
-    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(var(--safe-height) - var(--header-height));
   }
 }
 </style>

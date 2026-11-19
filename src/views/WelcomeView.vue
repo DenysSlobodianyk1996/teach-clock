@@ -221,7 +221,7 @@ h1 {
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
-    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(var(--safe-height) - var(--header-height));
   }
   .art {
     flex: 1 1 0;

@@ -1,8 +1,9 @@
 // @vitest-environment node
 import { beforeAll, describe, expect, it } from 'vitest'
+import { execSync } from 'node:child_process'
 import { JSDOM } from 'jsdom'
-import { CONTACT_EMAIL, PRIVACY_UPDATED } from '@/config'
-import { formatPrivacyDate } from '@/privacy'
+import { CONTACT_EMAIL } from '@/config'
+import { formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
 import { t, tEn } from '@/test/i18n'
 import { buildPrivacyPage, type PrivacyPage } from '../../scripts/buildPrivacyPage.ts'
 
@@ -94,5 +95,12 @@ describe('formatPrivacyDate', () => {
   it('writes the date in words for each language', () => {
     expect(formatPrivacyDate('en', '2026-11-13')).toBe('13 November 2026')
     expect(formatPrivacyDate('uk', '2026-11-13')).toMatch(/^13 листопада 2026/)
+  })
+})
+
+describe('PRIVACY_UPDATED', () => {
+  it('is the date of the commit the build is made from, with nothing to bump by hand', () => {
+    const commitDate = execSync('git log -1 --format=%cs', { encoding: 'utf8' }).trim()
+    expect(PRIVACY_UPDATED).toBe(commitDate)
   })
 })

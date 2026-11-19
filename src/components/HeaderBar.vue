@@ -32,8 +32,10 @@ const { t } = useI18n()
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  /* Under the status bar too, so the bar sits on the header's background; the controls below it. */
+  box-sizing: content-box;
   height: var(--header-height);
-  padding: 0 20px;
+  padding: var(--inset-top) 20px 0;
 }
 .brand {
   display: flex;
@@ -55,14 +57,14 @@ const { t } = useI18n()
 
 @media (min-width: 1100px) {
   .hdr {
-    padding: 0 40px;
+    padding-inline: 40px;
   }
 }
 /* Phones: room only for icons, as in the design. Names stay for screen readers. */
 @media (--phone) {
   .hdr {
     gap: 8px;
-    padding: 0 14px;
+    padding-inline: 14px;
   }
   .hdr-tools {
     gap: 6px;
