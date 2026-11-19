@@ -540,13 +540,14 @@ function tapTray() {
    * the height of everything else with a full tray; in Test, where Submit can appear, the face
    * leaves more room. Not a flexible column as in RoundView: the tray empties and Submit appears
    * during a Round, and the face must not grow with them. A wrong drop only opens a popup, so the
-   * size never changes during a Round. The small-phone browser tests check it all fits 360 × 640.
+   * size never changes during a Round. The small-phone browser tests check it all fits 360 × 640, and
+   * 360 × 640 with the system bars taking 80 px of it (e2e/system-bars.spec.ts).
    */
   .number-face {
-    width: clamp(200px, 100svh - 346px, 100vw - 40px);
+    width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 346px, 100vw - 40px);
   }
   .board.test .number-face {
-    width: clamp(200px, 100svh - 366px, 100vw - 40px);
+    width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 366px, 100vw - 40px);
   }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {

@@ -8,6 +8,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
+import { privacyUpdated } from './scripts/privacyUpdated.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
@@ -16,6 +17,12 @@ import en from './src/i18n/en.ts'
 
 /** The Android App build (`npm run android:sync`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
+
+/**
+ * The Privacy Page's "Updated" date: the built commit's date (scripts/privacyUpdated.ts). Set here,
+ * before Vite reads the environment, so the app, the static privacy.html and Vitest all print it.
+ */
+process.env.VITE_PRIVACY_UPDATED = privacyUpdated({ given: process.env.VITE_PRIVACY_UPDATED })
 
 /**
  * GitHub Pages serves the app from /teach-clock/; everywhere else, the Android App included, it

@@ -26,19 +26,19 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768/,
+      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
-      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768/,
+      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars/,
     },
     {
       // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when
       // the game is installed. Checks that everything fits without scrolling.
       name: 'small-phone',
       use: { ...devices['Galaxy S8'], viewport: { width: 360, height: 720 } },
-      testMatch: /fits-small-phone\.spec|number-size\.spec/,
+      testMatch: /fits-small-phone\.spec|number-size\.spec|system-bars\.spec/,
     },
     {
       // Windows between phone and desktop: 601–768px wide, an upright tablet, a wide landscape window

@@ -76,7 +76,8 @@ on a phone it is below the fold). It is never shown in a Round or on the Summary
   the Android App too, never the browser), in the interface language, with no Footer. It says nothing is collected or
   sent: no accounts, ads or analytics; only the Preferences and the last name stay on the device;
   results are not kept after a Round. It also names the author (Денис Слободяник / Denys
-  Slobodianyk) and gives the contact email. Its button goes back to the screen that opened it. It works offline. For Google Play's
+  Slobodianyk) and gives the contact email. Its "Updated" date is the day of the deploy it came
+  with (the built commit's date, batch 21). Its button goes back to the screen that opened it. It works offline. For Google Play's
   listing the Web App build also renders the same screen into a static page that needs no
   JavaScript: the app's header with the logo and title only, Ukrainian then English, the device's
   light or dark theme, and "До гри" opening the web game. It lives at
@@ -221,6 +222,10 @@ Rules shared by Drag Arrows and Set Time:
   height the header, the dots and the answer area leave, never below about 150 px, and grows on
   taller phones. Every Round fits a 360 × 640 screen without scrolling, Submit or Done in view, in
   Teach and Test.
+- The Android App draws edge to edge: backgrounds run under the status bar, a camera cutout and the
+  navigation bar, and every control stays between them, in both builds (batch 21). The bars' icons
+  follow the theme. Fitting is measured inside that safe area: every screen fits a 360 × 720 phone
+  with its bars; Welcome, Settings and the drag Games also fit 360 × 640 with them.
 - All art is original SVG. The 2019 palette and images are not reused.
 
 ## Out of scope

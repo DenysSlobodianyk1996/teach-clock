@@ -64,7 +64,9 @@ function trapTab(event: KeyboardEvent) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  /* The scrim covers the whole screen; the popup stays between the system bars. */
+  padding: calc(16px + var(--inset-top)) calc(16px + var(--inset-right))
+    calc(16px + var(--inset-bottom)) calc(16px + var(--inset-left));
   background: var(--scrim);
 }
 .popup {

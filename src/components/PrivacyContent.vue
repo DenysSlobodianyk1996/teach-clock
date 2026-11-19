@@ -6,8 +6,8 @@
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { CONTACT_EMAIL, PRIVACY_UPDATED } from '@/config'
-import { formatPrivacyDate, type PrivacyLocale } from '@/privacy'
+import { CONTACT_EMAIL } from '@/config'
+import { formatPrivacyDate, PRIVACY_UPDATED, type PrivacyLocale } from '@/privacy'
 
 const props = withDefaults(
   defineProps<{
