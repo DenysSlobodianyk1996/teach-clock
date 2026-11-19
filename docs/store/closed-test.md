@@ -20,17 +20,17 @@ Play Console › your app › **Dashboard**. The "Apply for production" section 
 
 ## Key dates
 
-| What                                     | Date       |
-| ---------------------------------------- | ---------- |
-| Developer account verified               | 2026-11-16 |
-| First build live on closed testing       |            |
-| Tester invite sent                       |            |
-| 12th tester opted in (day 1)             |            |
-| Day 14 (earliest "Apply for production") |            |
-| Applied for production                   |            |
-| Production access granted                |            |
-| First production release                 |            |
-| Teacher Approved opt-in                  |            |
+| What                                     | Date          |
+| ---------------------------------------- | ------------- |
+| Developer account verified               | 2026-11-16    |
+| First build live on closed testing       | by 2026-11-19 |
+| Tester invite sent                       | by 2026-11-19 |
+| 12th tester opted in (day 1)             | 2026-11-19    |
+| Day 14 (earliest "Apply for production") | 2026-12-03    |
+| Applied for production                   |               |
+| Production access granted                |               |
+| First production release                 |               |
+| Teacher Approved opt-in                  |               |
 
 ## Testers
 
@@ -58,9 +58,9 @@ Labels only. Tick when they have opted in, according to the Dashboard or what th
 
 One line whenever you check the Dashboard.
 
-| Date | Opted in (Dashboard) | Days met (Dashboard) | Build (versionName / versionCode) | Notes |
-| ---- | -------------------- | -------------------- | --------------------------------- | ----- |
-|      |                      |                      |                                   |       |
+| Date       | Opted in (Dashboard) | Days met (Dashboard) | Build (versionName / versionCode) | Notes                                                                                                     |
+| ---------- | -------------------- | -------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-11-19 | 12 or more           | 0                    |                                   | Dashboard: "Publish a closed testing release" and "Get at least 12 testers" done; the 14 days are running |
 
 ## Feedback and what changed
 
