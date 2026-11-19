@@ -100,6 +100,10 @@ _Avoid_: hint, label
 The read-only popup that the eye by the heading opens in Drag Hours and Drag Minutes, in Teach only: the Round's face with every number on its own slot, as plain yellow tiles ("This is how the clock should look"). Looking at it changes nothing, so it is not a Hint.
 _Avoid_: Hint, answer key, solution, Заповнений циферблат
 
+**Info Popup**:
+The popup that the ⓘ by a heading opens on a phone, where the text it holds would not fit on the screen: on Welcome, what the four Games are; on Settings, the Game or Mode options, each by its name with what it does. Reading it changes nothing.
+_Avoid_: tooltip, help, Hint
+
 **Drag Arrows**:
 The Game where the Player is given a Clock Time and drags the Hour Hand and Minute Hand to show it.
 _Avoid_: Set the Clock, ArrowManipulation
