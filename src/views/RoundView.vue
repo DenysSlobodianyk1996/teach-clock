@@ -311,8 +311,11 @@ h1 {
     flex-basis: 0;
     min-height: 150px;
   }
+  /* The row keeps the screen's height so the clock stays whole; a taller answer runs past it, and
+     its own padding keeps the Round's bottom room under Submit (the Round's padding stays above). */
   .answer-side {
     align-self: safe center;
+    padding-bottom: 12px;
   }
 }
 </style>

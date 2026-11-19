@@ -177,6 +177,18 @@ for (const viewport of [
         .click()
       await expectGotItReachable(page)
     })
+
+    test('Set Time: the page runs on below Submit with room under it', async ({ page }) => {
+      await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
+      const submit = page.getByRole('button', { name: t('round.submit') })
+      await expect(submit).toBeVisible()
+      const pageBottom = await page.evaluate(() => document.scrollingElement!.scrollHeight)
+      expect(
+        pageBottom - (await bottomFromPageTop(submit)),
+        'room under Submit',
+      ).toBeGreaterThanOrEqual(10)
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+    })
   })
 }
 
