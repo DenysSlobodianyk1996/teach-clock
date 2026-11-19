@@ -24,6 +24,8 @@ export default {
     namePlaceholder: 'Твоє ім’я',
     start: 'Почати',
   },
+  /** The ⓘ by a heading on a phone, which opens its Info Popup. */
+  info: { more: 'Докладніше' },
   settings: {
     greeting: '{name}, у що граємо?',
     game: 'Гра',
