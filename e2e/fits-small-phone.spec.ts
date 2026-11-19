@@ -62,6 +62,49 @@ test.describe('Welcome on a 360 × 640 phone', () => {
   })
 })
 
+/** The Welcome clock's drawn size: the smaller side of its box, as the face is drawn to fit both. */
+async function welcomeClockSize(page: Page) {
+  return page.locator('.art svg.clock').evaluate((e) => {
+    const box = e.getBoundingClientRect()
+    return Math.min(box.width, box.height)
+  })
+}
+
+test('Welcome on a 412 × 915 phone: a clearly bigger clock than at 360 × 640, Start in view', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  const small = await welcomeClockSize(page)
+
+  await page.setViewportSize({ width: 412, height: 915 })
+  await page.goto('/')
+  const big = await welcomeClockSize(page)
+  expect(big, 'the clock grows into the room').toBeGreaterThanOrEqual(small + 100)
+  expect(big, 'no wider than the column').toBeLessThanOrEqual(412 - 40)
+  const start = page.getByRole('button', { name: t('welcome.start') })
+  expect(await bottomFromPageTop(start), 'Start fits without scrolling').toBeLessThanOrEqual(915)
+  expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+})
+
+for (const locale of ['uk-UA', 'en-US']) {
+  test.describe(`Welcome on an upright 10-inch tablet, ${locale}`, () => {
+    test.use({ viewport: { width: 810, height: 1440 }, locale })
+
+    test('a big clock within the width, the column full width, Start in view', async ({ page }) => {
+      await page.goto('/')
+      const size = await welcomeClockSize(page)
+      expect(size, 'a big clock').toBeGreaterThanOrEqual(500)
+      expect(size, 'within the width').toBeLessThanOrEqual(810 - 40)
+      const field = (await page.locator('#player-name').boundingBox())!
+      expect(field.width, 'the name field spans the column').toBeGreaterThanOrEqual(810 - 60)
+      expect(await bottomFromPageTop(page.locator('form button[type=submit]'))).toBeLessThanOrEqual(
+        1440,
+      )
+    })
+  })
+}
+
 test.describe('Welcome on a desktop', () => {
   test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
 
@@ -118,6 +161,24 @@ test.describe('Settings on a 360 × 640 phone', () => {
     })
   }
 })
+
+for (const size of [
+  { width: 412, height: 915 },
+  { width: 810, height: 1440 },
+]) {
+  test(`Settings on a ${size.width} × ${size.height} screen: Back and Play follow the Mode cards closely`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(size)
+    await toSettings(page)
+    const modes = page.getByRole('group', { name: t('settings.mode') })
+    const play = page.getByRole('button', { name: t('settings.play') })
+    const playTop = await play.evaluate((e) => e.getBoundingClientRect().top + scrollY)
+    // Between them only the Level row (Set Time is the default Game) and the usual gaps.
+    expect(playTop - (await bottomFromPageTop(modes)), 'no big empty gap').toBeLessThanOrEqual(160)
+    expect(await bottomFromPageTop(play)).toBeLessThanOrEqual(size.height)
+  })
+}
 
 test.describe('Settings on a desktop', () => {
   test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
