@@ -263,28 +263,31 @@ h1 {
 /* Phone upright: the clock sits above the answer. */
 @media (--phone) {
   .round {
-    padding: 4px 20px 20px;
+    padding: 0 20px 12px;
   }
-  .play {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 8px;
-    align-content: start;
+  .progress {
+    padding-bottom: 2px;
   }
   /*
-   * The clock takes the height the rest of the screen leaves, up to the full width. Each number is
-   * the height of everything else (header, dots, answer area, gaps) on a 360 × 720 phone; the
-   * small-phone browser tests check it all fits. A wrong Answer only opens a popup, so the size
-   * never changes during a Round.
+   * A column: the clock side takes the height the rest leaves (header, dots, answer area), up to
+   * the full width, and never less than ~150 px. Nothing in the answer area changes height during a
+   * Round (a time-box error borrows room below Submit, see SetTimeAnswer), and a wrong Answer only
+   * opens a popup, so the clock never changes size.
    */
-  .setTime .clock {
-    width: clamp(150px, 100svh - 500px, 100vw - 40px);
-  }
-  .dragArrows .clock {
-    width: clamp(150px, 100svh - 360px, 100vw - 40px);
+  .play {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
   }
   .clock-side {
-    gap: 6px;
+    flex: 1 1 0;
+    min-height: 150px;
+    justify-content: center;
+    container-type: size;
+  }
+  .clock {
+    width: min(100cqw, 100cqh);
   }
   /* No room for the question on a phone; keep it for screen readers. */
   .answer-side h1 {
@@ -296,9 +299,20 @@ h1 {
     white-space: nowrap;
   }
 }
+/*
+ * A sideways phone: the clock beside the answer, as big as the screen's height under the dots
+ * allows, so it is seen whole. A taller answer runs on below it and the page scrolls.
+ */
 @media (--phone-sideways) {
   .play {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    flex-basis: 0;
+    min-height: 150px;
+  }
+  .answer-side {
+    align-self: safe center;
   }
 }
 </style>

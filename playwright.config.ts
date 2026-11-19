@@ -61,6 +61,8 @@ export default defineConfig({
       command: process.env.CI
         ? 'npm run build-only && npm run preview'
         : `npm run dev -- --port ${port} --strictPort`,
+      // No Vue DevTools button over the page (vite.config.ts).
+      env: { PW_TEST: '1' },
       port,
       reuseExistingServer: !process.env.CI,
     },
