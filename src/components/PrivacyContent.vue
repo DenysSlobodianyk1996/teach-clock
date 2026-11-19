@@ -55,16 +55,19 @@ const updated = computed(() => formatPrivacyDate(props.locale))
   gap: 18px;
   width: min(100%, 720px);
   margin: 0 auto;
+  padding: clamp(8px, 4vw, 40px) clamp(20px, 6vw, 64px) 40px;
   padding: clamp(8px, 4cqi, 40px) clamp(20px, 6cqi, 64px) 40px;
 }
 .title {
   margin: 0;
+  font-size: clamp(32px, 4.7vw, 48px);
   font-size: clamp(32px, 4.7cqi, 48px);
   font-weight: 900;
   line-height: 1.08;
 }
 .lead {
   margin: 0;
+  font-size: clamp(18px, 2vw, 21px);
   font-size: clamp(18px, 2cqi, 21px);
   font-weight: 700;
 }
@@ -74,6 +77,7 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-size: clamp(17px, 1.9vw, 19px);
   font-size: clamp(17px, 1.9cqi, 19px);
   line-height: 1.45;
 }
@@ -85,6 +89,7 @@ a {
 }
 .author {
   margin: 0;
+  font-size: clamp(17px, 1.9vw, 19px);
   font-size: clamp(17px, 1.9cqi, 19px);
   font-weight: 700;
 }

@@ -191,10 +191,12 @@ function startRound() {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 4px clamp(20px, 4.7vw, 48px) 32px;
   padding: 4px clamp(20px, 4.7cqi, 48px) 32px;
 }
 h1 {
   margin: 0;
+  font-size: clamp(26px, 3.5vw, 36px);
   font-size: clamp(26px, 3.5cqi, 36px);
   font-weight: 900;
 }

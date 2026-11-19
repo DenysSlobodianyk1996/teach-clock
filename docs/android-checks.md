@@ -50,11 +50,30 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 
 ![Set Time Round in landscape](../.scratch/08-play-store/images/08-landscape.png)
 
+## Old system WebViews (batch 22)
+
+The Android App draws with the phone's system WebView, which a never-updated phone keeps at the version it shipped with. A Samsung S8 in closed testing showed no border on the chosen Settings cards and no clock in a Set Time Round: its WebView was older than Chrome 105, and those rules used `:has()` and container units (Chrome 105) and `svh` (Chrome 108). The JS ran, so taps still worked.
+
+- **The floor is Chrome 87** (`OLDEST_CHROME` in `src/config.ts`). Vite builds the JS and CSS for it (`build.target`, `build.cssTarget`).
+- **`src/__tests__/cssFloor.spec.ts`** (in `npx vitest run`) fails on `:has()`, container units (`cqi`, `cqw`…) or `svh`/`dvh`/`lvh` without a fallback. A fallback is either `@supports` around the rule, or, for a value without `var()`, a declaration of the same property just before that an old WebView understands (`vw`, `vh`). A value with `var()`, or a custom property, cannot fall back that way: the browser checks it only when it is used, after it has already won, so it needs `@supports`.
+- **`e2e/old-webview.spec.ts`** runs the reported steps on an old Chromium: the chosen cards have the accent border, and the Welcome clock, the Set Time clock and the Drag Hours face show. It only runs when `OLD_CHROMIUM` names a Chromium binary:
+
+  ```sh
+  # Chromium 104 (the last without :has() and container units), arm64 Mac
+  npx @puppeteer/browsers install chromium@1012729 --platform mac_arm --path /tmp/old-chromium
+  OLD_CHROMIUM=/tmp/old-chromium/chromium/mac_arm-1012729/chrome-mac/Chromium.app/Contents/MacOS/Chromium \
+    npx playwright test --project old-webview
+  ```
+
+  Playwright's locators call `Element.checkVisibility()` (Chrome 105), so the spec drives the page with plain DOM calls. Snapshots older than Chrome 88 exist only for Intel Macs (Rosetta).
+
+- **On a device:** the Android 12 (API 31) `google_apis` emulator image, without Play, has WebView 91 (`adb shell dumpsys webviewupdate`). Done on 2026-11-19 with the debug APK: the chosen cards have their border and the Set Time clock shows (`.scratch/22-old-webview/issues/01-old-webview.md`).
+
 ## What the emulator does not prove
 
 - **OEM icon masks and launchers.** Only the Pixel launcher's circle was seen. Samsung (squircle), Xiaomi and others may crop the adaptive icon differently; check on a real phone or in Play Console's preview.
 - **Themed icons (Android 13+).** The adaptive icon has no `monochrome` layer, so with themed icons on, the launcher shows the normal coloured icon.
 - **The signed release build.** The checks used the debug APK (same web assets, same manifest permissions). The `.aab` from CI is only tested when Google Play's pre-launch report runs it, or on an internal-testing install.
-- **Older Android versions.** Only API 36 was run. On Android 7–11 (minSdk 24) the splash is the old full-screen `splash.png`, and an old system WebView may behave differently.
+- **Older Android versions.** Only API 36 was run for these checks. On Android 7–11 (minSdk 24) the splash is the old full-screen `splash.png`. Old system WebViews are covered in [Old system WebViews](#old-system-webviews-batch-22).
 - **Real touch and speed.** Drags were sent as synthetic mouse events through the WebView; a child's finger on a slow phone was not tried.
 - **Gesture back vs. 3-button back.** Back was sent as `KEYCODE_BACK`; the system back gesture and predictive back animation were not tried.
