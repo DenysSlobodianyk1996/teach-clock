@@ -115,6 +115,41 @@ test.describe('Welcome on a desktop', () => {
   })
 })
 
+/** Scrolls Got it into view if it has to, then checks it lies on the screen and closes the popup. */
+async function expectGotItReachable(page: Page) {
+  const popup = page.getByRole('dialog')
+  const gotIt = popup.getByRole('button', { name: t('teach.gotIt') })
+  await gotIt.scrollIntoViewIfNeeded()
+  const box = (await gotIt.boundingBox())!
+  const height = page.viewportSize()!.height
+  expect(box.y, 'Got it starts on the screen').toBeGreaterThanOrEqual(0)
+  expect(box.y + box.height, 'Got it ends on the screen').toBeLessThanOrEqual(height)
+  await gotIt.click()
+  await expect(popup).toBeHidden()
+}
+
+for (const viewport of [
+  { width: 640, height: 360 },
+  { width: 800, height: 360 },
+]) {
+  test.describe(`a sideways ${viewport.width} × ${viewport.height} phone`, () => {
+    test.use({ viewport })
+
+    test('Got it is reachable in the Welcome and Game Info Popups', async ({ page }) => {
+      await page.goto('/')
+      await page.getByRole('button', { name: t('info.more') }).click()
+      await expectGotItReachable(page)
+
+      await toSettings(page)
+      await page
+        .getByRole('group', { name: t('settings.game') })
+        .getByRole('button', { name: t('info.more') })
+        .click()
+      await expectGotItReachable(page)
+    })
+  })
+}
+
 test.describe('Settings on a 360 × 640 phone', () => {
   test.use({ viewport: { width: 360, height: 640 } })
 

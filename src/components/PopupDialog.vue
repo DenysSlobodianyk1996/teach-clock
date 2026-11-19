@@ -73,6 +73,10 @@ function trapTab(event: KeyboardEvent) {
   align-items: center;
   gap: 18px;
   width: min(460px, 100%);
+  /* On a short screen (a sideways phone) a long popup scrolls inside, so its buttons stay reachable. */
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 32px 40px;
   border-radius: 32px;
   background: var(--pop);
