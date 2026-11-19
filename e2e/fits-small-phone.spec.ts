@@ -35,6 +35,43 @@ test('Welcome on a 360 × 640 phone: the Footer comes after the start button', a
   expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
 })
 
+test.describe('Welcome on a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  test('Start is in view with nothing scrolled; the intro is behind the ⓘ', async ({ page }) => {
+    await page.goto('/')
+    const start = page.getByRole('button', { name: t('welcome.start') })
+    await expect(start).toBeVisible()
+    expect(await bottomFromPageTop(start), 'Start fits without scrolling').toBeLessThanOrEqual(640)
+    await expect(page.getByText(t('welcome.intro'))).toBeHidden()
+
+    // The clock shrinks to the room left, never below about 120 px.
+    const clock = page.locator('.art svg.clock')
+    expect(await clock.evaluate((e) => e.getBoundingClientRect().height)).toBeGreaterThanOrEqual(
+      118,
+    )
+
+    await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+    await page.getByRole('button', { name: t('info.more') }).click()
+    const popup = page.getByRole('dialog')
+    await expect(popup).toContainText(t('welcome.intro'))
+    await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+    await expect(popup).toBeHidden()
+    await expect(page.getByLabel(t('welcome.nameLabel'))).toHaveValue('Оля')
+    expect(await page.evaluate(() => scrollY)).toBe(0)
+  })
+})
+
+test.describe('Welcome on a desktop', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
+
+  test('shows the intro beside the clock and no ⓘ', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByText(t('welcome.intro'))).toBeVisible()
+    await expect(page.getByRole('button', { name: t('info.more') })).toHaveCount(0)
+  })
+})
+
 test('Settings fits: no sideways scroll, Back and Play side by side in full', async ({ page }) => {
   await toSettings(page)
   expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
