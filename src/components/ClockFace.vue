@@ -119,7 +119,7 @@ function release(event: PointerEvent) {
   <svg
     ref="svg"
     class="clock"
-    :class="[rim && `rim-${rim}`, { draggable, animate }]"
+    :class="[rim && `rim-${rim}`, { draggable, animate, grabbing: !!dragging }]"
     :style="animate && { '--wind': `${windSeconds}s` }"
     viewBox="-100 -100 200 200"
     role="img"
@@ -223,8 +223,8 @@ function release(event: PointerEvent) {
 .grip {
   cursor: grab;
 }
-.draggable:has(.dragging),
-.draggable:has(.dragging) * {
+.draggable.grabbing,
+.draggable.grabbing * {
   cursor: grabbing;
 }
 .animate [data-hand],

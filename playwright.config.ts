@@ -26,13 +26,30 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars/,
+      testIgnore:
+        /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
-      testIgnore: /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars/,
+      testIgnore:
+        /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
     },
+    // An old system WebView, such as a Samsung S8's: an old Chromium from OLD_CHROMIUM on a Galaxy S8
+    // screen. Skipped unless OLD_CHROMIUM is set (docs/android-checks.md).
+    ...(process.env.OLD_CHROMIUM
+      ? [
+          {
+            name: 'old-webview',
+            use: {
+              ...devices['Galaxy S8'],
+              viewport: { width: 360, height: 720 },
+              launchOptions: { executablePath: process.env.OLD_CHROMIUM },
+            },
+            testMatch: /old-webview\.spec/,
+          },
+        ]
+      : []),
     {
       // A narrow, short phone: a 360 × 800 screen minus the status and navigation bars, as when
       // the game is installed. Checks that everything fits without scrolling.

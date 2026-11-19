@@ -274,6 +274,7 @@ function toSettings() {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding: 16px clamp(20px, 4.4vw, 44px) 28px;
   padding: 16px clamp(20px, 4.4cqi, 44px) 28px;
 }
 .top {
@@ -292,6 +293,7 @@ function toSettings() {
 }
 h1 {
   margin: 0;
+  font-size: clamp(32px, 5vw, 52px);
   font-size: clamp(32px, 5cqi, 52px);
   font-weight: 900;
   line-height: 1;

@@ -5,8 +5,9 @@ defineEmits<{ select: [] }>()
 </script>
 
 <template>
-  <label class="choice">
+  <label class="choice" :class="{ checked }">
     <input class="radio" type="radio" :name="name" :checked="checked" @change="$emit('select')" />
+    <span class="ring" aria-hidden="true"></span>
     <slot name="icon" />
     <span class="text">
       <b>{{ title }}</b>
@@ -40,11 +41,19 @@ defineEmits<{ select: [] }>()
   opacity: 0;
   cursor: pointer;
 }
-.choice:has(.radio:focus-visible) {
-  outline: 4px solid var(--accent);
-  outline-offset: 3px;
+/* No :has() here: old Android WebViews lack it (docs/android-checks.md). The focus ring sits on a
+   sibling of the radio, so only keyboard focus shows it, and the chosen card has a class. */
+.ring {
+  position: absolute;
+  inset: -10px;
+  border-radius: 29px;
+  pointer-events: none;
 }
-.choice:has(.radio:checked) {
+.radio:focus-visible ~ .ring {
+  outline: 4px solid var(--accent);
+  outline-offset: -4px;
+}
+.choice.checked {
   border-color: var(--accent);
   background: var(--surface-2);
 }

@@ -12,6 +12,7 @@ import { privacyUpdated } from './scripts/privacyUpdated.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
+import { OLDEST_CHROME } from './src/config.ts'
 import uk from './src/i18n/uk.ts'
 import en from './src/i18n/en.ts'
 
@@ -230,6 +231,11 @@ function webManifestPlugin(): Plugin {
 export default defineConfig({
   base,
   server: { port: 4200, strictPort: true },
+  // Old Android WebViews (src/config.ts); other browsers as Vite's default baseline.
+  build: {
+    target: [`chrome${OLDEST_CHROME}`, 'edge107', 'firefox104', 'safari16'],
+    cssTarget: [`chrome${OLDEST_CHROME}`, 'edge107', 'firefox104', 'safari16'],
+  },
   // Shared breakpoints such as `@media (--phone)`, defined once in src/styles/media.ts.
   css: { postcss: { plugins: [customMediaPlugin] } },
   plugins: [

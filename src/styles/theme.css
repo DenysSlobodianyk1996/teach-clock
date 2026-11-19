@@ -44,7 +44,14 @@
   --inset-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
   --inset-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
   /* The screen's height between the bars: what the screens fit into. */
-  --safe-height: calc(100dvh - var(--inset-top) - var(--inset-bottom));
+  /* vh first: old Android WebViews lack dvh, and a custom property cannot fall back to an earlier
+     declaration, so dvh only where it is supported (docs/android-checks.md). */
+  --safe-height: calc(100vh - var(--inset-top) - var(--inset-bottom));
+}
+@supports (height: 100dvh) {
+  :root {
+    --safe-height: calc(100dvh - var(--inset-top) - var(--inset-bottom));
+  }
 }
 
 :root[data-theme='dark'] {

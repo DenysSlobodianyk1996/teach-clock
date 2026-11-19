@@ -182,6 +182,8 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  /* vw first: old Android WebViews lack container units (docs/android-checks.md). */
+  padding: 16px clamp(20px, 4.7vw, 48px) 28px;
   padding: 16px clamp(20px, 4.7cqi, 48px) 28px;
 }
 .progress {
@@ -244,6 +246,7 @@ useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
   stroke: currentColor;
 }
 .clock {
+  width: min(100%, 41vw);
   width: min(100%, 41cqi);
   height: auto;
   aspect-ratio: 1;
@@ -286,8 +289,19 @@ h1 {
     justify-content: center;
     container-type: size;
   }
-  .clock {
-    width: min(100cqw, 100cqh);
+  /* Old Android WebViews lack container units: there the clock is the screen's height less what
+     the rest of the Round takes (measured at every phone size: it does not change), as wide as
+     the screen at most and never under 150 px. */
+  .setTime .clock {
+    width: clamp(150px, 100vh - var(--inset-top) - var(--inset-bottom) - 482px, 100%);
+  }
+  .dragArrows .clock {
+    width: clamp(150px, 100vh - var(--inset-top) - var(--inset-bottom) - 358px, 100%);
+  }
+  @supports (width: 1cqw) {
+    .play .clock {
+      width: min(100cqw, 100cqh);
+    }
   }
   /* No room for the question on a phone; keep it for screen readers. */
   .answer-side h1 {

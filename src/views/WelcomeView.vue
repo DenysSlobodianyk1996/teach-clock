@@ -125,6 +125,7 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 40px;
   align-items: center;
+  padding: 0 clamp(24px, 6vw, 64px) 40px;
   padding: 0 clamp(24px, 6cqi, 64px) 40px;
 }
 .intro {
@@ -134,12 +135,14 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
 }
 h1 {
   margin: 0;
+  font-size: clamp(32px, 4.7vw, 48px);
   font-size: clamp(32px, 4.7cqi, 48px);
   font-weight: 900;
   line-height: 1.08;
 }
 .lead {
   margin: 0;
+  font-size: clamp(17px, 2vw, 20px);
   font-size: clamp(17px, 2cqi, 20px);
   line-height: 1.45;
   color: var(--muted);
@@ -226,12 +229,16 @@ h1 {
   .art {
     flex: 1 1 0;
     min-height: 120px;
+    max-height: calc(100vw - 40px);
     max-height: calc(100cqi - 40px);
     container-type: size;
     align-items: center;
   }
-  .clock {
-    width: min(100cqw, 100cqh);
+  /* Old Android WebViews lack container units; there the clock keeps its width above. */
+  @supports (width: 1cqw) {
+    .art .clock {
+      width: min(100cqw, 100cqh);
+    }
   }
 }
 </style>

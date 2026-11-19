@@ -3,3 +3,10 @@ export const CONTACT_EMAIL = 'denys.slobodianyk@gmail.com'
 
 /** The subject a Contact email starts with, in English whatever the interface language. */
 export const CONTACT_SUBJECT = 'Contact support from teach clock for kids'
+
+/**
+ * The oldest Chrome the game must work on: an Android App on a phone whose system WebView was never
+ * updated, such as a Samsung S8's (batch 22). Vite builds the JS and CSS for it (vite.config.ts),
+ * and src/__tests__/cssFloor.spec.ts fails on CSS it lacks without a fallback.
+ */
+export const OLDEST_CHROME = 87

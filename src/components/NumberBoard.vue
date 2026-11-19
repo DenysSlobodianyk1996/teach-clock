@@ -367,6 +367,7 @@ function tapTray() {
   width: 100%;
 }
 .number-face {
+  width: min(100%, 41vw);
   width: min(100%, 41cqi);
   height: auto;
   aspect-ratio: 1;
@@ -544,10 +545,20 @@ function tapTray() {
    * 360 × 640 with the system bars taking 80 px of it (e2e/system-bars.spec.ts).
    */
   .number-face {
-    width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 346px, 100vw - 40px);
+    width: clamp(190px, 100vh - var(--inset-top) - var(--inset-bottom) - 346px, 100vw - 40px);
   }
   .board.test .number-face {
-    width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 366px, 100vw - 40px);
+    width: clamp(190px, 100vh - var(--inset-top) - var(--inset-bottom) - 366px, 100vw - 40px);
+  }
+  /* svh only where supported: old Android WebViews lack it, and a value with var() cannot fall
+     back to the declaration before it (docs/android-checks.md). */
+  @supports (height: 1svh) {
+    .number-face {
+      width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 346px, 100vw - 40px);
+    }
+    .board.test .number-face {
+      width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 366px, 100vw - 40px);
+    }
   }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {

@@ -26,6 +26,7 @@
 .app {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   min-height: 100dvh;
   padding: 0 var(--inset-right) var(--inset-bottom) var(--inset-left);
 }

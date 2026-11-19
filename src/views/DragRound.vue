@@ -200,6 +200,7 @@ function submit() {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  padding: 16px clamp(20px, 4.7vw, 48px) 28px;
   padding: 16px clamp(20px, 4.7cqi, 48px) 28px;
 }
 .progress {
