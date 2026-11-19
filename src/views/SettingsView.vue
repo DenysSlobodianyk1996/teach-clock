@@ -304,6 +304,24 @@ h1 {
     font-size: 17px;
     line-height: 1.15;
   }
+  /* A very narrow phone (320 px): a smaller icon and title, so "Перевірка" or "Розстав хвилини"
+     still fit beside the icon. */
+  @media (max-width: 340px) {
+    .games :deep(.choice),
+    .modes :deep(.choice) {
+      gap: 6px;
+      padding: 8px;
+    }
+    .games :deep(.choice svg),
+    .modes :deep(.choice svg) {
+      width: 28px;
+      height: 28px;
+    }
+    .games :deep(.choice b),
+    .modes :deep(.choice b) {
+      font-size: 15px;
+    }
+  }
   .levels :deep(.choice),
   .hours :deep(.choice) {
     justify-content: center;
