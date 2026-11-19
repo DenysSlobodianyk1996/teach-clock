@@ -2,7 +2,7 @@
  * On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view, and the
  * clock as big as the room left allows.
  */
-import { t } from './i18n.ts'
+import { startingWith, t } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { startRound } from './round.ts'
 import { closeWrongPopup, popupButtons, wrongPopup } from './teach.ts'
@@ -68,6 +68,64 @@ test.describe('Welcome on a desktop', () => {
   test('shows the intro beside the clock and no ⓘ', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByText(t('welcome.intro'))).toBeVisible()
+    await expect(page.getByRole('button', { name: t('info.more') })).toHaveCount(0)
+  })
+})
+
+test.describe('Settings on a 360 × 640 phone', () => {
+  test.use({ viewport: { width: 360, height: 640 } })
+
+  const descriptions = [
+    ...(['dragMinutes', 'dragArrows', 'setTime'] as const).map((g) => t(`games.${g}.description`)),
+    ...(['teach', 'test'] as const).map((m) => t(`modes.${m}.description`)),
+    ...([1, 5, 15] as const).map((l) => t(`levels.${l}.description`)),
+    ...([12, 24] as const).map((h) => t(`hours.${h}.description`)),
+  ]
+
+  for (const game of ['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const) {
+    test(`${game}: Play in view with nothing scrolled, no descriptions, an ⓘ for Game and Mode`, async ({
+      page,
+    }) => {
+      await toSettings(page)
+      const gameCard = page.getByRole('radio', { name: startingWith(t(`games.${game}.name`)) })
+      const testCard = page.getByRole('radio', { name: startingWith(t('modes.test.name')) })
+      await gameCard.check()
+      await testCard.check()
+      await page.evaluate(() => scrollTo(0, 0))
+
+      const back = page.getByRole('button', { name: t('settings.back') })
+      const play = page.getByRole('button', { name: t('settings.play') })
+      expect(await bottomFromPageTop(play), 'Play fits without scrolling').toBeLessThanOrEqual(640)
+      const [b, p] = [(await back.boundingBox())!, (await play.boundingBox())!]
+      expect(Math.round(b.y), 'side by side').toBe(Math.round(p.y))
+      expect(b.x + b.width).toBeLessThanOrEqual(p.x)
+      expect(p.x + p.width).toBeLessThanOrEqual(360)
+      for (const text of descriptions) await expect(page.getByText(text)).toBeHidden()
+
+      for (const section of ['settings.game', 'settings.mode'] as const) {
+        await page
+          .getByRole('group', { name: t(section) })
+          .getByRole('button', { name: t('info.more') })
+          .click()
+        const popup = page.getByRole('dialog')
+        await expect(popup.getByRole('heading', { name: t(section) })).toBeVisible()
+        await popup.getByRole('button', { name: t('teach.gotIt') }).click()
+        await expect(popup).toBeHidden()
+      }
+      await expect(gameCard).toBeChecked()
+      await expect(testCard).toBeChecked()
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
+    })
+  }
+})
+
+test.describe('Settings on a desktop', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false })
+
+  test('shows the descriptions on the cards and no ⓘ', async ({ page }) => {
+    await toSettings(page)
+    await expect(page.getByText(t('games.setTime.description'))).toBeVisible()
+    await expect(page.getByText(t('modes.teach.description'))).toBeVisible()
     await expect(page.getByRole('button', { name: t('info.more') })).toHaveCount(0)
   })
 })

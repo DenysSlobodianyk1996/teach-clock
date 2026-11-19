@@ -148,6 +148,89 @@ describe('Settings screen', () => {
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('round'))
   })
 
+  /** The ⓘ by a section's heading ("Гра" or "Режим"). */
+  function infoButton(wrapper: Screen, section: string) {
+    const group = wrapper.findAll('fieldset').find((f) => f.find('legend').text() === section)
+    if (!group) throw new Error(`No section "${section}"`)
+    return group.get(`button[aria-label="${t('info.more')}"]`)
+  }
+
+  function gotIt(wrapper: Screen) {
+    const found = wrapper
+      .get('[role="dialog"]')
+      .findAll('button')
+      .find((b) => b.text() === t('teach.gotIt'))
+    if (!found) throw new Error('No Got it')
+    return found
+  }
+
+  const describes = (hours: 12 | 24) =>
+    t('games.dragHours.description', { range: t(`hours.${hours}.name`) })
+
+  it('opens the Game Info Popup from the ⓘ: all four Games by name, with their descriptions', async () => {
+    const { wrapper } = await open()
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    await infoButton(wrapper, t('settings.game')).trigger('click')
+    const dialog = wrapper.get('[role="dialog"]')
+    expect(dialog.get('h2').text()).toBe(t('settings.game'))
+    const games = ['dragHours', 'dragMinutes', 'dragArrows', 'setTime'] as const
+    expect(dialog.findAll('dt').map((d) => d.text())).toEqual(
+      games.map((g) => t(`games.${g}.name`)),
+    )
+    expect(dialog.findAll('dd').map((d) => d.text())).toEqual([
+      describes(12),
+      t('games.dragMinutes.description'),
+      t('games.dragArrows.description'),
+      t('games.setTime.description'),
+    ])
+    // Text only: no card icons.
+    expect(dialog.findAll('svg')).toHaveLength(0)
+  })
+
+  it('names the picked Hours in the Drag Hours line of the Game Info Popup', async () => {
+    const { wrapper } = await open()
+    await choice(wrapper, t('hours.24.name')).setValue(true)
+    await infoButton(wrapper, t('settings.game')).trigger('click')
+    const text = wrapper.get('[role="dialog"]').text()
+    expect(text).toContain(describes(24))
+    expect(describes(24)).toContain('13–24')
+    expect(text).not.toContain(describes(12))
+  })
+
+  it('opens the Mode Info Popup from the ⓘ: Teach and Test with their descriptions', async () => {
+    const { wrapper } = await open()
+    await infoButton(wrapper, t('settings.mode')).trigger('click')
+    const dialog = wrapper.get('[role="dialog"]')
+    expect(dialog.get('h2').text()).toBe(t('settings.mode'))
+    expect(dialog.findAll('dt').map((d) => d.text())).toEqual([
+      t('modes.teach.name'),
+      t('modes.test.name'),
+    ])
+    expect(dialog.findAll('dd').map((d) => d.text())).toEqual([
+      t('modes.teach.description'),
+      t('modes.test.description'),
+    ])
+  })
+
+  it.each(['settings.game', 'settings.mode'] as const)(
+    'closes the Info Popup of %s on Got it, leaving the Settings as they were',
+    async (section) => {
+      const { wrapper } = await open()
+      await choice(wrapper, t('games.setTime.name')).setValue(true)
+      await choice(wrapper, t('modes.test.name')).setValue(true)
+      await choice(wrapper, t('levels.5.name')).setValue(true)
+      const before = { ...usePlayStore().settings }
+
+      await infoButton(wrapper, t(section)).trigger('click')
+      await gotIt(wrapper).trigger('click')
+      expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+      expect(usePlayStore().settings).toEqual(before)
+      expect(choice(wrapper, t('games.setTime.name')).element.checked).toBe(true)
+      expect(choice(wrapper, t('modes.test.name')).element.checked).toBe(true)
+      expect(choice(wrapper, t('levels.5.name')).element.checked).toBe(true)
+    },
+  )
+
   it('goes back to Welcome', async () => {
     const { wrapper, router } = await open()
     await button(wrapper, t('settings.back')).trigger('click')

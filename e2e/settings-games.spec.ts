@@ -32,9 +32,10 @@ for (const viewport of viewports) {
         const box = (await card.boundingBox())!
         expect(box.x, GAMES[i]).toBeGreaterThanOrEqual(0)
         expect(box.x + box.width, GAMES[i]).toBeLessThanOrEqual(viewport.width)
-        // Nothing inside spills out of its card.
+        // Nothing inside spills out of its card (a phone hides the description, so it is skipped).
         const spills = await card.evaluate((e) =>
           [...e.querySelectorAll('b, .description, svg')].some((child) => {
+            if (child.getClientRects().length === 0) return false
             const c = child.getBoundingClientRect()
             const r = e.getBoundingClientRect()
             return c.left < r.left || c.right > r.right || c.bottom > r.bottom
