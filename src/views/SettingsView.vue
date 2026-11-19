@@ -56,7 +56,7 @@ function startRound() {
     <fieldset class="group" :aria-labelledby="`${id}-game`">
       <legend class="label">
         <span :id="`${id}-game`">{{ t('settings.game') }}</span>
-        <InfoButton @click="info = 'game'" />
+        <InfoButton :about="t('settings.game')" @click="info = 'game'" />
       </legend>
       <div class="row games">
         <ChoiceCard
@@ -103,7 +103,7 @@ function startRound() {
     <fieldset class="group" :aria-labelledby="`${id}-mode`">
       <legend class="label">
         <span :id="`${id}-mode`">{{ t('settings.mode') }}</span>
-        <InfoButton @click="info = 'mode'" />
+        <InfoButton :about="t('settings.mode')" @click="info = 'mode'" />
       </legend>
       <div class="row modes">
         <ChoiceCard

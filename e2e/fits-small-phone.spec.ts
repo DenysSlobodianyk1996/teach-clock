@@ -173,7 +173,7 @@ for (const viewport of [
       await toSettings(page)
       await page
         .getByRole('group', { name: t('settings.game') })
-        .getByRole('button', { name: t('info.more') })
+        .getByRole('button', { name: t('info.moreAbout', { section: t('settings.game') }) })
         .click()
       await expectGotItReachable(page)
     })
@@ -225,7 +225,7 @@ test.describe('Settings on a 360 × 640 phone', () => {
       for (const section of ['settings.game', 'settings.mode'] as const) {
         await page
           .getByRole('group', { name: t(section) })
-          .getByRole('button', { name: t('info.more') })
+          .getByRole('button', { name: t('info.moreAbout', { section: t(section) }), exact: true })
           .click()
         const popup = page.getByRole('dialog')
         await expect(popup.getByRole('heading', { name: t(section) })).toBeVisible()
@@ -264,7 +264,7 @@ test.describe('Settings on a desktop', () => {
     await toSettings(page)
     await expect(page.getByText(t('games.setTime.description'))).toBeVisible()
     await expect(page.getByText(t('modes.teach.description'))).toBeVisible()
-    await expect(page.getByRole('button', { name: t('info.more') })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: startingWith(t('info.more')) })).toHaveCount(0)
   })
 })
 
@@ -405,9 +405,14 @@ test.describe('a 320px-wide phone', () => {
       const box = (await toggle.boundingBox())!
       expect(box.width).toBeGreaterThanOrEqual(44)
       expect(box.height).toBeGreaterThanOrEqual(44)
-      const knob = (await toggle.locator('.knob').boundingBox())!
-      const under = (await toggle.locator(icon).boundingBox())!
-      expect(Math.abs(centre(knob) - centre(under)), icon).toBeLessThanOrEqual(1)
+      // Polled: under a loaded test run the knob can be measured a frame before it settles.
+      await expect
+        .poll(async () => {
+          const knob = (await toggle.locator('.knob').boundingBox())!
+          const under = (await toggle.locator(icon).boundingBox())!
+          return Math.abs(centre(knob) - centre(under))
+        }, icon)
+        .toBeLessThanOrEqual(1)
       await toggle.click()
     }
   })
