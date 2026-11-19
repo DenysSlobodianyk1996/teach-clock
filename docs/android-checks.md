@@ -39,6 +39,7 @@ Done on 2026-11-13 on the emulator (AVD `Medium_Phone_API_36.1`, Android 16 / AP
 - [x] **Launcher icon:** the clock on a dark circle (the dark theme's background) (Pixel launcher, circle mask).
 - [ ] **Name follows the phone's language (batch 13, ADR 0005):** with English first in Settings → System → Languages, the name under the icon and in recent apps reads "Teach Clock"; move Ukrainian above English and both read "Вчимо годинник". The name is the full Game Name in both; a cut-off on a one-line launcher is accepted. The interface language inside the app is a separate check.
 - [ ] **Interface language follows the phone (batch 13):** on a fresh install, English first opens Welcome in English and Ukrainian first in Ukrainian; after a tap on УК/EN the app keeps that choice on the next launch, while the name under the icon stays the phone's.
+- [ ] **Keyboard on Welcome (batch 19):** a tap on the name field opens the keyboard; the screen pans up (`adjustPan`), the clock keeps its size and the field stays in view while typing.
 - [x] **Android 12+ splash:** dark background (the dark theme's) with the clock in the middle, then Welcome.
 
 | Splash                                                    | Welcome, offline                                                                     | Back in a Round                                                                       | Launcher icon                                                           |

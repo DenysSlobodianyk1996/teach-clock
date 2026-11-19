@@ -181,11 +181,9 @@ h1 {
   .confetti {
     display: none;
   }
-  .clock {
-    width: 230px;
-  }
   .intro {
     gap: 18px;
+    flex: none;
   }
   /* The ⓘ follows the heading's last word and never wraps away from it: the word keeps a gap
      the ⓘ's width after it, and the ⓘ is pulled back over that gap. */
@@ -212,31 +210,28 @@ h1 {
     width: 100%;
   }
 
-  /* Upright: one screen down to Start. The clock takes the height left, from about 120 px up to the
-     column's width, so a tall screen gets a big clock; what is still left is shared above and below.
-     The column is full width in every language. The Footer follows below. A sideways phone is too
-     short for that and scrolls as before. */
-  @media (min-height: 501px) {
-    .welcome {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      height: calc(100dvh - var(--header-height));
-    }
-    .art {
-      flex: 1 1 0;
-      min-height: 120px;
-      max-height: calc(100cqi - 40px);
-    }
-    .clock {
-      width: auto;
-      max-width: 100%;
-      height: 100%;
-    }
-    .intro {
-      flex: none;
-    }
+  /* One screen down to Start. The clock takes the height left, from about 120 px up to the column's
+     width, so a tall screen gets a big clock; what is still left is shared above and below. The
+     column is full width in every language. At least a screen tall, never fixed: when the rest needs
+     more (big text, a sideways phone) the page grows and scrolls, and the Footer still follows
+     Start. No height breakpoint, so a keyboard that shrinks the page only shrinks the clock towards
+     its floor; it never flips to another layout mid-typing. */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    min-height: calc(100dvh - var(--header-height));
+  }
+  .art {
+    flex: 1 1 0;
+    min-height: 120px;
+    max-height: calc(100cqi - 40px);
+    container-type: size;
+    align-items: center;
+  }
+  .clock {
+    width: min(100cqw, 100cqh);
   }
 }
 </style>

@@ -62,6 +62,36 @@ test.describe('Welcome on a 360 × 640 phone', () => {
   })
 })
 
+test('Welcome on a 360 × 640 phone with big text: the Footer still follows Start', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  // As with a large font scale: the heading takes far more room than usual.
+  await page.addStyleTag({ content: '.welcome h1 { font-size: 64px !important; }' })
+  const start = page.getByRole('button', { name: t('welcome.start') })
+  const footerTop = await page
+    .getByRole('contentinfo')
+    .evaluate((e) => e.getBoundingClientRect().top + scrollY)
+  expect(footerTop, 'the Footer never covers Start').toBeGreaterThanOrEqual(
+    await bottomFromPageTop(start),
+  )
+})
+
+test('Welcome on a 360 × 640 phone: the on-screen keyboard never makes the clock jump bigger', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).focus()
+  const before = await welcomeClockSize(page)
+  // A keyboard that shrinks the page (Android WebView, Firefox on Android) leaves about 360 px.
+  await page.setViewportSize({ width: 360, height: 360 })
+  expect(await welcomeClockSize(page), 'no bigger than before the keyboard').toBeLessThanOrEqual(
+    before,
+  )
+})
+
 /** The Welcome clock's drawn size: the smaller side of its box, as the face is drawn to fit both. */
 async function welcomeClockSize(page: Page) {
   return page.locator('.art svg.clock').evaluate((e) => {
