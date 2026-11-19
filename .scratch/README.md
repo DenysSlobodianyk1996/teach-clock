@@ -23,7 +23,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [16-filled-clock](16-filled-clock/)                                     | feature       | done    | no   | #62                      |
 | [17-drag-drops-hold](17-drag-drops-hold/)                               | fixes         | done    | no   | #63                      |
 | [18-store-shots](18-store-shots/)                                       | store art     | done    | no   | #64                      |
-| [19-small-screen-phone](19-small-screen-phone/)                         | fixes         | planned | yes  | —                        |
+| [19-small-screen-phone](19-small-screen-phone/)                         | fixes         | planned | yes  | #68                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
