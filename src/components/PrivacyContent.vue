@@ -6,7 +6,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { CONTACT_EMAIL } from '@/config'
+import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
 import { formatPrivacyDate, PRIVACY_UPDATED, type PrivacyLocale } from '@/privacy'
 
 const props = withDefaults(
@@ -35,6 +35,8 @@ const updated = computed(() => formatPrivacyDate(props.locale))
       <li>
         {{ t('privacy.questions') }}
         <a :href="`mailto:${CONTACT_EMAIL}`">{{ CONTACT_EMAIL }}</a>
+        {{ t('privacy.or') }}
+        <a :href="ISSUES_URL">{{ ISSUES_URL.replace('https://', '') }}</a>
       </li>
     </ul>
     <p class="author">{{ t('privacy.createdBy') }}</p>

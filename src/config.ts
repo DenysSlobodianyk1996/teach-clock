@@ -1,6 +1,9 @@
 /** The author's address for Contact in the Footer. Also printed on the Privacy Page. */
 export const CONTACT_EMAIL = 'denys.slobodianyk@gmail.com'
 
+/** The game's public issue tracker, the Privacy Page's second way to ask a question. */
+export const ISSUES_URL = 'https://github.com/DenysSlobodianyk1996/teach-clock/issues'
+
 /** The subject a Contact email starts with, in English whatever the interface language. */
 export const CONTACT_SUBJECT = 'Contact support from teach clock for kids'
 

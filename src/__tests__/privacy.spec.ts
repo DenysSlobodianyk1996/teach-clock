@@ -2,7 +2,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import { execSync } from 'node:child_process'
 import { JSDOM } from 'jsdom'
-import { CONTACT_EMAIL } from '@/config'
+import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
 import { formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
 import { t, tEn } from '@/test/i18n'
 import { buildPrivacyPage, type PrivacyPage } from '../../scripts/buildPrivacyPage.ts'
@@ -45,11 +45,15 @@ describe('the static privacy.html for Google Play, rendered from the app', () =>
     }
   })
 
-  it('gives the contact email and the date of the text in each language', () => {
+  it('gives the contact email, the issues and the date of the text in each language', () => {
     for (const lang of ['uk', 'en'] as const) {
       const links = [...article(lang).querySelectorAll('a')]
-      // The contact email and the way back to the game are the only links.
-      expect(links.map((a) => a.getAttribute('href'))).toEqual([`mailto:${CONTACT_EMAIL}`, './'])
+      // The contact email, the issues and the way back to the game are the only links.
+      expect(links.map((a) => a.getAttribute('href'))).toEqual([
+        `mailto:${CONTACT_EMAIL}`,
+        ISSUES_URL,
+        './',
+      ])
       expect(article(lang).querySelector('time')!.getAttribute('datetime')).toBe(PRIVACY_UPDATED)
       expect(article(lang).querySelector('time')!.textContent).toBe(formatPrivacyDate(lang))
     }

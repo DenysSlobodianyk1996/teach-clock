@@ -154,6 +154,7 @@ export default {
     results: 'Results are not kept after a round ends.',
     createdBy: 'Created by Denys Slobodianyk',
     questions: 'Questions:',
+    or: 'or',
     updated: 'Updated:',
     back: 'Back to the game',
   },
