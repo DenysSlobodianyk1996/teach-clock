@@ -234,6 +234,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   }
   .entry {
     position: relative;
+    grid-template-rows: auto auto;
     row-gap: 2px;
     /* Brings the pad up to 4px under the ranges. */
     margin-bottom: -4px;
