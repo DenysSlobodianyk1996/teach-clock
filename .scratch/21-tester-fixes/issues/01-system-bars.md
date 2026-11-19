@@ -2,7 +2,7 @@
 
 **Blocked by:** none
 
-**Status:** done (the emulator and phone checks are left to the author: `docs/android-checks.md`)
+**Status:** done
 
 **What to build:** the Android App stays edge to edge (`viewport-fit=cover`, Capacitor 8), and the status bar, a camera cutout and the navigation bar never lie over a control. Backgrounds run under the bars; the header's controls sit below the status bar, the Footer's links above the navigation bar, nothing under a cutout on either side.
 
@@ -22,6 +22,6 @@
 - [x] `PopupDialog`'s scrim pads by the insets.
 - [x] Bar icons follow the theme in the Android App.
 - [x] Tests: `e2e/system-bars.spec.ts` (upright 360 × 640 and 360 × 720, sideways 640 × 360 with a cutout; Welcome, Settings, every Game's Round, the Info Popup, the Privacy Page), `src/android/__tests__/systemBars.spec.ts`.
-- [ ] Seen on an emulator with a cutout, in 3-button and gesture navigation, light and dark, upright and sideways (`docs/android-checks.md`); before/after screenshots in the PR.
+- [x] Seen on an emulator with a cutout, in 3-button and gesture navigation, light and dark, upright and sideways (`docs/android-checks.md`); before/after screenshots in the PR.
 
 **Out of scope:** hiding the bars (immersive mode); a sticky header.
