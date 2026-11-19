@@ -176,6 +176,7 @@ for (const viewport of [
         .getByRole('button', { name: t('info.moreAbout', { section: t('settings.game') }) })
         .click()
       await expectGotItReachable(page)
+      expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
     })
 
     test('Set Time: the page runs on below Submit with room under it', async ({ page }) => {
