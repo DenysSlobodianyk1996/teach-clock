@@ -212,21 +212,26 @@ h1 {
     width: 100%;
   }
 
-  /* Upright: one screen down to Start. The clock takes the height left, from about 120 to 230 px;
-     the Footer follows below. A sideways phone is too short for that and scrolls as before. */
+  /* Upright: one screen down to Start. The clock takes the height left, from about 120 px up to the
+     column's width, so a tall screen gets a big clock; what is still left is shared above and below.
+     The column is full width in every language. The Footer follows below. A sideways phone is too
+     short for that and scrolls as before. */
   @media (min-height: 501px) {
     .welcome {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
       height: calc(100dvh - var(--header-height));
     }
     .art {
       flex: 1 1 0;
       min-height: 120px;
-      max-height: 230px;
+      max-height: calc(100cqi - 40px);
     }
     .clock {
       width: auto;
+      max-width: 100%;
       height: 100%;
     }
     .intro {
