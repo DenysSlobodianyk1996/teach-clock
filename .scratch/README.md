@@ -28,7 +28,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [21-tester-fixes](21-tester-fixes/)                                     | fixes         | done        | no   | #74, #75                 |
 | [22-old-webview](22-old-webview/)                                       | fixes         | done        | no   | #76                      |
 | [23-privacy-static-page](23-privacy-static-page/)                       | fixes         | done        | no   | #78                      |
-| [24-privacy-in-app](24-privacy-in-app/)                                 | fixes         | in progress | no   |                          |
+| [24-privacy-in-app](24-privacy-in-app/)                                 | fixes         | in progress | no   | #79                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
