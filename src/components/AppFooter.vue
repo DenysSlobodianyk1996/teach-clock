@@ -4,19 +4,21 @@
  * App.vue shows it outside <main>, so the <footer> is the page's contentinfo landmark.
  */
 import { useI18n } from 'vue-i18n'
-import { RouterLink } from 'vue-router'
 import { CONTACT_EMAIL, CONTACT_SUBJECT } from '@/config'
+import { PRIVACY_PAGE } from '@/static/privacy'
 
 const { t } = useI18n()
 
+// Base-relative, so it works under /teach-clock/ on Pages and at / in the Android App.
+const privacyHref = `${import.meta.env.BASE_URL}${PRIVACY_PAGE}`
 const contactHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`
 </script>
 
 <template>
   <footer class="footer">
     <nav class="links">
-      <!-- An app screen in both builds, so it also opens offline and in the Android App. -->
-      <RouterLink :to="{ name: 'privacy' }">{{ t('footer.privacy') }}</RouterLink>
+      <!-- The static Privacy Page, bundled with the app: it opens offline and in the Android App. -->
+      <a :href="privacyHref">{{ t('footer.privacy') }}</a>
       <a :href="contactHref">{{ t('footer.contact') }}</a>
     </nav>
   </footer>

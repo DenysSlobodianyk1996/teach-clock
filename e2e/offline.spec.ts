@@ -35,18 +35,13 @@ test('the Privacy Page opens with no internet after the first visit', async ({ p
   await page.evaluate(() => navigator.serviceWorker.ready)
 
   await context.setOffline(true)
-  await page.goto('/privacy-policy')
-  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
-
-  // The static copy for Google Play is in the offline copy too.
-  await page.goto('/privacy.html')
-  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
-
-  // The old in-app address (before batch 12) gets no redirect: like GitHub Pages, the service
-  // worker answers it with privacy.html, never the app (which would send it to Welcome).
-  await page.goto('/privacy')
-  await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
-  await expect(page.locator('article[lang="en"]')).toBeVisible()
+  // The address the Footer opens, and the one in Google Play's listing: the service worker answers
+  // both with the Privacy Page, never the app (which would send them to Welcome).
+  for (const address of ['/privacy/index.html', '/privacy/']) {
+    await page.goto(address)
+    await expect(page.locator('section[lang="en"] h1')).toBeVisible()
+    await expect(page.locator('section[lang="uk"] h1')).toBeVisible()
+  }
 })
 
 /** The manifest the page links, fetched through the page (and so its service worker). */

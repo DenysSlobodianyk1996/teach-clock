@@ -80,6 +80,7 @@ async function toSettings(page: Page) {
 
 test.describe('an upright 360 × 640 phone with system bars', () => {
   test.use({ viewport: { width: 360, height: 640 } })
+
   test.beforeEach(({ page }) => withSystemBars(page, UPRIGHT))
 
   test('Welcome: the header below the status bar, Start in the safe area unscrolled, the Footer clear', async ({
@@ -132,19 +133,20 @@ test.describe('an upright 360 × 640 phone with system bars', () => {
     })
   }
 
-  test('the Privacy Page: the header below the status bar', async ({ page }) => {
+  test('the Privacy Page: its language links below the status bar', async ({ page }) => {
     await page.goto('/')
     await page
       .getByRole('contentinfo')
       .getByRole('link', { name: t('footer.privacy') })
       .click()
-    await expect(page).toHaveURL(/privacy-policy/)
-    await expectInSafeArea(page, headerControls(page), UPRIGHT, 'header')
+    await expect(page).toHaveURL(/\/privacy\/index\.html$/)
+    await expectInSafeArea(page, [page.locator('nav a').first()], UPRIGHT, 'language links')
   })
 })
 
 test.describe('an upright 360 × 720 phone with system bars', () => {
   test.use({ viewport: { width: 360, height: 720 } })
+
   test.beforeEach(({ page }) => withSystemBars(page, UPRIGHT))
 
   for (const game of ['setTime', 'dragArrows', 'dragHours', 'dragMinutes'] as const) {
@@ -167,6 +169,7 @@ test.describe('an upright 360 × 720 phone with system bars', () => {
 
 test.describe('a sideways 640 × 360 phone with system bars', () => {
   test.use({ viewport: { width: 640, height: 360 } })
+
   test.beforeEach(({ page }) => withSystemBars(page, SIDEWAYS))
 
   test('Welcome and Settings: nothing under the cutout or the navigation bar', async ({ page }) => {

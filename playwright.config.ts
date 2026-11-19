@@ -26,14 +26,12 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore:
-        /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
+      testIgnore: /offline\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
-      testIgnore:
-        /offline\.spec|privacy-reload\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
+      testIgnore: /offline\.spec|small-phone|phone-layout-768|system-bars|old-webview/,
     },
     // An old system WebView, such as a Samsung S8's: an old Chromium from OLD_CHROMIUM on a Galaxy S8
     // screen. Skipped unless OLD_CHROMIUM is set (docs/android-checks.md).
@@ -65,11 +63,10 @@ export default defineConfig({
       testMatch: /phone-layout-768\.spec/,
     },
     {
-      // The built app: the offline check, checks that minified CSS has broken before, and a reload
-      // on the Privacy Page (only the build writes privacy.html, which could shadow an app route).
+      // The built app: the offline check and checks that minified CSS has broken before.
       name: 'offline',
       use: { ...devices['Pixel 7'], baseURL: `http://localhost:${offlinePort}` },
-      testMatch: /offline\.spec|dragged-number\.spec|privacy-reload\.spec/,
+      testMatch: /offline\.spec|dragged-number\.spec/,
     },
   ],
   webServer: [

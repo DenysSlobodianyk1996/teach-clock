@@ -7,8 +7,8 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
-import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
-import { privacyUpdated } from './scripts/privacyUpdated.ts'
+import { fillPrivacyPage, privacyUpdated } from './scripts/privacyUpdated.ts'
+import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
@@ -20,66 +20,42 @@ import en from './src/i18n/en.ts'
 const isAndroidApp = process.env.VITE_TARGET === 'android'
 
 /**
- * The Privacy Page's "Updated" date: the built commit's date (scripts/privacyUpdated.ts). Set here,
- * before Vite reads the environment, so the app, the static privacy.html and Vitest all print it.
- */
-process.env.VITE_PRIVACY_UPDATED = privacyUpdated({ given: process.env.VITE_PRIVACY_UPDATED })
-
-/**
  * GitHub Pages serves the app from /teach-clock/; everywhere else, the Android App included, it
  * lives at the root.
  */
 const base = process.env.GITHUB_PAGES && !isAndroidApp ? '/teach-clock/' : '/'
 
 /**
- * The Web App's static `privacy.html`, the public URL in Google Play's listing. It is rendered from
- * the app's own Privacy Page components (scripts/buildPrivacyPage.ts), so the two look alike and
- * never drift. The dev server serves it too; the service worker precaches it with the rest of the
- * build.
+ * The Privacy Page (batch 23) lives outside public/ so every build can stamp its "Updated" date:
+ * the built commit's date, or VITE_PRIVACY_UPDATED when set (scripts/privacyUpdated.ts). The Web
+ * App build (where the service worker precaches it) and the Android App both get
+ * privacy/index.html; the dev server serves it at the same address.
  */
+const PRIVACY_SOURCE = fileURLToPath(new URL('./src/static/privacy.html', import.meta.url))
+
 function privacyPagePlugin(): Plugin {
-  let root = ''
-  let base = '/'
+  const render = async () =>
+    fillPrivacyPage(
+      await readFile(PRIVACY_SOURCE, 'utf8'),
+      privacyUpdated({ given: process.env.VITE_PRIVACY_UPDATED }),
+    )
   return {
     name: 'teach-clock-privacy-page',
-    configResolved(config) {
-      root = config.root
-      base = config.base
+    async generateBundle() {
+      this.emitFile({ type: 'asset', fileName: PRIVACY_PAGE, source: await render() })
     },
     configureServer(server) {
-      // Built once and kept until a source file changes, so reloads stay fast. Its fonts are served
-      // from here: the dev server does not have them under these names.
-      let page: Promise<PrivacyPage> | undefined
-      server.watcher.on('all', () => (page = undefined))
-      const fontTypes: Record<string, string> = { woff2: 'font/woff2', woff: 'font/woff' }
       server.middlewares.use(async (req, res, next) => {
-        const url = req.url?.split('?')[0] ?? ''
-        if (url.startsWith(`${base}assets/`) && page) {
-          const asset = (await page.catch(() => undefined))?.assets.get(url.slice(base.length))
-          if (!asset) return next()
-          const type = fontTypes[url.split('.').pop()!]
-          if (type) res.setHeader('Content-Type', type)
-          return res.end(asset)
+        const url = req.url ?? ''
+        if (!NOT_THE_APP_PAGES.some((page) => page.test(url))) return next()
+        const path = url.split('?')[0] ?? ''
+        if (path.endsWith('/privacy')) {
+          res.writeHead(302, { Location: `${path}/` }).end()
+          return
         }
-        if (url !== `${base}privacy.html`) return next()
-        try {
-          page ??= buildPrivacyPage({ root, base })
-          const { html } = await page
-          res.setHeader('Content-Type', 'text/html; charset=utf-8')
-          res.end(html)
-        } catch (error) {
-          page = undefined
-          next(error)
-        }
+        res.setHeader('Content-Type', 'text/html; charset=utf-8')
+        res.end(await render())
       })
-    },
-    async generateBundle(_options, bundle) {
-      const page = await buildPrivacyPage({ root, base })
-      this.emitFile({ type: 'asset', fileName: 'privacy.html', source: page.html })
-      // The app's build has these fonts already (same content, same names); emit any it lacks.
-      for (const [fileName, source] of page.assets) {
-        if (!(fileName in bundle)) this.emitFile({ type: 'asset', fileName, source })
-      }
     },
   }
 }
@@ -246,8 +222,8 @@ export default defineConfig({
     themeColorsPlugin(),
     appTextPlugin(),
     webManifestPlugin(),
-    // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
-    ...(isAndroidApp ? [] : [privacyPagePlugin()]),
+    // The Privacy Page, in both builds: the Footer opens it in the Android App too.
+    privacyPagePlugin(),
     // Offline and installable (ticket 11). The service worker precaches the whole app on the
     // first visit; src/pwa.ts registers it and applies updates only between Rounds.
     // Off in the Android App: the game is packaged inside it, so there is no service worker and
@@ -263,6 +239,8 @@ export default defineConfig({
         // Everything the build emits, fonts and both manifests included, so every Game works and
         // the app installs offline.
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
+        // The Privacy Page is its own page (precached as privacy/index.html), not the app.
+        navigateFallbackDenylist: NOT_THE_APP_PAGES,
       },
     }),
   ],
