@@ -2,11 +2,11 @@
 
 **Blocked by:** 01, 02
 
-**Status:** todo
+**Status:** done
 
 **Checklist:**
 
-- [ ] `docs/design/` boards: the new header buttons.
-- [ ] `docs/product-brief.md`, `docs/android-checks.md`, `CLAUDE.md` status, `.scratch/README.md` row.
-- [ ] Store screenshots retaken (`npm run store-shots`).
-- [ ] Seen on the Oppo-sized emulator (`request.md`): no screen scrolls the app.
+- [x] `docs/design/` boards: the new header buttons.
+- [x] `docs/product-brief.md`, `docs/android-checks.md`, `CLAUDE.md` status, `.scratch/README.md` row.
+- [x] Store screenshots retaken (`npm run store-shots`).
+- [x] Seen on the Oppo-sized emulator (`request.md`): no screen scrolls the app.

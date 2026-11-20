@@ -18,11 +18,11 @@ From the author, 2026-11-20, after batch 24:
 
 An Android 14 emulator set up like the Oppo A (720 × 1600 at 320 dpi, 3-button navigation, WebView 113) gives the app 728 CSS px between the bars, as the phone does. A script read over DevTools how far each screen scrolled the whole document:
 
-| Setup | Welcome | Settings | Drag Hours / Minutes | Drag Arrows, Set Time |
-| --- | --- | --- | --- | --- |
-| font 100 %, UK and EN | 61 | 0 | 0 | 0 |
-| font 130 % | 61 | 0 | 1 | 0 |
-| larger Display size (640 px tall) | 61 | 0 | 39 | 0 |
+| Setup                             | Welcome | Settings | Drag Hours / Minutes | Drag Arrows, Set Time |
+| --------------------------------- | ------- | -------- | -------------------- | --------------------- |
+| font 100 %, UK and EN             | 61      | 0        | 0                    | 0                     |
+| font 130 %                        | 61      | 0        | 1                    | 0                     |
+| larger Display size (640 px tall) | 61      | 0        | 39                   | 0                     |
 
 - Welcome on a phone was at least a screen tall less the header, and the Footer came after it: every phone scrolled by the Footer's 61 px. Batch 19 meant it ("the Footer follows Start"); the tests scrolled to reach the Footer.
 - The Rounds' clocks were sized from the screen's height less a measured constant, so a phone with less height than measured scrolled.
@@ -33,3 +33,14 @@ An Android 14 emulator set up like the Oppo A (720 × 1600 at 320 dpi, 3-button 
 1. The app is the screen's height and never scrolls. The header stays on top and the Footer (Welcome, Settings) at the bottom; only `<main>` between them scrolls, and only when a screen cannot fit (very big text, a phone held sideways, the Privacy Page).
 2. The screens and their clocks size from `<main>`, not the screen.
 3. The header's tools are round buttons like Home: language shows the current language, theme the current theme; a tap switches it.
+
+Font sizes and units stay as they are (the author, after asking whether rem/em would save room: it would not, `1rem` is 16 px).
+
+## After (the same emulator, `images/01-emulator-after.png`)
+
+Nothing scrolls on any screen, in Ukrainian and English, at 728 px and with a larger Display size (640 px). With font size 130 % the drag Games scroll inside `<main>` only (2 px in Teach, 55 px in Test); the page never moves.
+
+## Left to check on a phone
+
+- The Oppo A itself: no screen scrolls; the header and the Footer stay put.
+- The keyboard on Welcome keeps the name field in view.
