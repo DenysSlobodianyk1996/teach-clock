@@ -13,9 +13,13 @@ async function toSettings(page: Page) {
   await page.getByRole('button', { name: t('welcome.start') }).click()
 }
 
-/** How far down the page an element ends, measured from the very top (not from the scroll). */
+/** How far down an element ends, measured from the screen's top with nothing scrolled: neither the
+ * page nor <main>, the one part that may scroll (batch 25). */
 async function bottomFromPageTop(locator: Locator) {
-  return locator.evaluate((e) => e.getBoundingClientRect().bottom + scrollY)
+  return locator.evaluate(
+    (e) =>
+      e.getBoundingClientRect().bottom + scrollY + (document.querySelector('main')?.scrollTop ?? 0),
+  )
 }
 
 async function sidewaysScroll(page: Page) {
@@ -62,20 +66,25 @@ test.describe('Welcome on a 360 × 640 phone', () => {
   })
 })
 
-test('Welcome on a 360 × 640 phone with big text: the Footer still follows Start', async ({
+test('Welcome on a 360 × 640 phone with big text: only <main> scrolls, Start above the Footer', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 640 })
   await page.goto('/')
   // As with a large font scale: the heading takes far more room than usual.
   await page.addStyleTag({ content: '.welcome h1 { font-size: 64px !important; }' })
+  expect(
+    await page.evaluate(() => document.scrollingElement!.scrollHeight - innerHeight),
+    'the page never scrolls',
+  ).toBeLessThanOrEqual(0)
   const start = page.getByRole('button', { name: t('welcome.start') })
-  const footerTop = await page
-    .getByRole('contentinfo')
-    .evaluate((e) => e.getBoundingClientRect().top + scrollY)
-  expect(footerTop, 'the Footer never covers Start').toBeGreaterThanOrEqual(
-    await bottomFromPageTop(start),
+  await start.scrollIntoViewIfNeeded()
+  const startBox = (await start.boundingBox())!
+  const footerBox = (await page.getByRole('contentinfo').boundingBox())!
+  expect(startBox.y + startBox.height, 'the Footer never covers Start').toBeLessThanOrEqual(
+    footerBox.y,
   )
+  expect(footerBox.y + footerBox.height, 'the Footer stays on the screen').toBeLessThanOrEqual(640)
 })
 
 test('Welcome on a 360 × 640 phone: the on-screen keyboard never makes the clock jump bigger', async ({
@@ -179,15 +188,22 @@ for (const viewport of [
       expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
     })
 
-    test('Set Time: the page runs on below Submit with room under it', async ({ page }) => {
+    test('Set Time: <main> runs on below Submit with room under it, the page never scrolls', async ({
+      page,
+    }) => {
       await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
       const submit = page.getByRole('button', { name: t('round.submit') })
       await expect(submit).toBeVisible()
-      const pageBottom = await page.evaluate(() => document.scrollingElement!.scrollHeight)
+      const room = await submit.evaluate((e) => {
+        const main = document.querySelector('main')!
+        const bottom = e.getBoundingClientRect().bottom - main.getBoundingClientRect().top
+        return main.scrollHeight - (bottom + main.scrollTop)
+      })
+      expect(room, 'room under Submit').toBeGreaterThanOrEqual(10)
       expect(
-        pageBottom - (await bottomFromPageTop(submit)),
-        'room under Submit',
-      ).toBeGreaterThanOrEqual(10)
+        await page.evaluate(() => document.scrollingElement!.scrollHeight - innerHeight),
+        'the page never scrolls',
+      ).toBeLessThanOrEqual(0)
       expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
     })
   })
@@ -392,30 +408,20 @@ test.describe('a 320px-wide phone', () => {
     expect(await sidewaysScroll(page)).toBeLessThanOrEqual(0)
   })
 
-  test('the theme toggle is easy to tap, the knob under the sun or the moon', async ({ page }) => {
-    // A light device, and no sliding, so the knob is measured where it rests.
-    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' })
+  test('the header buttons are easy to tap and fit beside Home', async ({ page }) => {
     await toSettings(page)
-    const toggle = page.getByRole('switch', { name: t('header.darkTheme') })
-    const centre = (b: { x: number; width: number }) => b.x + b.width / 2
-    for (const [icon, dark] of [
-      ['.sun', 'false'],
-      ['.moon', 'true'],
-    ] as const) {
-      await expect(toggle).toHaveAttribute('aria-checked', dark)
-      const box = (await toggle.boundingBox())!
-      expect(box.width).toBeGreaterThanOrEqual(44)
-      expect(box.height).toBeGreaterThanOrEqual(44)
-      // Polled: under a loaded test run the knob can be measured a frame before it settles.
-      await expect
-        .poll(async () => {
-          const knob = (await toggle.locator('.knob').boundingBox())!
-          const under = (await toggle.locator(icon).boundingBox())!
-          return Math.abs(centre(knob) - centre(under))
-        }, icon)
-        .toBeLessThanOrEqual(1)
-      await toggle.click()
+    for (const name of [
+      t('header.languageNow', { language: t('languages.uk') }),
+      t('header.home'),
+    ]) {
+      const box = (await page
+        .getByRole('link', { name })
+        .or(page.getByRole('button', { name }))
+        .boundingBox())!
+      expect(box.width, name).toBeGreaterThanOrEqual(44)
+      expect(box.height, name).toBeGreaterThanOrEqual(44)
     }
+    expect(await headerOverflow(page)).toBeLessThanOrEqual(0)
   })
 })
 

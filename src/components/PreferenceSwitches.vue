@@ -1,117 +1,50 @@
 <script setup lang="ts">
+/**
+ * The language and the theme in the header (batch 25): two round buttons like Home. Each shows what
+ * is in use now, the language's code or the theme's sun or moon; a tap switches to the other.
+ */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import HeaderButton from './HeaderButton.vue'
 import { LOCALES, usePreferencesStore } from '@/stores/preferences'
 
 const { t } = useI18n()
 const preferences = usePreferencesStore()
-const dark = computed(() => preferences.theme === 'dark')
+
+const otherLocale = computed(() => LOCALES.find((l) => l !== preferences.locale) ?? LOCALES[0])
 </script>
 
 <template>
-  <div class="seg" role="group" :aria-label="t('header.language')">
-    <button
-      v-for="locale in LOCALES"
-      :key="locale"
-      type="button"
-      :lang="locale"
-      :aria-label="t(`languages.${locale}`)"
-      :aria-pressed="preferences.locale === locale"
-      @click="preferences.locale = locale"
-    >
-      {{ t(`languageCodes.${locale}`) }}
-    </button>
-  </div>
+  <HeaderButton
+    circle
+    class="language"
+    :label="t('header.languageNow', { language: t(`languages.${preferences.locale}`) })"
+    @click="preferences.locale = otherLocale"
+  >
+    {{ t(`languageCodes.${preferences.locale}`) }}
+  </HeaderButton>
 
-  <!-- Sun and moon on a track; the knob sits under the chosen one. The same on every screen. -->
-  <button
-    class="theme-toggle"
-    :class="{ dark }"
-    type="button"
-    role="switch"
-    :aria-checked="dark"
-    :aria-label="t('header.darkTheme')"
+  <HeaderButton
+    circle
+    class="theme"
+    :label="t('header.themeNow', { theme: t(`themes.${preferences.theme}`) })"
     @click="preferences.toggleTheme()"
   >
-    <span class="knob" aria-hidden="true" />
-    <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
+    <svg v-if="preferences.theme === 'dark'" class="moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 3.6a8.6 8.6 0 1 0 4.9 13.6A7 7 0 0 1 15.5 3.6Z" />
+    </svg>
+    <svg v-else class="sun" viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="4.2" />
       <path
         d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"
       />
     </svg>
-    <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M15.5 3.6a8.6 8.6 0 1 0 4.9 13.6A7 7 0 0 1 15.5 3.6Z" />
-    </svg>
-  </button>
+  </HeaderButton>
 </template>
 
 <style scoped>
-.seg {
-  display: flex;
-  padding: 4px;
-  gap: 2px;
-  border-radius: 999px;
-  background: var(--bg-deep);
-}
-.seg button {
-  min-width: 48px;
-  height: 40px;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted);
-  font:
-    800 15px 'Nunito',
-    sans-serif;
-  cursor: pointer;
-}
-.seg button[aria-pressed='true'] {
-  background: var(--surface-2);
-  color: var(--text);
-}
-
-/* The knob is as wide as each icon's slot, so it sits right under the sun or the moon. */
-.theme-toggle {
-  --knob: 40px;
-  --pad: 4px;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  width: calc(2 * var(--knob) + 2 * var(--pad));
-  height: calc(var(--knob) + 2 * var(--pad));
-  padding: var(--pad);
-  border: 0;
-  border-radius: 999px;
-  background: var(--bg-deep);
-  cursor: pointer;
-}
-.knob {
-  position: absolute;
-  top: var(--pad);
-  left: var(--pad);
-  width: var(--knob);
-  height: var(--knob);
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
-  transition:
-    transform 0.25s ease,
-    background-color 0.25s ease;
-}
-.dark .knob {
-  transform: translateX(var(--knob));
-  background: var(--surface-2);
-}
-.icon {
-  position: relative;
-  width: var(--knob);
-  height: 22px;
-  color: var(--muted);
-  transition: color 0.25s ease;
+.language {
+  font-size: 15px;
 }
 .sun {
   fill: none;
@@ -124,25 +57,5 @@ const dark = computed(() => preferences.theme === 'dark')
 }
 .moon {
   fill: currentColor;
-}
-.theme-toggle:not(.dark) .sun {
-  color: var(--accent-ink);
-}
-.dark .moon {
-  color: var(--accent);
-}
-
-/* Phones: compact, so the header fits a 320px screen; still 44px to tap. */
-@media (--phone) {
-  .theme-toggle {
-    --knob: 36px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .knob,
-  .icon {
-    transition: none;
-  }
 }
 </style>

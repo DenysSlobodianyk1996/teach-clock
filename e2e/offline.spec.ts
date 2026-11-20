@@ -103,15 +103,13 @@ test('the installed name follows a УК/EN tap', async ({ page }) => {
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
 
   await page
-    .getByRole('group', { name: t('header.language') })
-    .getByRole('button', { name: t('languages.en') })
+    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
     .click()
   await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
 
   await page
-    .getByRole('group', { name: tEn('header.language') })
-    .getByRole('button', { name: tEn('languages.uk') })
+    .getByRole('button', { name: tEn('header.languageNow', { language: tEn('languages.en') }) })
     .click()
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
@@ -147,8 +145,7 @@ test.describe('an installed Web App', () => {
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
 
     await page
-      .getByRole('group', { name: t('header.language') })
-      .getByRole('button', { name: t('languages.en') })
+      .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
       .click()
     await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)

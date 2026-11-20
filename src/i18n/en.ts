@@ -11,9 +11,10 @@ export default {
   header: {
     home: 'Home',
     leave: 'Leave',
-    language: 'Language',
-    darkTheme: 'Dark theme',
+    languageNow: 'Language: {language}',
+    themeNow: 'Theme: {theme}',
   },
+  themes: { light: 'light', dark: 'dark' },
   languages: { uk: 'Українська', en: 'English' },
   languageCodes: { uk: 'УК', en: 'EN' },
   welcome: {

@@ -9,10 +9,12 @@ export default {
   header: {
     home: 'Додому',
     leave: 'Вийти',
-    language: 'Мова',
-    /** The sun/moon toggle: a switch that is on in the dark theme. */
-    darkTheme: 'Темна тема',
+    /** The round language button: it shows the language in use; a tap switches to the other. */
+    languageNow: 'Мова: {language}',
+    /** The round theme button: it shows the theme in use (sun or moon); a tap switches it. */
+    themeNow: 'Тема: {theme}',
   },
+  themes: { light: 'світла', dark: 'темна' },
   /** Each language by its own name, the same in every interface language. */
   languages: { uk: 'Українська', en: 'English' },
   languageCodes: { uk: 'УК', en: 'EN' },
