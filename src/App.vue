@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { nextTick, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AppFooter from '@/components/AppFooter.vue'
@@ -39,6 +39,15 @@ watch(
     }
   },
   { immediate: true },
+)
+// Only <main> scrolls (AppFrame): every screen opens at its top, so a Round never starts scrolled
+// past its dots.
+watch(
+  () => route.name,
+  async () => {
+    await nextTick()
+    document.querySelector('main')?.scrollTo(0, 0)
+  },
 )
 watch(
   () => preferences.theme,

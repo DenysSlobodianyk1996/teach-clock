@@ -560,6 +560,17 @@ function tapTray() {
       width: clamp(190px, 100svh - var(--inset-top) - var(--inset-bottom) - 366px, 100vw - 40px);
     }
   }
+  /* Where container units work, the face sizes from <main>'s height (AppFrame), which already leaves
+     out the header and the system bars: the rest of a Round with a full tray takes 288 px in Teach
+     (the dots, the heading with the eye, the tray, the help) and 294 px in Test (room for Submit). */
+  @supports (height: 1cqh) {
+    .number-face {
+      width: clamp(190px, 100cqh - 288px, 100cqi - 40px);
+    }
+    .board.test .number-face {
+      width: clamp(190px, 100cqh - 294px, 100cqi - 40px);
+    }
+  }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
   .tray {
     grid-template-columns: repeat(6, max-content);

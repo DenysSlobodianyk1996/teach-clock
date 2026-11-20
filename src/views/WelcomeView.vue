@@ -213,22 +213,27 @@ h1 {
     width: 100%;
   }
 
-  /* One screen down to Start. The clock takes the height left, from about 120 px up to the column's
-     width, so a tall screen gets a big clock; what is still left is shared above and below. The
-     column is full width in every language. At least a screen tall, never fixed: when the rest needs
-     more (big text, a sideways phone) the page grows and scrolls, and the Footer still follows
-     Start. No height breakpoint, so a keyboard that shrinks the page only shrinks the clock towards
-     its floor; it never flips to another layout mid-typing. */
+  /* Start without scrolling. The view fills <main>; the clock takes the height left, from about
+     100 px up to the column's width, so a tall screen gets a big clock. What is still left is shared
+     above and below by auto margins, which, unlike centring, keep the top reachable when the rest
+     needs more than <main> has (big text, a sideways phone): then <main> scrolls, never the page.
+     The column is full width in every language. No height breakpoint, so a keyboard that shrinks the
+     page only shrinks the clock towards its floor; it never flips to another layout mid-typing. */
   .welcome {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
-    min-height: calc(var(--safe-height) - var(--header-height));
+    justify-content: flex-start;
+  }
+  .art {
+    margin-top: auto;
+  }
+  .intro {
+    margin-bottom: auto;
   }
   .art {
     flex: 1 1 0;
-    min-height: 120px;
+    min-height: 100px;
     max-height: calc(100vw - 40px);
     max-height: calc(100cqi - 40px);
     container-type: size;

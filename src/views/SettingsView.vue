@@ -255,9 +255,13 @@ h1 {
   }
   /* Back and Play follow the last section with the usual gap, not pinned to the screen's bottom,
      so a tall screen shows no empty band between the cards and the buttons. The block sits in the
-     middle of the room left; on a small phone it fills it anyway. */
-  .settings {
-    justify-content: center;
+     middle of the room left (auto margins, which keep the greeting reachable if <main> must scroll);
+     on a small phone it fills it anyway. */
+  .settings > h1 {
+    margin-top: auto;
+  }
+  .settings > .actions {
+    margin-bottom: auto;
   }
   .spacer {
     display: none;
