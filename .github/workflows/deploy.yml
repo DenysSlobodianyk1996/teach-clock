@@ -18,6 +18,8 @@ on:
 
 permissions:
   contents: read
+  # Reads the Android workflow's run number for the version (the Version step).
+  actions: read
   pages: write
   id-token: write
 
@@ -38,6 +40,25 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # The Privacy Page shows the same version as the Android App built from this commit
+      # (scripts/appVersion.ts): VERSION_CODE is the run number of the Android workflow's push run
+      # for this commit, which starts with this one. Without one (a change only to this workflow, or
+      # Run workflow), the latest Android run's number.
+      - name: Version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=''
+          for attempt in 1 2 3 4 5 6; do
+            code=$(gh run list -R "$GITHUB_REPOSITORY" --workflow android.yml --event push --commit "$GITHUB_SHA" --json number --jq '.[0].number // empty')
+            [ -n "$code" ] && break
+            sleep 10
+          done
+          if [ -z "$code" ]; then
+            code=$(gh run list -R "$GITHUB_REPOSITORY" --workflow android.yml --limit 1 --json number --jq '.[0].number // empty')
+          fi
+          echo "VERSION_CODE=$code" >> "$GITHUB_ENV"
+          echo "Privacy Page version from Android run ${code:-none}." >> "$GITHUB_STEP_SUMMARY"
       - run: npm run build
         env:
           GITHUB_PAGES: '1'

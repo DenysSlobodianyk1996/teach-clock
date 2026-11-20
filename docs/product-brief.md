@@ -79,8 +79,10 @@ view (batch 25). It is never shown in a Round or on the Summary. It holds:
   collected or sent: no accounts, ads, analytics or permissions; only the Preferences and the last
   name stay on the device; results are not kept after a Round. It names the author (Denys
   Slobodianyk / Денис Слободяник) and gives the contact email and the public GitHub issues. Its
-  "Updated" date is the day of the deploy it came with (the built commit's date, batch 21). It
-  works offline. The text lives once per language in i18n (`privacy.*`, batch 24).
+  "Updated" date is the day of the deploy it came with (the built commit's date, batch 21). Under
+  it, "Версія: 1.0.23" / "Version: 1.0.23": the app's version, the same in the Web App and the
+  Android App built from one commit and the same as Google Play's (package.json's major.minor and
+  the Android build's run number, batch 27). It works offline. The text lives once per language in i18n (`privacy.*`, batch 24).
   The Web App build also renders the same screen into a static page for Google Play's listing,
   `privacy/index.html`, at https://denysslobodianyk1996.github.io/teach-clock/privacy/ (batch 23):
   English then Ukrainian, with a link to each at the top and a link back to the game under each,

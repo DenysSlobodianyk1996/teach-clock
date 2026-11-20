@@ -9,6 +9,12 @@
  */
 export const PRIVACY_UPDATED: string = import.meta.env.VITE_PRIVACY_UPDATED ?? '2026-11-19'
 
+/**
+ * The app's version on the Privacy Page, e.g. 1.0.23: package.json's major.minor and the Android
+ * run number, the same as Google Play's versionName (scripts/appVersion.ts, batch 27).
+ */
+export const APP_VERSION: string = import.meta.env.VITE_APP_VERSION ?? '1.0.0'
+
 export type PrivacyLocale = 'uk' | 'en'
 
 const EN_MONTHS = [

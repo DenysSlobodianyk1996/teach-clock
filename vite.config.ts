@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 
@@ -9,6 +10,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
 import { privacyUpdated } from './scripts/privacyUpdated.ts'
+import { appVersion } from './scripts/appVersion.ts'
 import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
@@ -25,6 +27,19 @@ const isAndroidApp = process.env.VITE_TARGET === 'android'
  * before Vite reads the environment, so the app, the static privacy/index.html and Vitest all print it.
  */
 process.env.VITE_PRIVACY_UPDATED = privacyUpdated({ given: process.env.VITE_PRIVACY_UPDATED })
+
+/**
+ * The version on the Privacy Page (scripts/appVersion.ts): package.json's major.minor and the
+ * Android run number CI gives in VERSION_CODE, as Google Play's versionName.
+ */
+process.env.VITE_APP_VERSION = appVersion({
+  packageVersion: (
+    JSON.parse(readFileSync(fileURLToPath(new URL('./package.json', import.meta.url)), 'utf8')) as {
+      version: string
+    }
+  ).version,
+  versionCode: process.env.VERSION_CODE,
+})
 
 /**
  * GitHub Pages serves the app from /teach-clock/; everywhere else, the Android App included, it
@@ -63,7 +78,8 @@ function privacyPagePlugin(): Plugin {
           if (type) res.setHeader('Content-Type', type)
           return res.end(asset)
         }
-        if (!url.startsWith(base) || !NOT_THE_APP_PAGES.some((page) => page.test(url))) return next()
+        if (!url.startsWith(base) || !NOT_THE_APP_PAGES.some((page) => page.test(url)))
+          return next()
         // A bare folder, as GitHub Pages does: the page's relative links need the slash.
         if (url.endsWith('/privacy')) {
           res.writeHead(302, { Location: `${url}/` }).end()
