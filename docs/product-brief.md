@@ -69,8 +69,8 @@ The **Info Popup** is the text an ⓘ stands for, on the phone layout only (on d
 the screen and there is no ⓘ): a heading, one paragraph or a list of names with descriptions, and
 one Got it button. Got it, Escape or a tap on the scrim closes it; reading it changes nothing.
 
-Welcome and Settings end with the **Footer**, a plain bar after the screen's content (not sticky;
-on a phone it is below the fold). It is never shown in a Round or on the Summary. It holds:
+Welcome and Settings end with the **Footer**, a plain bar at the bottom of the screen, always in
+view (batch 25). It is never shown in a Round or on the Summary. It holds:
 
 - **Privacy**: opens the **Privacy Page** as an app screen, `/privacy-policy`, in the Web App and
   in the Android App alike: one text, in the interface language, with the app header and a "До
@@ -89,10 +89,11 @@ on a phone it is below the fold). It is never shown in a Round or on the Summary
   for kids" (set in `src/config.ts`).
 
 A small header on every screen holds the Preferences: interface language (Ukrainian first,
-English second) and theme, light or dark. The theme is one sun/moon toggle: a track with a sun on
-the left and a moon on the right, and a round knob under the chosen one; one tap switches. Until
-the Player taps it, the game follows the device (dark when the device is in dark mode, otherwise
-light). The language too follows the device until the Player taps УК/EN: Ukrainian when it comes
+English second) and theme, light or dark. Each is a round button like Home (batch 25): the
+language button shows the language in use (УК or EN), the theme button its sun or moon, and one
+tap switches to the other. Until the Player taps it, the game follows the device (dark when the
+device is in dark mode, otherwise light). The language too follows the device until the Player
+taps the language button: Ukrainian when it comes
 before English in the device's languages, otherwise English. The device remembers Preferences the
 Player picked and the last name typed.
 
@@ -201,7 +202,7 @@ Rules shared by Drag Arrows and Set Time:
 
 - Two themes, light and dark, with a soft but saturated palette (warm cream or white clock face,
   coral Hour Hand, teal Minute Hand, mustard highlights, softened green/red for right/wrong). The
-  device decides which one comes first; the Player can switch with the toggle. The Android
+  device decides which one comes first; the Player can switch with the theme button. The Android
   splash sits on the dark theme's background. The app icon (Android, the Web App's maskable and
   Apple touch icons, the Play icon) is the clock on the clock face's cream, with no dark tile: the
   clock fills the launcher's safe circle, so on a round launcher the icon is the clock itself and
@@ -216,7 +217,7 @@ Rules shared by Drag Arrows and Set Time:
 - The play area keeps a 4:3 landscape shape, scales to fit, and is capped at about 1024 px wide on
   desktop. Every screen switches to the phone layout when the window is 768 px wide or less, taller
   than wide (an upright tablet too), or 500 px tall or less (a phone held sideways). There the
-  screen stacks and scrolls, and the clock sits above the answer area (beside it on a sideways
+  screen stacks, and the clock sits above the answer area (beside it on a sideways
   phone wider than 600 px). The breakpoint is defined once, in `src/styles/media.ts`.
 - The clock never moves during a Round, on any screen. The Hint opens in a popup over it, so no
   space is kept around the clock for it. Anything else that can appear beside it (a Set Time error,
@@ -225,6 +226,10 @@ Rules shared by Drag Arrows and Set Time:
   height the header, the dots and the answer area leave, never below about 150 px, and grows on
   taller phones. Every Round fits a 360 × 640 screen without scrolling, Submit or Done in view, in
   Teach and Test.
+- The app is the screen's height and never scrolls as a whole (batch 25): the header stays on top,
+  the Footer (Welcome, Settings) at the bottom, and only the screen between them scrolls, when it
+  cannot fit (very big text, a phone held sideways, the Privacy Page, a short desktop window).
+  Welcome, Settings and every Round fit 360 × 640, 360 × 728 and 320 × 640 with nothing scrolled.
 - The Android App draws edge to edge: backgrounds run under the status bar, a camera cutout and the
   navigation bar, and every control stays between them, in both builds (batch 21). The bars' icons
   follow the theme. Fitting is measured inside that safe area: every screen fits a 360 × 720 phone

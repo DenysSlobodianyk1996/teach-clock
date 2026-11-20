@@ -131,7 +131,7 @@ Teach Clock as an app installed from Google Play, with the whole game inside it 
 _Avoid_: mobile app, native app, Play version, APK
 
 **Footer**:
-The plain bar at the bottom of Welcome and Settings with the links to the Privacy Page and to contact the author. Never shown during a Round or on the Summary.
+The plain bar at the bottom of Welcome and Settings with the links to the Privacy Page and to contact the author, always on the screen (only the screen above it scrolls). Never shown during a Round or on the Summary.
 _Avoid_: bottom bar, links bar
 
 **Privacy Page**:
