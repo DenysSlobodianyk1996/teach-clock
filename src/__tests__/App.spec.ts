@@ -10,19 +10,14 @@ import { webManifestHref } from '@/webManifest'
 
 type Screen = Awaited<ReturnType<typeof mountScreen>>['wrapper']
 
-/** The pressed button in the switch group named `group`, by its accessible name. */
-function switchButton(wrapper: Screen, group: string, name: string) {
-  const found = wrapper
-    .find(`[role="group"][aria-label="${group}"]`)
-    .findAll('button')
-    .find((b) => (b.attributes('aria-label') ?? b.text()) === name)
-  if (!found) throw new Error(`No "${name}" in "${group}"`)
-  return found
+/** The header's round language button: it shows the language in use; a tap switches it. */
+function languageButton(wrapper: Screen) {
+  return wrapper.get('button.language')
 }
 
-/** The header's sun/moon toggle. */
-function themeToggle(wrapper: Screen) {
-  return wrapper.get(`[role="switch"][aria-label="${t('header.darkTheme')}"]`)
+/** The header's round theme button: it shows the theme in use; a tap switches it. */
+function themeButton(wrapper: Screen) {
+  return wrapper.get('button.theme')
 }
 
 async function open() {
@@ -53,22 +48,27 @@ describe('Preferences in the header', () => {
     const wrapper = await open()
     expect(document.documentElement.lang).toBe('uk')
     expect(document.documentElement.dataset.theme).toBe('light')
-    expect(
-      switchButton(wrapper, t('header.language'), t('languages.uk')).attributes('aria-pressed'),
-    ).toBe('true')
-    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('false')
+    expect(languageButton(wrapper).text()).toBe(t('languageCodes.uk'))
+    expect(languageButton(wrapper).attributes('aria-label')).toBe(
+      t('header.languageNow', { language: t('languages.uk') }),
+    )
+    expect(themeButton(wrapper).attributes('aria-label')).toBe(
+      t('header.themeNow', { theme: t('themes.light') }),
+    )
   })
 
   it('starts dark on a device in dark mode', async () => {
     stubDeviceTheme('dark')
     const wrapper = await open()
     expect(document.documentElement.dataset.theme).toBe('dark')
-    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('true')
+    expect(themeButton(wrapper).attributes('aria-label')).toBe(
+      t('header.themeNow', { theme: t('themes.dark') }),
+    )
   })
 
   it('switches the interface to English', async () => {
     const wrapper = await open()
-    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    await languageButton(wrapper).trigger('click')
     expect(wrapper.find('h1').text()).toBe(tEn('welcome.title'))
     expect(document.documentElement.lang).toBe('en')
     expect(document.title).toBe(tEn('app.name'))
@@ -79,14 +79,14 @@ describe('Preferences in the header', () => {
     const wrapper = await open()
     const description = () => document.head.querySelector('meta[name="description"]')
     expect(description()?.getAttribute('content')).toBe(t('app.description'))
-    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    await languageButton(wrapper).trigger('click')
     expect(description()?.getAttribute('content')).toBe(tEn('app.description'))
   })
 
   it('links the manifest in the interface language, to install under that Game Name', async () => {
     const wrapper = await open()
     expect(manifestLink().getAttribute('href')).toBe(webManifestHref(base, 'uk'))
-    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    await languageButton(wrapper).trigger('click')
     expect(manifestLink().getAttribute('href')).toBe(webManifestHref(base, 'en'))
   })
 
@@ -94,7 +94,7 @@ describe('Preferences in the header', () => {
     stubInstalledWebApp()
     manifestLink().setAttribute('href', 'installed.webmanifest')
     const wrapper = await open()
-    await switchButton(wrapper, t('header.language'), t('languages.en')).trigger('click')
+    await languageButton(wrapper).trigger('click')
     expect(wrapper.find('h1').text()).toBe(tEn('welcome.title'))
     expect(manifestLink().getAttribute('href')).toBe('installed.webmanifest')
   })
@@ -102,18 +102,20 @@ describe('Preferences in the header', () => {
   it('switches between light and dark with one tap and saves the choice', async () => {
     stubDeviceTheme('light')
     const wrapper = await open()
-    await themeToggle(wrapper).trigger('click')
+    await themeButton(wrapper).trigger('click')
     expect(document.documentElement.dataset.theme).toBe('dark')
-    expect(themeToggle(wrapper).attributes('aria-checked')).toBe('true')
+    expect(themeButton(wrapper).attributes('aria-label')).toBe(
+      t('header.themeNow', { theme: t('themes.dark') }),
+    )
     expect(localStorage.getItem('teach-clock.theme')).toBe('dark')
-    await themeToggle(wrapper).trigger('click')
+    await themeButton(wrapper).trigger('click')
     expect(document.documentElement.dataset.theme).toBe('light')
     expect(localStorage.getItem('teach-clock.theme')).toBe('light')
   })
 
   it('has one theme control for every screen size', async () => {
     const wrapper = await open()
-    expect(wrapper.findAll('[role="switch"]')).toHaveLength(1)
+    expect(wrapper.findAll('button.theme')).toHaveLength(1)
   })
 })
 

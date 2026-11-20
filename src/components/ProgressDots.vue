@@ -84,4 +84,20 @@ const STATUS_CLASS: Record<DotStatus, string | null> = {
     gap: 8px;
   }
 }
+/* A narrow phone (320 px, or a larger Display size): twelve dots stay on one row, so the Round's
+   clock keeps its room (batch 25). */
+@media (max-width: 340px) {
+  .dots {
+    gap: 6px;
+  }
+  .dot {
+    width: 14px;
+    height: 14px;
+  }
+  .dot.now {
+    width: 18px;
+    height: 18px;
+    border-width: 3px;
+  }
+}
 </style>

@@ -787,6 +787,37 @@ stage_listing_refresh() {
   fi
 }
 
+stage_listing_refresh_25() {
+  stage "Store listing: new screenshots (batch 25, round header buttons)"
+  if already DONE_LISTING_SHOTS_25; then return 0; fi
+  if [[ -z "$(date_of "First build live on closed testing")" ]] && ! is_done DONE_FIRST_UPLOAD; then
+    not_yet "the first upload"
+    return 0
+  fi
+  say "Batch 25 retook all 48 screenshots: the header's language and theme are round buttons like"
+  say "Home, and the Footer sits at the bottom of Welcome and Settings. They go up once a build with"
+  say "batch 25 is live on the track the listing is for, so the listing never shows a screen testers lack."
+  if ! confirm "Is a build with batch 25 live on the track the listing is for?"; then
+    not_yet "the app update with batch 25 reaches that track"
+    return 0
+  fi
+  open_link "$PLAY_CONSOLE"
+  say "Grow users › Store presence › ${BOLD}Main store listing${RESET}. For ${BOLD}English (en-US)${RESET}, then"
+  say "${BOLD}Ukrainian (uk)${RESET} (pick it in the language list at the top), with <lang> = en, then uk:"
+  step "Phone screenshots: delete the old 8, add docs/store/screenshots/<lang>/1-welcome.png …"
+  say "  8-summary.png in that order (1 to 8)"
+  step "7-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-7/<lang>/1 … 8"
+  step "10-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-10/<lang>/1 … 8"
+  note "The app icon and the feature graphic stay as they are. Save each language before switching."
+  if (( DRY_RUN )); then open_link "$ROOT/docs/store/screenshots"; else
+    offer "Open docs/store/screenshots in Finder?" open "$ROOT/docs/store/screenshots" || true
+  fi
+  pause "Press Enter when both languages are saved"
+  if confirm "Do both languages show the new 8 screenshots for all three sizes?"; then
+    mark_done DONE_LISTING_SHOTS_25
+  fi
+}
+
 stage_testers() {
   stage "Testers: Google Group, opt-in link, message"
   if already DONE_TESTERS "Tester invite sent"; then return 0; fi
@@ -958,7 +989,7 @@ stage_teacher_approved() {
 
 STAGES=(stage_start stage_account stage_machine stage_upload_key stage_key_secrets
   stage_variables stage_create_app stage_app_content stage_listing stage_first_bundle
-  stage_first_upload stage_listing_refresh stage_testers stage_service_account stage_closed_test stage_apply
+  stage_first_upload stage_listing_refresh stage_listing_refresh_25 stage_testers stage_service_account stage_closed_test stage_apply
   stage_production stage_teacher_approved)
 
 run_wizard() {

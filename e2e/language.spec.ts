@@ -60,8 +60,7 @@ test.describe('in an English browser', () => {
   test('a tap on УК is kept after a reload, before the app loads too', async ({ page }) => {
     await page.goto('/')
     await page
-      .getByRole('group', { name: tEn('header.language') })
-      .getByRole('button', { name: tEn('languages.uk') })
+      .getByRole('button', { name: tEn('header.languageNow', { language: tEn('languages.en') }) })
       .click()
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
     await expect(description(page)).toHaveAttribute('content', t('app.description'))

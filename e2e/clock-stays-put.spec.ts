@@ -17,16 +17,18 @@ async function start(
   const level = game === 'dragArrows' || game === 'setTime' ? 15 : undefined
   await startRound(page, { game, mode, level })
   await expect(page.getByText(t(`modes.${mode}.name`), { exact: false }).first()).toBeVisible()
-  // The Round opens scrolled to the top; measure only once it is there.
-  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0)
+  // The Round opens with <main> at its top (only <main> scrolls); measure only once it is there.
+  await expect.poll(() => page.locator('main').evaluate((m) => m.scrollTop)).toBe(0)
 }
 
-/** Where the clock is on the page. */
+/** Where the clock is in the screen's content. */
 async function spot(clock: Locator) {
-  // From the top of the page, not of the window: on a phone, tapping Submit may scroll it into view.
+  // From the top of <main>'s content, not of the window: <main> may scroll to bring Submit or the
+  // focused time box into view (batch 25).
   const box = await clock.evaluate((e) => {
     const { x, y, width } = e.getBoundingClientRect()
-    return { x, y: y + scrollY, width }
+    const main = document.querySelector('main')!
+    return { x, y: y - main.getBoundingClientRect().top + main.scrollTop, width }
   })
   return { x: Math.round(box.x), y: Math.round(box.y), width: Math.round(box.width) }
 }

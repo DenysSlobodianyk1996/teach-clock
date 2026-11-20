@@ -71,22 +71,11 @@
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; letter-spacing: 0.2px; }
 .brand svg { width: 36px; height: 36px; }
 .hdr-tools { display: flex; align-items: center; gap: 10px; }
-.seg { display: flex; padding: 4px; gap: 2px; border-radius: 999px; background: var(--bg-deep); }
-.seg button { min-width: 48px; height: 40px; padding: 0 10px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: 800 15px "Nunito", sans-serif; }
-.seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
-.swatch { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); vertical-align: middle; }
-/* Theme toggle: a track with a sun (light) on the left and a moon (dark) on the right; the knob sits under the chosen one. */
-.theme-toggle { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 48px; padding: 4px; border: 0; border-radius: 999px; background: var(--bg-deep); color: var(--muted); cursor: pointer; }
-.theme-toggle .tt-knob { position: absolute; top: 4px; left: 4px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.14); transition: transform 0.2s ease, background-color 0.2s ease; }
-.theme-toggle[aria-checked="true"] .tt-knob { transform: translateX(44px); background: var(--surface-2); }
-.theme-toggle .tt-icon { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
-.theme-toggle svg { width: 22px; height: 22px; }
-.theme-toggle .tt-sun circle { fill: currentColor; }
-.theme-toggle .tt-sun line { stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.theme-toggle .tt-moon path { fill: currentColor; }
-.theme-toggle[aria-checked="false"] .tt-sun { color: var(--accent-ink); }
-.theme-toggle[aria-checked="true"] .tt-moon { color: var(--accent); }
-@media (prefers-reduced-motion: reduce) { .theme-toggle .tt-knob { transition: none; } }
+/* Header tools (batch 25): round buttons like Home. The language shows the code in use, the theme
+   its sun or moon; a tap switches it. */
+.icon-btn.circle { width: 48px; padding: 0; font-size: 15px; }
+.icon-btn .sun { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.icon-btn .sun circle, .icon-btn .moon { fill: currentColor; }
 .icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; min-width: 48px; padding: 0 16px; border: 2px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 800 16px "Nunito", sans-serif; }
 .icon-btn svg { width: 22px; height: 22px; }
 

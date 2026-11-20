@@ -106,8 +106,7 @@ test('the Privacy Page screen fits a narrow phone and shows one text, in the int
   expect(overflow).toBeLessThanOrEqual(0)
 
   await page
-    .getByRole('group', { name: t('header.language') })
-    .getByRole('button', { name: t('languages.en') })
+    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
     .click()
   await expect(page.getByRole('heading', { level: 1, name: tEn('privacy.title') })).toBeVisible()
 })

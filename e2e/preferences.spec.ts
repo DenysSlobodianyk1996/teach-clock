@@ -7,9 +7,11 @@ function rgb(hex: string) {
   return `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`
 }
 
-/** The header's sun/moon toggle, in the interface language `lookup` reads. */
-function themeToggle(page: Page, lookup = t) {
-  return page.getByRole('switch', { name: lookup('header.darkTheme') })
+/** The header's round theme button while `theme` is in use, in the language `lookup` reads. */
+function themeButton(page: Page, theme: 'light' | 'dark', lookup = t) {
+  return page.getByRole('button', {
+    name: lookup('header.themeNow', { theme: lookup(`themes.${theme}`) }),
+  })
 }
 
 /** Checks `<html>`, the page and the browser bar are all in `theme`. */
@@ -28,14 +30,13 @@ test('the language and theme survive a reload', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
   await page
-    .getByRole('group', { name: t('header.language') })
-    .getByRole('button', { name: t('languages.en') })
+    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
     .click()
   await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
-  await expect(themeToggle(page, tEn)).toHaveAttribute('aria-checked', 'false')
+  await expect(themeButton(page, 'light', tEn)).toBeVisible()
 
-  await themeToggle(page, tEn).click()
-  await expect(themeToggle(page, tEn)).toHaveAttribute('aria-checked', 'true')
+  await themeButton(page, 'light', tEn).click()
+  await expect(themeButton(page, 'dark', tEn)).toBeVisible()
   await expectTheme(page, 'dark')
 
   await page.reload()
@@ -45,12 +46,30 @@ test('the language and theme survive a reload', async ({ page }) => {
   await expectTheme(page, 'dark')
 })
 
-test('the toggle is one switch, at least 44 px to tap', async ({ page }) => {
+test('language and theme are round buttons, at least 44 px to tap, showing what is in use', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
-  await expect(page.getByRole('switch')).toHaveCount(1)
-  const box = await themeToggle(page).boundingBox()
-  expect(box!.width).toBeGreaterThanOrEqual(44)
-  expect(box!.height).toBeGreaterThanOrEqual(44)
+  const language = page.getByRole('button', {
+    name: t('header.languageNow', { language: t('languages.uk') }),
+  })
+  await expect(language).toHaveText(t('languageCodes.uk'))
+  const theme = themeButton(page, 'light')
+  await expect(theme.locator('.sun')).toBeVisible()
+  for (const button of [language, theme]) {
+    const box = (await button.boundingBox())!
+    expect(box.width).toBeGreaterThanOrEqual(44)
+    expect(Math.abs(box.width - box.height), 'a circle').toBeLessThanOrEqual(1)
+  }
+  await theme.click()
+  await expect(themeButton(page, 'dark').locator('.moon')).toBeVisible()
+  await language.click()
+  await expect(
+    page.getByRole('button', {
+      name: tEn('header.languageNow', { language: tEn('languages.en') }),
+    }),
+  ).toHaveText(tEn('languageCodes.en'))
 })
 
 for (const scheme of ['light', 'dark'] as const) {
@@ -58,7 +77,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: scheme })
     await page.goto('/')
     await expectTheme(page, scheme)
-    await expect(themeToggle(page)).toHaveAttribute('aria-checked', String(scheme === 'dark'))
+    await expect(themeButton(page, scheme)).toBeVisible()
   })
 
   test(`the old middle theme gives way to a device in ${scheme} mode`, async ({ page }) => {
@@ -66,7 +85,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: scheme })
     await page.goto('/')
     await expectTheme(page, scheme)
-    await expect(themeToggle(page)).toHaveAttribute('aria-checked', String(scheme === 'dark'))
+    await expect(themeButton(page, scheme)).toBeVisible()
   })
 }
 
@@ -76,7 +95,7 @@ test('with nothing saved the game follows the device live', async ({ page }) => 
   await expectTheme(page, 'light')
   await page.emulateMedia({ colorScheme: 'dark' })
   await expectTheme(page, 'dark')
-  await expect(themeToggle(page)).toHaveAttribute('aria-checked', 'true')
+  await expect(themeButton(page, 'dark')).toBeVisible()
 })
 
 test('a saved theme is kept whatever the device says', async ({ page }) => {
@@ -87,7 +106,7 @@ test('a saved theme is kept whatever the device says', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.emulateMedia({ colorScheme: 'dark' })
   await expectTheme(page, 'light')
-  await expect(themeToggle(page)).toHaveAttribute('aria-checked', 'false')
+  await expect(themeButton(page, 'light')).toBeVisible()
 })
 
 test('the first frame is already in the device theme', async ({ page }) => {

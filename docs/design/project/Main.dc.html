@@ -62,12 +62,12 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <div class="tc" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 2px solid var(--line)">
           <b style="font-size: 16px">Світла</b><span style="font-size: 13px; color: var(--muted)">якщо пристрій у світлому режимі</span>
           <div style="display: flex; gap: 6px"><span class="swatch" style="background: #fffaf0"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #11727a"></span><span class="swatch" style="background: #1d4b5c"></span></div>
-          <div><button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Темна тема"><span class="tt-knob"></span><span class="tt-icon tt-sun"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><line x1="12" y1="4.5" x2="12" y2="2"></line><line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line><line x1="19.5" y1="12" x2="22" y2="12"></line><line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line><line x1="12" y1="19.5" x2="12" y2="22"></line><line x1="6.7" y1="17.3" x2="4.93" y2="19.07"></line><line x1="4.5" y1="12" x2="2" y2="12"></line><line x1="6.7" y1="6.7" x2="4.93" y2="4.93"></line></svg></span><span class="tt-icon tt-moon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M 11.24 3.04 A 9 9 0 1 0 20.97 12.77 A 7 7 0 0 1 11.24 3.04 Z"></path></svg></span></button></div>
+          <div><button class="icon-btn circle" type="button" aria-label="Тема: світла"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"></path></svg></button></div>
         </div>
         <div class="tc dark" style="border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 2px solid var(--line)">
           <b style="font-size: 16px">Темна</b><span style="font-size: 13px; color: var(--muted)">якщо пристрій у темному режимі</span>
           <div style="display: flex; gap: 6px"><span class="swatch" style="background: #f1e6cf"></span><span class="swatch" style="background: #e5604b"></span><span class="swatch" style="background: #157f86"></span><span class="swatch" style="background: #f0b444"></span></div>
-          <div><button class="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Темна тема"><span class="tt-knob"></span><span class="tt-icon tt-sun"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><line x1="12" y1="4.5" x2="12" y2="2"></line><line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line><line x1="19.5" y1="12" x2="22" y2="12"></line><line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line><line x1="12" y1="19.5" x2="12" y2="22"></line><line x1="6.7" y1="17.3" x2="4.93" y2="19.07"></line><line x1="4.5" y1="12" x2="2" y2="12"></line><line x1="6.7" y1="6.7" x2="4.93" y2="4.93"></line></svg></span><span class="tt-icon tt-moon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M 11.24 3.04 A 9 9 0 1 0 20.97 12.77 A 7 7 0 0 1 11.24 3.04 Z"></path></svg></span></button></div>
+          <div><button class="icon-btn circle" type="button" aria-label="Тема: темна"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 3.6a8.6 8.6 0 1 0 4.9 13.6A7 7 0 0 1 15.5 3.6Z"></path></svg></button></div>
         </div>
       </div>
 
@@ -84,7 +84,7 @@ a{color:#f2b84b}a:hover{color:#ffd27a}
         <button class="btn" type="button" disabled>Перевірити</button>
       </div>
       <div style="display: flex; gap: 14px; align-items: center">
-        <div class="seg" role="group" aria-label="Мова"><button type="button" aria-pressed="true">УК</button><button type="button" aria-pressed="false">EN</button></div>
+        <button class="icon-btn circle" type="button" aria-label="Мова: Українська">УК</button>
       </div>
     </div>
   </div>

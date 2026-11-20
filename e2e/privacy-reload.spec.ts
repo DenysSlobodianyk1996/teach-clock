@@ -17,8 +17,10 @@ test('a reload on the Privacy Page stays in the app, and Back returns to Welcome
 
   await page.reload()
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
-  // The app screen, not the static page: the УК/EN switch is only in the app.
-  await expect(page.getByRole('group', { name: t('header.language') })).toBeVisible()
+  // The app screen, not the static page: the language button is only in the app.
+  await expect(
+    page.getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) }),
+  ).toBeVisible()
 
   await page.goBack()
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
