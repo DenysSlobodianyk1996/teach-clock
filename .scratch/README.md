@@ -29,7 +29,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [22-old-webview](22-old-webview/)                                       | fixes         | done        | no   | #76                      |
 | [23-privacy-static-page](23-privacy-static-page/)                       | fixes         | done        | no   | #78                      |
 | [24-privacy-in-app](24-privacy-in-app/)                                 | fixes         | done        | no   | #79                      |
-| [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | in progress | no   |                          |
+| [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | in progress | no   | #80                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
