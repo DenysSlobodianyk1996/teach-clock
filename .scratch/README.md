@@ -30,6 +30,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [23-privacy-static-page](23-privacy-static-page/)                       | fixes         | done        | no   | #78                      |
 | [24-privacy-in-app](24-privacy-in-app/)                                 | fixes         | done        | no   | #79                      |
 | [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | in progress | no   | #80                      |
+| [26-version-name](26-version-name/)                                     | fixes         | in progress | no   |                          |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 

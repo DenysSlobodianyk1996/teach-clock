@@ -2,11 +2,16 @@ apply plugin: 'com.android.application'
 
 import groovy.json.JsonSlurper
 
-// versionName is the game's version from package.json (raised by hand). versionCode must grow with
-// every Play upload: CI sets VERSION_CODE to the workflow's run number; local builds use 1.
+// versionCode must grow with every Play upload: CI sets VERSION_CODE to the workflow's run number;
+// local builds use 1. versionName, what players see, is MAJOR.MINOR from package.json (raised by
+// hand for a big change) and the run number as the patch, so every upload has its own name, e.g.
+// 1.0.22. A local build without VERSION_CODE keeps package.json's version as it is.
 def packageJson = new JsonSlurper().parse(file('../../package.json'))
-def appVersionName = packageJson.version
-def appVersionCode = (System.getenv('VERSION_CODE') ?: '1') as Integer
+def ciVersionCode = System.getenv('VERSION_CODE')
+def appVersionCode = (ciVersionCode ?: '1') as Integer
+def appVersionName = ciVersionCode
+        ? packageJson.version.tokenize('.').take(2).join('.') + '.' + appVersionCode
+        : packageJson.version
 
 // The upload key (docs/android-release.md, step 3). With ANDROID_KEYSTORE_PATH unset the release
 // build is left unsigned, which is enough for local checks.

@@ -104,7 +104,7 @@ The release build reads its signing key and version from environment variables:
 | `ANDROID_KEY_PASSWORD`      | the key's password: the same as the keystore's (see section 3)     |
 | `VERSION_CODE`              | the versionCode; CI sets the run number, local builds default to 1 |
 
-`versionName` is always the `version` in `package.json`.
+`versionName`, what players see, is the major and minor of the `version` in `package.json` with `VERSION_CODE` as the patch: `1.0.0` and run 22 make `1.0.22`. Raise the major or minor in `package.json` by hand for a big change; the patch is never edited. A local build without `VERSION_CODE` keeps the `version` as it is.
 
 ## 3. Upload key (day 0–3)
 
@@ -305,7 +305,7 @@ After the first production release: Play Console › **Grow › Teacher Approved
 - **AAB (app bundle)**: the file you upload to Play (`.aab`). Play makes the actual APKs for each phone from it.
 - **Package ID / applicationId**: the app's permanent unique name, `app.teachclockforkids`.
 - **versionCode**: a whole number that must grow with every upload. CI sets it from the run number.
-- **versionName**: what users see, for example 1.0.0, taken from `package.json`.
+- **versionName**: what users see, for example 1.0.22: major and minor from `package.json`, the versionCode as the patch.
 - **Track**: a release channel: internal, closed testing (`alpha`), open testing, production.
 - **Upload key / app signing key**: you sign uploads with the upload key; Google re-signs with the app key it keeps (Play App Signing).
 - **Target SDK (API level)**: the Android version the app declares it's built for. Play requires 36 now.
