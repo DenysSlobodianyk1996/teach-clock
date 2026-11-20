@@ -71,6 +71,10 @@ The Android App draws with the phone's system WebView, which a never-updated pho
 
 - **On a device:** the Android 12 (API 31) `google_apis` emulator image, without Play, has WebView 91 (`adb shell dumpsys webviewupdate`). Done on 2026-11-19 with the debug APK: the chosen cards have their border and the Set Time clock shows (`.scratch/22-old-webview/issues/01-old-webview.md`).
 
+## Debug install on a phone with several users
+
+`npm run android:install` installs for the phone's current user (`adb install --user current`). Before that, a phone with a Guest or second user (an Oppo CPH2021) kept the debug app only in Guest: `adb install -r` printed Success but updated it only for the users that already had it, and the Owner saw no icon. If that happens, `adb shell dumpsys package app.teachclockforkids.debug | grep installed=` shows which users have it, and `adb shell pm install-existing --user 0 app.teachclockforkids.debug` adds it for the Owner.
+
 ## What the emulator does not prove
 
 - **OEM icon masks and launchers.** Only the Pixel launcher's circle was seen. Samsung (squircle), Xiaomi and others may crop the adaptive icon differently; check on a real phone or in Play Console's preview.

@@ -3,6 +3,8 @@
 # With --install (npm run android:install) it also installs it on the phone plugged in over USB,
 # which needs USB debugging on (Settings › Developer options).
 # The debug app id ends in .debug, so it installs next to the copy from Google Play.
+# --user current: without it, a phone with a Guest or second user may keep the app only there
+# (adb install -r updates it for the users that already have it), and no icon shows for the Owner.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -30,5 +32,5 @@ apk="android/app/build/outputs/apk/debug/app-debug.apk"
 echo "APK: $apk"
 
 if [ "${1:-}" = "--install" ]; then
-  "$ANDROID_HOME/platform-tools/adb" install -r "$apk"
+  "$ANDROID_HOME/platform-tools/adb" install -r --user current "$apk"
 fi
