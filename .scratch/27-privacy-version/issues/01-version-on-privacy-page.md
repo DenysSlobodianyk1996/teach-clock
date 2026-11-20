@@ -12,6 +12,6 @@
 - [x] `PrivacyContent.vue` shows it; `privacy.version` in `uk` and `en`.
 - [x] Tests: the app screen and the static page show it in both languages; `APP_VERSION` follows `VERSION_CODE` (checked with and without it; a `VERSION_CODE=23` build prints 1.0.23 in `privacy/index.html`).
 - [x] `deploy.yml`: the Version step (`actions: read`); its `gh run list` query checked against the batch 26 merge (run 22).
-- [x] Docs synced: product brief, `docs/android-release.md`, `docs/design/project/Privacy.dc.html`, this batch's row. The online design canvas is left to the author, as in batch 25.
+- [x] Docs synced: product brief, `docs/android-release.md`, `docs/design/project/Privacy.dc.html`, this batch's row. The online design canvas (https://claude.ai/artifact/7EUG95X5c8toe1Nb1TbGEu) mirrors local `docs/design/project/`: version 53, `Privacy.dc.html` republished, all 45 `project/*` files with the same SHA-256 as local.
 
 **Out of scope:** the Footer (the first ask, dropped); a production release from Run workflow gets a new Android run number, while the Web App keeps the closed-test one until its next deploy.
