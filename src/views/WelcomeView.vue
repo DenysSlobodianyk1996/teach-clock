@@ -189,7 +189,15 @@ h1 {
     flex: none;
   }
   /* The ⓘ follows the heading's last word and never wraps away from it: the word keeps a gap
-     the ⓘ's width after it, and the ⓘ is pulled back over that gap. */
+     the ⓘ's width after it, and the ⓘ is pulled back over that gap. The block shares the heading's
+     font, so the ⓘ's `vertical-align: middle` centres it on the heading's letters, not on the
+     body text's (4 px lower, batch 25). */
+  .heading {
+    font-size: clamp(32px, 4.7vw, 48px);
+    font-size: clamp(32px, 4.7cqi, 48px);
+    font-weight: 900;
+    line-height: 1.08;
+  }
   .heading h1 {
     display: inline;
   }

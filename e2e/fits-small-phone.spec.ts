@@ -64,6 +64,28 @@ test.describe('Welcome on a 360 × 640 phone', () => {
     await expect(page.getByLabel(t('welcome.nameLabel'))).toHaveValue('Оля')
     expect(await page.evaluate(() => scrollY)).toBe(0)
   })
+
+  for (const locale of ['uk', 'en']) {
+    test(`the ⓘ is centred on the heading's last word, ${locale}`, async ({ page }) => {
+      await page.addInitScript((value) => localStorage.setItem('teach-clock.locale', value), locale)
+      await page.goto('/')
+      const last = page.locator('.welcome .last')
+      await expect(last).toBeVisible()
+      await page.evaluate(() => document.fonts.ready)
+      // Batch 25: it sat 4 px low, centred on the body text's letters instead of the heading's.
+      const offset = await last.evaluate((word) => {
+        // A box 1ex tall on the word's baseline: its middle is the middle of the lowercase letters.
+        const probe = document.createElement('span')
+        probe.style.cssText = 'display:inline-block;width:0;height:1ex;vertical-align:baseline'
+        word.prepend(probe)
+        const letters = probe.getBoundingClientRect()
+        probe.remove()
+        const ring = document.querySelector('.welcome .info-btn svg circle')!.getBoundingClientRect()
+        return ring.top + ring.height / 2 - (letters.top + letters.height / 2)
+      })
+      expect(Math.abs(offset), 'ⓘ centre against the letters').toBeLessThanOrEqual(1)
+    })
+  }
 })
 
 test('Welcome on a 360 × 640 phone with big text: only <main> scrolls, Start above the Footer', async ({
