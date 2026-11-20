@@ -230,7 +230,7 @@ Rules shared by Drag Arrows and Set Time:
   the Footer (Welcome, Settings) at the bottom, and only the screen between them scrolls, when it
   cannot fit (very big text, a phone held sideways, the Privacy Page, a short desktop window).
   Welcome, Settings and every Round fit 360 × 640, 360 × 728 and 320 × 640 with nothing scrolled.
-- The Android App draws edge to edge: backgrounds run under the status bar, a camera cutout and the
+- The Android App draws edge to edge on every Android version (`EdgeToEdge.enable`, batch 25): backgrounds run under the status bar, a camera cutout and the
   navigation bar, and every control stays between them, in both builds (batch 21). The bars' icons
   follow the theme. Fitting is measured inside that safe area: every screen fits a 360 × 720 phone
   with its bars; Welcome, Settings and the drag Games also fit 360 × 640 with them.

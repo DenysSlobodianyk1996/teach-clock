@@ -563,12 +563,13 @@ function tapTray() {
   /* Where container units work, the face sizes from <main>'s height (AppFrame), which already leaves
      out the header and the system bars. The rest of a Round with a full tray takes up to 300 px in
      either Mode: the dots, the heading (two lines in both languages, with the eye in Teach), the tray
-     and the help or Submit (measured at 360 × 640 and 320 × 640, batch 25). Both rules stay here, as
-     the Test one outside would otherwise win. */
+     and the help or Submit (measured at 360 × 640 and 320 × 640, batch 25); 4 px more, as a phone's
+     rounding left <main> 1 px to scroll (an Oppo A52). Both rules stay here, as the Test one outside
+     would otherwise win. */
   @supports (height: 1cqh) {
     .number-face,
     .board.test .number-face {
-      width: clamp(190px, 100cqh - 300px, 100cqi - 40px);
+      width: clamp(190px, 100cqh - 304px, 100cqi - 40px);
     }
   }
   /* Six 48 px tap areas side by side still fit a 360 px wide phone. */
