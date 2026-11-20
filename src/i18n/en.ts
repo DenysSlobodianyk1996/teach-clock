@@ -149,6 +149,7 @@ export default {
   privacy: {
     title: 'Privacy policy',
     updated: 'Updated:',
+    version: 'Version:',
     noDataTitle: 'No personal data',
     noData:
       'Teach Clock is a game for children. It collects no data. It sends nothing to any server, stores nothing remotely and shares nothing with anyone.',

@@ -7,6 +7,8 @@ interface ImportMetaEnv {
   readonly VITE_TARGET?: string
   /** The Privacy Page's date, set by vite.config.ts; read only through src/privacy.ts. */
   readonly VITE_PRIVACY_UPDATED?: string
+  /** The app's version, set by vite.config.ts; read only through src/privacy.ts. */
+  readonly VITE_APP_VERSION?: string
 }
 
 interface ImportMeta {

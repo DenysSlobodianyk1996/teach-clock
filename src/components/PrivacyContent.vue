@@ -8,7 +8,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
-import { formatPrivacyDate, PRIVACY_UPDATED, type PrivacyLocale } from '@/privacy'
+import { APP_VERSION, formatPrivacyDate, PRIVACY_UPDATED, type PrivacyLocale } from '@/privacy'
 
 const props = withDefaults(
   defineProps<{
@@ -38,6 +38,7 @@ const updated = computed(() => formatPrivacyDate(props.locale))
       <p class="updated">
         {{ t('privacy.updated') }} <time :datetime="PRIVACY_UPDATED">{{ updated }}</time>
       </p>
+      <p class="version">{{ t('privacy.version') }} {{ APP_VERSION }}</p>
     </header>
 
     <section v-for="key in SECTIONS" :key="key">
@@ -98,7 +99,8 @@ const updated = computed(() => formatPrivacyDate(props.locale))
   font-size: clamp(18px, 2cqi, 21px);
   font-weight: 700;
 }
-.updated {
+.updated,
+.version {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 15px;

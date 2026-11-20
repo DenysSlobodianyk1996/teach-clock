@@ -3,14 +3,17 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { execSync } from 'node:child_process'
 import { JSDOM } from 'jsdom'
 import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
-import { formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
+import { readFileSync } from 'node:fs'
+import { APP_VERSION, formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
 import { t, tEn } from '@/test/i18n'
 import { buildPrivacyPage, type PrivacyPage } from '../../scripts/buildPrivacyPage.ts'
+import { appVersion } from '../../scripts/appVersion.ts'
 
 /** Every text of the Privacy Page, one per language (batch 24). */
 const KEYS = [
   'title',
   'updated',
+  'version',
   'noDataTitle',
   'noData',
   'onDeviceTitle',
@@ -69,6 +72,9 @@ describe('the static privacy/index.html for Google Play, rendered from the app',
       ])
       expect(article(lang).querySelector('time')!.getAttribute('datetime')).toBe(PRIVACY_UPDATED)
       expect(article(lang).querySelector('time')!.textContent).toBe(formatPrivacyDate(lang))
+      expect(article(lang).querySelector('.version')!.textContent!.trim()).toBe(
+        `${(lang === 'en' ? tEn : t)('privacy.version')} ${APP_VERSION}`,
+      )
     }
   })
 
@@ -118,6 +124,15 @@ describe('formatPrivacyDate', () => {
     expect(formatPrivacyDate('en', '2026-11-13')).toBe('13 November 2026')
     expect(formatPrivacyDate('uk', '2026-11-13')).toBe('13 листопада 2026 року')
     expect(formatPrivacyDate('en', '2026-01-05')).toBe('5 January 2026')
+  })
+})
+
+describe('APP_VERSION', () => {
+  it("is package.json's major.minor and the Android run number, the same as Google Play's", () => {
+    const { version } = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string }
+    expect(APP_VERSION).toBe(
+      appVersion({ packageVersion: version, versionCode: process.env.VERSION_CODE }),
+    )
   })
 })
 

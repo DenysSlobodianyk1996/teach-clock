@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises, type VueWrapper } from '@vue/test-utils'
 import App from '@/App.vue'
 import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
-import { formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
+import { APP_VERSION, formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
 import { mountScreen } from '@/test/mountScreen'
 import { t, tEn } from '@/test/i18n'
 import { usePlayerStore } from '@/stores/player'
@@ -24,7 +24,7 @@ async function open(path: string, arrange?: () => void) {
 const backButton = () => wrapper.findAll('button').find((b) => b.text() === t('privacy.back'))!
 
 describe('the Privacy Page in the app', () => {
-  it('says that nothing is collected, with the author, the contact email and the date of the text', async () => {
+  it('says that nothing is collected, with the author, the contact email, the date of the text and the version', async () => {
     await open('/privacy-policy')
     expect(wrapper.find('h1').text()).toBe(t('privacy.title'))
     for (const key of ['noData', 'onDevice', 'noAds', 'children'])
@@ -37,6 +37,7 @@ describe('the Privacy Page in the app', () => {
     ])
     expect(wrapper.find('time').attributes('datetime')).toBe(PRIVACY_UPDATED)
     expect(wrapper.find('time').text()).toBe(formatPrivacyDate('uk'))
+    expect(wrapper.find('.version').text()).toBe(`${t('privacy.version')} ${APP_VERSION}`)
   })
 
   it('is in the interface language, one text only', async () => {

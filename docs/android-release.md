@@ -104,7 +104,7 @@ The release build reads its signing key and version from environment variables:
 | `ANDROID_KEY_PASSWORD`      | the key's password: the same as the keystore's (see section 3)     |
 | `VERSION_CODE`              | the versionCode; CI sets the run number, local builds default to 1 |
 
-`versionName`, what players see, is the major and minor of the `version` in `package.json` with `VERSION_CODE` as the patch: `1.0.0` and run 22 make `1.0.22`. Raise the major or minor in `package.json` by hand for a big change; the patch is never edited. A local build without `VERSION_CODE` keeps the `version` as it is.
+`versionName`, what players see, is the major and minor of the `version` in `package.json` with `VERSION_CODE` as the patch: `1.0.0` and run 22 make `1.0.22`. Raise the major or minor in `package.json` by hand for a big change; the patch is never edited. A local build without `VERSION_CODE` keeps the `version` as it is. The Privacy Page shows the same version (`scripts/appVersion.ts`, batch 27); the Pages deploy takes `VERSION_CODE` from the Android run of the same commit.
 
 ## 3. Upload key (day 0–3)
 
