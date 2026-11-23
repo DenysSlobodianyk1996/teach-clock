@@ -47,6 +47,8 @@
     "PhoneDragMinutes.dc.html": { "x": 3960, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Розстав хвилини · Навчання: помилка" },
     "PhoneSummary.dc.html": { "x": 4400, "y": 7340, "w": 390, "h": 1700, "title": "Телефон · Підсумок" },
     "PhoneDragHours24.dc.html": { "x": 4870, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Розстав години 13–24 · Навчання: помилка" },
+    "PhoneWelcomeNameError.dc.html": { "x": 5310, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Вітання: порожнє ім’я" },
+    "PhoneWelcomeLanguageMenu.dc.html": { "x": 5750, "y": 7340, "w": 360, "h": 640, "title": "Телефон · Меню мов" },
 
     "DesktopWelcome.dc.html": { "x": 0, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Вітання" },
     "DesktopSettings.dc.html": { "x": 1520, "y": 9380, "w": 1440, "h": 900, "title": "Комп’ютер · Налаштування" },
@@ -64,7 +66,9 @@
     "DragHoursDrag.dc.html", "DragHoursTeachWrong.dc.html", "PhoneDragHoursTeachWrong.dc.html", "DragHoursTestSubmit.dc.html", "DragMinutesTestSubmit.dc.html",
     "Summary.dc.html", "LightSummary.dc.html", "SummaryDragHours.dc.html", "SummaryDragMinutes.dc.html", "SummaryDragHoursTeach.dc.html",
     "PhoneWelcome.dc.html", "PhoneWelcomeInfo.dc.html", "PhoneSettings.dc.html", "PhoneSettingsGameInfo.dc.html", "PhoneSettingsHours.dc.html", "PhoneSettingsSetTime.dc.html", "PhoneSetTime.dc.html", "PhoneDragArrows.dc.html", "PhoneDragHours.dc.html", "PhoneDragMinutes.dc.html", "PhoneSummary.dc.html", "PhoneDragHours24.dc.html",
-    "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html"
+    "DesktopWelcome.dc.html", "DesktopSettings.dc.html", "DesktopSetTime.dc.html", "DesktopDragArrows.dc.html", "DesktopDragHours.dc.html", "DesktopDragMinutes.dc.html", "DesktopSummary.dc.html",
+    "PhoneWelcomeNameError.dc.html",
+    "PhoneWelcomeLanguageMenu.dc.html"
   ],
   "notes": {
     "rowStyle": { "x": 0, "y": -260, "text": "Стиль і елементи", "kind": "title1", "maxW": 1024 },
@@ -73,7 +77,7 @@
     "rowArrows": { "x": 0, "y": 3244, "text": "Постав стрілки (Drag Arrows)", "kind": "title1", "maxW": 3232 },
     "rowNumbers": { "x": 0, "y": 4412, "text": "Розстав години і хвилини (Drag Hours, Drag Minutes)", "kind": "title1", "maxW": 5440 },
     "rowSummary": { "x": 0, "y": 5580, "text": "Підсумок (Summary)", "kind": "title1", "maxW": 5440 },
-    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 5230 },
+    "rowPhone": { "x": 0, "y": 7080, "text": "Телефон: до 768 px завширшки або вертикально", "kind": "title1", "maxW": 6110 },
     "rowDesktop": { "x": 0, "y": 9120, "text": "Комп’ютер: ігрова зона до 1024 px", "kind": "title1", "maxW": 10560 }
   },
   "designSystems": []

@@ -58,8 +58,12 @@ The choice of Game, Mode and Level (or Hours, in Drag Hours) the Player makes be
 _Avoid_: Options, setup
 
 **Preferences**:
-The interface language (Ukrainian or English) and colour theme (light or dark), each the device's choice until the Player picks one, kept on the device. A device in any language other than Ukrainian starts in English.
+The interface language (one of the six on the Language Menu) and colour theme (light or dark), each the device's choice until the Player picks one, kept on the device. A device with no listed language starts in English.
 _Avoid_: Settings, config
+
+**Language Menu**:
+The list the header's language button opens: EN, УК, DE, FR, IT, ES, each with the language's own name and the current one ticked. Choosing a row switches the interface at once; a tap outside changes nothing.
+_Avoid_: language toggle, language switch
 
 ### The clock
 
@@ -119,7 +123,7 @@ _Avoid_: Hint, tooltip
 ### Where it runs
 
 **Game Name**:
-What the game is called: "Teach Clock" in English, "Вчимо годинник" in Ukrainian, never shortened. Under the Android App's icon it follows the device's language; everywhere else it follows the language around it.
+What the game is called, never shortened: "Teach Clock" (English), "Вчимо годинник" (Ukrainian), "Uhr lernen" (German), "Apprendre l'heure" (French), "Impara l'ora" (Italian), "Aprende la hora" (Spanish). Under the Android App's icon it follows the device's language; everywhere else it follows the language around it.
 _Avoid_: app name, title, Годинник, Clock, Time Teacher
 
 **Web App**:
@@ -135,5 +139,5 @@ The plain bar at the bottom of Welcome and Settings with the links to the Privac
 _Avoid_: bottom bar, links bar
 
 **Privacy Page**:
-The screen that says nothing about the Player is collected or sent: `/privacy-policy`, opened from the Footer in the Web App and the Android App, in the interface language, with a way back to the game. Its text is one per language in i18n (`privacy.*`). The Web App build also renders it, English then Ukrainian, into the static `privacy/index.html`, whose public address, https://denysslobodianyk1996.github.io/teach-clock/privacy/, is the one in Google Play's listing (batch 24).
+The screen that says nothing about the Player is collected or sent: `/privacy-policy`, opened from the Footer in the Web App and the Android App, in the interface language, with a way back to the game. Its text is one per language in i18n (`privacy.*`). The Web App build also renders all six languages, with links to each at the top and no JavaScript, into the static `privacy/index.html`, whose public address, https://denysslobodianyk1996.github.io/teach-clock/privacy/, is the one in Google Play's listing (batches 24, 28).
 _Avoid_: privacy policy screen, terms

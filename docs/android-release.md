@@ -194,9 +194,9 @@ Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your cont
 
 Batch 19 gave every portrait screen the phone layout and the icon a cream background, so the icon and all 48 screenshots are new. Upload them **only once the app update with the new layout is live on the same track** (closed testing now, production later): the listing should never show screens the installed app doesn't have yet. The feature graphic stays as it is. The wizard has this as its own stage ("Store listing: new icon and screenshots").
 
-Grow users › Store presence › **Main store listing**, first for **English (en-US)**, then **Ukrainian (uk)** (pick it in the language list at the top), with `<lang>` = `en`, then `uk`:
+Grow users › Store presence › **Main store listing**, first for **English (en-US)**, then each translation (pick it in the language list at the top): **Ukrainian (uk)**, **German (de-DE)**, **French (fr-FR)**, **Italian (it-IT)** and **Spanish (es-ES)**, with `<lang>` = `en`, `uk`, `de`, `fr`, `it`, `es`:
 
-1. **App icon**: replace it with `store/icon-512.png` (the same file for both languages).
+1. **App icon**: replace it with `store/icon-512.png` (the same file for every language).
 2. **Phone screenshots**: delete the old 8, then add `store/<lang>/phone/1-welcome.png` … `8-summary.png` in order (1 to 8).
 3. **7-inch tablet screenshots**: delete the old 8, then add `store/<lang>/tablet-7/1-welcome.png` … `8-summary.png` in order.
 4. **10-inch tablet screenshots**: delete the old 8, then add `store/<lang>/tablet-10/1-welcome.png` … `8-summary.png` in order.
@@ -257,7 +257,7 @@ So CI can upload every merge:
 4. Play Console › **Users and permissions › Invite new users** › the service account's email (`play-uploader@…iam.gserviceaccount.com`). App permissions: **Teach Clock** › "Release to testing tracks" **and** "Release to production…" (and "View app information"). The production run needs both.
 5. `gh secret set PLAY_SERVICE_ACCOUNT_JSON < ~/Downloads/<the-file>.json`, then **delete the downloaded file**.
 
-From then on, each merge to `main` that changes the app builds a signed bundle and uploads it to the **alpha** track with the release notes "Покращення та виправлення" / "Improvements and fixes". Your testers get it as an update. Until the secret is set, the upload step is skipped with a warning (the bundle is still kept as an artifact).
+From then on, each merge to `main` that changes the app builds a signed bundle and uploads it to the **alpha** track with short release notes in all six languages ("Improvements and fixes" and its translations, set in `.github/workflows/android.yml`). Your testers get it as an update. Until the secret is set, the upload step is skipped with a warning (the bundle is still kept as an artifact).
 
 ## 12. Closed test (day ~5–19)
 
@@ -277,7 +277,7 @@ Answer briefly and truthfully; your drafts are at the end of [`store/closed-test
 
 ## 14. Release to production (day ~26)
 
-GitHub › Actions › **Android app bundle** › **Run workflow** (branch `main`) › type the release notes for each listing language (`notes_en`, `notes_uk`, `notes_de`), at most 500 characters each. The wizard can start it for you (`gh workflow run android.yml --ref main -f notes_en=… -f notes_uk=… -f notes_de=…`). The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release). It fails if `PLAY_SERVICE_ACCOUNT_JSON` isn't set or the run isn't on `main`. Each production release is reviewed by Google, which takes hours to a few days.
+GitHub › Actions › **Android app bundle** › **Run workflow** (branch `main`) › type the release notes for each listing language (`notes_en`, `notes_uk`, `notes_de`, `notes_fr`, `notes_it`, `notes_es`), at most 500 characters each. The wizard can start it for you (`gh workflow run android.yml --ref main -f notes_en=… -f notes_uk=… -f notes_de=…`). The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release). It fails if `PLAY_SERVICE_ACCOUNT_JSON` isn't set or the run isn't on `main`. Each production release is reviewed by Google, which takes hours to a few days.
 
 ## 15. Teacher Approved
 
