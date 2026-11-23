@@ -89,6 +89,16 @@ for (const viewport of [
   }
 }
 
+test.describe('a laptop window', () => {
+  test.use({ viewport: { width: 1550, height: 780 } })
+
+  test('Welcome fits: its decoration adds no scroll to <main>', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('button', { name: t('welcome.start') })).toBeVisible()
+    await expectNoScroll(page, 'Welcome')
+  })
+})
+
 test.describe('a long screen', () => {
   test.use({ viewport: { width: 360, height: 640 } })
 
