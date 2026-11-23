@@ -64,7 +64,7 @@
 
 /* The screen's content stops at --content-max, centred with free space either side. <main> itself
    stays full width, so its scrollbar is at the window's edge. */
-.screen > :slotted(*) {
+.screen > :deep(*) {
   width: 100%;
   max-width: var(--content-max);
   margin-left: auto;

@@ -30,4 +30,6 @@ Then: "maybe do max width area like 1200 px etc for main area. like on left righ
 
 Then, with `images/12-very-wide-window.png`: "to not have such case"
 
+Then, with `images/12-clock-too-big.png`: "I mean, not have too big clock and small content", "this also not fine", and "max width maybe 1440 or 1200 up to you".
+
 On checks: "don't run such full tests, you just burn tokens", then "just do fixes, don't review them. it was fine to just catch them, fix, and dont retest".

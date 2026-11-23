@@ -89,6 +89,18 @@ test.describe('1920 × 1080, a large window', () => {
     expect(brand.left, 'the header lines up with the content').toBeCloseTo(408, 0)
     expect(tools.right).toBeCloseTo(1512, 0)
   })
+
+  test('keeps a drag Game in the column, its clock no bigger than half of it', async ({ page }) => {
+    await page.goto('/')
+    await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+    await page.getByRole('button', { name: t('welcome.start') }).click()
+    await page.getByRole('radio').first().check()
+    await page.getByRole('button', { name: t('settings.play') }).click()
+    const face = page.locator('.number-face')
+    await expect(face).toBeVisible()
+    expect((await box(page.locator('main > *').first())).width).toBeCloseTo(1200, 0)
+    expect((await box(face)).width).toBeLessThanOrEqual(600)
+  })
 })
 
 test.describe('740 × 360, a sideways phone', () => {

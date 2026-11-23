@@ -9,9 +9,11 @@
 ![Band under the Footer](../images/12-footer-band.png)
 ![Scrollbar in the middle of a low window](../images/12-low-window.png)
 ![Content and header spread across a very wide window](../images/12-very-wide-window.png)
+![A huge clock beside small text in a drag Game](../images/12-clock-too-big.png)
 
 - [x] The play area is the window's full width and height at 800 × 600, 1100 × 700, 1280 × 520, 1440 × 900 and 1920 × 1080
 - [x] The content is at most 1200 px wide and centred, while `<main>` and its scrollbar stay at the window's full width
+- [x] Every Game stays in the column, and the clock stops at 540 px up to a 5152 × 2400 window
 - [x] The header's brand and tools line up with the content column in a wide window
 - [x] No empty band under the Footer, and the page itself never scrolls
 - [x] Settings keeps Game titles whole: four cards in a row above 1100 px, two by two below
