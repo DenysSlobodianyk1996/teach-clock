@@ -32,6 +32,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | in progress | no   | #80                      |
 | [26-version-name](26-version-name/)                                     | fixes         | done        | no   | #81                      |
 | [27-privacy-version](27-privacy-version/)                               | feature       | in progress | no   | #82                      |
+| [28-name-required-six-languages](28-name-required-six-languages/)       | feature       | planned     | yes  | —                        |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
