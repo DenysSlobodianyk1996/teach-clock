@@ -1,8 +1,8 @@
 # Closed test: instructions for testers, Ukrainian
 
-What to send testers once they have opted in (the invite itself is in [`../android-release.md`](../android-release.md) §10). Paste each block into the Google Group's welcome message, a group post, or a chat. The English version is [`testers.en.md`](testers.en.md). Words in quotes are the app's own labels, so testers can find them on screen.
+What to send testers once they have opted in (the invite itself is in [`../../android-release.md`](../../android-release.md) §10). Paste each block into the Google Group's welcome message, a group post, or a chat. The English version is [`en/testers.md`](../en/testers.md). Words in quotes are the app's own labels, so testers can find them on screen.
 
-Never put a tester's name or email here: the repo is public. Log what they report, by label, in [`closed-test.md`](closed-test.md).
+Never put a tester's name or email here: the repo is public. Log what they report, by label, in [`closed-test.md`](../closed-test.md).
 
 ## Інструкції для тестування
 

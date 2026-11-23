@@ -1,10 +1,9 @@
 /**
  * The Play Store graphics: `npm run store-shots` (playwright.config.store.ts). Not a test and not
  * part of `npx playwright test`. Shoots the Android build in each language, once per project in
- * playwright.config.store.ts: the phone at 1080 × 1920 into docs/store/screenshots/<lang>/, the
- * tablets into docs/store/screenshots/<project>/<lang>/ (tablet-7, tablet-10). The phone project
- * also draws the feature graphic in each language (scripts/featureGraphic.ts) into
- * docs/store/feature-graphic.<lang>.png, 1024 × 500.
+ * playwright.config.store.ts, into docs/store/<lang>/<project>/ (phone at 1080 × 1920, tablet-7,
+ * tablet-10). The phone project also draws the feature graphic in each language
+ * (scripts/featureGraphic.ts) into docs/store/<lang>/feature-graphic.png, 1024 × 500.
  * Every file is a PNG without alpha, as Play asks.
  */
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -20,9 +19,9 @@ import { featureGraphicSvg } from '../scripts/featureGraphic.ts'
 
 const STORE = fileURLToPath(new URL('../docs/store/', import.meta.url))
 
-/** The folder for one language's screenshots: the phone's at the top, each tablet's in its own. */
+/** The folder for one language's screenshots on one device. */
 function shotDir(project: string, lang: string) {
-  return `${STORE}screenshots/${project === 'phone' ? '' : `${project}/`}${lang}/`
+  return `${STORE}${lang}/${project}/`
 }
 
 const LANGUAGES = {
@@ -205,6 +204,6 @@ for (const lang of Object.keys(LANGUAGES) as Lang[]) {
     const shot = await page.locator('svg').first().screenshot({ scale: 'css' })
     const png = sharp(shot).removeAlpha().png({ compressionLevel: 9 })
     expect((await png.clone().metadata()).width).toBe(1024)
-    await png.toFile(`${STORE}feature-graphic.${lang}.png`)
+    await png.toFile(`${STORE}${lang}/feature-graphic.png`)
   })
 }

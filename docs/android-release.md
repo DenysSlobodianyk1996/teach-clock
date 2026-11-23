@@ -154,7 +154,7 @@ Once the "identity verified" email has come: Play Console › **Home › Create 
 
 | Form                        | Answer                                                                                                                                                         |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Privacy policy              | `https://denysslobodianyk1996.github.io/teach-clock/privacy/` (from batch 23, unchanged by batch 24; before it, `…/teach-clock/privacy.html`)                 |
+| Privacy policy              | `https://denysslobodianyk1996.github.io/teach-clock/privacy/` (from batch 23, unchanged by batch 24; before it, `…/teach-clock/privacy.html`)                  |
 | App access                  | All functionality is available without special access                                                                                                          |
 | Ads                         | **No**, the app contains no ads                                                                                                                                |
 | Content rating              | Fill in the questionnaire honestly: category Game/Education; no violence, no user interaction, no sharing, no purchases. You'll get a 3+ / PEGI 3 style rating |
@@ -170,21 +170,21 @@ Once the "identity verified" email has come: Play Console › **Home › Create 
 
 Grow users › Store presence › **Main store listing**. English is the default language: Play shows it to everyone whose language has no listing of its own. Ukrainian is a translation, shown to Ukrainian users (ADR 0005). Each language has its own title, texts, screenshots and feature graphic. Everything is in [`docs/store/`](store/):
 
-| Field                                     | English (`en-US`, default)                             | Ukrainian (`uk`, translation)          |
-| ----------------------------------------- | ------------------------------------------------------ | -------------------------------------- |
-| App name, short and full description      | [`listing.en.md`](store/listing.en.md)                 | [`listing.uk.md`](store/listing.uk.md) |
-| Phone screenshots (8, 1080×1920)          | `store/screenshots/en/1-welcome.png` … `8-summary.png` | `store/screenshots/uk/…`               |
-| 7-inch tablet screenshots (8, 1216×2160)  | `store/screenshots/tablet-7/en/…`                      | `store/screenshots/tablet-7/uk/…`      |
-| 10-inch tablet screenshots (8, 1620×2880) | `store/screenshots/tablet-10/en/…`                     | `store/screenshots/tablet-10/uk/…`     |
-| App icon (512×512)                        | `store/icon-512.png`                                   | the same                               |
-| Feature graphic (1024×500)                | `store/feature-graphic.en.png`                         | `store/feature-graphic.uk.png`         |
+| Field                                     | English (`en-US`, default)                       | Ukrainian (`uk`, translation)          |
+| ----------------------------------------- | ------------------------------------------------ | -------------------------------------- |
+| App name, short and full description      | [`en/listing.md`](store/en/listing.md)           | [`uk/listing.md`](store/uk/listing.md) |
+| Phone screenshots (8, 1080×1920)          | `store/en/phone/1-welcome.png` … `8-summary.png` | `store/uk/phone/…`                     |
+| 7-inch tablet screenshots (8, 1216×2160)  | `store/en/tablet-7/…`                            | `store/uk/tablet-7/…`                  |
+| 10-inch tablet screenshots (8, 1620×2880) | `store/en/tablet-10/…`                           | `store/uk/tablet-10/…`                 |
+| App icon (512×512)                        | `store/icon-512.png`                             | the same                               |
+| Feature graphic (1024×500)                | `store/en/feature-graphic.png`                   | `store/uk/feature-graphic.png`         |
 
 Setting the default language, in **Manage translations** (top right of the listing):
 
 - **The app was made with Ukrainian as the default** (before batch 13): Manage translations › **Change default language** › English (United States) – en-US. Ukrainian stays, now as a translation. Then check that each language has its own texts, screenshots and feature graphic from the table.
 - **A new app** (English already the default from step 6): Manage translations › Add your own translations › **Українська – uk**, then fill it from the table.
 
-A translation without its own feature graphic shows the default one, so upload `feature-graphic.uk.png` to the Ukrainian listing. Only the author can do this in Play Console; `bash scripts/release-wizard.sh` walks through it (stage "Store listing").
+A translation without its own feature graphic shows the default one, so upload `uk/feature-graphic.png` to the Ukrainian listing. Only the author can do this in Play Console; `bash scripts/release-wizard.sh` walks through it (stage "Store listing").
 
 Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots (phone and both tablets) and both feature graphics after UI or text changes; the graphics' text is in `scripts/featureGraphic.ts` (the Game Name from the i18n files).
 
@@ -195,9 +195,9 @@ Batch 19 gave every portrait screen the phone layout and the icon a cream backgr
 Grow users › Store presence › **Main store listing**, first for **English (en-US)**, then **Ukrainian (uk)** (pick it in the language list at the top), with `<lang>` = `en`, then `uk`:
 
 1. **App icon**: replace it with `store/icon-512.png` (the same file for both languages).
-2. **Phone screenshots**: delete the old 8, then add `store/screenshots/<lang>/1-welcome.png` … `8-summary.png` in order (1 to 8).
-3. **7-inch tablet screenshots**: delete the old 8, then add `store/screenshots/tablet-7/<lang>/1-welcome.png` … `8-summary.png` in order.
-4. **10-inch tablet screenshots**: delete the old 8, then add `store/screenshots/tablet-10/<lang>/1-welcome.png` … `8-summary.png` in order.
+2. **Phone screenshots**: delete the old 8, then add `store/<lang>/phone/1-welcome.png` … `8-summary.png` in order (1 to 8).
+3. **7-inch tablet screenshots**: delete the old 8, then add `store/<lang>/tablet-7/1-welcome.png` … `8-summary.png` in order.
+4. **10-inch tablet screenshots**: delete the old 8, then add `store/<lang>/tablet-10/1-welcome.png` … `8-summary.png` in order.
 5. **Save**, then switch to the next language.
 
 ## 9. First upload, by hand (day ~3)
@@ -241,7 +241,7 @@ Google only accepts automatic (API) uploads after the app has one build, so this
 > 3. Install the game from Google Play and **keep it installed for 14 days**. Playing it once or twice helps too!
 >    Thanks! 🙌
 
-Once they have opted in, send them the testing instructions, the feedback you want and the known issues: [`store/testers.en.md`](store/testers.en.md) and [`store/testers.uk.md`](store/testers.uk.md).
+Once they have opted in, send them the testing instructions, the feedback you want and the known issues: [`store/en/testers.md`](store/en/testers.md) and [`store/uk/testers.md`](store/uk/testers.md).
 
 Ask a few more than 12 (say 15): the rule needs **12 opted in for 14 days in a row**, and someone always drops out. Track who opted in, and the dates, in [`store/closed-test.md`](store/closed-test.md), with labels (T1, T2…) only: the repo is public.
 
@@ -289,15 +289,15 @@ After the first production release: Play Console › **Grow › Teacher Approved
 
 ## What lives where
 
-| Thing                       | Where                                                                                                                                                                                               | Secret? |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                                                               | no      |
-| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                                                            | **yes** |
-| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                                                                  | **yes** |
-| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                                                                 | no      |
-| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                                                                               | no      |
-| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                                                                           | no      |
-| Store texts and graphics    | `docs/store/`                                                                                                                                                                                       | no      |
+| Thing                       | Where                                                                                                                                                                                                                                                        | Secret? |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| Package ID                  | `capacitor.config.ts`, `android/app/build.gradle`, repo variable `ANDROID_PACKAGE_ID`                                                                                                                                                                        | no      |
+| Upload key                  | your `.jks` and its backup + secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`                                                                                                                     | **yes** |
+| Play API access for CI      | secret `PLAY_SERVICE_ACCOUNT_JSON`                                                                                                                                                                                                                           | **yes** |
+| CI build and upload         | `.github/workflows/android.yml` (Actions name "Android app bundle")                                                                                                                                                                                          | no      |
+| Release wizard              | `scripts/release-wizard.sh`; its progress in `.env.release` (git-ignored, no secrets)                                                                                                                                                                        | no      |
+| Key dates, testers, answers | `docs/store/closed-test.md` (labels only)                                                                                                                                                                                                                    | no      |
+| Store texts and graphics    | `docs/store/`                                                                                                                                                                                                                                                | no      |
 | Privacy Page                | text in `src/i18n` (`privacy.*`), look in `PrivacyContent.vue`; the app screen `/privacy-policy`, and the Web App build renders `privacy/index.html` from it (`scripts/buildPrivacyPage.ts`) → `https://denysslobodianyk1996.github.io/teach-clock/privacy/` | no      |
 
 ## Android words you'll meet

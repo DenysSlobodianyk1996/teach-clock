@@ -24,7 +24,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
   - `npm run android:open`: open `android/` in Android Studio
   - `npm run android:check`: after `bundleRelease`, fails on location or `AD_ID` permissions
   - `npm run android:assets`: launcher icons, splash and `docs/store/icon-512.png` from `public/favicon.svg`
-  - `PW_PORT=<port> npm run store-shots`: Play screenshots and feature graphic into `docs/store/`; rerun after UI or text changes
+  - `PW_PORT=<port> npm run store-shots`: Play screenshots and feature graphic into `docs/store/<lang>/`; rerun after UI or text changes
   - `bash scripts/release-wizard.sh [--dry-run]`: walks the author through the Play Console steps only a person can do
 - Push to `main` that changes the app also uploads a signed bundle to Play closed testing (`.github/workflows/android.yml`); production is its Run workflow button
 
@@ -36,7 +36,7 @@ Work is tracked in batches under `.scratch/NN-<outcome>/`: `.scratch/README.md` 
 - `docs/adr/` — decisions that are hard to reverse.
 - `src/game/` — game rules, plain TypeScript (no Vue). `src/stores/` — Pinia. `src/i18n/` — interface text (every ticket from 03 adds `en` next to `uk`).
 - `docs/android-release.md` — publishing on Google Play step by step (account, keys, secrets, Play Console, testers, releases); `docs/android-checks.md` — the device checklist.
-- `docs/store/` — Play listing text (`listing.uk.md`, `listing.en.md`, with character counts), screenshots, feature graphic, icon, closed-test tracker.
+- `docs/store/` — Play listing text (one folder per language with `listing.md`, character counts, `feature-graphic.png`, `phone/`, `tablet-7/`, `tablet-10/`; `en` and `uk` also `testers.md`), and in the root the icon, feature graphic template and closed-test tracker.
 - `src/platform.ts` — `isAndroidApp`; components read the build target only from here.
 - `docs/design/` — ticket 01 design prototype: open `gallery.html` locally; `project/theme.css` has the theme tokens.
 - `docs/original/` — the 2019 thesis (PDF), deck (PPTX) and screenshots, in Ukrainian. Large; prefer the brief.
