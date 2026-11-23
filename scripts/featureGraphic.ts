@@ -1,6 +1,6 @@
 /**
  * The Play Store feature graphic in each listing language: docs/store/feature-graphic.svg with
- * its text slots filled in. `npm run store-shots` draws each one into feature-graphic.<lang>.png.
+ * its text slots filled in. `npm run store-shots` draws each one into docs/store/<lang>/feature-graphic.png.
  */
 import { readFileSync } from 'node:fs'
 import { MESSAGES } from '../src/i18n/messages.ts'

@@ -19,10 +19,17 @@ const title = computed(() => {
   const at = text.lastIndexOf(' ')
   return { head: text.slice(0, at + 1), last: text.slice(at + 1) }
 })
-const canStart = computed(() => draft.value.trim() !== '')
+const nameField = ref<HTMLInputElement | null>(null)
+/** Start was tried with no name; the first typed letter clears it. */
+const nameMissing = ref(false)
 
 function start() {
-  if (!canStart.value) return
+  if (draft.value.trim() === '') {
+    nameMissing.value = true
+    // In the tap itself, so a phone opens its keyboard.
+    nameField.value?.focus()
+    return
+  }
   player.setName(draft.value)
   router.push({ name: 'settings' })
 }
@@ -37,7 +44,7 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
 
 <template>
   <div class="welcome">
-    <form class="intro" @submit.prevent="start">
+    <form class="intro" novalidate @submit.prevent="start">
       <div class="heading">
         <h1>
           {{ title.head }}<span class="last">{{ title.last }}</span>
@@ -46,19 +53,29 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
       </div>
       <p class="lead">{{ t('welcome.intro') }}</p>
       <div class="name">
-        <label class="label" for="player-name">{{ t('welcome.nameLabel') }}</label>
+        <label class="label" for="player-name">
+          {{ t('welcome.nameLabel') }}<span class="required-mark" aria-hidden="true"> *</span>
+        </label>
         <input
           id="player-name"
+          ref="nameField"
           v-model="draft"
           class="field"
           type="text"
           :maxlength="NAME_MAX_LENGTH"
           autocomplete="given-name"
           :placeholder="t('welcome.namePlaceholder')"
+          required
+          :aria-invalid="nameMissing || undefined"
+          :aria-describedby="nameMissing ? 'player-name-error' : undefined"
+          @input="nameMissing = false"
         />
+        <p v-if="nameMissing" id="player-name-error" class="name-error" role="alert">
+          {{ t('welcome.nameRequired') }}
+        </p>
       </div>
       <div class="actions">
-        <button class="btn" type="submit" :disabled="!canStart">
+        <button class="btn" type="submit">
           {{ t('welcome.start') }}
           <svg
             viewBox="0 0 24 24"
@@ -153,6 +170,19 @@ h1 {
   gap: 10px;
   margin-top: 6px;
 }
+.required-mark {
+  color: var(--bad-text);
+}
+.field[aria-invalid='true'] {
+  border-color: var(--bad);
+}
+.name-error {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--bad-text);
+}
 .art {
   position: relative;
   display: flex;
@@ -219,6 +249,10 @@ h1 {
   }
   .actions .btn {
     width: 100%;
+  }
+  /* The message sits in the gaps around it, so it fits where the clock is already at its floor. */
+  .name-error {
+    margin: -5px 0 -6px;
   }
 
   /* Start without scrolling. The view fills <main>; the clock takes the height left, from about
