@@ -18,7 +18,8 @@ function strings(folder: string): Record<string, string> {
   return Object.fromEntries(
     [...xml.matchAll(/<string name="([^"]+)">([^<]*)<\/string>/g)].map(([, key, value]) => [
       key,
-      value,
+      // Android's strings.xml writes an apostrophe as \'.
+      value!.replace(/\\'/g, "'"),
     ]),
   )
 }
@@ -27,6 +28,9 @@ const gameName = {
   en: tEn('app.name'),
   uk: t('app.name', {}, { locale: 'uk' }),
   de: tIn('de', 'app.name'),
+  fr: tIn('fr', 'app.name'),
+  it: tIn('it', 'app.name'),
+  es: tIn('es', 'app.name'),
 }
 
 describe('Android App name', () => {
@@ -34,6 +38,9 @@ describe('Android App name', () => {
     ['values', 'en'],
     ['values-uk', 'uk'],
     ['values-de', 'de'],
+    ['values-fr', 'fr'],
+    ['values-it', 'it'],
+    ['values-es', 'es'],
   ] as const)('%s: launcher name and window title are the full Game Name (%s)', (folder, lang) => {
     const { app_name, title_activity_main } = strings(folder)
     expect(app_name).toBe(gameName[lang])

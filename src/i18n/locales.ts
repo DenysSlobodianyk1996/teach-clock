@@ -8,6 +8,9 @@ export const LANGUAGES = [
   { code: 'en', key: 'EN', name: 'English' },
   { code: 'uk', key: 'УК', name: 'Українська' },
   { code: 'de', key: 'DE', name: 'Deutsch' },
+  { code: 'fr', key: 'FR', name: 'Français' },
+  { code: 'it', key: 'IT', name: 'Italiano' },
+  { code: 'es', key: 'ES', name: 'Español' },
 ] as const
 
 export type Locale = (typeof LANGUAGES)[number]['code']

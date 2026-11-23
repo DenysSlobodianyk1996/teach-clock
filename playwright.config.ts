@@ -27,7 +27,7 @@ export default defineConfig({
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
       testIgnore:
-        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview/,
+        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview|language-fit/,
     },
     {
       name: 'phone',
