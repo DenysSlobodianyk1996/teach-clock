@@ -39,18 +39,14 @@
   flex: 1 1 0;
   min-height: 0;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 
-/* The play area keeps 4:3, fits the screen under the header and stops at ~1024 px. */
+/* The play area fills the window under the header, at every width. */
 .stage {
   container-type: inline-size;
   display: flex;
   flex-direction: column;
-  width: min(100%, var(--stage-max), calc((var(--safe-height) - var(--header-height)) * 4 / 3));
-  max-height: 100%;
-  aspect-ratio: 4 / 3;
+  width: 100%;
   background: var(--bg);
 }
 
@@ -64,37 +60,5 @@
   overflow-x: hidden;
   overflow-y: auto;
   container-type: size;
-}
-
-/* Desktop: the stage sits as a card on a deeper background. Not when taller than wide: that is the
-   phone layout (see src/styles/media.ts). */
-@media (min-width: 1100px) and (min-height: 860px) and (orientation: landscape) {
-  .app {
-    background: var(--bg-deep);
-  }
-  .stage-wrap {
-    padding-top: 20px;
-  }
-  .stage {
-    width: min(
-      100%,
-      var(--stage-max),
-      calc((var(--safe-height) - var(--header-height) - 40px) * 4 / 3)
-    );
-    border-radius: 32px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-}
-
-/* Phones (upright or sideways): no 4:3, the stage takes all the height under the header. */
-@media (--phone) {
-  .stage-wrap {
-    align-items: stretch;
-  }
-  .stage {
-    width: 100%;
-    aspect-ratio: auto;
-  }
 }
 </style>

@@ -35,7 +35,6 @@
   --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
 
   --header-height: 72px;
-  --stage-max: 1024px;
 
   /* The system bars and a camera cutout drawn over the page (batch 21). The Android App is edge to
      edge: Capacitor's SystemBars puts their sizes in --safe-area-inset-* (`insetsHandling: 'css'`,

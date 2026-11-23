@@ -369,6 +369,8 @@ function tapTray() {
 .number-face {
   width: min(100%, 41vw);
   width: min(100%, 41cqi);
+  /* A wide, low window: the clock also fits the height under the dots. */
+  width: min(100%, 41cqi, max(200px, 100cqh - 140px));
   height: auto;
   aspect-ratio: 1;
   display: block;

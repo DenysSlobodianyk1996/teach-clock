@@ -175,7 +175,7 @@ h1 {
 .required-mark {
   color: var(--bad-text);
 }
-.field[aria-invalid='true'] {
+.field[aria-invalid='true']:not(:focus) {
   border-color: var(--bad);
 }
 .name-error {

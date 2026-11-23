@@ -69,6 +69,11 @@ for (const theme of ['light', 'dark'] as const) {
       await token('--bad-text'),
     )
     await expect(error(page)).toHaveCSS('color', await token('--bad-text'))
+    // One border: yellow while focused, even with the error, and red once focus leaves.
+    await expect(nameField(page)).toBeFocused()
+    await expect(nameField(page)).toHaveCSS('border-top-color', await token('--accent'))
+    await expect(nameField(page)).toHaveCSS('outline-style', 'none')
+    await nameField(page).blur()
     await expect(nameField(page)).toHaveCSS('border-top-color', await token('--bad'))
   })
 }

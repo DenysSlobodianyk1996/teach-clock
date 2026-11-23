@@ -248,6 +248,13 @@ h1 {
   gap: 4px;
 }
 
+/* Four Game cards need about 1100 px to keep their titles whole. */
+@media (max-width: 1100px) {
+  .games {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (--phone) {
   .settings {
     padding: 4px 20px 24px;

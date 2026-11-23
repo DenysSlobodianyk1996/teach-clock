@@ -2,7 +2,7 @@
  * The phone layout starts at 768px wide or less, or when the window is taller than wide
  * (src/styles/media.ts). Between 601px and 768px, and on an upright tablet, a Drag Arrows Round
  * stacks: the clock fills the width and no big empty band is left under the answer. Wider landscape
- * windows keep the 4:3 play area, and sideways phones keep the clock and the answer side by side.
+ * windows fill the screen, and sideways phones keep the clock and the answer side by side.
  */
 import { t, startingWith } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
@@ -61,12 +61,11 @@ for (const viewport of stacked) {
 test.describe('1024 × 768, a wider landscape window', () => {
   test.use({ viewport: { width: 1024, height: 768 } })
 
-  test('keeps the 4:3 play area, the clock beside the answer', async ({ page }) => {
+  test('fills the window, the clock beside the answer', async ({ page }) => {
     await toDragArrowsRound(page)
-    const stage = await page
-      .locator('.stage')
-      .evaluate((e) => e.getBoundingClientRect().width / e.getBoundingClientRect().height)
-    expect(stage).toBeCloseTo(4 / 3, 1)
+    const stage = await box(page.locator('.stage'))
+    expect(stage.right - stage.left).toBeCloseTo(1024, 0)
+    expect(stage.bottom).toBeCloseTo(768, 0)
     const clock = await box(page.locator('.clock-side'))
     const answer = await box(page.locator('.answer-side'))
     expect(answer.left, 'the answer sits right of the clock').toBeGreaterThanOrEqual(
