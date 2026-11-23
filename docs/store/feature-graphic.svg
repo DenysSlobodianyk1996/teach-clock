@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
   <!-- Play Store feature graphic, one per listing language. Its text slots are filled by
-       scripts/featureGraphic.ts and `npm run store-shots` draws feature-graphic.<lang>.png. -->
+       scripts/featureGraphic.ts and `npm run store-shots` draws <lang>/feature-graphic.png. -->
   <rect width="1024" height="500" fill="#f5efe3"/>
   <circle cx="770" cy="250" r="232" fill="#ebe2d1"/>
   <circle cx="770" cy="250" r="300" fill="none" stroke="#ebe2d1" stroke-width="18"/>

@@ -32,7 +32,7 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
   (batch 20, `src/android/playUpdate.ts`). The name under
   its icon follows the phone's languages, not the in-app switch: "Вчимо годинник" when Ukrainian
   comes before English, "Teach Clock" otherwise (ADR 0005). One Play listing: English is the
-  default, Ukrainian a translation (`docs/store/`).
+  default, Ukrainian a translation (`docs/store/<lang>/`).
 - The two differ only through `src/platform.ts`: no service worker in the Android App.
 - The Game Name is "Teach Clock" in English and "Вчимо годинник" in Ukrainian, never shortened.
 

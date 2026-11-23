@@ -1,6 +1,6 @@
 # Play listing: Ukrainian (translation, `uk`)
 
-Add Ukrainian as a translation in Play Console › Grow users › Store presence › Main store listing › Manage translations; Play shows it to Ukrainian users. English, in [`listing.en.md`](listing.en.md), is the default language. The title starts with the Game Name, "Вчимо годинник". Feature graphic: `feature-graphic.uk.png`; screenshots: `screenshots/uk/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
+Add Ukrainian as a translation in Play Console › Grow users › Store presence › Main store listing › Manage translations; Play shows it to Ukrainian users. English, in [`en/listing.md`](../en/listing.md), is the default language. The title starts with the Game Name, "Вчимо годинник". Feature graphic: `feature-graphic.png`; screenshots: `phone/`, `tablet-7/`, `tablet-10/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
 
 Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text.
 
