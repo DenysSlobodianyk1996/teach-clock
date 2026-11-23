@@ -30,15 +30,19 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
   to the front, on Welcome or Settings only, never in a Round; Play draws it in the phone's
   language, downloads the update and restarts the app. Closed with ✕, it waits for the next start
   (batch 20, `src/android/playUpdate.ts`). The name under
-  its icon follows the phone's languages, not the in-app switch: "Вчимо годинник" when Ukrainian
-  comes before English, "Teach Clock" otherwise (ADR 0005). One Play listing: English is the
-  default, Ukrainian a translation (`docs/store/<lang>/`).
+  its icon follows the phone's languages, not the Language Menu: the Game Name of the first listed
+  language, "Teach Clock" when none is listed (ADR 0005). One Play listing: English is the default;
+  Ukrainian, German, French, Italian and Spanish are translations (`docs/store/<lang>/`).
 - The two differ only through `src/platform.ts`: no service worker in the Android App.
-- The Game Name is "Teach Clock" in English and "Вчимо годинник" in Ukrainian, never shortened.
+- The Game Name is never shortened: "Teach Clock" (English), "Вчимо годинник" (Ukrainian), "Uhr
+  lernen" (German), "Apprendre l'heure" (French), "Impara l'ora" (Italian), "Aprende la hora" (Spanish).
 
 ## Screens
 
-1. **Welcome**: a short description of what the app teaches, a name field, Start. On a phone held
+1. **Welcome**: a short description of what the app teaches, a required name field (a red
+   asterisk on its label), Start. Start is always enabled: with an empty name, or only spaces, Start
+   or Enter marks the field red, focuses it and shows a short message, which the first typed
+   letter clears (batch 28). On a phone held
    upright it is one screen down to Start (a 360 × 640 phone too): the clock shrinks to the height
    left (about 120–230 px), the description is hidden and an ⓘ after the heading's last word opens
    it in an **Info Popup** headed by the Game Name.
@@ -85,18 +89,19 @@ view (batch 25). It is never shown in a Round or on the Summary. It holds:
   the Android build's run number, batch 27). It works offline. The text lives once per language in i18n (`privacy.*`, batch 24).
   The Web App build also renders the same screen into a static page for Google Play's listing,
   `privacy/index.html`, at https://denysslobodianyk1996.github.io/teach-clock/privacy/ (batch 23):
-  English then Ukrainian, with a link to each at the top and a link back to the game under each,
-  in the device's light or dark theme, with no JavaScript.
+  all six languages, with a link to each at the top and a link back to the game under each, in the
+  device's light or dark theme, with no JavaScript.
 - **Contact**: a `mailto:` link to the author with the subject "Contact support from teach clock
   for kids" (set in `src/config.ts`).
 
-A small header on every screen holds the Preferences: interface language (Ukrainian first,
-English second) and theme, light or dark. Each is a round button like Home (batch 25): the
-language button shows the language in use (УК or EN), the theme button its sun or moon, and one
-tap switches to the other. Until the Player taps it, the game follows the device (dark when the
-device is in dark mode, otherwise light). The language too follows the device until the Player
-taps the language button: Ukrainian when it comes
-before English in the device's languages, otherwise English. The device remembers Preferences the
+A small header on every screen holds the Preferences: interface language and theme, light or
+dark. Each is a round button like Home (batch 25). The theme button shows its sun or moon and one
+tap switches it; until then the game follows the device (dark when the device is in dark mode,
+otherwise light). The language button shows the key of the language in use and opens the
+**Language Menu** (batch 28): EN, УК, DE, FR, IT, ES, each with the language's own name and the
+current one ticked. Choosing one switches the interface at once and closes the menu; a tap outside
+or Escape closes it with no change. Until the Player chooses, the game uses the first of the
+device's languages that is on the list, otherwise English. The device remembers Preferences the
 Player picked and the last name typed.
 
 ## Games

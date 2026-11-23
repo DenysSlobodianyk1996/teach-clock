@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Телефон: Вітання, порожнє ім’я</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#f2b84b}a:hover{color:#ffd27a}
+</style>
+</helmet>
+<!-- Phone Welcome on 360 × 640 after Почати with an empty name (batch 28): the field red and
+     focused, the message under it, Почати still enabled. The first typed letter clears it. -->
+<div class="tc dark" style="position: relative; width: 360px; height: 640px; display: flex; flex-direction: column">
+  <header class="hdr" style="height: 64px; padding: 0 14px">
+    <div class="brand"><svg class="c-icon" viewBox="-100 -100 200 200" aria-hidden="true"><circle class="c-face" r="90"></circle><line class="c-hour" y1="8" y2="-42" transform="rotate(300)"></line><line class="c-min" y1="10" y2="-64" transform="rotate(60)"></line><circle class="c-pin" r="9"></circle></svg></div>
+    <div class="hdr-tools" style="gap: 8px">
+      <button class="icon-btn circle" type="button" aria-label="Мова: Українська">УК</button>
+      <button class="icon-btn circle" type="button" aria-label="Тема: темна"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 3.6a8.6 8.6 0 1 0 4.9 13.6A7 7 0 0 1 15.5 3.6Z"></path></svg></button>
+    </div>
+  </header>
+
+  <!-- Upright phone: one screen down to Почати. The clock takes the height left (about 120–230 px);
+       the intro is behind the ⓘ after the heading's last word. -->
+  <main style="flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding: 8px 20px 20px">
+    <div style="flex: 1 1 0; min-height: 120px; max-height: 230px; display: flex; justify-content: center">
+      <svg class="clock" viewBox="-100 -100 200 200" role="img" aria-label="Годинник показує 10:10" style="width: 150px; height: 150px">
+        <circle class="c-face" r="94"></circle>
+        <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6"></circle>
+        <circle class="c-tick5" r="84" stroke-dasharray="3 40.982" stroke-dashoffset="1.5"></circle>
+        <text class="c-num" x="33" y="-57.2">1</text><text class="c-num" x="57.2" y="-33">2</text><text class="c-num" x="66" y="0">3</text><text class="c-num" x="57.2" y="33">4</text><text class="c-num" x="33" y="57.2">5</text><text class="c-num" x="0" y="66">6</text><text class="c-num" x="-33" y="57.2">7</text><text class="c-num" x="-57.2" y="33">8</text><text class="c-num" x="-66" y="0">9</text><text class="c-num" x="-57.2" y="-33">10</text><text class="c-num" x="-33" y="-57.2">11</text><text class="c-num" x="0" y="-66">12</text>
+        <line class="c-hour" y1="10" y2="-45" transform="rotate(305)"></line>
+        <line class="c-min" y1="14" y2="-70" transform="rotate(60)"></line>
+        <circle class="c-pin" r="7"></circle>
+      </svg>
+    </div>
+    <h1 style="margin: 0; font-size: 32px; font-weight: 900; line-height: 1.1">Привіт! Навчимося читати <span style="white-space: nowrap">годинник&nbsp;<button class="icon-btn" type="button" aria-label="Докладніше" style="flex: none; width: 44px; min-width: 44px; height: 44px; padding: 0; border: 0; color: var(--muted); margin: -8px 0; vertical-align: middle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="width: 26px; height: 26px"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 11v6"></path><circle cx="12" cy="7.4" r="0.6" fill="currentColor" stroke-width="1.6"></circle></svg></button></span></h1>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label class="label" for="name-p">Як тебе звати?<span class="required-mark" aria-hidden="true"> *</span></label>
+      <input class="field field-error" id="name-p" type="text" required aria-invalid="true" aria-describedby="name-p-error" value="" placeholder="Твоє ім’я">
+      <p class="name-error" id="name-p-error" role="alert">Напиши ім’я, щоб почати</p>
+    </div>
+    <a class="btn" href="PhoneSettings.dc.html" style="width: 100%">Почати<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+  </main>
+  <footer class="ftr" role="contentinfo"><nav class="ftr-links"><a href="Privacy.dc.html">Конфіденційність</a><a href="mailto:denys.slobodianyk@gmail.com?subject=Contact%20support%20from%20teach%20clock%20for%20kids">Зв’язатися</a></nav></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":640}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
