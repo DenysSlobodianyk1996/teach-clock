@@ -35,7 +35,7 @@ function deviceLanguage(): string | undefined {
 
 /**
  * The interface language the app starts in, by the store's rule below, without a store: a saved
- * uk or en, else the device's languages. src/i18n/index.ts starts vue-i18n in it.
+ * language on the list, else the device's languages. src/i18n/index.ts starts vue-i18n in it.
  */
 export function startingLocale(): Locale {
   try {
@@ -44,8 +44,8 @@ export function startingLocale(): Locale {
   } catch {
     // No storage: the device decides.
   }
-  if (typeof navigator === 'undefined') return deviceLocale(undefined)
-  return deviceLocale(navigator.languages, navigator.language)
+  if (typeof navigator === 'undefined') return deviceLocale(LOCALES, undefined)
+  return deviceLocale(LOCALES, navigator.languages, navigator.language)
 }
 
 /**
@@ -62,7 +62,7 @@ export const usePreferencesStore = defineStore('preferences', () => {
   const deviceIsDark = usePreferredDark()
 
   const locale = computed<Locale>({
-    get: () => chosenLocale.value ?? deviceLocale(deviceLanguages.value, deviceLanguage()),
+    get: () => chosenLocale.value ?? deviceLocale(LOCALES, deviceLanguages.value, deviceLanguage()),
     set: (value) => {
       chosenLocale.value = value
     },

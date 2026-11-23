@@ -1,10 +1,7 @@
 import type { ManifestOptions } from 'vite-plugin-pwa'
 import { THEME_BG } from './themeColors.ts'
-import uk from './i18n/uk.ts'
-import en from './i18n/en.ts'
 import { LOCALES, type Locale } from './i18n/locales.ts'
-
-const messages = { uk, en }
+import { MESSAGES } from './i18n/messages.ts'
 
 /** The manifest file for `locale`, at the site root next to index.html. */
 export function webManifestFile(locale: Locale): string {
@@ -24,9 +21,9 @@ export function webManifestHref(base: string, locale: Locale): string {
  */
 export function webManifests(base: string): Record<Locale, Partial<ManifestOptions>> {
   const manifest = (lang: Locale): Partial<ManifestOptions> => ({
-    name: messages[lang].app.name,
-    short_name: messages[lang].app.name,
-    description: messages[lang].app.description,
+    name: MESSAGES[lang].app.name,
+    short_name: MESSAGES[lang].app.name,
+    description: MESSAGES[lang].app.description,
     lang,
     // The browser bar starts light, the default theme; index.html repaints it per theme.
     theme_color: THEME_BG.light,

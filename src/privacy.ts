@@ -1,3 +1,5 @@
+import type { Locale } from './i18n/locales.ts'
+
 /**
  * The Privacy Page's text lives in i18n (`privacy.*`, one per language) and its look in
  * PrivacyContent.vue, shown in the app by PrivacyView (/privacy-policy) and rendered into the static
@@ -15,7 +17,7 @@ export const PRIVACY_UPDATED: string = import.meta.env.VITE_PRIVACY_UPDATED ?? '
  */
 export const APP_VERSION: string = import.meta.env.VITE_APP_VERSION ?? '1.0.0'
 
-export type PrivacyLocale = 'uk' | 'en'
+export type PrivacyLocale = Locale
 
 const EN_MONTHS = [
   'January',
@@ -47,14 +49,17 @@ const UK_MONTHS = [
   'грудня',
 ]
 
+/** Each language's written date; a listed language without one fails to build. */
+const DATES: Record<Locale, (day: number, month: number, year: number) => string> = {
+  en: (day, month, year) => `${day} ${EN_MONTHS[month]} ${year}`,
+  uk: (day, month, year) => `${day} ${UK_MONTHS[month]} ${year} року`,
+}
+
 /**
  * "19 листопада 2026 року" / "19 November 2026". Spelled out here rather than with Intl, so the
  * static page built in Node and the app print exactly the same words.
  */
 export function formatPrivacyDate(locale: PrivacyLocale, iso: string = PRIVACY_UPDATED): string {
   const [year, month, day] = iso.split('-').map(Number)
-  const index = (month ?? 1) - 1
-  return locale === 'en'
-    ? `${day} ${EN_MONTHS[index]} ${year}`
-    : `${day} ${UK_MONTHS[index]} ${year} року`
+  return DATES[locale](day!, (month ?? 1) - 1, year!)
 }

@@ -2,7 +2,7 @@
  * On a small phone, Settings and the Round fit the screen: no sideways scroll, Submit in view, and the
  * clock as big as the room left allows.
  */
-import { startingWith, t } from './i18n.ts'
+import { startingWith, t, languageNow, LOCALES } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { startRound } from './round.ts'
 import { closeWrongPopup, popupButtons, wrongPopup } from './teach.ts'
@@ -65,7 +65,7 @@ test.describe('Welcome on a 360 × 640 phone', () => {
     expect(await page.evaluate(() => scrollY)).toBe(0)
   })
 
-  for (const locale of ['uk', 'en']) {
+  for (const locale of LOCALES) {
     test(`the ⓘ is centred on the heading's last word, ${locale}`, async ({ page }) => {
       await page.addInitScript((value) => localStorage.setItem('teach-clock.locale', value), locale)
       await page.goto('/')
@@ -80,7 +80,9 @@ test.describe('Welcome on a 360 × 640 phone', () => {
         word.prepend(probe)
         const letters = probe.getBoundingClientRect()
         probe.remove()
-        const ring = document.querySelector('.welcome .info-btn svg circle')!.getBoundingClientRect()
+        const ring = document
+          .querySelector('.welcome .info-btn svg circle')!
+          .getBoundingClientRect()
         return ring.top + ring.height / 2 - (letters.top + letters.height / 2)
       })
       expect(Math.abs(offset), 'ⓘ centre against the letters').toBeLessThanOrEqual(1)
@@ -432,10 +434,7 @@ test.describe('a 320px-wide phone', () => {
 
   test('the header buttons are easy to tap and fit beside Home', async ({ page }) => {
     await toSettings(page)
-    for (const name of [
-      t('header.languageNow', { language: t('languages.uk') }),
-      t('header.home'),
-    ]) {
+    for (const name of [languageNow('uk'), t('header.home')]) {
       const box = (await page
         .getByRole('link', { name })
         .or(page.getByRole('button', { name }))

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '@/router'
+import { LOCALES } from '@/i18n/locales'
 import { webManifestFile } from '@/webManifest'
 
 /**
@@ -21,8 +22,7 @@ function filesAtSiteRoot(): string[] {
     // The service worker and its loader (vite-plugin-pwa), and a manifest per language.
     'sw.js',
     'registerSW.js',
-    webManifestFile('uk'),
-    webManifestFile('en'),
+    ...LOCALES.map(webManifestFile),
     // The bundled scripts, styles and fonts.
     'assets',
     ...readdirSync(publicDir),

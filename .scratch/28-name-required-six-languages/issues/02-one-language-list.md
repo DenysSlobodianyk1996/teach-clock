@@ -4,15 +4,15 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] The list is still English and Ukrainian, in the order EN, УК, and is the single source for supported languages
-- [ ] Language keys and own names live once beside the list, not in every message file
-- [ ] Device detection picks the first device language on the list, otherwise English
-- [ ] A saved language still wins, and existing saved values stay valid
-- [ ] The first-paint script receives the list from the build, so title, `lang` and manifest are right before Vue starts
-- [ ] Privacy text and dates are chosen by language with no Ukrainian fallback for other languages
-- [ ] Test helpers look up text by locale and loop over the list
-- [ ] Tests that use German as unsupported move to a language that stays unsupported
-- [ ] The English "1 minutes" message is fixed
-- [ ] Existing unit and browser tests pass
+- [x] The list is still English and Ukrainian, in the order EN, УК, and is the single source for supported languages
+- [x] Language keys and own names live once beside the list, not in every message file
+- [x] Device detection picks the first device language on the list, otherwise English
+- [x] A saved language still wins, and existing saved values stay valid
+- [x] The first-paint script receives the list from the build, so title, `lang` and manifest are right before Vue starts
+- [x] Privacy text and dates are chosen by language with no Ukrainian fallback for other languages
+- [x] Test helpers look up text by locale and loop over the list
+- [x] Tests that use German as unsupported move to a language that stays unsupported
+- [x] The English "1 minutes" message is fixed
+- [x] Existing unit and browser tests pass

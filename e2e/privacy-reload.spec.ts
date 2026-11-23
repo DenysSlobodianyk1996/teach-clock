@@ -3,7 +3,7 @@
  * privacy/index.html made for Google Play, and Back still works after it.
  */
 import { expect, test } from '@playwright/test'
-import { t } from './i18n.ts'
+import { t, languageNow } from './i18n.ts'
 
 test('a reload on the Privacy Page stays in the app, and Back returns to Welcome', async ({
   page,
@@ -18,9 +18,7 @@ test('a reload on the Privacy Page stays in the app, and Back returns to Welcome
   await page.reload()
   await expect(page.getByRole('heading', { level: 1, name: t('privacy.title') })).toBeVisible()
   // The app screen, not the static page: the language button is only in the app.
-  await expect(
-    page.getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) }),
-  ).toBeVisible()
+  await expect(page.getByRole('button', { name: languageNow('uk') })).toBeVisible()
 
   await page.goBack()
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()

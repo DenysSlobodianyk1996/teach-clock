@@ -9,15 +9,12 @@ export default {
   header: {
     home: 'Додому',
     leave: 'Вийти',
-    /** The round language button: it shows the language in use; a tap switches to the other. */
+    /** The round language button: it shows the language in use; a tap changes it. */
     languageNow: 'Мова: {language}',
     /** The round theme button: it shows the theme in use (sun or moon); a tap switches it. */
     themeNow: 'Тема: {theme}',
   },
   themes: { light: 'світла', dark: 'темна' },
-  /** Each language by its own name, the same in every interface language. */
-  languages: { uk: 'Українська', en: 'English' },
-  languageCodes: { uk: 'УК', en: 'EN' },
   welcome: {
     title: 'Привіт! Навчимося читати годинник',
     intro:

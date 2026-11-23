@@ -1,27 +1,31 @@
 <script setup lang="ts">
 /**
  * The language and the theme in the header (batch 25): two round buttons like Home. Each shows what
- * is in use now, the language's code or the theme's sun or moon; a tap switches to the other.
+ * is in use now, the language's key or the theme's sun or moon; a tap moves to the next.
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import HeaderButton from './HeaderButton.vue'
+import { languageOf } from '@/i18n/locales'
 import { LOCALES, usePreferencesStore } from '@/stores/preferences'
 
 const { t } = useI18n()
 const preferences = usePreferencesStore()
 
-const otherLocale = computed(() => LOCALES.find((l) => l !== preferences.locale) ?? LOCALES[0])
+const language = computed(() => languageOf(preferences.locale))
+const nextLocale = computed(
+  () => LOCALES[(LOCALES.indexOf(preferences.locale) + 1) % LOCALES.length]!,
+)
 </script>
 
 <template>
   <HeaderButton
     circle
     class="language"
-    :label="t('header.languageNow', { language: t(`languages.${preferences.locale}`) })"
-    @click="preferences.locale = otherLocale"
+    :label="t('header.languageNow', { language: language.name })"
+    @click="preferences.locale = nextLocale"
   >
-    {{ t(`languageCodes.${preferences.locale}`) }}
+    {{ language.key }}
   </HeaderButton>
 
   <HeaderButton

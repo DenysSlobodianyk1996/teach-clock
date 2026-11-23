@@ -4,16 +4,16 @@
  * the same content into the static `privacy/index.html` for Google Play's listing (src/privacyStatic.ts).
  */
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import PrivacyContent from '@/components/PrivacyContent.vue'
 import { goBack } from '@/router'
+import { usePreferencesStore } from '@/stores/preferences'
 
-const { locale } = useI18n()
+const preferences = usePreferencesStore()
 const router = useRouter()
 </script>
 
 <template>
-  <PrivacyContent :locale="locale === 'en' ? 'en' : 'uk'">
+  <PrivacyContent :locale="preferences.locale">
     <template #back="{ label }">
       <button class="btn" type="button" @click="goBack(router)">{{ label }}</button>
     </template>

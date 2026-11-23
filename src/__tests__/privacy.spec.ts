@@ -5,7 +5,7 @@ import { JSDOM } from 'jsdom'
 import { CONTACT_EMAIL, ISSUES_URL } from '@/config'
 import { readFileSync } from 'node:fs'
 import { APP_VERSION, formatPrivacyDate, PRIVACY_UPDATED } from '@/privacy'
-import { t, tEn } from '@/test/i18n'
+import { LOCALES, t, tEn, tIn, type Locale } from '@/test/i18n'
 import { buildPrivacyPage, type PrivacyPage } from '../../scripts/buildPrivacyPage.ts'
 import { appVersion } from '../../scripts/appVersion.ts'
 
@@ -32,21 +32,22 @@ const KEYS = [
 describe('the static privacy/index.html for Google Play, rendered from the app', () => {
   let page: PrivacyPage
   let doc: Document
-  const article = (lang: 'uk' | 'en') => doc.querySelector<HTMLElement>(`article[lang="${lang}"]`)!
+  const article = (lang: Locale) => doc.querySelector<HTMLElement>(`article[lang="${lang}"]`)!
 
   beforeAll(async () => {
     page = await buildPrivacyPage({ root: process.cwd(), base: '/teach-clock/' })
     doc = new JSDOM(page.html).window.document
   }, 60_000)
 
-  it('says what the in-app Privacy Page says, English then Ukrainian', () => {
+  it('says what the in-app Privacy Page says, in the order of the list', () => {
     const articles = [...doc.querySelectorAll('article')].map((a) => a.lang)
-    expect(articles).toEqual(['en', 'uk'])
+    expect(articles).toEqual(LOCALES)
     expect(article('en').querySelector('h1')!.textContent).toBe(tEn('privacy.title'))
     expect(article('uk').querySelector('h2')!.textContent).toBe(t('privacy.title'))
-    for (const key of KEYS) {
-      expect(article('uk').textContent).toContain(t(`privacy.${key}`))
-      expect(article('en').textContent).toContain(tEn(`privacy.${key}`))
+    for (const lang of LOCALES) {
+      for (const key of KEYS) {
+        expect(article(lang).textContent).toContain(tIn(lang, `privacy.${key}`))
+      }
     }
   })
 
@@ -56,13 +57,12 @@ describe('the static privacy/index.html for Google Play, rendered from the app',
 
   it('links each language from the top', () => {
     const nav = [...doc.querySelectorAll('nav a')].map((a) => a.getAttribute('href'))
-    expect(nav).toEqual(['#en', '#uk'])
-    expect(doc.getElementById('en')!.lang).toBe('en')
-    expect(doc.getElementById('uk')!.lang).toBe('uk')
+    expect(nav).toEqual(LOCALES.map((lang) => `#${lang}`))
+    for (const lang of LOCALES) expect(doc.getElementById(lang)!.lang).toBe(lang)
   })
 
   it('gives the contact email, the issues and the date of the text in each language', () => {
-    for (const lang of ['uk', 'en'] as const) {
+    for (const lang of LOCALES) {
       const links = [...article(lang).querySelectorAll('a')]
       // The contact email, the public issues and the way back to the game, one folder up.
       expect(links.map((a) => a.getAttribute('href'))).toEqual([
@@ -73,7 +73,7 @@ describe('the static privacy/index.html for Google Play, rendered from the app',
       expect(article(lang).querySelector('time')!.getAttribute('datetime')).toBe(PRIVACY_UPDATED)
       expect(article(lang).querySelector('time')!.textContent).toBe(formatPrivacyDate(lang))
       expect(article(lang).querySelector('.version')!.textContent!.trim()).toBe(
-        `${(lang === 'en' ? tEn : t)('privacy.version')} ${APP_VERSION}`,
+        `${tIn(lang, 'privacy.version')} ${APP_VERSION}`,
       )
     }
   })
