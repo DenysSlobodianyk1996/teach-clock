@@ -6,7 +6,7 @@ test('a Player walks from Welcome through Settings to a Round', async ({ page })
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
 
   const start = page.getByRole('button', { name: t('welcome.start') })
-  await expect(start).toBeDisabled()
+  await expect(start).toBeEnabled()
   await page.getByLabel(t('welcome.nameLabel')).fill('  Оля ')
   await start.click()
 

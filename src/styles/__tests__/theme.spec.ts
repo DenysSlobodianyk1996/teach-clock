@@ -45,6 +45,8 @@ const TEXT_PAIRS: [text: string, background: string][] = [
   ['--muted', '--surface'],
   ['--muted', '--surface-2'],
   ['--good-text', '--surface'],
+  ['--bad-text', '--bg'],
+  ['--bad-text', '--bg-deep'],
   ['--accent-ink', '--accent'],
   ['--pop-ink', '--pop'],
   ['--num', '--face'],
