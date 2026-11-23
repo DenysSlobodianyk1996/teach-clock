@@ -26,6 +26,7 @@ test('Enter on an empty field does the same as tapping Start', async ({ page }) 
   await page.goto('/')
   await nameField(page).press('Enter')
   await expectNameError(page)
+  await expect(start(page)).toBeEnabled()
 })
 
 test('a name of only spaces counts as empty', async ({ page }) => {
@@ -33,6 +34,7 @@ test('a name of only spaces counts as empty', async ({ page }) => {
   await nameField(page).fill('   ')
   await start(page).click()
   await expectNameError(page)
+  await expect(start(page)).toBeEnabled()
 })
 
 test('the first typed letter clears the error, and the name then starts', async ({ page }) => {
