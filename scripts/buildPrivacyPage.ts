@@ -1,7 +1,7 @@
 /**
  * Builds the static privacy/index.html for the Web App (Google Play's Privacy policy URL) from the app's
  * own Privacy Page: a server-side Vite build of src/privacyStatic.ts renders the Vue components in
- * Ukrainian and English, and the page gets the CSS that build produces, inlined, so it needs no
+ * every language on the list, and the page gets the CSS that build produces, inlined, so it needs no
  * JavaScript. vite.config.ts calls this for the build and for the dev server.
  */
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'

@@ -2,7 +2,7 @@
 /**
  * The Privacy Page's text in one language, one text per language (`privacy.*` in i18n). The app
  * screen (PrivacyView, /privacy-policy) shows it in the interface language with a Back button; the
- * static privacy/index.html for Google Play shows it in English and in Ukrainian with a link to the
+ * static privacy/index.html for Google Play shows it in every language with a link to the
  * game (src/privacyStatic.ts). The way back goes in the `back` slot.
  */
 import { computed } from 'vue'

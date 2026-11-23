@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 import App from '../App.vue'
 import { mountScreen } from '@/test/mountScreen'
-import { t, tEn } from '@/test/i18n'
+import { t, tEn, languageNow, languageKey } from '@/test/i18n'
 import { usePlayerStore } from '@/stores/player'
 import { stubDeviceTheme } from '@/test/deviceTheme'
 import { stubInstalledWebApp } from '@/test/installedWebApp'
@@ -48,10 +48,8 @@ describe('Preferences in the header', () => {
     const wrapper = await open()
     expect(document.documentElement.lang).toBe('uk')
     expect(document.documentElement.dataset.theme).toBe('light')
-    expect(languageButton(wrapper).text()).toBe(t('languageCodes.uk'))
-    expect(languageButton(wrapper).attributes('aria-label')).toBe(
-      t('header.languageNow', { language: t('languages.uk') }),
-    )
+    expect(languageButton(wrapper).text()).toBe(languageKey('uk'))
+    expect(languageButton(wrapper).attributes('aria-label')).toBe(languageNow('uk'))
     expect(themeButton(wrapper).attributes('aria-label')).toBe(
       t('header.themeNow', { theme: t('themes.light') }),
     )

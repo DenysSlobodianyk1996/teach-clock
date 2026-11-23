@@ -26,13 +26,15 @@
         document.querySelector('meta[name="theme-color"]').setAttribute('content', colours[theme])
       } catch (e) {}
       // Name and describe the page and set the language before the app loads, by the rule in
-      // src/stores/preferences.ts: a saved uk or en, else the device's languages by
-      // src/i18n/deviceLocale.ts. vite.config.ts fills in that rule and each language's text.
+      // src/stores/preferences.ts: a saved language on the list, else the device's
+      // languages by src/i18n/deviceLocale.ts. vite.config.ts fills in the list (src/i18n/locales.ts),
+      // that rule and each language's text.
       try {
+        var locales = __LOCALES__
         var text = __APP_TEXT__
         var locale = localStorage.getItem('teach-clock.locale')
-        if (locale !== 'uk' && locale !== 'en') {
-          locale = __DEVICE_LOCALE__(navigator.languages, navigator.language)
+        if (locales.indexOf(locale) === -1) {
+          locale = __DEVICE_LOCALE__(locales, navigator.languages, navigator.language)
         }
         document.documentElement.lang = locale
         document.title = text[locale].name

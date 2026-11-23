@@ -15,8 +15,6 @@ export default {
     themeNow: 'Theme: {theme}',
   },
   themes: { light: 'light', dark: 'dark' },
-  languages: { uk: 'Українська', en: 'English' },
-  languageCodes: { uk: 'УК', en: 'EN' },
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
@@ -88,7 +86,7 @@ export default {
       minuteZero: 'The long hand points at 12 — so it’s {time} exactly.',
       minuteOn: 'The long hand points at {number}. Count in fives: that’s {minute} minutes.',
       minuteBetween:
-        'The long hand is just past {number}. Count the small marks — that’s {minute} minutes.',
+        'The long hand is just past {number}. Count the small marks — that’s minute {minute}.',
       swapped: 'Don’t mix up the hands: the short one shows the hours, the long one the minutes.',
       both: 'The short hand shows the hours ({hour}) and the long hand the minutes ({minute}).',
     },

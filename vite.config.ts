@@ -16,8 +16,7 @@ import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
 import { OLDEST_CHROME } from './src/config.ts'
-import uk from './src/i18n/uk.ts'
-import en from './src/i18n/en.ts'
+import { MESSAGES } from './src/i18n/messages.ts'
 
 /** The Android App build (`npm run android:sync`); src/platform.ts reads the same var for the app. */
 const isAndroidApp = process.env.VITE_TARGET === 'android'
@@ -140,17 +139,18 @@ async function deviceLocaleScript(): Promise<string> {
   const body = code.replace(/\/\*[\s\S]*?\*\/\s*/g, '').replace(/^export function/m, 'function')
   const script = `(function () {\n${body}\nreturn deviceLocale\n})()`
   const rule = new Function(`return ${script}`)() as (
+    supported: readonly string[],
     languages?: string[],
     language?: string,
   ) => string
   const checks: [string[], string | undefined, string][] = [
     [['ru', 'uk-UA', 'en'], undefined, 'uk'],
-    [['de', 'en_US'], undefined, 'en'],
+    [['pl', 'en_US'], undefined, 'en'],
     [[], 'uk_UA', 'uk'],
     [['pl'], undefined, 'en'],
   ]
   for (const [languages, language, expected] of checks) {
-    if (rule(languages, language) !== expected) {
+    if (rule(LOCALES, languages, language) !== expected) {
       throw new Error(`The pre-paint deviceLocale gives the wrong language for ${languages}`)
     }
   }
@@ -160,18 +160,17 @@ async function deviceLocaleScript(): Promise<string> {
 /**
  * Fills index.html: its static Game Name and description in English (`__APP_NAME__`,
  * `__APP_DESCRIPTION__`, decision 7 of batch 13), and the pre-paint script's interface-language
- * rule (`__DEVICE_LOCALE__`, src/i18n/deviceLocale.ts) and each language's Game Name and
+ * rule (`__DEVICE_LOCALE__`, src/i18n/deviceLocale.ts), the list it picks from (`__LOCALES__`) and each language's Game Name and
  * description (`__APP_TEXT__`, from i18n). So the tab is named in the language the app will start
  * in and never drifts from the Preferences store.
  */
 function appTextPlugin(): Plugin {
-  const messages = { uk, en }
   // `<` escaped, so no text can close the script.
   const text = JSON.stringify(
     Object.fromEntries(
       LOCALES.map((locale) => [
         locale,
-        { name: messages[locale].app.name, description: messages[locale].app.description },
+        { name: MESSAGES[locale].app.name, description: MESSAGES[locale].app.description },
       ]),
     ),
   ).replaceAll('<', '\\u003c')
@@ -184,8 +183,9 @@ function appTextPlugin(): Plugin {
       order: 'pre',
       handler: async (html) =>
         html
-          .replaceAll('__APP_NAME__', escape(en.app.name))
-          .replaceAll('__APP_DESCRIPTION__', escape(en.app.description))
+          .replaceAll('__APP_NAME__', escape(MESSAGES.en.app.name))
+          .replaceAll('__APP_DESCRIPTION__', escape(MESSAGES.en.app.description))
+          .replaceAll('__LOCALES__', JSON.stringify(LOCALES))
           .replaceAll('__APP_TEXT__', text)
           .replaceAll('__DEVICE_LOCALE__', await (script ??= deviceLocaleScript())),
     },

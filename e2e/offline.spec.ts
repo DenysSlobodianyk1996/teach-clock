@@ -1,4 +1,4 @@
-import { t, tEn, startingWith } from './i18n.ts'
+import { t, tEn, startingWith, languageNow } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 
 test('after the first visit the whole app works with no internet', async ({ page, context }) => {
@@ -102,15 +102,11 @@ test('the installed name follows a УК/EN tap', async ({ page }) => {
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
 
-  await page
-    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
-    .click()
+  await page.getByRole('button', { name: languageNow('uk') }).click()
   await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
 
-  await page
-    .getByRole('button', { name: tEn('header.languageNow', { language: tEn('languages.en') }) })
-    .click()
+  await page.getByRole('button', { name: languageNow('en') }).click()
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
 })
@@ -144,9 +140,7 @@ test.describe('an installed Web App', () => {
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
 
-    await page
-      .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
-      .click()
+    await page.getByRole('button', { name: languageNow('uk') }).click()
     await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
   })

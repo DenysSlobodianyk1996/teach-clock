@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { t, tEn } from './i18n.ts'
+import { t, tEn, languageNow, tIn, LOCALES } from './i18n.ts'
 import { CONTACT_EMAIL, ISSUES_URL } from '../src/config.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
@@ -77,12 +77,12 @@ test('the static Privacy Page follows the device: light or dark', async ({ page 
 })
 
 test('the static Privacy Page links back to the web game, in each language', async ({ page }) => {
-  for (const [lang, back] of [
-    ['en', tEn('privacy.back')],
-    ['uk', t('privacy.back')],
-  ] as const) {
+  for (const lang of LOCALES) {
     await page.goto('/privacy/index.html')
-    await page.locator(`article[lang="${lang}"]`).getByRole('link', { name: back }).click()
+    await page
+      .locator(`article[lang="${lang}"]`)
+      .getByRole('link', { name: tIn(lang, 'privacy.back') })
+      .click()
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   }
 })
@@ -105,8 +105,6 @@ test('the Privacy Page screen fits a narrow phone and shows one text, in the int
   )
   expect(overflow).toBeLessThanOrEqual(0)
 
-  await page
-    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
-    .click()
+  await page.getByRole('button', { name: languageNow('uk') }).click()
   await expect(page.getByRole('heading', { level: 1, name: tEn('privacy.title') })).toBeVisible()
 })

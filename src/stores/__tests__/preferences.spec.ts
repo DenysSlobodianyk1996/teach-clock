@@ -22,7 +22,7 @@ describe('preferences store', () => {
 
   it.each([
     [['ru', 'uk', 'en'], 'uk'],
-    [['de', 'en'], 'en'],
+    [['pl', 'en'], 'en'],
   ])('starts a device with languages %j in %s and saves nothing', (languages, expected) => {
     stubDeviceLanguages(languages)
     const preferences = usePreferencesStore()
@@ -93,9 +93,9 @@ describe('preferences store', () => {
   })
 
   it.each(['middle', 'neon'])(
-    'follows the device when the saved language is de and the theme %s',
+    'follows the device when the saved language is pl and the theme %s',
     (saved) => {
-      localStorage.setItem('teach-clock.locale', 'de')
+      localStorage.setItem('teach-clock.locale', 'pl')
       localStorage.setItem('teach-clock.theme', saved)
       stubDeviceTheme('dark')
       stubDeviceLanguages(['uk-UA'])
