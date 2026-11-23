@@ -61,4 +61,13 @@
   overflow-y: auto;
   container-type: size;
 }
+
+/* The screen's content stops at --content-max, centred with free space either side. <main> itself
+   stays full width, so its scrollbar is at the window's edge. */
+.screen > :slotted(*) {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>

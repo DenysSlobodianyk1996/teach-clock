@@ -74,6 +74,19 @@ test.describe('1024 × 768, a wider landscape window', () => {
   })
 })
 
+test.describe('1920 × 1080, a large window', () => {
+  test.use({ viewport: { width: 1920, height: 1080 } })
+
+  test('centres the content at 1200 px, with <main> full width', async ({ page }) => {
+    await toDragArrowsRound(page)
+    const main = await box(page.locator('main'))
+    const content = await box(page.locator('main > *').first())
+    expect(main.width).toBeCloseTo(1920, 0)
+    expect(content.width).toBeCloseTo(1200, 0)
+    expect(content.left).toBeCloseTo(360, 0)
+  })
+})
+
 test.describe('740 × 360, a sideways phone', () => {
   test.use({ viewport: { width: 740, height: 360 } })
 

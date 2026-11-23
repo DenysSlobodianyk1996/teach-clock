@@ -222,7 +222,8 @@ Rules shared by Drag Arrows and Set Time:
   hands and Grips, so a Grip never hides a number. On clocks without Grips the numbers stay under
   the hands.
 - Text meets WCAG AA contrast. Touch targets at least 48 px.
-- The play area fills the window under the header at every width. Every screen switches to the phone layout when the window is 768 px wide or less, taller
+- The play area fills the window under the header at every width, and a screen's content stops at
+  1200 px, centred. Every screen switches to the phone layout when the window is 768 px wide or less, taller
   than wide (an upright tablet too), or 500 px tall or less (a phone held sideways). There the
   screen stacks, and the clock sits above the answer area (beside it on a sideways
   phone wider than 600 px). The breakpoint is defined once, in `src/styles/media.ts`.

@@ -1,6 +1,6 @@
 # 12: Desktop fills the window
 
-**What to build:** Above 768 px the play area fills the window under the header instead of a 4:3 card capped at 1024 px. The Footer sits at the bottom at its normal height, and a scrollbar, when one is needed, is at the window's right edge.
+**What to build:** Above 768 px the play area fills the window under the header instead of a 4:3 card capped at 1024 px. A screen's content stops at 1200 px, centred with free space left and right. The Footer sits at the bottom at its normal height, and a scrollbar, when one is needed, is at the window's right edge.
 
 **Blocked by:** 01, 03
 
@@ -10,6 +10,7 @@
 ![Scrollbar in the middle of a low window](../images/12-low-window.png)
 
 - [x] The play area is the window's full width and height at 800 × 600, 1100 × 700, 1280 × 520, 1440 × 900 and 1920 × 1080
+- [x] The content is at most 1200 px wide and centred, while `<main>` and its scrollbar stay at the window's full width
 - [x] No empty band under the Footer, and the page itself never scrolls
 - [x] Settings keeps Game titles whole: four cards in a row above 1100 px, two by two below
 - [x] The page declares its theme's `color-scheme`, so scrollbars follow it

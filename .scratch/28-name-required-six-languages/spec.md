@@ -106,7 +106,7 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 61. As a Player, I want keys pressed in the open language menu to stay in the menu, so that I cannot change or submit my Answer behind it.
 62. As a Player, I want the language menu to close when the screen changes, so that it never covers the next screen.
 63. As a Player, I want each language on one line in the menu, so that the list is easy to scan.
-64. As a Player on a desktop, I want the game to fill my window, so that there is no empty band or scrollbar in the middle of the screen.
+64. As a Player on a desktop, I want the game to fill my window, with the content kept to a comfortable 1200 px, so that there is no empty band or scrollbar in the middle of the screen.
 65. As a Player in a wide, low window, I want the Round's clock to fit the height, so that I can see it whole.
 66. As a Player, I want the name field to have one border, red for an error and yellow while I am in the field, so that its state is clear.
 
@@ -130,7 +130,7 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 - **Translations:** drafted by Claude and shipped in this batch. A review list in the batch folder records clock vocabulary, the day-half labels, Game Names, listings and Privacy text for a later native check.
 - **Release effect:** merging changes that touch build scripts triggers a signed upload to Play closed testing. New listings and images are added in Play Console by hand.
 - **Language menu width:** no fixed width. The menu is as wide as its longest row, and every row stays on one line.
-- **Desktop layout (amended after the first build):** above 768 px the play area fills the window under the header. The 4:3 card capped at 1024 px is removed. Below 1100 px the Settings Game cards go two by two, and a Round's clock is limited by the height as well as the width.
+- **Desktop layout (amended after the first build):** above 768 px the play area fills the window under the header. The 4:3 card capped at 1024 px is removed. A screen's content stops at 1200 px, centred with free space left and right, while `<main>` stays full width so its scrollbar is at the window's edge. Below 1100 px the Settings Game cards go two by two, and a Round's clock is limited by the height as well as the width.
 - **Name field border:** one border, with no focus outline around it. Red with an error, yellow while focused, even with the error showing.
 
 ## Testing Decisions

@@ -26,4 +26,6 @@ Desktop issues, width bigger 768px settings page
 [Image #4] - when error - 1 red border, when focus - change error border to focused
 In general, for 768 + px layout strange - width should be full
 
+Then: "maybe do max width area like 1200 px etc for main area. like on left right will be free space"
+
 On checks: "don't run such full tests, you just burn tokens", then "just do fixes, don't review them. it was fine to just catch them, fix, and dont retest".
