@@ -16,7 +16,7 @@ Uhr lernen — für Kinder
 Ein ruhiges Spiel: Kinder lernen, die Uhr zu lesen und zu stellen. Ohne Werbung.
 ```
 
-## Full description (2522 / 4000)
+## Full description (2565 / 4000)
 
 ```text
 „Uhr lernen“ ist ein ruhiges Spiel, mit dem Kinder eine ganz normale Zeigeruhr verstehen: wo die Zahlen stehen, wie man die Minuten zählt, wie man die Zeiger auf eine Uhrzeit stellt und wie man abliest, wie spät es ist.
@@ -46,7 +46,7 @@ RUHIG UND SICHER
 • Funktioniert schon beim ersten Start ohne Internet.
 • Kein Zeitdruck und keine Töne: Dein Kind spielt in seinem eigenen Tempo.
 • Für Smartphones und Tablets, hochkant oder quer.
-• Auf Deutsch und in weiteren Sprachen, mit hellem und dunklem Design: Es folgt dem Gerät, und ein Tippen wechselt es.
+• Auf Englisch, Ukrainisch, Deutsch, Französisch, Italienisch und Spanisch, mit hellem und dunklem Design: Beides folgt dem Gerät und lässt sich im Spiel ändern.
 
 Viel Spaß und schöne gemeinsame Zeit!
 ```

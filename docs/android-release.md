@@ -186,7 +186,7 @@ Setting the default language, in **Manage translations** (top right of the listi
 
 A translation without its own feature graphic shows the default one, so upload `uk/feature-graphic.png` to the Ukrainian listing. Only the author can do this in Play Console; `bash scripts/release-wizard.sh` walks through it (stage "Store listing").
 
-**German (`de-DE`)** is one more translation with the same files in [`store/de/`](store/de/listing.md): add it under Manage translations › Add your own translations once a build with German is live on the track (wizard stage "Store listing: the other languages").
+**German (`de-DE`), French (`fr-FR`), Italian (`it-IT`) and Spanish (`es-ES`)** are further translations with the same files in [`store/de/`](store/de/listing.md), [`store/fr/`](store/fr/listing.md), [`store/it/`](store/it/listing.md) and [`store/es/`](store/es/listing.md): add each under Manage translations › Add your own translations once a build with that language is live on the track (wizard stage "Store listing: the other languages").
 
 Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots (phone and both tablets) and the feature graphics of every listing language after UI or text changes; the graphics' taglines are in `scripts/storeLanguages.ts` (the Game Name from the i18n files).
 

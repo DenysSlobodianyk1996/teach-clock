@@ -24,12 +24,34 @@ function fields(lang: string) {
 const LIMITS = { 'App name': 30, 'Short description': 80, 'Full description': 4000 }
 const chars = (text: string) => [...text].length
 
-it('has a Play listing for English, Ukrainian and German, in the language list order', () => {
-  expect(STORE_LANGUAGES.slice(0, 3)).toEqual(['en', 'uk', 'de'])
+it('has a Play listing for all six languages, in the language list order', () => {
+  expect(STORE_LANGUAGES).toEqual(['en', 'uk', 'de', 'fr', 'it', 'es'])
 })
 
 it('names each listing by its Play locale', () => {
-  expect((['en', 'uk', 'de'] as const).map(playLocale)).toEqual(['en-US', 'uk-UA', 'de-DE'])
+  expect(STORE_LANGUAGES.map(playLocale)).toEqual([
+    'en-US',
+    'uk-UA',
+    'de-DE',
+    'fr-FR',
+    'it-IT',
+    'es-ES',
+  ])
+})
+
+it('tells every listing which six languages the game has', () => {
+  const named = {
+    en: ['English', 'Ukrainian', 'German', 'French', 'Italian', 'Spanish'],
+    uk: ['англійська', 'українська', 'німецька', 'французька', 'італійська', 'іспанська'],
+    de: ['Englisch', 'Ukrainisch', 'Deutsch', 'Französisch', 'Italienisch', 'Spanisch'],
+    fr: ['anglais', 'ukrainien', 'allemand', 'français', 'italien', 'espagnol'],
+    it: ['inglese', 'ucraino', 'tedesco', 'francese', 'italiano', 'spagnolo'],
+    es: ['inglés', 'ucraniano', 'alemán', 'francés', 'italiano', 'español'],
+  }
+  for (const [lang, languages] of Object.entries(named)) {
+    const text = fields(lang)['Full description']!.text.toLowerCase()
+    for (const language of languages) expect(text).toContain(language.toLowerCase())
+  }
 })
 
 it('gives every listing its release notes in the Android workflow, in its Play locale', () => {

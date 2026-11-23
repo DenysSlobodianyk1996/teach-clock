@@ -30,6 +30,21 @@ const STORE: Partial<Record<Locale, StoreLanguage>> = {
     playerName: 'Mia',
     tagline: ['Vier Spiele, um die Uhr', 'lesen und stellen zu lernen'],
   },
+  fr: {
+    playLocale: 'fr-FR',
+    playerName: 'Léa',
+    tagline: ['Quatre jeux pour apprendre', 'à lire et régler l’heure'],
+  },
+  it: {
+    playLocale: 'it-IT',
+    playerName: 'Giulia',
+    tagline: ['Quattro giochi per imparare', 'a leggere e impostare l’ora'],
+  },
+  es: {
+    playLocale: 'es-ES',
+    playerName: 'Lucía',
+    tagline: ['Cuatro juegos para aprender', 'a leer y poner la hora'],
+  },
 }
 
 /** The languages with a Play listing, in the order of the shared language list. */
