@@ -6,7 +6,7 @@ type Game = 'setTime' | 'dragArrows' | 'dragHours' | 'dragMinutes'
 
 /**
  * Enters a name, picks the Game, the Mode and (for the clock Games) the Level or (for Drag Hours)
- * the Hours, and presses Play.
+ * the Hours, presses Play and waits for the Round to open.
  */
 export async function startRound(
   page: Page,
@@ -26,4 +26,5 @@ export async function startRound(
     await page.getByRole('radio', { name: startingWith(t(`levels.${level}.name`)) }).check()
   if (hours) await page.getByRole('radio', { name: startingWith(t(`hours.${hours}.name`)) }).check()
   await page.getByRole('button', { name: t('settings.play') }).click()
+  await page.waitForURL(/\/round$/)
 }

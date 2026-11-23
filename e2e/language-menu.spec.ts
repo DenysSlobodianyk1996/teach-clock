@@ -131,6 +131,130 @@ test('changing language in a Round keeps its Task, progress and typed Answer', a
   await expect(page.getByRole('button', { name: tEn('round.submit') })).toBeEnabled()
 })
 
+test.describe('while the menu is open over a Set Time Round', () => {
+  const hourBox = (page: Page) => page.getByRole('button', { name: t('round.hours'), exact: true })
+  const progress = (page: Page, n: number) => page.getByText(t('round.progress', { n, total: 10 }))
+  const pad = (page: Page, digit: string) =>
+    page.locator('.pad').getByRole('button', { name: digit, exact: true })
+
+  /** A Round with a whole Answer typed (hour 1), the menu open on it. */
+  async function openOverAnswer(page: Page) {
+    await startRound(page, { game: 'setTime', mode: 'test', level: 5 })
+    await hourBox(page).click()
+    await pad(page, '1').click()
+    await page.getByRole('button', { name: t('round.minutes'), exact: true }).click()
+    await pad(page, '1').click()
+    await pad(page, '0').click()
+    await expect(hourBox(page)).toHaveText('1')
+    // The hour box selected, so a stray digit would make the hour 12.
+    await hourBox(page).click()
+    await page.getByRole('button', { name: languageNow('uk') }).click()
+    await expect(languageRow(page, 'uk')).toBeFocused()
+  }
+
+  /** A click on the menu's own padding, above the first row. */
+  const clickPadding = async (page: Page) => {
+    const menu = page.getByRole('menu')
+    const box = (await menu.boundingBox())!
+    await menu.click({ position: { x: box.width / 2, y: 4 } })
+  }
+
+  test('a digit does not reach the Answer', async ({ page }) => {
+    await openOverAnswer(page)
+    await page.keyboard.press('2')
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('menu')).toHaveCount(0)
+    await expect(hourBox(page)).toHaveText('1')
+  })
+
+  test('a click on the padding keeps focus in the menu, so its keys still work', async ({
+    page,
+  }) => {
+    await openOverAnswer(page)
+    await clickPadding(page)
+    await expect(languageRow(page, 'uk')).toBeFocused()
+    await page.keyboard.press('ArrowDown')
+    await expect(languageRow(page, 'de')).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('menu')).toHaveCount(0)
+  })
+
+  test('Enter after a click on the padding does not submit the Answer', async ({ page }) => {
+    await openOverAnswer(page)
+    await clickPadding(page)
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('menu')).toHaveCount(0)
+    await expect(progress(page, 1)).toBeVisible()
+  })
+
+  test('with focus lost from the menu, keys still cannot reach the Round', async ({ page }) => {
+    await openOverAnswer(page)
+    // Each key finds focus lost: the first one puts it back on the row.
+    for (const key of ['2', 'Enter']) {
+      await page.evaluate(() => (document.activeElement as HTMLElement).blur())
+      await page.keyboard.press(key)
+    }
+    await expect(hourBox(page)).toHaveText('1')
+    await expect(progress(page, 1)).toBeVisible()
+    await expect(page.getByRole('menu')).toBeVisible()
+    await expect(languageRow(page, 'uk')).toBeFocused()
+  })
+
+  test('browser Back closes it behind the Leave question, focus not on the button', async ({
+    page,
+  }) => {
+    await openOverAnswer(page)
+    await page.goBack()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page.getByRole('menu')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: languageNow('uk') })).not.toBeFocused()
+  })
+})
+
+test('browser Back to another screen closes the menu, focus not on the button', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+  await page.getByRole('button', { name: t('welcome.start') }).click()
+  await expect(page).toHaveURL(/\/settings$/)
+  await page.getByRole('button', { name: languageNow('uk') }).click()
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
+  await expect(page.getByRole('menu')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: languageNow('uk') })).not.toBeFocused()
+})
+
+test('holding Enter on the button opens the menu and leaves it open', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: languageNow('uk') }).focus()
+  await page.keyboard.down('Enter')
+  await expect(languageRow(page, 'uk')).toBeFocused()
+  // Checked after each repeat: a second one would reopen a menu the first had closed.
+  for (let repeat = 0; repeat < 2; repeat++) {
+    await page.keyboard.down('Enter')
+    await expect(page.getByRole('menu')).toBeVisible()
+    await expect(languageRow(page, 'uk')).toBeFocused()
+  }
+  await page.keyboard.up('Enter')
+  await expect(page.getByRole('menu')).toBeVisible()
+})
+
+test('holding Enter on a row chooses once and does not open the menu again', async ({ page }) => {
+  await page.goto('/')
+  const button = page.getByRole('button', { name: languageNow('uk') })
+  await button.focus()
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowUp')
+  await expect(languageRow(page, 'en')).toBeFocused()
+  await page.keyboard.down('Enter')
+  const chosen = page.getByRole('button', { name: languageNow('en') })
+  await expect(chosen).toBeFocused()
+  await page.keyboard.down('Enter')
+  await page.keyboard.up('Enter')
+  await expect(page.getByRole('menu')).toHaveCount(0)
+})
+
 /** The rows of the open menu, copied up to six: the list has fewer until its languages land. */
 async function fillToSixRows(page: Page) {
   await page.getByRole('menu').evaluate((menu) => {
@@ -155,6 +279,66 @@ test.describe('at 320 × 640 in a Round, next to Leave', () => {
     }
   })
 })
+
+for (const { width, height } of [
+  { width: 360, height: 728 },
+  { width: 360, height: 640 },
+  { width: 320, height: 640 },
+]) {
+  test.describe(`the menu at ${width} × ${height}`, () => {
+    test.use({ viewport: { width, height } })
+
+    for (const { code, name } of LANGUAGES) {
+      test(`in ${code}, every row is one line and the menu is on the screen`, async ({ page }) => {
+        await page.addInitScript((locale) => {
+          // The interface language, as the Player's choice would store it.
+          Object.defineProperty(navigator, 'languages', { get: () => [locale] })
+          Object.defineProperty(navigator, 'language', { get: () => locale })
+        }, code)
+        await page.goto('/')
+        await page.getByRole('button', { name: languageNow(code) }).click()
+        const menu = page.getByRole('menu')
+        await expect(languageRow(page, code)).toContainText(name)
+
+        const box = (await menu.boundingBox())!
+        expect(box.x).toBeGreaterThanOrEqual(0)
+        expect(box.y).toBeGreaterThanOrEqual(0)
+        expect(box.x + box.width).toBeLessThanOrEqual(width)
+        expect(box.y + box.height).toBeLessThanOrEqual(height)
+        expect(await menu.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0)
+
+        for (const language of LANGUAGES) {
+          const row = languageRow(page, language.code)
+          const lines = await row.locator('.name').evaluate((el) => {
+            const range = document.createRange()
+            range.selectNodeContents(el)
+            return new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size
+          })
+          expect(lines, `${language.code} on one line`).toBe(1)
+          const [rowBox, keyBox, nameBox] = await Promise.all([
+            row.boundingBox(),
+            row.locator('.key').boundingBox(),
+            row.locator('.name').boundingBox(),
+          ])
+          expect(keyBox!.x + keyBox!.width).toBeLessThanOrEqual(nameBox!.x)
+          expect(nameBox!.x + nameBox!.width).toBeLessThanOrEqual(rowBox!.x + rowBox!.width)
+          const textFits = await row
+            .locator('.name')
+            .evaluate((el) => el.scrollWidth <= el.clientWidth)
+          expect(textFits, `${language.code} not cut off`).toBe(true)
+        }
+        const tick = page.getByRole('menuitemradio', { checked: true }).locator('svg')
+        const [tickBox, currentBox] = await Promise.all([
+          tick.boundingBox(),
+          languageRow(page, code).boundingBox(),
+        ])
+        expect(tickBox!.x + tickBox!.width).toBeLessThanOrEqual(currentBox!.x + currentBox!.width)
+        expect(tickBox!.y).toBeGreaterThanOrEqual(currentBox!.y)
+        expect(tickBox!.y + tickBox!.height).toBeLessThanOrEqual(currentBox!.y + currentBox!.height)
+      })
+    }
+  })
+}
 
 const BARS = { top: 32, right: 0, bottom: 48, left: 0 }
 

@@ -9,12 +9,16 @@ import AppFrame from '@/components/AppFrame.vue'
 import HeaderBar from '@/components/HeaderBar.vue'
 import PrivacyContent from '@/components/PrivacyContent.vue'
 import { LANGUAGES } from '@/i18n/locales'
+import { MESSAGES } from '@/i18n/messages'
+
+/** One label for readers of any language on the list, fixed at build time. */
+const languagesLabel = LANGUAGES.map(({ code }) => MESSAGES[code].privacy.language).join(' / ')
 </script>
 
 <template>
   <AppFrame>
     <template #header><HeaderBar /></template>
-    <nav class="languages" aria-label="Language / Мова">
+    <nav class="languages" :aria-label="languagesLabel">
       <a
         v-for="language in LANGUAGES"
         :key="language.code"

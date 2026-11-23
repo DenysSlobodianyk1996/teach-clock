@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { NAME_MAX_LENGTH, usePlayerStore } from '@/stores/player'
@@ -20,8 +20,11 @@ const title = computed(() => {
   return { head: text.slice(0, at + 1), last: text.slice(at + 1) }
 })
 const nameField = ref<HTMLInputElement | null>(null)
-/** Start was tried with no name; the first typed letter clears it. */
+/** Start was tried with no name; the first typed letter clears it, a space does not. */
 const nameMissing = ref(false)
+watch(draft, (name) => {
+  if (name.trim() !== '') nameMissing.value = false
+})
 
 function start() {
   if (draft.value.trim() === '') {
@@ -68,7 +71,6 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
           required
           :aria-invalid="nameMissing || undefined"
           :aria-describedby="nameMissing ? 'player-name-error' : undefined"
-          @input="nameMissing = false"
         />
         <p v-if="nameMissing" id="player-name-error" class="name-error" role="alert">
           {{ t('welcome.nameRequired') }}

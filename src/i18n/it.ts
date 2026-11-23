@@ -157,6 +157,7 @@ export default {
   },
   // The Privacy Page: the app screen (/privacy-policy) and the static privacy/index.html share it.
   privacy: {
+    language: 'Lingua',
     title: 'Informativa sulla privacy',
     updated: 'Aggiornata il:',
     version: 'Versione:',

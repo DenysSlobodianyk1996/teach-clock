@@ -67,6 +67,20 @@ test.describe('the static privacy/index.html, with JavaScript off', () => {
   })
 })
 
+test.describe('the static page, with JavaScript off', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('names its language links in all six languages', async ({ page }) => {
+    await page.goto('/privacy/')
+    const label = await page.getByRole('navigation').first().getAttribute('aria-label')
+    for (const lang of LOCALES) {
+      // The word for "language" in that language, as the header button's label has it.
+      const word = tIn(lang, 'header.languageNow', { language: '' }).replace(/[\s:]+$/u, '')
+      expect(label).toContain(word)
+    }
+  })
+})
+
 test('the static Privacy Page follows the device: light or dark', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/privacy/')
