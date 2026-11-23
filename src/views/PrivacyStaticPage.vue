@@ -40,7 +40,8 @@ import { LANGUAGES } from '@/i18n/locales'
 <style scoped>
 .languages {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 8px 20px;
   width: min(100%, 720px);
   margin: 0 auto;
   padding: 16px clamp(20px, 6vw, 64px) 0;

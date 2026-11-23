@@ -12,6 +12,7 @@ export type ListingLang = Locale
 const TAGLINE: Record<ListingLang, [string, string]> = {
   uk: ['Чотири ігри, щоб навчитися', 'читати й ставити час'],
   en: ['Four games to learn to read', 'and set the time'],
+  de: ['Vier Spiele, um die Uhr', 'lesen und stellen zu lernen'],
 }
 
 const template = () =>

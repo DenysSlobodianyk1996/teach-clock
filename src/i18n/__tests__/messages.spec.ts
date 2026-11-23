@@ -20,12 +20,13 @@ const at = (messages: object, path: string) =>
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()
 
 describe('the language list', () => {
-  it('is English then Ukrainian, each with its key and own name', () => {
+  it('is English, Ukrainian, German, each with its key and own name', () => {
     expect(LANGUAGES).toEqual([
       { code: 'en', key: 'EN', name: 'English' },
       { code: 'uk', key: 'УК', name: 'Українська' },
+      { code: 'de', key: 'DE', name: 'Deutsch' },
     ])
-    expect(LOCALES).toEqual(['en', 'uk'])
+    expect(LOCALES).toEqual(['en', 'uk', 'de'])
   })
 
   it('has interface text for exactly the languages on the list', () => {
@@ -54,5 +55,12 @@ describe('interface text', () => {
     const hint = t('teach.mistakes.minuteBetween', { number: 12, minute: 1 })
     expect(hint).not.toMatch(/\b1 minutes\b/)
     expect(hint).toContain('1')
+  })
+
+  it.each([1, 2, 12])('reads correctly in German with the count %i', (n) => {
+    const { t } = createAppI18n('de').global
+    const hint = t('teach.mistakes.minuteOn', { number: n, minute: n })
+    expect(hint).not.toMatch(/\b1 Minuten\b/)
+    expect(t('teach.mistakes.hourOn', { hour: n })).not.toMatch(/\b(der|dem|den) \d/)
   })
 })
