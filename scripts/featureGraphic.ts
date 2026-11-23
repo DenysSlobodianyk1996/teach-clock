@@ -13,6 +13,9 @@ const TAGLINE: Record<ListingLang, [string, string]> = {
   uk: ['Чотири ігри, щоб навчитися', 'читати й ставити час'],
   en: ['Four games to learn to read', 'and set the time'],
   de: ['Vier Spiele, um die Uhr', 'lesen und stellen zu lernen'],
+  fr: ['Quatre jeux pour apprendre', 'à lire et régler l’heure'],
+  it: ['Quattro giochi per imparare', 'a leggere e impostare l’ora'],
+  es: ['Cuatro juegos para aprender', 'a leer y poner la hora'],
 }
 
 const template = () =>

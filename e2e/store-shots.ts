@@ -25,7 +25,14 @@ function shotDir(project: string, lang: string) {
 }
 
 /** The Player's name in each language's screenshots. */
-const PLAYER_NAMES: Record<Locale, string> = { uk: 'Оля', en: 'Emma', de: 'Mia' }
+const PLAYER_NAMES: Record<Locale, string> = {
+  uk: 'Оля',
+  en: 'Emma',
+  de: 'Mia',
+  fr: 'Léa',
+  it: 'Sofia',
+  es: 'Lucía',
+}
 type Game = 'setTime' | 'dragArrows' | 'dragHours' | 'dragMinutes'
 
 /** Saves what the page shows as a PNG with no alpha channel. */

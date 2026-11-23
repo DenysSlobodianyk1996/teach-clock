@@ -64,11 +64,60 @@ const DE_MONTHS = [
   'Dezember',
 ]
 
+const FR_MONTHS = [
+  'janvier',
+  'février',
+  'mars',
+  'avril',
+  'mai',
+  'juin',
+  'juillet',
+  'août',
+  'septembre',
+  'octobre',
+  'novembre',
+  'décembre',
+]
+
+const IT_MONTHS = [
+  'gennaio',
+  'febbraio',
+  'marzo',
+  'aprile',
+  'maggio',
+  'giugno',
+  'luglio',
+  'agosto',
+  'settembre',
+  'ottobre',
+  'novembre',
+  'dicembre',
+]
+
+const ES_MONTHS = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+]
+
 /** Each language's written date; a listed language without one fails to build. */
 const DATES: Record<Locale, (day: number, month: number, year: number) => string> = {
   en: (day, month, year) => `${day} ${EN_MONTHS[month]} ${year}`,
   uk: (day, month, year) => `${day} ${UK_MONTHS[month]} ${year} року`,
   de: (day, month, year) => `${day}. ${DE_MONTHS[month]} ${year}`,
+  // The first of the month is an ordinal in French and Italian: "1er mars", "1º marzo".
+  fr: (day, month, year) => `${day === 1 ? '1er' : day} ${FR_MONTHS[month]} ${year}`,
+  it: (day, month, year) => `${day === 1 ? '1º' : day} ${IT_MONTHS[month]} ${year}`,
+  es: (day, month, year) => `${day} de ${ES_MONTHS[month]} de ${year}`,
 }
 
 /**

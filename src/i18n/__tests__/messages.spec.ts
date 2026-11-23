@@ -20,13 +20,16 @@ const at = (messages: object, path: string) =>
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()
 
 describe('the language list', () => {
-  it('is English, Ukrainian, German, each with its key and own name', () => {
+  it('is EN, УК, DE, FR, IT, ES, each with its key and own name', () => {
     expect(LANGUAGES).toEqual([
       { code: 'en', key: 'EN', name: 'English' },
       { code: 'uk', key: 'УК', name: 'Українська' },
       { code: 'de', key: 'DE', name: 'Deutsch' },
+      { code: 'fr', key: 'FR', name: 'Français' },
+      { code: 'it', key: 'IT', name: 'Italiano' },
+      { code: 'es', key: 'ES', name: 'Español' },
     ])
-    expect(LOCALES).toEqual(['en', 'uk', 'de'])
+    expect(LOCALES).toEqual(['en', 'uk', 'de', 'fr', 'it', 'es'])
   })
 
   it('has interface text for exactly the languages on the list', () => {
@@ -62,5 +65,54 @@ describe('interface text', () => {
     const hint = t('teach.mistakes.minuteOn', { number: n, minute: n })
     expect(hint).not.toMatch(/\b1 Minuten\b/)
     expect(t('teach.mistakes.hourOn', { hour: n })).not.toMatch(/\b(der|dem|den) \d/)
+  })
+
+  const ROMANCE = ['fr', 'it', 'es'] as const
+  const texts = (locale: (typeof ROMANCE)[number]) =>
+    keys(MESSAGES[locale]).map((path) => at(MESSAGES[locale], path))
+
+  it.each(ROMANCE)('%s puts no article or elision right before a number', (locale) => {
+    const bad = texts(locale).filter((text) =>
+      /(?:^|[\s(])(?:le|la|les|l['’]|il|lo|el|los|las|d['’]|dell['’]|all['’])\s*\{(?:hour|next|number|minute|n|right|total|time)\}/i.test(
+        text,
+      ),
+    )
+    expect(bad).toEqual([])
+  })
+
+  it.each(ROMANCE)('%s puts no counted noun right after a number', (locale) => {
+    const bad = texts(locale).filter((text) =>
+      /\{(?:hour|next|number|minute|n|right|total)\}\s+(?:minut|heure|ore\b|ora\b|hora|nombre|numer|númer|chiffre|cifra|plac|pos[éet])/i.test(
+        text,
+      ),
+    )
+    expect(bad).toEqual([])
+  })
+
+  it('French has a non-breaking space before ! ? ; : and inside « »', () => {
+    const bad = texts('fr').filter(
+      (text) =>
+        /[^\u00a0\u202f][!?;»]/.test(text) ||
+        /«[^\u00a0\u202f]/.test(text) ||
+        / :(?!\d)/.test(text),
+    )
+    expect(bad).toEqual([])
+  })
+
+  it.each([
+    ['fr', 'petite aiguille', 'grande aiguille'],
+    ['it', 'lancetta', 'lancetta'],
+    ['es', 'manecilla', 'manecilla'],
+  ] as const)('%s names the clock hands in its usual words', (locale, short, long) => {
+    expect(MESSAGES[locale].round.hourHand.toLowerCase()).toContain(short)
+    expect(MESSAGES[locale].round.minuteHand.toLowerCase()).toContain(long)
+  })
+
+  it.each([
+    ['fr', "Apprendre l'heure"],
+    ['it', "Impara l'ora"],
+    ['es', 'Aprende la hora'],
+  ] as const)('%s has its full Game Name', (locale, name) => {
+    expect(MESSAGES[locale].app.name).toBe(name)
   })
 })

@@ -125,6 +125,11 @@ describe('formatPrivacyDate', () => {
     expect(formatPrivacyDate('uk', '2026-11-13')).toBe('13 листопада 2026 року')
     expect(formatPrivacyDate('en', '2026-01-05')).toBe('5 January 2026')
     expect(formatPrivacyDate('de', '2026-03-05')).toBe('5. März 2026')
+    expect(formatPrivacyDate('fr', '2026-08-05')).toBe('5 août 2026')
+    expect(formatPrivacyDate('fr', '2026-03-01')).toBe('1er mars 2026')
+    expect(formatPrivacyDate('it', '2026-12-05')).toBe('5 dicembre 2026')
+    expect(formatPrivacyDate('it', '2026-03-01')).toBe('1º marzo 2026')
+    expect(formatPrivacyDate('es', '2026-03-05')).toBe('5 de marzo de 2026')
   })
 })
 

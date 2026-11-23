@@ -10,6 +10,21 @@ const browsers = [
     lang: 'de',
     lookup: ((key, params) => tIn('de', key, params)) as typeof t,
   },
+  {
+    locale: 'fr-FR',
+    lang: 'fr',
+    lookup: ((key, params) => tIn('fr', key, params)) as typeof t,
+  },
+  {
+    locale: 'it-IT',
+    lang: 'it',
+    lookup: ((key, params) => tIn('it', key, params)) as typeof t,
+  },
+  {
+    locale: 'es-ES',
+    lang: 'es',
+    lookup: ((key, params) => tIn('es', key, params)) as typeof t,
+  },
   // Not on the language list: English.
   { locale: 'pl-PL', lang: 'en', lookup: tEn },
 ] as const
