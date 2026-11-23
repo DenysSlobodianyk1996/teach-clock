@@ -49,10 +49,26 @@ const UK_MONTHS = [
   'грудня',
 ]
 
+const DE_MONTHS = [
+  'Januar',
+  'Februar',
+  'März',
+  'April',
+  'Mai',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'Dezember',
+]
+
 /** Each language's written date; a listed language without one fails to build. */
 const DATES: Record<Locale, (day: number, month: number, year: number) => string> = {
   en: (day, month, year) => `${day} ${EN_MONTHS[month]} ${year}`,
   uk: (day, month, year) => `${day} ${UK_MONTHS[month]} ${year} року`,
+  de: (day, month, year) => `${day}. ${DE_MONTHS[month]} ${year}`,
 }
 
 /**

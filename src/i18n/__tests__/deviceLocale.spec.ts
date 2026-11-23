@@ -12,6 +12,8 @@ describe('the interface language a device starts in', () => {
     [['pl'], 'en'],
     [['en-GB', 'uk'], 'en'],
     [['uk-UA'], 'uk'],
+    [['de-AT', 'en'], 'de'],
+    [['pl', 'de_DE', 'uk'], 'de'],
     [['UK-ua'], 'uk'],
     [['uk_UA'], 'uk'],
     [['pl_PL', 'en_US'], 'en'],

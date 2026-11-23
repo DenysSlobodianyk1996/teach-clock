@@ -7,6 +7,7 @@
 export const LANGUAGES = [
   { code: 'en', key: 'EN', name: 'English' },
   { code: 'uk', key: 'УК', name: 'Українська' },
+  { code: 'de', key: 'DE', name: 'Deutsch' },
 ] as const
 
 export type Locale = (typeof LANGUAGES)[number]['code']

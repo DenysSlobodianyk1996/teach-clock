@@ -124,6 +124,7 @@ describe('formatPrivacyDate', () => {
     expect(formatPrivacyDate('en', '2026-11-13')).toBe('13 November 2026')
     expect(formatPrivacyDate('uk', '2026-11-13')).toBe('13 листопада 2026 року')
     expect(formatPrivacyDate('en', '2026-01-05')).toBe('5 January 2026')
+    expect(formatPrivacyDate('de', '2026-03-05')).toBe('5. März 2026')
   })
 })
 

@@ -18,6 +18,8 @@ body {
   font-family: 'Nunito', system-ui, sans-serif;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
+  /* A long German word breaks rather than leave its card, button or heading (batch 28). */
+  overflow-wrap: break-word;
 }
 
 button,

@@ -1,10 +1,15 @@
-import { t, tEn, chooseLanguage } from './i18n.ts'
+import { t, tEn, tIn, chooseLanguage } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 
 /** A browser whose language list is `locale`, with what it should show and call the tab. */
 const browsers = [
   { locale: 'en-US', lang: 'en', lookup: tEn },
   { locale: 'uk-UA', lang: 'uk', lookup: t },
+  {
+    locale: 'de-DE',
+    lang: 'de',
+    lookup: ((key, params) => tIn('de', key, params)) as typeof t,
+  },
   // Not on the language list: English.
   { locale: 'pl-PL', lang: 'en', lookup: tEn },
 ] as const
