@@ -28,4 +28,16 @@ describe('Welcome screen', () => {
     await wrapper.get('[role="dialog"]').trigger('keydown', { key: 'Escape' })
     expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
   })
+
+  it('keeps the name error while only spaces are typed, and clears it on a letter', async () => {
+    const { wrapper } = await mountScreen(WelcomeView, '/')
+    await wrapper.get('form').trigger('submit')
+    expect(wrapper.get('[role="alert"]').text()).toBe(t('welcome.nameRequired'))
+
+    await wrapper.get('#player-name').setValue(' ')
+    expect(wrapper.find('[role="alert"]').exists()).toBe(true)
+
+    await wrapper.get('#player-name').setValue(' О')
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  })
 })

@@ -4,9 +4,11 @@
  * menu button: the arrows, Home and End move, Enter or Space chooses, Escape closes, and focus goes
  * back to the button. A clear layer behind the menu takes a tap outside, so that tap closes the
  * menu and changes nothing on the screen. While open it is in `openPopups`, so the Android back
- * button closes it too.
+ * button closes it too, and it holds the keyboard: no key reaches the Round behind it. Any navigation,
+ * even one a Round's Leave question stops, closes it and leaves focus where it is.
  */
 import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import HeaderButton from './HeaderButton.vue'
 import { trackPopup } from './openPopups'
@@ -30,18 +32,40 @@ async function openMenu(focusAt: 'current' | 'last' = 'current') {
   if (open.value) return
   open.value = true
   untrack = trackPopup(close)
+  window.addEventListener('keydown', holdKeys, true)
   await nextTick()
   const all = rows()
   const at = LANGUAGES.findIndex((language) => language.code === preferences.locale)
   all[focusAt === 'last' ? all.length - 1 : at]?.focus()
 }
 
-function close() {
+function shut() {
   if (!open.value) return
   open.value = false
   untrack?.()
   untrack = undefined
+  window.removeEventListener('keydown', holdKeys, true)
+}
+
+function close() {
+  if (!open.value) return
+  shut()
   button.value?.focus()
+}
+
+/** A key pressed with focus outside the open menu goes back to the menu, never to the screen. */
+function holdKeys(event: KeyboardEvent) {
+  if (menu.value?.contains(event.target as Node)) return
+  event.stopPropagation()
+  // Browser shortcuts such as reload keep working.
+  if (event.ctrlKey || event.metaKey || event.altKey) return
+  event.preventDefault()
+  rows()[LANGUAGES.findIndex((language) => language.code === preferences.locale)]?.focus()
+}
+
+/** A held Enter acts once: its repeats neither choose a row nor reopen the menu. */
+function ignoreRepeat(event: KeyboardEvent) {
+  if (event.repeat) event.preventDefault()
 }
 
 function choose(locale: Locale) {
@@ -63,7 +87,12 @@ function move(event: KeyboardEvent) {
   all[next]?.focus()
 }
 
-onBeforeUnmount(() => untrack?.())
+const stopWatchingRoutes = useRouter().afterEach(shut)
+
+onBeforeUnmount(() => {
+  stopWatchingRoutes()
+  shut()
+})
 </script>
 
 <template>
@@ -77,6 +106,7 @@ onBeforeUnmount(() => untrack?.())
       :aria-expanded="open"
       :aria-controls="open ? 'language-menu' : undefined"
       @click="openMenu()"
+      @keydown.enter="ignoreRepeat"
       @keydown.down.prevent="openMenu()"
       @keydown.up.prevent="openMenu('last')"
     >
@@ -90,9 +120,12 @@ onBeforeUnmount(() => untrack?.())
         class="menu"
         role="menu"
         :aria-label="label"
+        @mousedown.prevent
         @keydown="move"
+        @keydown.enter="ignoreRepeat"
         @keydown.esc="close"
         @keydown.tab="close"
+        @keydown.stop
       >
         <button
           v-for="language in LANGUAGES"
@@ -132,8 +165,8 @@ onBeforeUnmount(() => untrack?.())
   inset: 0;
   z-index: 4;
 }
-/* Below the button, its right edge on the button's. Never past the bottom system bar: a very short
-   screen scrolls the list inside. */
+/* Below the button, its right edge on the button's, as wide as its longest row. Never past the
+   bottom system bar: a very short screen scrolls the list inside. */
 .menu {
   position: absolute;
   z-index: 5;
@@ -142,7 +175,7 @@ onBeforeUnmount(() => untrack?.())
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: 184px;
+  width: max-content;
   max-height: calc(var(--safe-height) - var(--header-height) - 12px);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -169,6 +202,7 @@ onBeforeUnmount(() => untrack?.())
     700 16px 'Nunito',
     sans-serif;
   text-align: left;
+  white-space: nowrap;
   cursor: pointer;
 }
 .row:hover,
@@ -185,8 +219,7 @@ onBeforeUnmount(() => untrack?.())
   font-weight: 900;
 }
 .name {
-  flex: 1;
-  min-width: 0;
+  flex: 1 0 auto;
 }
 .tick {
   flex: none;

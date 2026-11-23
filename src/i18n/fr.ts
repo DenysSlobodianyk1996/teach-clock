@@ -162,6 +162,7 @@ export default {
   },
   // The Privacy Page: the app screen (/privacy-policy) and the static privacy/index.html share it.
   privacy: {
+    language: 'Langue',
     title: 'Politique de confidentialité',
     updated: 'Mise à jour\u00a0:',
     version: 'Version\u00a0:',
