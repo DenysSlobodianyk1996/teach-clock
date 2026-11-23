@@ -1,4 +1,4 @@
-import { t, tEn, startingWith, languageNow } from './i18n.ts'
+import { t, tEn, startingWith, chooseLanguage } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 
 test('after the first visit the whole app works with no internet', async ({ page, context }) => {
@@ -97,16 +97,16 @@ for (const { locale, lang, lookup } of browsers) {
   })
 }
 
-test('the installed name follows a УК/EN tap', async ({ page }) => {
+test('the installed name follows the language chosen', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
 
-  await page.getByRole('button', { name: languageNow('uk') }).click()
+  await chooseLanguage(page, 'uk', 'en')
   await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: tEn('app.name'), lang: 'en' })
 
-  await page.getByRole('button', { name: languageNow('en') }).click()
+  await chooseLanguage(page, 'en', 'uk')
   await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   expect(await linkedManifest(page)).toMatchObject({ name: t('app.name'), lang: 'uk' })
 })
@@ -135,12 +135,12 @@ test.describe('an installed Web App', () => {
     })
   })
 
-  test('links no manifest, so a УК/EN tap never renames it', async ({ page }) => {
+  test('links no manifest, so choosing a language never renames it', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
 
-    await page.getByRole('button', { name: languageNow('uk') }).click()
+    await chooseLanguage(page, 'uk', 'en')
     await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
   })
