@@ -9,7 +9,7 @@ export default {
   header: {
     home: 'Додому',
     leave: 'Вийти',
-    /** The round language button: it shows the language in use; a tap changes it. */
+    /** The round language button: it shows the language in use; a tap opens the list. */
     languageNow: 'Мова: {language}',
     /** The round theme button: it shows the theme in use (sun or moon); a tap switches it. */
     themeNow: 'Тема: {theme}',

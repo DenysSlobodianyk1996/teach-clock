@@ -1,5 +1,6 @@
 import { MESSAGES, type MessageSchema } from '../src/i18n/messages.ts'
 import { LOCALES, languageOf, type Locale } from '../src/i18n/locales.ts'
+import type { Page } from '@playwright/test'
 
 export { LOCALES, type Locale }
 
@@ -50,6 +51,18 @@ export function languageNow(locale: Locale): string {
 /** The key the header language button shows while `locale` is in use. */
 export function languageKey(locale: Locale): string {
   return languageOf(locale).key
+}
+
+/** A row of the open language menu, named by its key and own name. */
+export function languageRow(page: Page, locale: Locale) {
+  const { key, name } = languageOf(locale)
+  return page.getByRole('menuitemradio', { name: `${key} ${name}`, exact: true })
+}
+
+/** Opens the header's language menu, in use `from`, and chooses `to`. */
+export async function chooseLanguage(page: Page, from: Locale, to: Locale) {
+  await page.getByRole('button', { name: languageNow(from) }).click()
+  await languageRow(page, to).click()
 }
 
 /** Matches an accessible name that starts with `text`, such as a choice card's title. */

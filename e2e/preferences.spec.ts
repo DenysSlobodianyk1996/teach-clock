@@ -1,4 +1,4 @@
-import { t, tEn, languageNow, languageKey } from './i18n.ts'
+import { t, tEn, chooseLanguage, languageNow, languageKey } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 import { THEME_BG } from '../src/themeColors.ts'
 
@@ -29,7 +29,7 @@ async function saveTheme(page: Page, theme: string) {
 test('the language and theme survive a reload', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
-  await page.getByRole('button', { name: languageNow('uk') }).click()
+  await chooseLanguage(page, 'uk', 'en')
   await expect(page.getByRole('heading', { name: tEn('welcome.title') })).toBeVisible()
   await expect(themeButton(page, 'light', tEn)).toBeVisible()
 
@@ -62,7 +62,7 @@ test('language and theme are round buttons, at least 44 px to tap, showing what 
   }
   await theme.click()
   await expect(themeButton(page, 'dark').locator('.moon')).toBeVisible()
-  await language.click()
+  await chooseLanguage(page, 'uk', 'en')
   await expect(
     page.getByRole('button', {
       name: languageNow('en'),

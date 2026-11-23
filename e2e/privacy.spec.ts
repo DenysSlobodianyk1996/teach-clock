@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { t, tEn, languageNow, tIn, LOCALES } from './i18n.ts'
+import { t, tEn, chooseLanguage, tIn, LOCALES } from './i18n.ts'
 import { CONTACT_EMAIL, ISSUES_URL } from '../src/config.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
@@ -105,6 +105,6 @@ test('the Privacy Page screen fits a narrow phone and shows one text, in the int
   )
   expect(overflow).toBeLessThanOrEqual(0)
 
-  await page.getByRole('button', { name: languageNow('uk') }).click()
+  await chooseLanguage(page, 'uk', 'en')
   await expect(page.getByRole('heading', { level: 1, name: tEn('privacy.title') })).toBeVisible()
 })

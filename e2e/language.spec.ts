@@ -1,4 +1,4 @@
-import { t, tEn, languageNow } from './i18n.ts'
+import { t, tEn, chooseLanguage } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 
 /** A browser whose language list is `locale`, with what it should show and call the tab. */
@@ -57,9 +57,9 @@ for (const { locale, lang, lookup } of browsers) {
 test.describe('in an English browser', () => {
   test.use({ locale: 'en-US' })
 
-  test('a tap on УК is kept after a reload, before the app loads too', async ({ page }) => {
+  test('choosing УК is kept after a reload, before the app loads too', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('button', { name: languageNow('en') }).click()
+    await chooseLanguage(page, 'en', 'uk')
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
     await expect(description(page)).toHaveAttribute('content', t('app.description'))
 
