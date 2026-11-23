@@ -42,7 +42,8 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 1. **Welcome**: a short description of what the app teaches, a required name field (a red
    asterisk on its label), Start. Start is always enabled: with an empty name, or only spaces, Start
    or Enter marks the field red, focuses it and shows a short message, which the first typed
-   letter clears (batch 28). On a phone held
+   letter clears. The field has one border: red with an error, yellow while focused, even with
+   the error showing (batch 28). On a phone held
    upright it is one screen down to Start (a 360 × 640 phone too): the clock shrinks to the height
    left (about 120–230 px), the description is hidden and an ⓘ after the heading's last word opens
    it in an **Info Popup** headed by the Game Name.

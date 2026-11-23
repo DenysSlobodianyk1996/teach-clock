@@ -101,6 +101,15 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 
 60. As the author, I want a list of the phrases that most need a native check, so that a later review starts with clock words and Privacy text.
 
+### Follow-ups from review and desktop testing
+
+61. As a Player, I want keys pressed in the open language menu to stay in the menu, so that I cannot change or submit my Answer behind it.
+62. As a Player, I want the language menu to close when the screen changes, so that it never covers the next screen.
+63. As a Player, I want each language on one line in the menu, so that the list is easy to scan.
+64. As a Player on a desktop, I want the game to fill my window, so that there is no empty band or scrollbar in the middle of the screen.
+65. As a Player in a wide, low window, I want the Round's clock to fit the height, so that I can see it whole.
+66. As a Player, I want the name field to have one border, red for an error and yellow while I am in the field, so that its state is clear.
+
 ## Implementation Decisions
 
 - **Scope:** one batch on one integration branch, one PR to main. The how-to-play demo is not part of it.
@@ -120,6 +129,9 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 - **Release notes:** the Android workflow supplies notes for all six Play locales.
 - **Translations:** drafted by Claude and shipped in this batch. A review list in the batch folder records clock vocabulary, the day-half labels, Game Names, listings and Privacy text for a later native check.
 - **Release effect:** merging changes that touch build scripts triggers a signed upload to Play closed testing. New listings and images are added in Play Console by hand.
+- **Language menu width:** no fixed width. The menu is as wide as its longest row, and every row stays on one line.
+- **Desktop layout (amended after the first build):** above 768 px the play area fills the window under the header. The 4:3 card capped at 1024 px is removed. Below 1100 px the Settings Game cards go two by two, and a Round's clock is limited by the height as well as the width.
+- **Name field border:** one border, with no focus outline around it. Red with an error, yellow while focused, even with the error showing.
 
 ## Testing Decisions
 
@@ -130,6 +142,7 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 - Tests that use German as the unsupported language move to a language that stays unsupported, such as Polish.
 - Test helpers become locale-driven, so a new language joins the loops through the shared list.
 - No new test seams are introduced.
+- Tickets 10–13 are checked only with the specs they touch, by the author's choice. The full suites are not rerun after the review fixes.
 
 ## Out of Scope
 
@@ -147,3 +160,4 @@ Everything a Player or parent sees follows: the Game Name, the installed app's n
 - CI runs neither Vitest nor Playwright, so the batch's local checks are the safety net for moved store paths.
 - The Ukrainian Play title is already at 30 of 30 characters, so new titles need checking against the same limit.
 - Ticket order: required name; remove two-language assumptions; language menu; German and layout; French, Italian, Spanish; Game Names; Privacy; regroup store; store assets; sync docs.
+- Follow-up tickets: 10 review fixes; 11 language menu on one line; 12 desktop fills the window; 13 one border on the name field; 14 store and design after the desktop layout.
