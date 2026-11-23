@@ -29,6 +29,10 @@ on:
         description: 'Release notes in English (up to 500 characters)'
         required: true
         type: string
+      notes_de:
+        description: 'Release notes in German (up to 500 characters)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -134,6 +138,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           NOTES_UK: ${{ inputs.notes_uk }}
           NOTES_EN: ${{ inputs.notes_en }}
+          NOTES_DE: ${{ inputs.notes_de }}
         run: |
           if [ "$EVENT" = workflow_dispatch ]; then
             track=production
@@ -146,6 +151,7 @@ jobs:
             track=alpha
             NOTES_UK='Покращення та виправлення'
             NOTES_EN='Improvements and fixes'
+            NOTES_DE='Verbesserungen und Fehlerbehebungen'
           fi
           # A production run must not end green without a release; a push may, before setup.
           skip() {
@@ -182,6 +188,7 @@ jobs:
           }
           write_notes uk-UA "$NOTES_UK" notes_uk
           write_notes en-US "$NOTES_EN" notes_en
+          write_notes de-DE "$NOTES_DE" notes_de
           {
             echo "upload=true"
             echo "track=$track"
