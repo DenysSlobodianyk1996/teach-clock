@@ -94,7 +94,7 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
       </div>
     </form>
 
-    <div class="art" aria-hidden="true">
+    <div class="confetti-layer" aria-hidden="true">
       <svg class="confetti" viewBox="0 0 400 400">
         <circle cx="60" cy="70" r="10" fill="var(--accent)" />
         <circle cx="352" cy="110" r="7" fill="var(--hour)" />
@@ -117,6 +117,9 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
           fill="var(--face)"
         />
       </svg>
+    </div>
+
+    <div class="art" aria-hidden="true">
       <svg class="clock" viewBox="-100 -100 200 200">
         <circle class="c-face" r="94" />
         <circle class="c-tick" r="84" stroke-dasharray="1.2 7.5965" stroke-dashoffset="0.6" />
@@ -185,15 +188,33 @@ h1 {
   line-height: 1.2;
   color: var(--bad-text);
 }
+.intro {
+  grid-column: 1;
+  grid-row: 1;
+}
 .art {
+  grid-column: 2;
+  grid-row: 1;
   position: relative;
   display: flex;
   justify-content: center;
 }
+/* The confetti is wider and taller than the clock. Its own clipped layer in the clock's cell keeps
+   that overhang from giving <main> a scrollbar. Not on .welcome: it holds the fixed Info Popup. */
+.confetti-layer {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: stretch;
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
 .confetti {
   position: absolute;
+  left: -7.5%;
   width: 115%;
-  top: -5%;
+  /* Starts just above a full-size (380 px) clock, which the row centres. */
+  top: calc(50% - 209px);
 }
 .clock {
   position: relative;
@@ -213,7 +234,7 @@ h1 {
   .art {
     order: -1;
   }
-  .confetti {
+  .confetti-layer {
     display: none;
   }
   .intro {

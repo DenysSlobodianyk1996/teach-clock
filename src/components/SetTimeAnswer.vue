@@ -227,6 +227,25 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 .submit {
   width: 100%;
 }
+/* A short desktop window: smaller boxes and gaps, so Submit stays on the screen. */
+@media (min-width: 769px) and (min-height: 501px) and (max-height: 760px) and (orientation: landscape) {
+  .answer {
+    gap: 8px;
+  }
+  .entry {
+    margin-bottom: 0;
+  }
+  .timebox {
+    height: 64px;
+    font-size: 40px;
+  }
+  .colon {
+    font-size: 40px;
+  }
+  .submit {
+    min-height: 48px;
+  }
+}
 @media (--phone) {
   .answer {
     gap: 8px;

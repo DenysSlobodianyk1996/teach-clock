@@ -255,6 +255,45 @@ h1 {
   }
 }
 
+/* A short desktop window: tighter cards and gaps, so Play stays on the screen with nothing to scroll. */
+@media (min-width: 769px) and (min-height: 501px) and (max-height: 860px) and (orientation: landscape) {
+  .settings {
+    gap: 8px;
+    padding-bottom: 14px;
+  }
+  h1 {
+    font-size: 26px;
+  }
+  .group {
+    gap: 4px;
+  }
+  .group legend {
+    margin-bottom: 4px;
+  }
+  .row {
+    gap: 10px;
+  }
+  .row :deep(.choice) {
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: 18px;
+  }
+  .row :deep(.choice svg) {
+    width: 40px;
+    height: 40px;
+  }
+  .row :deep(.choice b) {
+    font-size: 17px;
+  }
+  .row :deep(.description) {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+  .actions .btn {
+    min-height: 48px;
+  }
+}
+
 @media (--phone) {
   .settings {
     padding: 4px 20px 24px;
