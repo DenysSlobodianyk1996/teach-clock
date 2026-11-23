@@ -144,8 +144,8 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 40px;
   align-items: center;
-  padding: 0 clamp(24px, 6vw, 64px) 40px;
-  padding: 0 clamp(24px, 6cqi, 64px) 40px;
+  padding: 0 clamp(24px, 6vw, 48px) 40px;
+  padding: 0 clamp(24px, 6cqi, 48px) 40px;
 }
 .intro {
   display: flex;

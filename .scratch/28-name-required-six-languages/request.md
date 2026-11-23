@@ -28,4 +28,6 @@ In general, for 768 + px layout strange - width should be full
 
 Then: "maybe do max width area like 1200 px etc for main area. like on left right will be free space"
 
+Then, with `images/12-very-wide-window.png`: "to not have such case"
+
 On checks: "don't run such full tests, you just burn tokens", then "just do fixes, don't review them. it was fine to just catch them, fix, and dont retest".

@@ -55,9 +55,10 @@ const { t } = useI18n()
   gap: 10px;
 }
 
+/* A wide window: the brand and tools line up with the screen's content column (AppFrame). */
 @media (min-width: 1100px) {
   .hdr {
-    padding-inline: 40px;
+    padding-inline: max(40px, calc((100% - var(--content-max)) / 2 + 48px));
   }
 }
 /* Phones: room only for icons, as in the design. Names stay for screen readers. */

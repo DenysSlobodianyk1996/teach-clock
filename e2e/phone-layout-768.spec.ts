@@ -84,6 +84,10 @@ test.describe('1920 × 1080, a large window', () => {
     expect(main.width).toBeCloseTo(1920, 0)
     expect(content.width).toBeCloseTo(1200, 0)
     expect(content.left).toBeCloseTo(360, 0)
+    const brand = await box(page.locator('header .brand'))
+    const tools = await box(page.locator('header .hdr-tools'))
+    expect(brand.left, 'the header lines up with the content').toBeCloseTo(408, 0)
+    expect(tools.right).toBeCloseTo(1512, 0)
   })
 })
 
