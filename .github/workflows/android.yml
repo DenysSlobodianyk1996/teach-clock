@@ -29,6 +29,22 @@ on:
         description: 'Release notes in English (up to 500 characters)'
         required: true
         type: string
+      notes_de:
+        description: 'Release notes in German (up to 500 characters)'
+        required: true
+        type: string
+      notes_fr:
+        description: 'Release notes in French (up to 500 characters)'
+        required: true
+        type: string
+      notes_it:
+        description: 'Release notes in Italian (up to 500 characters)'
+        required: true
+        type: string
+      notes_es:
+        description: 'Release notes in Spanish (up to 500 characters)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -134,6 +150,10 @@ jobs:
           EVENT: ${{ github.event_name }}
           NOTES_UK: ${{ inputs.notes_uk }}
           NOTES_EN: ${{ inputs.notes_en }}
+          NOTES_DE: ${{ inputs.notes_de }}
+          NOTES_FR: ${{ inputs.notes_fr }}
+          NOTES_IT: ${{ inputs.notes_it }}
+          NOTES_ES: ${{ inputs.notes_es }}
         run: |
           if [ "$EVENT" = workflow_dispatch ]; then
             track=production
@@ -146,6 +166,10 @@ jobs:
             track=alpha
             NOTES_UK='Покращення та виправлення'
             NOTES_EN='Improvements and fixes'
+            NOTES_DE='Verbesserungen und Fehlerbehebungen'
+            NOTES_FR='Améliorations et corrections'
+            NOTES_IT='Miglioramenti e correzioni'
+            NOTES_ES='Mejoras y correcciones'
           fi
           # A production run must not end green without a release; a push may, before setup.
           skip() {
@@ -182,6 +206,10 @@ jobs:
           }
           write_notes uk-UA "$NOTES_UK" notes_uk
           write_notes en-US "$NOTES_EN" notes_en
+          write_notes de-DE "$NOTES_DE" notes_de
+          write_notes fr-FR "$NOTES_FR" notes_fr
+          write_notes it-IT "$NOTES_IT" notes_it
+          write_notes es-ES "$NOTES_ES" notes_es
           {
             echo "upload=true"
             echo "track=$track"

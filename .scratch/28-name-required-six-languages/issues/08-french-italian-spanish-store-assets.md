@@ -4,12 +4,12 @@
 
 **Blocked by:** 05 French, Italian and Spanish end to end, 07 German store assets
 
-**Status:** todo
+**Status:** done
 
-- [ ] Each folder has a listing within Play's 30 / 80 / 4000 limits, with correct stated counts
-- [ ] Each title starts with that language's Game Name
-- [ ] Each feature graphic's title and tagline fit beside the clock art at 1024 × 500
-- [ ] Store-shots produces 24 screenshots and 1 feature graphic per language for all six
-- [ ] The Android workflow supplies release notes for all six Play locales within the limit
-- [ ] The release wizard covers all six listings with correct paths
-- [ ] French, Italian and Spanish screenshots and graphics are checked by eye for clipping
+- [x] Each folder has a listing within Play's 30 / 80 / 4000 limits, with correct stated counts
+- [x] Each title starts with that language's Game Name
+- [x] Each feature graphic's title and tagline fit beside the clock art at 1024 × 500
+- [x] Store-shots produces 24 screenshots and 1 feature graphic per language for all six
+- [x] The Android workflow supplies release notes for all six Play locales within the limit
+- [x] The release wizard covers all six listings with correct paths
+- [x] French, Italian and Spanish screenshots and graphics are checked by eye for clipping

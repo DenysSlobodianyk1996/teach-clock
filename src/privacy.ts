@@ -1,3 +1,5 @@
+import type { Locale } from './i18n/locales.ts'
+
 /**
  * The Privacy Page's text lives in i18n (`privacy.*`, one per language) and its look in
  * PrivacyContent.vue, shown in the app by PrivacyView (/privacy-policy) and rendered into the static
@@ -15,7 +17,7 @@ export const PRIVACY_UPDATED: string = import.meta.env.VITE_PRIVACY_UPDATED ?? '
  */
 export const APP_VERSION: string = import.meta.env.VITE_APP_VERSION ?? '1.0.0'
 
-export type PrivacyLocale = 'uk' | 'en'
+export type PrivacyLocale = Locale
 
 const EN_MONTHS = [
   'January',
@@ -47,14 +49,82 @@ const UK_MONTHS = [
   'грудня',
 ]
 
+const DE_MONTHS = [
+  'Januar',
+  'Februar',
+  'März',
+  'April',
+  'Mai',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'Dezember',
+]
+
+const FR_MONTHS = [
+  'janvier',
+  'février',
+  'mars',
+  'avril',
+  'mai',
+  'juin',
+  'juillet',
+  'août',
+  'septembre',
+  'octobre',
+  'novembre',
+  'décembre',
+]
+
+const IT_MONTHS = [
+  'gennaio',
+  'febbraio',
+  'marzo',
+  'aprile',
+  'maggio',
+  'giugno',
+  'luglio',
+  'agosto',
+  'settembre',
+  'ottobre',
+  'novembre',
+  'dicembre',
+]
+
+const ES_MONTHS = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+]
+
+/** Each language's written date; a listed language without one fails to build. */
+const DATES: Record<Locale, (day: number, month: number, year: number) => string> = {
+  en: (day, month, year) => `${day} ${EN_MONTHS[month]} ${year}`,
+  uk: (day, month, year) => `${day} ${UK_MONTHS[month]} ${year} року`,
+  de: (day, month, year) => `${day}. ${DE_MONTHS[month]} ${year}`,
+  // The first of the month is an ordinal in French and Italian: "1er mars", "1º marzo".
+  fr: (day, month, year) => `${day === 1 ? '1er' : day} ${FR_MONTHS[month]} ${year}`,
+  it: (day, month, year) => `${day === 1 ? '1º' : day} ${IT_MONTHS[month]} ${year}`,
+  es: (day, month, year) => `${day} de ${ES_MONTHS[month]} de ${year}`,
+}
+
 /**
  * "19 листопада 2026 року" / "19 November 2026". Spelled out here rather than with Intl, so the
  * static page built in Node and the app print exactly the same words.
  */
 export function formatPrivacyDate(locale: PrivacyLocale, iso: string = PRIVACY_UPDATED): string {
   const [year, month, day] = iso.split('-').map(Number)
-  const index = (month ?? 1) - 1
-  return locale === 'en'
-    ? `${day} ${EN_MONTHS[index]} ${year}`
-    : `${day} ${UK_MONTHS[index]} ${year} року`
+  return DATES[locale](day!, (month ?? 1) - 1, year!)
 }

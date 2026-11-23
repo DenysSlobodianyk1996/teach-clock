@@ -25,6 +25,6 @@ describe('the interface text before the app reads the Preferences', () => {
 
   it('falls back to English for text a language lacks', () => {
     const { t: text } = createAppI18n('uk').global
-    expect(text('app.name', {}, { locale: 'de' as 'uk' })).toBe(tEn('app.name'))
+    expect(text('app.name', {}, { locale: 'pl' as 'uk' })).toBe(tEn('app.name'))
   })
 })

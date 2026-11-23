@@ -2,7 +2,7 @@
 
 A new personal Play account can't publish to production until a closed test has had **at least 12 testers opted in, continuously, for at least 14 days**. Then you press **Apply for production**, and Google usually answers within 7 days. Source: https://support.google.com/googleplay/android-developer/answer/14151465 (checked 2026-11-13). The full steps are in [`../android-release.md`](../android-release.md) §9–§13; `bash scripts/release-wizard.sh` fills in the Key dates below as you go.
 
-What to send testers (testing instructions, the feedback you want, known issues): [`testers.en.md`](testers.en.md), [`testers.uk.md`](testers.uk.md).
+What to send testers (testing instructions, the feedback you want, known issues): [`en/testers.md`](en/testers.md), [`uk/testers.md`](uk/testers.md).
 
 > **This repo is public.** Don't write testers' names or emails here. Use labels (T1, T2…). The real list lives in the Google Group, and in a private note if you want one.
 

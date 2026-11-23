@@ -18,11 +18,20 @@ body {
   font-family: 'Nunito', system-ui, sans-serif;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
+  /* A long German word breaks rather than leave its card, button or heading (batch 28). */
+  overflow-wrap: break-word;
 }
 
 button,
 input {
   font-family: inherit;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 :focus-visible {
@@ -105,6 +114,11 @@ input {
   font:
     800 26px 'Nunito',
     sans-serif;
+}
+.field:focus,
+.field:focus-visible {
+  outline: none;
+  border-color: var(--accent);
 }
 .field::placeholder {
   color: rgba(42, 38, 51, 0.45);

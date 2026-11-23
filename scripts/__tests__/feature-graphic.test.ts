@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { featureGraphicSvg } from '../featureGraphic.ts'
+import { STORE_LANGUAGES } from '../storeLanguages.ts'
 import { t, tEn } from '../../src/test/i18n.ts'
 
 /** The Game Name's words in `locale`, one title line each. */
@@ -30,8 +31,27 @@ describe('Feature graphic', () => {
     expect(tagline.join(' ')).toBe('Four games to learn to read and set the time')
   })
 
-  it('has the same layout in both languages', () => {
+  it('in German shows the Game Name, a word per line, and its tagline', () => {
+    expect(lines(featureGraphicSvg('de'))).toEqual([
+      'Uhr',
+      'lernen',
+      'Vier Spiele, um die Uhr',
+      'lesen und stellen zu lernen',
+    ])
+  })
+
+  it.each([
+    ['fr', 'Apprendre', "l'heure", 'Quatre jeux pour apprendre', 'à lire et régler l’heure'],
+    ['it', 'Impara', "l'ora", 'Quattro giochi per imparare', 'a leggere e impostare l’ora'],
+    ['es', 'Aprende', 'la hora', 'Cuatro juegos para aprender', 'a leer y poner la hora'],
+  ] as const)('in %s shows the Game Name over two lines and its tagline', (lang, ...expected) => {
+    expect(lines(featureGraphicSvg(lang))).toEqual(expected)
+  })
+
+  it('has the same layout in every store language', () => {
     const layout = (svg: string) => svg.replace(/>[^<]*</g, '><')
-    expect(layout(featureGraphicSvg('en'))).toBe(layout(featureGraphicSvg('uk')))
+    for (const lang of STORE_LANGUAGES) {
+      expect(layout(featureGraphicSvg(lang))).toBe(layout(featureGraphicSvg('en')))
+    }
   })
 })

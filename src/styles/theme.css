@@ -26,6 +26,8 @@
   --good-text: #34834e;
   --help: #e9b928;
   --bad: #c2453f;
+  /* Red text, such as the name error on Welcome; --bad is for borders and shapes. */
+  --bad-text: #a4302b;
   --todo: rgba(31, 45, 58, 0.18);
   --scrim: rgba(31, 45, 58, 0.45);
   --pop: #fffaf0;
@@ -33,7 +35,7 @@
   --shadow: 0 8px 0 rgba(31, 45, 58, 0.08), 0 16px 32px rgba(31, 45, 58, 0.14);
 
   --header-height: 72px;
-  --stage-max: 1024px;
+  --content-max: 1200px;
 
   /* The system bars and a camera cutout drawn over the page (batch 21). The Android App is edge to
      edge: Capacitor's SystemBars puts their sizes in --safe-area-inset-* (`insetsHandling: 'css'`,
@@ -69,6 +71,7 @@
   --tile: #f1e6cf;
   --good: #7fd49a;
   --good-text: #a2e0b5;
+  --bad-text: #ffa59c;
   --help: #f5cf5a;
   --todo: rgba(238, 242, 246, 0.24);
   --scrim: rgba(4, 8, 12, 0.7);

@@ -2,7 +2,7 @@
  * The phone layout starts at 768px wide or less, or when the window is taller than wide
  * (src/styles/media.ts). Between 601px and 768px, and on an upright tablet, a Drag Arrows Round
  * stacks: the clock fills the width and no big empty band is left under the answer. Wider landscape
- * windows keep the 4:3 play area, and sideways phones keep the clock and the answer side by side.
+ * windows fill the screen, and sideways phones keep the clock and the answer side by side.
  */
 import { t, startingWith } from './i18n.ts'
 import { expect, test, type Locator, type Page } from '@playwright/test'
@@ -61,17 +61,45 @@ for (const viewport of stacked) {
 test.describe('1024 × 768, a wider landscape window', () => {
   test.use({ viewport: { width: 1024, height: 768 } })
 
-  test('keeps the 4:3 play area, the clock beside the answer', async ({ page }) => {
+  test('fills the window, the clock beside the answer', async ({ page }) => {
     await toDragArrowsRound(page)
-    const stage = await page
-      .locator('.stage')
-      .evaluate((e) => e.getBoundingClientRect().width / e.getBoundingClientRect().height)
-    expect(stage).toBeCloseTo(4 / 3, 1)
+    const stage = await box(page.locator('.stage'))
+    expect(stage.right - stage.left).toBeCloseTo(1024, 0)
+    expect(stage.bottom).toBeCloseTo(768, 0)
     const clock = await box(page.locator('.clock-side'))
     const answer = await box(page.locator('.answer-side'))
     expect(answer.left, 'the answer sits right of the clock').toBeGreaterThanOrEqual(
       clock.right - 1,
     )
+  })
+})
+
+test.describe('1920 × 1080, a large window', () => {
+  test.use({ viewport: { width: 1920, height: 1080 } })
+
+  test('centres the content at 1200 px, with <main> full width', async ({ page }) => {
+    await toDragArrowsRound(page)
+    const main = await box(page.locator('main'))
+    const content = await box(page.locator('main > *').first())
+    expect(main.width).toBeCloseTo(1920, 0)
+    expect(content.width).toBeCloseTo(1200, 0)
+    expect(content.left).toBeCloseTo(360, 0)
+    const brand = await box(page.locator('header .brand'))
+    const tools = await box(page.locator('header .hdr-tools'))
+    expect(brand.left, 'the header lines up with the content').toBeCloseTo(408, 0)
+    expect(tools.right).toBeCloseTo(1512, 0)
+  })
+
+  test('keeps a drag Game in the column, its clock no bigger than half of it', async ({ page }) => {
+    await page.goto('/')
+    await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+    await page.getByRole('button', { name: t('welcome.start') }).click()
+    await page.getByRole('radio').first().check()
+    await page.getByRole('button', { name: t('settings.play') }).click()
+    const face = page.locator('.number-face')
+    await expect(face).toBeVisible()
+    expect((await box(page.locator('main > *').first())).width).toBeCloseTo(1200, 0)
+    expect((await box(face)).width).toBeLessThanOrEqual(600)
   })
 })
 

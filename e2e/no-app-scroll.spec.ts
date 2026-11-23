@@ -3,7 +3,7 @@
  * and only <main> between them may scroll. On the phones below, no screen scrolls at all: an Oppo A
  * between its bars (360 × 728), a small phone (360 × 640) and a larger Display size (320 × 640).
  */
-import { startingWith, t, tEn } from './i18n.ts'
+import { startingWith, t, tIn, LOCALES } from './i18n.ts'
 import { expect, test, type Page } from '@playwright/test'
 
 type Lookup = typeof t
@@ -37,10 +37,9 @@ for (const viewport of [
   { width: 360, height: 640 },
   { width: 320, height: 640 },
 ]) {
-  for (const [language, lookup] of [
-    ['uk', t],
-    ['en', tEn],
-  ] as const) {
+  for (const language of LOCALES) {
+    const lookup: typeof t = (key, params) => tIn(language, key, params)
+
     test.describe(`a ${viewport.width} × ${viewport.height} phone in ${language}`, () => {
       test.use({ viewport })
 
@@ -61,6 +60,13 @@ for (const viewport of [
         expect(footer.y + footer.height, 'the Footer on the screen').toBeLessThanOrEqual(
           viewport.height,
         )
+      })
+
+      test('Welcome with the name error showing fits', async ({ page }) => {
+        await page.goto('/')
+        await page.getByRole('button', { name: lookup('welcome.start') }).click()
+        await expect(page.getByRole('alert')).toHaveText(lookup('welcome.nameRequired'))
+        await expectNoScroll(page, 'Welcome with the error')
       })
 
       for (const game of GAMES) {

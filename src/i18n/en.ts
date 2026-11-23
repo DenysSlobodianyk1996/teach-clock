@@ -15,14 +15,13 @@ export default {
     themeNow: 'Theme: {theme}',
   },
   themes: { light: 'light', dark: 'dark' },
-  languages: { uk: 'Українська', en: 'English' },
-  languageCodes: { uk: 'УК', en: 'EN' },
   welcome: {
     title: 'Hi! Let’s learn to read a clock',
     intro:
       'Four short games: put the hours, then the minutes, on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
     nameLabel: 'What’s your name?',
     namePlaceholder: 'Your name',
+    nameRequired: 'Type your name to start',
     start: 'Start',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
@@ -88,7 +87,7 @@ export default {
       minuteZero: 'The long hand points at 12 — so it’s {time} exactly.',
       minuteOn: 'The long hand points at {number}. Count in fives: that’s {minute} minutes.',
       minuteBetween:
-        'The long hand is just past {number}. Count the small marks — that’s {minute} minutes.',
+        'The long hand is just past {number}. Count the small marks — that’s minute {minute}.',
       swapped: 'Don’t mix up the hands: the short one shows the hours, the long one the minutes.',
       both: 'The short hand shows the hours ({hour}) and the long hand the minutes ({minute}).',
     },
@@ -147,6 +146,7 @@ export default {
   },
   // The Privacy Page: the app screen (/privacy-policy) and the static privacy/index.html share it.
   privacy: {
+    language: 'Language',
     title: 'Privacy policy',
     updated: 'Updated:',
     version: 'Version:',

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { t, tEn } from './i18n.ts'
+import { t, tEn, chooseLanguage, tIn, LOCALES } from './i18n.ts'
 import { CONTACT_EMAIL, ISSUES_URL } from '../src/config.ts'
 import { THEME_BG } from '../src/themeColors.ts'
 
@@ -34,10 +34,10 @@ test.describe('the static privacy/index.html, with JavaScript off', () => {
     // English comes first.
     expect((await en.boundingBox())!.y).toBeLessThan((await uk.boundingBox())!.y)
 
-    for (const [article, back, createdBy] of [
-      [uk, t('privacy.back'), t('privacy.createdBy')],
-      [en, tEn('privacy.back'), tEn('privacy.createdBy')],
-    ] as const) {
+    for (const lang of LOCALES) {
+      const article = page.locator(`article[lang="${lang}"]`)
+      const back = tIn(lang, 'privacy.back')
+      const createdBy = tIn(lang, 'privacy.createdBy')
       await expect(article.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute(
         'href',
         `mailto:${CONTACT_EMAIL}`,
@@ -67,6 +67,20 @@ test.describe('the static privacy/index.html, with JavaScript off', () => {
   })
 })
 
+test.describe('the static page, with JavaScript off', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('names its language links in all six languages', async ({ page }) => {
+    await page.goto('/privacy/')
+    const label = await page.getByRole('navigation').first().getAttribute('aria-label')
+    for (const lang of LOCALES) {
+      // The word for "language" in that language, as the header button's label has it.
+      const word = tIn(lang, 'header.languageNow', { language: '' }).replace(/[\s:]+$/u, '')
+      expect(label).toContain(word)
+    }
+  })
+})
+
 test('the static Privacy Page follows the device: light or dark', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/privacy/')
@@ -77,12 +91,12 @@ test('the static Privacy Page follows the device: light or dark', async ({ page 
 })
 
 test('the static Privacy Page links back to the web game, in each language', async ({ page }) => {
-  for (const [lang, back] of [
-    ['en', tEn('privacy.back')],
-    ['uk', t('privacy.back')],
-  ] as const) {
+  for (const lang of LOCALES) {
     await page.goto('/privacy/index.html')
-    await page.locator(`article[lang="${lang}"]`).getByRole('link', { name: back }).click()
+    await page
+      .locator(`article[lang="${lang}"]`)
+      .getByRole('link', { name: tIn(lang, 'privacy.back') })
+      .click()
     await expect(page.getByRole('heading', { name: t('welcome.title') })).toBeVisible()
   }
 })
@@ -105,8 +119,6 @@ test('the Privacy Page screen fits a narrow phone and shows one text, in the int
   )
   expect(overflow).toBeLessThanOrEqual(0)
 
-  await page
-    .getByRole('button', { name: t('header.languageNow', { language: t('languages.uk') }) })
-    .click()
+  await chooseLanguage(page, 'uk', 'en')
   await expect(page.getByRole('heading', { level: 1, name: tEn('privacy.title') })).toBeVisible()
 })

@@ -26,6 +26,7 @@
   --good-text: #34834e;
   --help: #e9b928;
   --bad: #c2453f;
+  --bad-text: #a4302b;
   --todo: rgba(31, 45, 58, 0.18);
   --scrim: rgba(31, 45, 58, 0.45);
   --pop: #fffaf0;
@@ -44,6 +45,7 @@
 .tc *, .tc *::before, .tc *::after { box-sizing: border-box; }
 
 .tc.dark {
+  --bad-text: #ffa59c;
   --bg: #121a24;
   --bg-deep: #0c121a;
   --surface: #1c2633;
@@ -205,3 +207,17 @@
 .ftr-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; }
 .ftr-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 4px; font-size: 15px; font-weight: 700; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
 .ftr-links a:hover { color: var(--text); }
+
+/* Required name on Welcome (batch 28). */
+.required-mark { color: var(--bad-text); }
+.field.field-error { border-color: var(--bad); }
+.name-error { margin: -2px 0 0; font-size: 16px; font-weight: 800; line-height: 1.2; color: var(--bad-text); }
+
+/* The Language Menu, under the header's language button (batch 28). */
+.lang-wrap { position: relative; }
+.lang-menu { position: absolute; z-index: 5; top: calc(100% + 6px); right: 0; display: flex; flex-direction: column; box-sizing: border-box; width: max-content; padding: 6px; border: 2px solid var(--line); border-radius: 20px; background: var(--pop); color: var(--pop-ink); box-shadow: var(--shadow); }
+.lang-row { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 0 10px; border: 0; border-radius: 14px; background: transparent; color: inherit; font: 700 16px "Nunito", sans-serif; text-align: left; white-space: nowrap; }
+.lang-row[aria-checked="true"] { background: var(--surface-2); }
+.lang-key { flex: none; width: 28px; font-weight: 900; }
+.lang-name { flex: 1 0 auto; }
+.lang-tick { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }

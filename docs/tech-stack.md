@@ -22,7 +22,7 @@ No physics, no game loop, no backend.
 | Confetti | **Own SVG pieces** with a CSS drop (`SummaryConfetti.vue`) | Summary celebration; no library needed |
 | State | **Pinia** | Current Round, Settings, Preferences |
 | Routing | **Vue Router** | Welcome, Settings, Round, Summary |
-| Interface text | **vue-i18n** | `uk` default, `en` |
+| Interface text | **vue-i18n** | Six languages from `src/i18n/locales.ts` (en, uk, de, fr, it, es), all bundled; `uk` is the source shape, `en` the fallback |
 | Preferences + last name | `localStorage` (via VueUse `useStorage`) | The only thing kept on the device |
 | Themes | CSS custom properties: light on `:root`, dark under `[data-theme='dark']` | Each background is also in `src/themeColors.ts` for the manifest, icons and pre-paint script; a test keeps the two equal |
 | Breakpoints | **Custom media** such as `@media (--phone)`, expanded at build time by a few-line PostCSS plugin in `src/styles/media.ts` | One definition for every screen. No new dependency: `postcss-custom-media` / `postcss-preset-env` would add packages for one replace, and Lightning CSS custom media can't see a definition from another `<style>` block |

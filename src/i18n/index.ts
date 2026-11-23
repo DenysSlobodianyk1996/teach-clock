@@ -1,10 +1,9 @@
 import { createI18n } from 'vue-i18n'
-import uk from './uk'
-import en from './en'
+import { MESSAGES, type MessageSchema } from './messages'
 import type { Locale } from './locales'
 import { startingLocale } from '../stores/preferences'
 
-export type MessageSchema = typeof uk
+export type { MessageSchema }
 
 /**
  * The interface text, starting in `locale`: by default the language the Preferences give before
@@ -16,6 +15,6 @@ export function createAppI18n(locale: Locale = startingLocale()) {
     legacy: false,
     locale,
     fallbackLocale: 'en',
-    messages: { uk, en },
+    messages: MESSAGES,
   })
 }
