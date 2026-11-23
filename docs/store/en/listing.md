@@ -1,6 +1,6 @@
 # Play listing: English (default language, `en-US`)
 
-Paste each block into Play Console › Grow users › Store presence › Main store listing. English is the default language, shown to everyone whose language has no listing of its own; the Ukrainian translation is in [`uk/listing.md`](../uk/listing.md). The title starts with the Game Name, "Teach Clock". Feature graphic: `feature-graphic.png`; screenshots: `phone/`, `tablet-7/`, `tablet-10/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
+Paste each block into Play Console › Grow users › Store presence › Main store listing. English is the default language, shown to everyone whose language has no listing of its own; the translations are in the [`uk`](../uk/listing.md), [`de`](../de/listing.md), [`fr`](../fr/listing.md), [`it`](../it/listing.md) and [`es`](../es/listing.md) folders. The title starts with the Game Name, "Teach Clock". Feature graphic: `feature-graphic.png`; screenshots: `phone/`, `tablet-7/`, `tablet-10/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
 
 Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text.
 
@@ -16,7 +16,7 @@ Teach Clock — clock for kids
 A calm game where kids learn to read a clock and set its hands. No ads.
 ```
 
-## Full description (2260 / 4000)
+## Full description (2314 / 4000)
 
 ```text
 Teach Clock is a calm game that helps children understand an ordinary clock with hands: where the numbers go, how to count the minutes, how to set the hands to a time, and how to read what time the clock shows.
@@ -46,7 +46,7 @@ CALM AND SAFE
 • Works offline from the very first launch.
 • No timer and no sounds: your child plays at their own pace.
 • For phones and tablets, upright or sideways.
-• Ukrainian and English, and two themes, light and dark: it follows the device, and one tap switches.
+• In English, Ukrainian, German, French, Italian and Spanish, with two themes, light and dark: both follow the device, and you can switch them in the game.
 
 Have fun, and enjoy the time together!
 ```

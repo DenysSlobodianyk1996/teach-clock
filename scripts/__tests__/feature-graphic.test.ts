@@ -40,6 +40,14 @@ describe('Feature graphic', () => {
     ])
   })
 
+  it.each([
+    ['fr', 'Apprendre', "l'heure", 'Quatre jeux pour apprendre', 'à lire et régler l’heure'],
+    ['it', 'Impara', "l'ora", 'Quattro giochi per imparare', 'a leggere e impostare l’ora'],
+    ['es', 'Aprende', 'la hora', 'Cuatro juegos para aprender', 'a leer y poner la hora'],
+  ] as const)('in %s shows the Game Name over two lines and its tagline', (lang, ...expected) => {
+    expect(lines(featureGraphicSvg(lang))).toEqual(expected)
+  })
+
   it('has the same layout in every store language', () => {
     const layout = (svg: string) => svg.replace(/>[^<]*</g, '><')
     for (const lang of STORE_LANGUAGES) {
