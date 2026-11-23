@@ -694,16 +694,16 @@ stage_listing() {
   say "  ${BOLD}Українська – uk${RESET}."
   pause
   say "${BOLD}English (en-US), the default${RESET}, for every language without its own listing:"
-  step "App name, short and full description: the text blocks in docs/store/listing.en.md"
-  step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/feature-graphic.en.png"
-  step "Phone screenshots: docs/store/screenshots/en/1-welcome.png … 8-summary.png (all 8)"
-  step "7-inch and 10-inch tablet screenshots: docs/store/screenshots/tablet-7/en/… and tablet-10/en/…"
+  step "App name, short and full description: the text blocks in docs/store/en/listing.md"
+  step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/en/feature-graphic.png"
+  step "Phone screenshots: docs/store/en/phone/1-welcome.png … 8-summary.png (all 8)"
+  step "7-inch and 10-inch tablet screenshots: docs/store/en/tablet-7/… and docs/store/en/tablet-10/…"
   pause
   say "${BOLD}Ukrainian (uk), the translation${RESET} (pick it in the language list at the top):"
-  step "App name, short and full description: the text blocks in docs/store/listing.uk.md"
-  step "Feature graphic: docs/store/feature-graphic.uk.png (without it Ukrainian users see the English one)"
-  step "Phone screenshots: docs/store/screenshots/uk/1-welcome.png … 8-summary.png (all 8)"
-  step "7-inch and 10-inch tablet screenshots: docs/store/screenshots/tablet-7/uk/… and tablet-10/uk/…"
+  step "App name, short and full description: the text blocks in docs/store/uk/listing.md"
+  step "Feature graphic: docs/store/uk/feature-graphic.png (without it Ukrainian users see the English one)"
+  step "Phone screenshots: docs/store/uk/phone/1-welcome.png … 8-summary.png (all 8)"
+  step "7-inch and 10-inch tablet screenshots: docs/store/uk/tablet-7/… and docs/store/uk/tablet-10/…"
   step "Website: $WEBSITE_URL."
   if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
     offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
@@ -773,13 +773,13 @@ stage_listing_refresh() {
   say "Grow users › Store presence › ${BOLD}Main store listing${RESET}. For ${BOLD}English (en-US)${RESET}, then"
   say "${BOLD}Ukrainian (uk)${RESET} (pick it in the language list at the top), with <lang> = en, then uk:"
   step "App icon: replace it with docs/store/icon-512.png (the same file for both)"
-  step "Phone screenshots: delete the old 8, add docs/store/screenshots/<lang>/1-welcome.png …"
+  step "Phone screenshots: delete the old 8, add docs/store/<lang>/phone/1-welcome.png …"
   say "  8-summary.png in that order (1 to 8)"
-  step "7-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-7/<lang>/1 … 8"
-  step "10-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-10/<lang>/1 … 8"
+  step "7-inch tablet screenshots: delete the old 8, add docs/store/<lang>/tablet-7/1 … 8"
+  step "10-inch tablet screenshots: delete the old 8, add docs/store/<lang>/tablet-10/1 … 8"
   note "The feature graphic stays as it is. Save each language before switching to the next."
-  if (( DRY_RUN )); then open_link "$ROOT/docs/store/screenshots"; else
-    offer "Open docs/store/screenshots in Finder?" open "$ROOT/docs/store/screenshots" || true
+  if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
+    offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
   fi
   pause "Press Enter when both languages are saved"
   if confirm "Do both languages show the new icon and the new 8 screenshots for all three sizes?"; then
@@ -804,13 +804,13 @@ stage_listing_refresh_25() {
   open_link "$PLAY_CONSOLE"
   say "Grow users › Store presence › ${BOLD}Main store listing${RESET}. For ${BOLD}English (en-US)${RESET}, then"
   say "${BOLD}Ukrainian (uk)${RESET} (pick it in the language list at the top), with <lang> = en, then uk:"
-  step "Phone screenshots: delete the old 8, add docs/store/screenshots/<lang>/1-welcome.png …"
+  step "Phone screenshots: delete the old 8, add docs/store/<lang>/phone/1-welcome.png …"
   say "  8-summary.png in that order (1 to 8)"
-  step "7-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-7/<lang>/1 … 8"
-  step "10-inch tablet screenshots: delete the old 8, add docs/store/screenshots/tablet-10/<lang>/1 … 8"
+  step "7-inch tablet screenshots: delete the old 8, add docs/store/<lang>/tablet-7/1 … 8"
+  step "10-inch tablet screenshots: delete the old 8, add docs/store/<lang>/tablet-10/1 … 8"
   note "The app icon and the feature graphic stay as they are. Save each language before switching."
-  if (( DRY_RUN )); then open_link "$ROOT/docs/store/screenshots"; else
-    offer "Open docs/store/screenshots in Finder?" open "$ROOT/docs/store/screenshots" || true
+  if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
+    offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
   fi
   pause "Press Enter when both languages are saved"
   if confirm "Do both languages show the new 8 screenshots for all three sizes?"; then

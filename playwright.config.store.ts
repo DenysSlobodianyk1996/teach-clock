@@ -1,5 +1,5 @@
 // The Play Store screenshots and feature graphic: `npm run store-shots`. Not part of
-// `npx playwright test` (that config only runs *.spec.ts). Writes into docs/store/.
+// `npx playwright test` (that config only runs *.spec.ts). Writes into docs/store/<lang>/.
 import process from 'node:process'
 import { defineConfig } from '@playwright/test'
 
