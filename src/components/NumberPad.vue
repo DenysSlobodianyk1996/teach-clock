@@ -76,6 +76,15 @@ const { t } = useI18n()
 .zero {
   grid-column: span 2;
 }
+/* A short desktop window: smaller keys, so Submit stays on the screen. */
+@media (min-width: 769px) and (min-height: 501px) and (max-height: 760px) and (orientation: landscape) {
+  .pad {
+    gap: 6px;
+  }
+  .key {
+    height: 48px;
+  }
+}
 @media (--phone) {
   .pad {
     gap: 4px;

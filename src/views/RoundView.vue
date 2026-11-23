@@ -265,6 +265,20 @@ h1 {
   font-weight: 900;
 }
 
+/* A short desktop window: less room around the answer, so a Round fits with nothing to scroll. */
+@media (min-width: 769px) and (min-height: 501px) and (max-height: 760px) and (orientation: landscape) {
+  .round {
+    padding-top: 6px;
+    padding-bottom: 12px;
+  }
+  .answer-side {
+    gap: 8px;
+  }
+  h1 {
+    font-size: 26px;
+  }
+}
+
 /* Phone upright: the clock sits above the answer. */
 @media (--phone) {
   .round {
