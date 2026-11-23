@@ -226,7 +226,7 @@ SDK_DIR="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
 # Values filled in along the way (globals, so set -u never trips on them).
 JDK="" SECRET_NAMES="" VARS="" GH_OK=0 REPO=""
 KEYSTORE_PATH="" KEY_PW="" GROUP_URL="" OPTIN_URL=""
-JSON_PATH="" CI_RUN="" CI_ARTIFACT="" NOTES_UK="" NOTES_EN=""
+JSON_PATH="" CI_RUN="" CI_ARTIFACT=""
 
 usage() {
   cat <<'EOF'
@@ -473,6 +473,38 @@ build_locally() {
   say "${GREEN}✓${RESET} Signed bundle: $ROOT/$AAB"
 }
 
+# store_languages: the languages with a Play listing, in the order of src/i18n/locales.ts.
+store_languages() {
+  local code
+  for code in $(sed -n "s/.*{ code: '\([a-z]*\)'.*/\1/p" "$ROOT/src/i18n/locales.ts"); do
+    if [[ -n "$(play_locale "$code")" && -f "$ROOT/docs/store/$code/listing.md" ]]; then
+      printf '%s\n' "$code"
+    fi
+  done
+}
+
+# play_locale CODE: its playLocale in scripts/storeLanguages.ts, or nothing.
+play_locale() {
+  awk -v open="  $1: {" -F"'" '$0 == open { f = 1; next } f && /playLocale:/ { print $2; exit }
+    f && /^  }/ { exit }' "$ROOT/scripts/storeLanguages.ts"
+}
+
+# language_name CODE: its own name in src/i18n/locales.ts.
+language_name() {
+  sed -n "s/.*{ code: '$1',.*name: '\([^']*\)'.*/\1/p" "$ROOT/src/i18n/locales.ts"
+}
+
+# upper CODE: de becomes DE (the bash on macOS has no case expansion).
+upper() { tr '[:lower:]' '[:upper:]' <<<"$1"; }
+
+# listing_steps CODE: where one language's Play listing files are.
+listing_steps() {
+  step "App name, short and full description: the text blocks in docs/store/$1/listing.md"
+  step "Feature graphic: docs/store/$1/feature-graphic.png"
+  step "Phone screenshots: docs/store/$1/phone/1-welcome.png … 8-summary.png (all 8)"
+  step "7-inch and 10-inch tablet screenshots: docs/store/$1/tablet-7/… and docs/store/$1/tablet-10/…"
+}
+
 # ── Stages, in the order of the timeline in docs/android-release.md ──────
 
 stage_start() {
@@ -694,16 +726,12 @@ stage_listing() {
   say "  ${BOLD}Українська – uk${RESET}."
   pause
   say "${BOLD}English (en-US), the default${RESET}, for every language without its own listing:"
-  step "App name, short and full description: the text blocks in docs/store/en/listing.md"
-  step "App icon: docs/store/icon-512.png. Feature graphic: docs/store/en/feature-graphic.png"
-  step "Phone screenshots: docs/store/en/phone/1-welcome.png … 8-summary.png (all 8)"
-  step "7-inch and 10-inch tablet screenshots: docs/store/en/tablet-7/… and docs/store/en/tablet-10/…"
+  step "App icon: docs/store/icon-512.png"
+  listing_steps en
   pause
   say "${BOLD}Ukrainian (uk), the translation${RESET} (pick it in the language list at the top):"
-  step "App name, short and full description: the text blocks in docs/store/uk/listing.md"
-  step "Feature graphic: docs/store/uk/feature-graphic.png (without it Ukrainian users see the English one)"
-  step "Phone screenshots: docs/store/uk/phone/1-welcome.png … 8-summary.png (all 8)"
-  step "7-inch and 10-inch tablet screenshots: docs/store/uk/tablet-7/… and docs/store/uk/tablet-10/…"
+  listing_steps uk
+  note "Without its own feature graphic a translation shows the English one."
   step "Website: $WEBSITE_URL."
   if (( DRY_RUN )); then open_link "$ROOT/docs/store"; else
     offer "Open docs/store in Finder?" open "$ROOT/docs/store" || true
@@ -818,6 +846,36 @@ stage_listing_refresh_25() {
   fi
 }
 
+# One stage for every listing added after English and Ukrainian, each remembered on its own.
+stage_listing_translations() {
+  stage "Store listing: the other languages"
+  if [[ -z "$(date_of "First build live on closed testing")" ]] && ! is_done DONE_FIRST_UPLOAD; then
+    not_yet "the first upload"
+    return 0
+  fi
+  local code key name locale
+  for code in $(store_languages); do
+    [[ "$code" == en || "$code" == uk ]] && continue
+    key="DONE_LISTING_$(upper "$code")"
+    name=$(language_name "$code")
+    locale=$(play_locale "$code")
+    if is_done "$key"; then say "${GREEN}✓${RESET} $name ($locale) is done."; continue; fi
+    say ""
+    say "${BOLD}$name ($locale)${RESET}: add it once a build with this language is live on the track."
+    open_link "$PLAY_CONSOLE"
+    step "Grow users › Store presence › Main store listing › Manage translations › Add your own translations › $name"
+    listing_steps "$code"
+    if (( DRY_RUN )); then open_link "$ROOT/docs/store/$code"; else
+      offer "Open docs/store/$code in Finder?" open "$ROOT/docs/store/$code" || true
+    fi
+    pause "Press Enter when $name is saved"
+    if confirm "Is the $name listing saved, with its graphic and all 24 screenshots?"; then
+      mark_done "$key"
+    fi
+  done
+  pause
+}
+
 stage_testers() {
   stage "Testers: Google Group, opt-in link, message"
   if already DONE_TESTERS "Tester invite sent"; then return 0; fi
@@ -891,7 +949,7 @@ stage_service_account() {
   fi
   say ""
   say "From now on each merge to main that changes the app uploads a new bundle to"
-  say "closed testing (track alpha, notes \"Покращення та виправлення\" / \"Improvements and fixes\")."
+  say "closed testing (track alpha, with short release notes for every listing language)."
   pause
 }
 
@@ -950,18 +1008,22 @@ stage_production() {
   if already DONE_PRODUCTION "First production release"; then return 0; fi
   if [[ -z "$(date_of "Production access granted")" ]]; then not_yet "Google grants production access"; return 0; fi
   say "GitHub › Actions › ${BOLD}Android app bundle${RESET} › ${BOLD}Run workflow${RESET} (branch main) with"
-  say "release notes in Ukrainian and English, at most 500 characters each. It builds a new"
+  say "release notes for every listing language, at most 500 characters each. It builds a new"
   say "bundle from main and uploads it straight to production; Google reviews it (hours to days)."
   if ! has_secret PLAY_SERVICE_ACCOUNT_JSON; then
     warn "PLAY_SERVICE_ACCOUNT_JSON isn't set, so the run would fail. Do the service account stage first."
   elif confirm "Start it from here?"; then
-    ask NOTES_UK "Release notes, Ukrainian:" || NOTES_UK=""
-    ask NOTES_EN "Release notes, English:" || NOTES_EN=""
-    if [[ -n "$NOTES_UK" && -n "$NOTES_EN" ]]; then
-      offer "Release to production now?" gh workflow run android.yml --ref main \
-        -f notes_uk="$NOTES_UK" -f notes_en="$NOTES_EN" || true
+    local code key notes=() missing=0
+    for code in $(store_languages); do
+      key="NOTES_$(upper "$code")"
+      ask "$key" "Release notes, $(language_name "$code"):" || printf -v "$key" '%s' ""
+      if [[ -z "${!key}" ]]; then missing=1; fi
+      notes+=(-f "notes_$code=${!key}")
+    done
+    if (( missing )); then
+      warn "Notes are needed for every language."
     else
-      warn "Both notes are needed."
+      offer "Release to production now?" gh workflow run android.yml --ref main "${notes[@]}" || true
     fi
   else
     open_link "https://github.com/${REPO:-denysslobodianyk1996/teach-clock}/actions/workflows/android.yml"
@@ -989,7 +1051,7 @@ stage_teacher_approved() {
 
 STAGES=(stage_start stage_account stage_machine stage_upload_key stage_key_secrets
   stage_variables stage_create_app stage_app_content stage_listing stage_first_bundle
-  stage_first_upload stage_listing_refresh stage_listing_refresh_25 stage_testers stage_service_account stage_closed_test stage_apply
+  stage_first_upload stage_listing_refresh stage_listing_refresh_25 stage_listing_translations stage_testers stage_service_account stage_closed_test stage_apply
   stage_production stage_teacher_approved)
 
 run_wizard() {

@@ -186,7 +186,9 @@ Setting the default language, in **Manage translations** (top right of the listi
 
 A translation without its own feature graphic shows the default one, so upload `uk/feature-graphic.png` to the Ukrainian listing. Only the author can do this in Play Console; `bash scripts/release-wizard.sh` walks through it (stage "Store listing").
 
-Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots (phone and both tablets) and both feature graphics after UI or text changes; the graphics' text is in `scripts/featureGraphic.ts` (the Game Name from the i18n files).
+**German (`de-DE`)** is one more translation with the same files in [`store/de/`](store/de/listing.md): add it under Manage translations › Add your own translations once a build with German is live on the track (wizard stage "Store listing: the other languages").
+
+Website: `https://denysslobodianyk1996.github.io/teach-clock/`. Email: your contact email. `npm run store-shots` redraws the screenshots (phone and both tablets) and the feature graphics of every listing language after UI or text changes; the graphics' taglines are in `scripts/storeLanguages.ts` (the Game Name from the i18n files).
 
 ### Replacing the icon and screenshots (batch 19)
 
@@ -275,7 +277,7 @@ Answer briefly and truthfully; your drafts are at the end of [`store/closed-test
 
 ## 14. Release to production (day ~26)
 
-GitHub › Actions › **Android app bundle** › **Run workflow** (branch `main`) › type the release notes in Ukrainian (`notes_uk`) and English (`notes_en`), at most 500 characters each. The wizard can start it for you (`gh workflow run android.yml --ref main -f notes_uk=… -f notes_en=…`). The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release). It fails if `PLAY_SERVICE_ACCOUNT_JSON` isn't set or the run isn't on `main`. Each production release is reviewed by Google, which takes hours to a few days.
+GitHub › Actions › **Android app bundle** › **Run workflow** (branch `main`) › type the release notes for each listing language (`notes_en`, `notes_uk`, `notes_de`), at most 500 characters each. The wizard can start it for you (`gh workflow run android.yml --ref main -f notes_en=… -f notes_uk=… -f notes_de=…`). The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release). It fails if `PLAY_SERVICE_ACCOUNT_JSON` isn't set or the run isn't on `main`. Each production release is reviewed by Google, which takes hours to a few days.
 
 ## 15. Teacher Approved
 
