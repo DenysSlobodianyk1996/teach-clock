@@ -63,6 +63,13 @@ for (const viewport of [
         )
       })
 
+      test('Welcome with the name error showing fits', async ({ page }) => {
+        await page.goto('/')
+        await page.getByRole('button', { name: lookup('welcome.start') }).click()
+        await expect(page.getByRole('alert')).toHaveText(lookup('welcome.nameRequired'))
+        await expectNoScroll(page, 'Welcome with the error')
+      })
+
       for (const game of GAMES) {
         for (const mode of ['teach', 'test'] as const) {
           test(`a ${game} Round in ${mode} fits`, async ({ page }) => {

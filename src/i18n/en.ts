@@ -23,6 +23,7 @@ export default {
       'Four short games: put the hours, then the minutes, on the clock face, set the hands to a time, and read what time the clock shows. No sign-up — just play.',
     nameLabel: 'What’s your name?',
     namePlaceholder: 'Your name',
+    nameRequired: 'Type your name to start',
     start: 'Start',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
