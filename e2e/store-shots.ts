@@ -12,10 +12,11 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { expect, test, type Page } from '@playwright/test'
-import { LOCALES, startingWith, tIn, type Locale } from './i18n.ts'
+import { startingWith, tIn } from './i18n.ts'
 import { setHands } from './hands.ts'
 import { dragNumber, tapNumber } from './numbers.ts'
 import { featureGraphicSvg } from '../scripts/featureGraphic.ts'
+import { STORE_LANGUAGES, playerName } from '../scripts/storeLanguages.ts'
 
 const STORE = fileURLToPath(new URL('../docs/store/', import.meta.url))
 
@@ -24,8 +25,6 @@ function shotDir(project: string, lang: string) {
   return `${STORE}${lang}/${project}/`
 }
 
-/** The Player's name in each language's screenshots. */
-const PLAYER_NAMES: Record<Locale, string> = { uk: 'Оля', en: 'Emma', de: 'Mia' }
 type Game = 'setTime' | 'dragArrows' | 'dragHours' | 'dragMinutes'
 
 /** Saves what the page shows as a PNG with no alpha channel. */
@@ -47,11 +46,11 @@ function seedRandom(seed: number) {
   }
 }
 
-for (const lang of LOCALES) {
+for (const lang of STORE_LANGUAGES) {
   test.describe(`screenshots ${lang}`, () => {
     const t = (key: Parameters<typeof tIn>[1], params?: Parameters<typeof tIn>[2]) =>
       tIn(lang, key, params)
-    const name = PLAYER_NAMES[lang]
+    const name = playerName(lang)
     const file = (n: number, slug: string) =>
       `${shotDir(test.info().project.name, lang)}${n}-${slug}.png`
 
@@ -187,7 +186,10 @@ function nunitoFaces() {
     .join('')
 }
 
-for (const lang of LOCALES) {
+/** The clock's rim starts at x = 580; the title and tagline stop short of it. */
+const TEXT_RIGHT_LIMIT = 568
+
+for (const lang of STORE_LANGUAGES) {
   test(`feature graphic, ${lang}`, async ({ page }, info) => {
     test.skip(info.project.name !== 'phone', 'drawn once, by the phone project')
     await page.setViewportSize({ width: 1024, height: 500 })
@@ -200,6 +202,14 @@ for (const lang of LOCALES) {
         [700, 900].map((w) => document.fonts.load(`${w} 20px Nunito`, 'Вчимо Teach')),
       )
     })
+    const textRight = await page.evaluate(() =>
+      Math.max(
+        ...[...document.querySelectorAll<SVGTextElement>('svg > g:first-of-type text')].map(
+          (text) => text.getBBox().x + text.getBBox().width,
+        ),
+      ),
+    )
+    expect(textRight).toBeLessThanOrEqual(TEXT_RIGHT_LIMIT)
     const shot = await page.locator('svg').first().screenshot({ scale: 'css' })
     const png = sharp(shot).removeAlpha().png({ compressionLevel: 9 })
     expect((await png.clone().metadata()).width).toBe(1024)
