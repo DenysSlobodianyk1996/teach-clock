@@ -12,7 +12,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import { expect, test, type Page } from '@playwright/test'
-import { startingWith, t as tUk, tEn } from './i18n.ts'
+import { LOCALES, startingWith, tIn, type Locale } from './i18n.ts'
 import { setHands } from './hands.ts'
 import { dragNumber, tapNumber } from './numbers.ts'
 import { featureGraphicSvg } from '../scripts/featureGraphic.ts'
@@ -24,11 +24,8 @@ function shotDir(project: string, lang: string) {
   return `${STORE}${lang}/${project}/`
 }
 
-const LANGUAGES = {
-  uk: { t: tUk, name: 'Оля' },
-  en: { t: tEn, name: 'Emma' },
-} as const
-type Lang = keyof typeof LANGUAGES
+/** The Player's name in each language's screenshots. */
+const PLAYER_NAMES: Record<Locale, string> = { uk: 'Оля', en: 'Emma' }
 type Game = 'setTime' | 'dragArrows' | 'dragHours' | 'dragMinutes'
 
 /** Saves what the page shows as a PNG with no alpha channel. */
@@ -50,9 +47,11 @@ function seedRandom(seed: number) {
   }
 }
 
-for (const lang of Object.keys(LANGUAGES) as Lang[]) {
+for (const lang of LOCALES) {
   test.describe(`screenshots ${lang}`, () => {
-    const { t, name } = LANGUAGES[lang]
+    const t = (key: Parameters<typeof tIn>[1], params?: Parameters<typeof tIn>[2]) =>
+      tIn(lang, key, params)
+    const name = PLAYER_NAMES[lang]
     const file = (n: number, slug: string) =>
       `${shotDir(test.info().project.name, lang)}${n}-${slug}.png`
 
@@ -188,7 +187,7 @@ function nunitoFaces() {
     .join('')
 }
 
-for (const lang of Object.keys(LANGUAGES) as Lang[]) {
+for (const lang of LOCALES) {
   test(`feature graphic, ${lang}`, async ({ page }, info) => {
     test.skip(info.project.name !== 'phone', 'drawn once, by the phone project')
     await page.setViewportSize({ width: 1024, height: 500 })

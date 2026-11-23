@@ -34,10 +34,10 @@ test.describe('the static privacy/index.html, with JavaScript off', () => {
     // English comes first.
     expect((await en.boundingBox())!.y).toBeLessThan((await uk.boundingBox())!.y)
 
-    for (const [article, back, createdBy] of [
-      [uk, t('privacy.back'), t('privacy.createdBy')],
-      [en, tEn('privacy.back'), tEn('privacy.createdBy')],
-    ] as const) {
+    for (const lang of LOCALES) {
+      const article = page.locator(`article[lang="${lang}"]`)
+      const back = tIn(lang, 'privacy.back')
+      const createdBy = tIn(lang, 'privacy.createdBy')
       await expect(article.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute(
         'href',
         `mailto:${CONTACT_EMAIL}`,
