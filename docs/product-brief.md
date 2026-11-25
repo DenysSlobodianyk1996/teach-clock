@@ -20,6 +20,13 @@ Terms are defined in [`GLOSSARY.md`](../GLOSSARY.md). Decisions are in [`docs/ad
 - **Web App**: the website on GitHub Pages, installable from the browser. A service worker keeps it
   playable offline after the first visit. Every merge to `main` that changes the app redeploys it.
   Installed, it keeps the Game Name in the interface language at install time (ADR 0005).
+  For search engines and link previews (batches 30, 31), its page is in English before any
+  JavaScript: Welcome itself, rendered at build time into `index.html`, which the app replaces in
+  the Player's language when it starts (hidden from the first paint on any other address); a
+  description that is the Play short description in each language; Open Graph tags; a JSON-LD
+  educational web app in six languages; `sitemap.xml`, `robots.txt`; and the Search Console tag.
+  Once the Android App is in production, Welcome links its Play listing ("Get it on Google Play",
+  `GOOGLE_PLAY_LIVE` in `src/config.ts`), never inside the Android App.
 - **Android App**: Google Play, package `app.teachclockforkids`, built with Capacitor (ADR 0004).
   The whole game is packaged inside, so it plays with no internet from the first launch; there is
   no service worker. The Android back button never leaves a Round by accident: on Welcome it exits,
