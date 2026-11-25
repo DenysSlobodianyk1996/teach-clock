@@ -156,12 +156,20 @@ Rules shared by Drag Arrows and Set Time:
 
 ### Set Time: input
 
-- Hour and minute boxes, up to two digits each. The Player taps a box to select it; the hour box
-  hands over to the minutes after its second digit. One digit reads with a leading zero
-  (`1` → 01, `5` minutes → 05).
+- Hour and minute boxes, up to two digits each. The Player taps a box to select it. One digit reads
+  with a leading zero (`1` → 01, `5` minutes → 05).
+- A box is complete when no further digit could fit its range: the hours after a first digit 2–9
+  (shown as typed, `8`), the minutes after a first digit 6–9 (shown at once as `07`), either box
+  after two digits. A complete hour box hands over to the minutes; a complete minute box stays
+  selected and nothing is submitted on its own. A complete box takes no more digits while it stays
+  selected. No leading zero is ever needed (batch 29, #87).
+- The first digit typed into a box after it is selected (tap, ←/→, Tab, the hour hand-over, "Set
+  correct answer") replaces what it holds; later digits add to it. Selecting alone loses nothing,
+  and until the first digit the box's digits look highlighted, like selected text. So a box is
+  retyped without Clear (batch 29, #88).
 - Under each box its range, in every Mode and Level: "1–12" under the hours, "0–59" under the
-  minutes. It only tells the Player which numbers fit; any digits can still be typed. The number pad
-  sits close under the ranges.
+  minutes. It only tells the Player which numbers fit; any two-digit value can still be typed
+  (`13`, `00`) and is reported only on Submit. The number pad sits close under the ranges.
 - On-screen number pad (0–9, clear). Clear empties the whole selected box. A physical keyboard
   also works: digits, Backspace/Delete to clear, ←/→ or Tab to switch boxes, Enter to submit.
 - Submit is enabled once both boxes have a digit. An impossible value (hour outside 1–12, minute

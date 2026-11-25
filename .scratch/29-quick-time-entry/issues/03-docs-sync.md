@@ -4,11 +4,11 @@
 
 **Blocked by:** 01 One digit completes a box, 02 A selected box is retyped
 
-**Status:** todo
+**Status:** done
 
-- [ ] `docs/product-brief.md`, "Set Time: input": a box is complete after one digit that cannot be
+- [x] `docs/product-brief.md`, "Set Time: input": a box is complete after one digit that cannot be
       followed (hours 2–9, minutes 6–9); the first digit after selecting a box replaces it; "any digits
       can still be typed" now holds only for two-digit values
-- [ ] Local boards in `docs/design/` and the online design canvas checked; changed only if they show the entry rules
-- [ ] `.scratch/README.md` row (status and PR) and `CLAUDE.md` status updated
-- [ ] GitHub issues #87 and #88 closed with a comment linking the batch PR, once the PR is open and green
+- [x] Local boards in `docs/design/` and the online design canvas checked; changed only if they show the entry rules
+- [x] `.scratch/README.md` row (status and PR) and `CLAUDE.md` status updated
+- [x] GitHub issues #87 and #88 closed with a comment linking the batch PR, once the PR is open and green
