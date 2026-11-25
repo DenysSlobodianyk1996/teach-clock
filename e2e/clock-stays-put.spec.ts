@@ -63,10 +63,10 @@ test('Set Time Teach: the clock stays put for the time-box error and the wrong-A
   const clock = page.locator('.clock-side svg.clock')
   const before = await spot(clock)
 
-  // 13:99 is not a time: both boxes get an error line.
-  await page.keyboard.type('1399')
+  // 13:59 is not a time (a typed minute is always 00–59): the hour box gets an error line.
+  await page.keyboard.type('1359')
   await page.keyboard.press('Enter')
-  await expect(page.getByRole('alert')).toContainText(t('round.errors.minute'))
+  await expect(page.getByRole('alert')).toContainText(t('round.errors.hour'))
   expect(await spot(clock), 'time-box error').toEqual(before)
 
   for (let i = 0; i < 2; i++) await page.keyboard.press('Backspace')
