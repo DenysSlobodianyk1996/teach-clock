@@ -1,6 +1,8 @@
 # Request
 
-From GitHub issue #87, "UX enhancement", as given.
+Two GitHub issues, combined in one parent, as given.
+
+## #87 UX enhancement
 
 This is a UX enhancement, not a bug. Nothing is broken; the goal is to remove an unnecessary manual step. The time input has two fields: hours (1–12) and minutes (0–59). Users should not have to type leading zeros like "08" to move to the next field.
 
@@ -13,3 +15,7 @@ Apply the same logic to minutes (0–59): a first digit from 6 to 9 is complete 
 Keep the existing two-digit behavior unchanged. Typing "08" or "12" must still work exactly as it does now. Acceptance check: typing "8" moves focus to minutes; typing "1" stays in hours, and then typing "1" again gives 11 and moves to minutes; typing "0" and then "8" gives 08 and moves to minutes.
 
 ![Phone screenshot from the issue](images/01-issue-screenshot.png)
+
+## #88 Re-enter time without clearing the field
+
+Tapping a filled time field should allow immediate re-entry. This is a small UX enhancement, not a bug. In learning mode, if I enter a wrong value and want to retype it, tapping the hours or minutes field keeps the old digits, so I have to clear them first and only then type. Expected: when the user taps a field that already has a value, the next digit replaces it (for example, by clearing or selecting the field on focus), and the existing auto-advance rules keep working the same way.
