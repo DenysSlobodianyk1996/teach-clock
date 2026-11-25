@@ -15,7 +15,7 @@ import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
-import { OLDEST_CHROME } from './src/config.ts'
+import { OLDEST_CHROME, SITE_URL } from './src/config.ts'
 import { MESSAGES } from './src/i18n/messages.ts'
 
 /** The Android App build (`npm run android:sync`); src/platform.ts reads the same var for the app. */
@@ -157,6 +157,10 @@ async function deviceLocaleScript(): Promise<string> {
   return script
 }
 
+/** Text made safe for an HTML attribute or element. */
+const escape = (value: string) =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
+
 /**
  * Fills index.html: its static Game Name and description in English (`__APP_NAME__`,
  * `__APP_DESCRIPTION__`, decision 7 of batch 13), and the pre-paint script's interface-language
@@ -174,8 +178,6 @@ function appTextPlugin(): Plugin {
       ]),
     ),
   ).replaceAll('<', '\\u003c')
-  const escape = (value: string) =>
-    value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
   let script: Promise<string> | undefined
   return {
     name: 'teach-clock-app-text',
@@ -188,6 +190,62 @@ function appTextPlugin(): Plugin {
           .replaceAll('__LOCALES__', JSON.stringify(LOCALES))
           .replaceAll('__APP_TEXT__', text)
           .replaceAll('__DEVICE_LOCALE__', await (script ??= deviceLocaleScript())),
+    },
+  }
+}
+
+/** The link preview image, the English store feature graphic (1024 × 500), at the site root. */
+const OG_IMAGE = 'og-image.png'
+
+/**
+ * Link previews and the search basics for the Web App on GitHub Pages (batch 30): Open Graph and
+ * Twitter tags and a canonical link in index.html, all with absolute URLs from SITE_URL, since
+ * Slack, Telegram and other unfurlers run no JavaScript; the image and sitemap.xml beside it. The
+ * text is English, as the static title and description are. Only a build with `GITHUB_PAGES` and
+ * not the Android App's; never the dev server. `env` is the process environment (a test gives its
+ * own).
+ */
+export function seoPlugin(env: Record<string, string | undefined> = process.env): Plugin {
+  const enabled = !!env.GITHUB_PAGES && env.VITE_TARGET !== 'android'
+  const image = `${SITE_URL}${OG_IMAGE}`
+  const text = { title: MESSAGES.en.app.name, description: MESSAGES.en.app.description }
+  // Vite escapes the attributes of the tags it injects, as appTextPlugin's `escape` does.
+  const meta = (key: string, content: string) => ({
+    tag: 'meta',
+    attrs: { [key.startsWith('og:') ? 'property' : 'name']: key, content },
+    injectTo: 'head' as const,
+  })
+  return {
+    name: 'teach-clock-seo',
+    apply: () => enabled,
+    transformIndexHtml: () => [
+      meta('og:type', 'website'),
+      meta('og:site_name', text.title),
+      meta('og:title', text.title),
+      meta('og:description', text.description),
+      meta('og:url', SITE_URL),
+      meta('og:locale', 'en_US'),
+      meta('og:image', image),
+      meta('og:image:width', '1024'),
+      meta('og:image:height', '500'),
+      meta('og:image:alt', MESSAGES.en.app.previewAlt),
+      meta('twitter:card', 'summary_large_image'),
+      meta('twitter:title', text.title),
+      meta('twitter:description', text.description),
+      meta('twitter:image', image),
+      { tag: 'link', attrs: { rel: 'canonical', href: SITE_URL }, injectTo: 'head' },
+    ],
+    async generateBundle() {
+      const graphic = fileURLToPath(new URL('./docs/store/en/feature-graphic.png', import.meta.url))
+      this.emitFile({ type: 'asset', fileName: OG_IMAGE, source: await readFile(graphic) })
+      const urls = [SITE_URL, `${SITE_URL}privacy/`]
+        .map((url) => `  <url><loc>${escape(url)}</loc></url>`)
+        .join('\n')
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+      })
     },
   }
 }
@@ -268,6 +326,7 @@ export default defineConfig({
     ...(process.env.PW_TEST ? [] : [vueDevTools()]),
     themeColorsPlugin(),
     appTextPlugin(),
+    seoPlugin(),
     webManifestPlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
@@ -286,6 +345,8 @@ export default defineConfig({
         // Everything the build emits, fonts and both manifests included, so every Game works and
         // the app installs offline.
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
+        // The link preview image is for unfurlers, never shown in the game (seoPlugin).
+        globIgnores: [OG_IMAGE],
         // The static Privacy Page is its own page (precached as privacy/index.html), not the app.
         navigateFallbackDenylist: NOT_THE_APP_PAGES,
       },
