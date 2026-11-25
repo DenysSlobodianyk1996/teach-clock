@@ -10,5 +10,5 @@
       followed (hours 2–9, minutes 6–9); the first digit after selecting a box replaces it; "any digits
       can still be typed" now holds only for two-digit values
 - [ ] Local boards in `docs/design/` and the online design canvas checked; changed only if they show the entry rules
-- [ ] `.scratch/README.md` row and `CLAUDE.md` status updated
+- [ ] `.scratch/README.md` row (status and PR) and `CLAUDE.md` status updated
 - [ ] GitHub issues #87 and #88 closed with a comment linking the batch PR, once the PR is open and green
