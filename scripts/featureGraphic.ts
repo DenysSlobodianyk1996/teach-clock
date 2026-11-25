@@ -1,6 +1,9 @@
 /**
  * The Play Store feature graphic in each listing language: docs/store/feature-graphic.svg with
  * its text slots filled in. `npm run store-shots` draws each one into docs/store/<lang>/feature-graphic.png.
+ * The English one, docs/store/en/feature-graphic.png, is also the Web App's link preview image:
+ * the Pages build copies it to og-image.png (`seoPlugin` in vite.config.ts), so redrawing it
+ * changes link previews.
  */
 import { readFileSync } from 'node:fs'
 import { MESSAGES } from '../src/i18n/messages.ts'
