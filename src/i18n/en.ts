@@ -24,6 +24,7 @@ export default {
     namePlaceholder: 'Your name',
     nameRequired: 'Type your name to start',
     start: 'Start',
+    googlePlay: 'Get it on Google Play',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
   info: { more: 'More info', moreAbout: 'More info: {section}' },

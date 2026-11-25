@@ -6,11 +6,14 @@ Until a flag is turned on, neither appears. Decision 7 in `request.md`.
 
 **Blocked by:** 02 Prerendered English Welcome, 03 Structured data, robots.txt, privacy canonical, Search Console tag
 
-**Status:** todo
+**Status:** done
 
-- [ ] `GOOGLE_PLAY_URL` from the app id and `GOOGLE_PLAY_LIVE = false` in `src/config.ts`; a test
+- [x] `GOOGLE_PLAY_URL` from the app id and `GOOGLE_PLAY_LIVE = false` in `src/config.ts`; a test
       keeps the URL on `capacitor.config.ts`'s app id
-- [ ] `welcome.googlePlay` in all six locales
-- [ ] Welcome shows the link only when live and not in the Android App; tests for off, on, and Android
-- [ ] The JSON-LD adds a `MobileApplication` (`operatingSystem` `Android`) when live; tests for both
-- [ ] The turn-on step in `docs/android-release.md`'s production release
+- [x] `welcome.googlePlay` in all six locales (Google's badge wording in each language)
+- [x] Welcome shows the link only when live and not in the Android App; tests for off, on, and Android
+      (`src/views/__tests__/WelcomeGooglePlay.spec.ts`)
+- [x] The JSON-LD adds a `MobileApplication` (`operatingSystem` `Android`) when live; tests for both
+- [x] The turn-on step in `docs/android-release.md`'s production release (step 14), with the checks
+      to run then: the small-phone fit, store screenshots, the Welcome boards
+      Note: the 360 × 640 fit with the link shown is not checked yet; it is part of the turn-on step.

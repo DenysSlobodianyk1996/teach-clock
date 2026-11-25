@@ -17,7 +17,13 @@ import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
-import { GOOGLE_SITE_VERIFICATION, OLDEST_CHROME, SITE_URL } from './src/config.ts'
+import {
+  GOOGLE_PLAY_LIVE,
+  GOOGLE_PLAY_URL,
+  GOOGLE_SITE_VERIFICATION,
+  OLDEST_CHROME,
+  SITE_URL,
+} from './src/config.ts'
 import { structuredData } from './src/structuredData.ts'
 import { MESSAGES } from './src/i18n/messages.ts'
 
@@ -256,6 +262,8 @@ const OG_IMAGE = 'og-image.png'
 export interface SeoOptions {
   /** Search Console's token (`GOOGLE_SITE_VERIFICATION`); no tag while it is empty. */
   siteVerification?: string
+  /** The Android App is in production (`GOOGLE_PLAY_LIVE`): the JSON-LD names it too. */
+  googlePlayLive?: boolean
 }
 
 /**
@@ -269,7 +277,10 @@ export interface SeoOptions {
  */
 export function seoPlugin(
   env: Record<string, string | undefined> = process.env,
-  { siteVerification = GOOGLE_SITE_VERIFICATION }: SeoOptions = {},
+  {
+    siteVerification = GOOGLE_SITE_VERIFICATION,
+    googlePlayLive = GOOGLE_PLAY_LIVE,
+  }: SeoOptions = {},
 ): Plugin {
   const enabled = isPagesBuild(env)
   const image = `${SITE_URL}${OG_IMAGE}`
@@ -311,7 +322,7 @@ export function seoPlugin(
             name: text.title,
             description: text.description,
             languages: LOCALES,
-            googlePlayUrl: null,
+            googlePlayUrl: googlePlayLive ? GOOGLE_PLAY_URL : null,
           }),
         ).replaceAll('<', '\\u003c'),
         injectTo: 'head',

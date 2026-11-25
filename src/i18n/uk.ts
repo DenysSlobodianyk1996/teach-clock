@@ -30,6 +30,11 @@ export default {
     namePlaceholder: 'Твоє ім’я',
     nameRequired: 'Напиши ім’я, щоб почати',
     start: 'Почати',
+    /**
+     * The link to the Android App's Play listing under Start, in the Web App only, once the app is
+     * in production (GOOGLE_PLAY_LIVE). Google's own badge wording in each language.
+     */
+    googlePlay: 'Завантажте з Google Play',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
   info: { more: 'Докладніше', moreAbout: 'Докладніше: {section}' },

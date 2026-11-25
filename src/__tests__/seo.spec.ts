@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { build, type Rollup } from 'vite'
-import { GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/config'
+import { GOOGLE_PLAY_LIVE, GOOGLE_PLAY_URL, GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/config'
 import { LOCALES, tEn } from '@/test/i18n'
 import { seoPlugin, type SeoOptions } from '../../vite.config.ts'
 
@@ -139,6 +139,21 @@ describe('link previews and the sitemap', () => {
   it('leaves the verification tag out if its token is ever emptied', async () => {
     const head = headOf(await built({ GITHUB_PAGES: '1' }, { siteVerification: '' }))
     expect(head.querySelector('meta[name="google-site-verification"]')).toBeNull()
+  }, 60_000)
+
+  it('names the Android App on Google Play once it is in production', async () => {
+    expect(GOOGLE_PLAY_LIVE).toBe(false)
+    const head = headOf(await built({ GITHUB_PAGES: '1' }, { googlePlayLive: true }))
+    expect(structuredDataOf(head)).toEqual([
+      webApplication,
+      {
+        ...webApplication,
+        '@type': 'MobileApplication',
+        url: GOOGLE_PLAY_URL,
+        installUrl: GOOGLE_PLAY_URL,
+        operatingSystem: 'Android',
+      },
+    ])
   }, 60_000)
 
   for (const [name, env] of [

@@ -279,6 +279,8 @@ Answer briefly and truthfully; your drafts are at the end of [`store/closed-test
 
 GitHub › Actions › **Android app bundle** › **Run workflow** (branch `main`) › type the release notes for each listing language (`notes_en`, `notes_uk`, `notes_de`, `notes_fr`, `notes_it`, `notes_es`), at most 500 characters each. The wizard can start it for you (`gh workflow run android.yml --ref main -f notes_en=… -f notes_uk=… -f notes_de=…`). The run builds a new bundle from `main` and uploads it straight to production (the upload action can't promote a closed-testing release). It fails if `PLAY_SERVICE_ACCOUNT_JSON` isn't set or the run isn't on `main`. Each production release is reviewed by Google, which takes hours to a few days.
 
+Once Google has approved it and the listing opens for everyone (`https://play.google.com/store/apps/details?id=app.teachclockforkids` in a private window), link it from the website (batch 31): set `GOOGLE_PLAY_LIVE = true` in `src/config.ts` on a branch. Welcome in the Web App then shows "Get it on Google Play" under Start (never inside the Android App), and the website's JSON-LD names the Android App as well. Before merging, run `npx playwright test --project=small-phone` (Welcome must still fit a 360 × 640 phone with the link), retake the store screenshots (`PW_PORT=<port> npm run store-shots`) and update the Welcome boards in `docs/design/` and the online canvas, since Welcome changes. After the deploy, check the JSON-LD in Google's Rich Results Test.
+
 ## 15. Teacher Approved
 
 After the first production release: Play Console › **Grow › Teacher Approved** (or the Families section) › opt in.
