@@ -87,6 +87,25 @@ test('a link unfurler sees the preview image, with no JavaScript', async ({ requ
   )
 })
 
+test('a search engine finds the JSON-LD, robots.txt, Search Console tag and canonicals', async ({
+  request,
+}) => {
+  const html = await (await request.get(site)).text()
+  expect(html).toContain('<script type="application/ld+json">')
+  expect(html).toMatch(/<meta name="google-site-verification" content="[\w-]+"/)
+
+  const robots = await request.get(`${site}robots.txt`)
+  expect(robots.status()).toBe(200)
+  expect(await robots.text()).toContain(
+    'Sitemap: https://denysslobodianyk1996.github.io/teach-clock/sitemap.xml',
+  )
+
+  const privacy = await (await request.get(`${site}privacy/`)).text()
+  expect(privacy).toContain(
+    '<link rel="canonical" href="https://denysslobodianyk1996.github.io/teach-clock/privacy/" />',
+  )
+})
+
 test.describe('the prerendered English Welcome', () => {
   /** The page as it is before the app's JavaScript runs: index.html's own scripts only. */
   async function withoutTheApp(page: import('@playwright/test').Page, path: string) {

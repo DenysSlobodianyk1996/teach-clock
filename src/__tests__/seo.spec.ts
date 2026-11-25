@@ -5,9 +5,9 @@ import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { build, type Rollup } from 'vite'
-import { SITE_URL } from '@/config'
-import { tEn } from '@/test/i18n'
-import { seoPlugin } from '../../vite.config.ts'
+import { GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/config'
+import { LOCALES, tEn } from '@/test/i18n'
+import { seoPlugin, type SeoOptions } from '../../vite.config.ts'
 
 /** A page as small as the app's index.html head, built with only the link-preview plugin. */
 let root = ''
@@ -23,15 +23,41 @@ beforeAll(() => {
 afterAll(() => rmSync(root, { recursive: true, force: true }))
 
 /** What the build writes for the given environment, by file name. */
-async function built(env: Record<string, string>) {
+async function built(env: Record<string, string>, options?: SeoOptions) {
   const output = (await build({
     root,
     configFile: false,
     logLevel: 'silent',
     build: { write: false },
-    plugins: [seoPlugin(env)],
+    plugins: [seoPlugin(env, options)],
   })) as Rollup.RollupOutput
   return new Map(output.output.map((file) => [file.fileName, file]))
+}
+
+/** The page's head as the build wrote it. */
+function headOf(files: Awaited<ReturnType<typeof built>>): HTMLHeadElement {
+  return new JSDOM(source(files.get('index.html')) as string).window.document.head
+}
+
+/** The page's JSON-LD, parsed. */
+function structuredDataOf(head: HTMLHeadElement): unknown {
+  const scripts = head.querySelectorAll('script[type="application/ld+json"]')
+  expect(scripts).toHaveLength(1)
+  return JSON.parse(scripts[0]!.textContent!)
+}
+
+/** The Web App as JSON-LD describes it (batch 31). */
+const webApplication = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Teach Clock',
+  description: 'A calm game where kids learn to read a clock and set its hands. No ads.',
+  url: 'https://denysslobodianyk1996.github.io/teach-clock/',
+  applicationCategory: 'EducationalApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  inLanguage: 'en',
+  availableLanguage: ['en', 'uk', 'de', 'fr', 'it', 'es'],
 }
 
 function source(file: Rollup.OutputAsset | Rollup.OutputChunk | undefined): string | Uint8Array {
@@ -90,7 +116,30 @@ describe('link previews and the sitemap', () => {
       const urls = [...sitemap.querySelectorAll('url > loc')].map((loc) => loc.textContent)
       expect(urls).toEqual([SITE_URL, `${SITE_URL}privacy/`])
     })
+
+    it('describes the game as a free educational web app in every language, in English', () => {
+      expect(webApplication.name).toBe(tEn('app.name'))
+      expect(webApplication.description).toBe(tEn('app.description'))
+      expect(webApplication.availableLanguage).toEqual(LOCALES)
+      expect(structuredDataOf(head)).toEqual(webApplication)
+    })
+
+    it('has a robots.txt that allows everything and names the sitemap', () => {
+      expect(source(files.get('robots.txt'))).toBe(
+        `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}sitemap.xml\n`,
+      )
+    })
+
+    it("carries the owner's Search Console verification token", () => {
+      expect(GOOGLE_SITE_VERIFICATION).toBe('jFybgwwGyr9yepRC53WaJmZYPZGWPFwLZD000UJpGIg')
+      expect(meta('google-site-verification')).toBe(GOOGLE_SITE_VERIFICATION)
+    })
   })
+
+  it('leaves the verification tag out if its token is ever emptied', async () => {
+    const head = headOf(await built({ GITHUB_PAGES: '1' }, { siteVerification: '' }))
+    expect(head.querySelector('meta[name="google-site-verification"]')).toBeNull()
+  }, 60_000)
 
   for (const [name, env] of [
     ['the Android App', { GITHUB_PAGES: '1', VITE_TARGET: 'android' }],
@@ -99,9 +148,10 @@ describe('link previews and the sitemap', () => {
     it(`adds nothing in ${name}`, async () => {
       const files = await built(env)
       const html = source(files.get('index.html')) as string
-      expect(html).not.toMatch(/og:|twitter:|canonical/)
+      expect(html).not.toMatch(/og:|twitter:|canonical|ld\+json|google-site-verification/)
       expect(files.has('og-image.png')).toBe(false)
       expect(files.has('sitemap.xml')).toBe(false)
+      expect(files.has('robots.txt')).toBe(false)
     }, 60_000)
   }
 })

@@ -20,3 +20,11 @@ export const OLDEST_CHROME = 87
  * must match.
  */
 export const SITE_URL = 'https://denysslobodianyk1996.github.io/teach-clock/'
+
+/**
+ * Google Search Console's HTML-tag token for the URL-prefix property `SITE_URL` (batch 31): the
+ * GitHub Pages build puts it in index.html as `<meta name="google-site-verification">`, and leaves
+ * the tag out while this is empty. Public by design: Google reads it from the page. Removing it
+ * unverifies the property.
+ */
+export const GOOGLE_SITE_VERIFICATION = 'jFybgwwGyr9yepRC53WaJmZYPZGWPFwLZD000UJpGIg'

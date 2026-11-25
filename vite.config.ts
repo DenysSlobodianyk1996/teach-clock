@@ -17,7 +17,8 @@ import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
 import { THEME_BG } from './src/themeColors.ts'
 import { webManifestFile, webManifestHref, webManifests } from './src/webManifest.ts'
 import { LOCALES } from './src/i18n/locales.ts'
-import { OLDEST_CHROME, SITE_URL } from './src/config.ts'
+import { GOOGLE_SITE_VERIFICATION, OLDEST_CHROME, SITE_URL } from './src/config.ts'
+import { structuredData } from './src/structuredData.ts'
 import { MESSAGES } from './src/i18n/messages.ts'
 
 /** The Android App build (`npm run android:sync`); src/platform.ts reads the same var for the app. */
@@ -98,7 +99,9 @@ function privacyPagePlugin(): Plugin {
       })
     },
     async generateBundle(_options, bundle) {
-      const page = await buildPrivacyPage({ root, base })
+      // Its public address on GitHub Pages only, for search engines (batch 31).
+      const canonical = isPagesBuild(process.env) ? `${SITE_URL}privacy/` : undefined
+      const page = await buildPrivacyPage({ root, base, canonical })
       this.emitFile({ type: 'asset', fileName: PRIVACY_PAGE, source: page.html })
       // The app's build has these fonts already (same content, same names); emit any it lacks.
       for (const [fileName, source] of page.assets) {
@@ -249,15 +252,25 @@ export function prerenderedWelcomePlugin(
 /** The link preview image, the English store feature graphic (1024 × 500), at the site root. */
 const OG_IMAGE = 'og-image.png'
 
+/** What seoPlugin takes from src/config.ts unless a test gives its own. */
+export interface SeoOptions {
+  /** Search Console's token (`GOOGLE_SITE_VERIFICATION`); no tag while it is empty. */
+  siteVerification?: string
+}
+
 /**
  * Link previews and the search basics for the Web App on GitHub Pages (batch 30): Open Graph and
  * Twitter tags and a canonical link in index.html, all with absolute URLs from SITE_URL, since
  * Slack, Telegram and other unfurlers run no JavaScript; the image and sitemap.xml beside it. The
- * text is English, as the static title and description are. Only a build with `GITHUB_PAGES` and
- * not the Android App's; never the dev server. `env` is the process environment (a test gives its
- * own).
+ * text is English, as the static title and description are. Batch 31 adds the search engines'
+ * part: the JSON-LD (src/structuredData.ts), the Search Console verification tag and robots.txt.
+ * Only a build with `GITHUB_PAGES` and not the Android App's; never the dev server. `env` is the
+ * process environment and `options` the constants in src/config.ts (a test gives its own).
  */
-export function seoPlugin(env: Record<string, string | undefined> = process.env): Plugin {
+export function seoPlugin(
+  env: Record<string, string | undefined> = process.env,
+  { siteVerification = GOOGLE_SITE_VERIFICATION }: SeoOptions = {},
+): Plugin {
   const enabled = isPagesBuild(env)
   const image = `${SITE_URL}${OG_IMAGE}`
   const text = { title: MESSAGES.en.app.name, description: MESSAGES.en.app.description }
@@ -287,6 +300,22 @@ export function seoPlugin(env: Record<string, string | undefined> = process.env)
       meta('twitter:image', image),
       meta('twitter:image:alt', MESSAGES.en.app.previewAlt),
       { tag: 'link', attrs: { rel: 'canonical', href: SITE_URL }, injectTo: 'head' },
+      ...(siteVerification ? [meta('google-site-verification', siteVerification)] : []),
+      {
+        tag: 'script',
+        attrs: { type: 'application/ld+json' },
+        // `<` escaped, so no text can close the script.
+        children: JSON.stringify(
+          structuredData({
+            site: SITE_URL,
+            name: text.title,
+            description: text.description,
+            languages: LOCALES,
+            googlePlayUrl: null,
+          }),
+        ).replaceAll('<', '\\u003c'),
+        injectTo: 'head',
+      },
     ],
     async generateBundle() {
       const graphic = fileURLToPath(new URL('./docs/store/en/feature-graphic.png', import.meta.url))
@@ -298,6 +327,13 @@ export function seoPlugin(env: Record<string, string | undefined> = process.env)
         type: 'asset',
         fileName: 'sitemap.xml',
         source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+      })
+      // Crawlers read robots.txt only at the host root, which this project site does not serve, so
+      // it is advisory; Search Console gets the sitemap directly (batch 31).
+      this.emitFile({
+        type: 'asset',
+        fileName: 'robots.txt',
+        source: `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}sitemap.xml\n`,
       })
     },
   }
