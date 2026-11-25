@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId } from 'vue'
+import { computed, ref, useId, watch } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import NumberPad from './NumberPad.vue'
@@ -41,7 +41,39 @@ function edit(next: TimeEntry) {
 }
 
 function select(box: Box) {
+  if (props.disabled) return
   entry.value = selectBox(entry.value, box)
+}
+
+const boxButton = (box: Box) => root.value?.querySelector<HTMLElement>(`[data-box="${box}"]`)
+
+// The focus follows the selection (a hand-over, the arrows, Set correct answer) while it is on a
+// box, so the browser never refocuses a box that is no longer selected.
+watch(
+  () => entry.value.selected,
+  (box) => {
+    const focused = document.activeElement
+    if (focused instanceof HTMLElement && focused.dataset.box && root.value?.contains(focused))
+      boxButton(box)?.focus()
+  },
+  { flush: 'post' },
+)
+
+// Only Tab selects a box by focusing it. Other focus (a popup giving it back, the window coming back
+// to the front) must not select the hours again and re-arm them: it goes to the selected box.
+let tabbing = false
+useEventListener(window, 'keyup', (event: KeyboardEvent) => {
+  if (event.key === 'Tab') tabbing = false
+})
+useEventListener(window, 'blur', () => (tabbing = false))
+
+function focused(box: Box) {
+  if (tabbing) {
+    tabbing = false
+    select(box)
+  } else if (entry.value.selected !== box) {
+    boxButton(entry.value.selected)?.focus()
+  }
 }
 
 /** What a box shows: a lone minute digit reads as 0X once the Player leaves it. */
@@ -72,6 +104,7 @@ function submit() {
 }
 
 useEventListener(window, 'keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Tab') tabbing = true
   if (props.disabled) return
   if (event.ctrlKey || event.metaKey || event.altKey) return
   if (/^[0-9]$/.test(event.key)) {
@@ -110,7 +143,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           :aria-pressed="entry.selected === box"
           :aria-invalid="errors.includes(box) || undefined"
           @click="select(box)"
-          @focus="select(box)"
+          @focus="focused(box)"
         >
           <span class="digits">{{ shown(box) }}</span>
         </button>

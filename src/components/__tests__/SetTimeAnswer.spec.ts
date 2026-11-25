@@ -190,6 +190,7 @@ describe('SetTimeAnswer', () => {
     await press('4')
     await press('5')
     expect(box(t('round.minutes')).text()).toBe('45')
+    await press('Tab')
     await box(t('round.hours')).trigger('focus')
     await press('7')
     await press('Enter')
@@ -230,6 +231,49 @@ describe('SetTimeAnswer', () => {
     await tap('1', '5')
     expect(box(t('round.hours')).text()).toBe('4')
     expect(box(t('round.minutes')).text()).toBe('15')
+  })
+
+  it('keeps the minutes selected after Set correct answer when the popup gives focus back to the hours', async () => {
+    open()
+    const hours = box(t('round.hours')).element as HTMLButtonElement
+    hours.focus()
+    // The wrong-Answer popup takes the focus while it is open.
+    hours.blur()
+    ;(wrapper.vm as unknown as { fill(time: { hour: number; minute: number }): void }).fill({
+      hour: 4,
+      minute: 20,
+    })
+    await wrapper.vm.$nextTick()
+    // The wrong-Answer popup closes after the fill and focuses what had the focus before it.
+    hours.focus()
+    await wrapper.vm.$nextTick()
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('true')
+    await tap('1', '5')
+    expect(box(t('round.hours')).text()).toBe('4')
+    expect(box(t('round.minutes')).text()).toBe('15')
+  })
+
+  it('moves the focus with the selection, and a focus on coming back to the window re-arms nothing', async () => {
+    open()
+    ;(box(t('round.hours')).element as HTMLButtonElement).focus()
+    await press('8')
+    expect(document.activeElement).toBe(box(t('round.minutes')).element)
+    await press('3')
+    // The browser focuses the focused button again when the window or tab gets the focus back.
+    await box(t('round.minutes')).trigger('focus')
+    await press('0')
+    expect(box(t('round.minutes')).text()).toBe('30')
+    await press('ArrowLeft')
+    expect(document.activeElement).toBe(box(t('round.hours')).element)
+  })
+
+  it('selects no box while disabled', async () => {
+    open({ disabled: true })
+    await box(t('round.minutes')).trigger('click')
+    await press('Tab')
+    await box(t('round.minutes')).trigger('focus')
+    expect(box(t('round.hours')).attributes('aria-pressed')).toBe('true')
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('false')
   })
 
   it('ignores the pad and Submit while disabled', async () => {
