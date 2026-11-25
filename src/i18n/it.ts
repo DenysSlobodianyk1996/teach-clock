@@ -4,7 +4,7 @@ import type uk from './uk.ts'
 export default {
   app: {
     name: "Impara l'ora",
-    description: 'Un gioco che insegna ai bambini a leggere e impostare l’ora su un orologio.',
+    description: 'I bambini imparano a leggere l’ora e a muovere le lancette. Senza pubblicità.',
     clockShows: 'L’orologio segna {time}',
     clockDrag: 'Orologio con le lancette su {time}. Trascina le lancette.',
     previewAlt:

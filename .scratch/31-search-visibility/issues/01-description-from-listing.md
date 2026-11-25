@@ -5,8 +5,10 @@ word, so the search result, the link preview, the install prompt and the store a
 
 **Blocked by:** None (can start immediately)
 
-**Status:** todo
+**Status:** done
 
-- [ ] `app.description` in all six locales equals the short description in `docs/store/<lang>/listing.md`
-- [ ] `scripts/__tests__/store-listing.test.ts` fails when they drift
-- [ ] `app.previewAlt`, the manifests, the static and runtime meta description still read well
+- [x] `app.description` in all six locales equals the short description in `docs/store/<lang>/listing.md`
+- [x] `scripts/__tests__/store-listing.test.ts` fails when they drift
+- [x] `app.previewAlt`, the manifests, the static and runtime meta description still read well
+      Note: `previewAlt` describes the feature graphic on its own and reuses nothing; the manifests,
+      `index.html` and App.vue read `app.description` by key, so they follow.

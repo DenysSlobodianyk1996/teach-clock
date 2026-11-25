@@ -4,7 +4,7 @@ import type uk from './uk.ts'
 export default {
   app: {
     name: 'Aprende la hora',
-    description: 'Un juego que enseña a los niños a leer y poner la hora en un reloj de agujas.',
+    description: 'Los niños aprenden a leer la hora y a mover las manecillas. Sin anuncios.',
     clockShows: 'El reloj marca {time}',
     clockDrag: 'Reloj con las manecillas en {time}. Arrastra las manecillas.',
     previewAlt:

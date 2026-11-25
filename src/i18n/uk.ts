@@ -2,7 +2,11 @@
 export default {
   app: {
     name: 'Вчимо годинник',
-    description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
+    /**
+     * The page's description (search results, link previews, the install prompt): the Play listing's
+     * short description in docs/store/<lang>/listing.md, word for word (batch 31).
+     */
+    description: 'Гра, у якій діти вчаться читати годинник і ставити стрілки. Без реклами.',
     clockShows: 'Годинник показує {time}',
     clockDrag: 'Годинник зі стрілками на {time}. Перетягни стрілки.',
     /** The link preview image's alt text (og:image:alt): the store's feature graphic. */

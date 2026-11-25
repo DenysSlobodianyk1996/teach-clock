@@ -4,7 +4,7 @@ import type uk from './uk.ts'
 export default {
   app: {
     name: 'Uhr lernen',
-    description: 'Ein Spiel, mit dem Kinder die Uhr lesen und stellen lernen.',
+    description: 'Ein ruhiges Spiel: Kinder lernen, die Uhr zu lesen und zu stellen. Ohne Werbung.',
     clockShows: 'Die Uhr zeigt {time}',
     clockDrag: 'Uhr mit den Zeigern auf {time}. Ziehe die Zeiger.',
     previewAlt:
