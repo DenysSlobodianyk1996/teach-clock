@@ -11,7 +11,7 @@ export default {
     clockShows: 'L’horloge indique {time}',
     clockDrag: 'Horloge dont les aiguilles indiquent {time}. Fais glisser les aiguilles.',
     previewAlt:
-      "Apprendre l'heure : une horloge à aiguilles et quatre jeux pour apprendre à lire et régler l'heure",
+      "Apprendre l'heure : une horloge à aiguilles et quatre jeux pour apprendre à lire et régler l'heure",
   },
   header: {
     home: 'Accueil',
