@@ -35,7 +35,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [28-name-required-six-languages](28-name-required-six-languages/)       | feature       | in progress | yes  | #85                      |
 | [29-quick-time-entry](29-quick-time-entry/)                             | fixes         | done        | yes  | #89 (plan), #90          |
 | [30-link-preview](30-link-preview/)                                     | fixes         | done        | no   | #91 (plan), #92          |
-| [31-search-visibility](31-search-visibility/)                           | feature       | in progress | no   | —                        |
+| [31-search-visibility](31-search-visibility/)                           | feature       | in progress | no   | #93                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
