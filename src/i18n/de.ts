@@ -7,6 +7,8 @@ export default {
     description: 'Ein Spiel, mit dem Kinder die Uhr lesen und stellen lernen.',
     clockShows: 'Die Uhr zeigt {time}',
     clockDrag: 'Uhr mit den Zeigern auf {time}. Ziehe die Zeiger.',
+    previewAlt:
+      'Uhr lernen: eine Uhr mit Zeigern und vier Spiele, um die Uhr lesen und stellen zu lernen',
   },
   header: {
     home: 'Startseite',

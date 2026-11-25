@@ -13,3 +13,10 @@ export const CONTACT_SUBJECT = 'Contact support from teach clock for kids'
  * and src/__tests__/cssFloor.spec.ts fails on CSS it lacks without a fallback.
  */
 export const OLDEST_CHROME = 87
+
+/**
+ * The Web App's public address on GitHub Pages, written only here: the link preview tags, the
+ * canonical link and sitemap.xml use it (vite.config.ts). scripts/release-wizard.sh's WEBSITE_URL
+ * must match.
+ */
+export const SITE_URL = 'https://denysslobodianyk1996.github.io/teach-clock/'
