@@ -9,6 +9,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import { customMediaPlugin } from './src/styles/media.ts'
 import { buildPrivacyPage, type PrivacyPage } from './scripts/buildPrivacyPage.ts'
+import { buildWelcomePage } from './scripts/buildWelcomePage.ts'
+import { PRERENDER_HIDDEN_CSS, prerenderedWelcomeScript } from './src/static/prerenderedWelcome.ts'
 import { privacyUpdated } from './scripts/privacyUpdated.ts'
 import { appVersion } from './scripts/appVersion.ts'
 import { NOT_THE_APP_PAGES, PRIVACY_PAGE } from './src/static/privacy.ts'
@@ -194,6 +196,56 @@ function appTextPlugin(): Plugin {
   }
 }
 
+/**
+ * The Web App's build for GitHub Pages: `GITHUB_PAGES` and not the Android App. Only it is on the
+ * web for search engines and link previews. `env` is the process environment (a test gives its own).
+ */
+function isPagesBuild(env: Record<string, string | undefined>): boolean {
+  return !!env.GITHUB_PAGES && env.VITE_TARGET !== 'android'
+}
+
+/** The app's folder, where the static pages' server-side builds find its sources. */
+const PROJECT_ROOT = fileURLToPath(new URL('.', import.meta.url))
+
+const APP_MOUNT = '<div id="app"></div>'
+
+/**
+ * The English Welcome in index.html's #app for search engines that run no JavaScript (batch 31):
+ * the app's own Welcome rendered at build time (scripts/buildWelcomePage.ts), its CSS after the
+ * app's stylesheet. The app mounts over it (no hydration) in the Player's language. A pre-paint
+ * script hides it where the app opens another screen (src/static/prerenderedWelcome.ts). Only the
+ * GitHub Pages build: nobody crawls the Android App, and the dev server needs none.
+ */
+export function prerenderedWelcomePlugin(
+  env: Record<string, string | undefined> = process.env,
+): Plugin {
+  let base = '/'
+  return {
+    name: 'teach-clock-prerendered-welcome',
+    apply: (_config, { command }) => isPagesBuild(env) && command === 'build',
+    configResolved(config) {
+      base = config.base
+    },
+    transformIndexHtml: {
+      // After Vite has linked the app's stylesheet, so Welcome's own rules come after it, as when
+      // the app loads Welcome's chunk.
+      order: 'post',
+      async handler(html) {
+        if (!html.includes(APP_MOUNT)) throw new Error(`index.html has no ${APP_MOUNT}`)
+        const welcome = await buildWelcomePage({ root: PROJECT_ROOT, base })
+        return {
+          html: html.replace(APP_MOUNT, `<div id="app">${welcome.html}</div>`),
+          tags: [
+            { tag: 'style', children: PRERENDER_HIDDEN_CSS, injectTo: 'head' },
+            { tag: 'script', children: prerenderedWelcomeScript(base), injectTo: 'head' },
+            { tag: 'style', children: welcome.css, injectTo: 'head' },
+          ],
+        }
+      },
+    },
+  }
+}
+
 /** The link preview image, the English store feature graphic (1024 × 500), at the site root. */
 const OG_IMAGE = 'og-image.png'
 
@@ -206,7 +258,7 @@ const OG_IMAGE = 'og-image.png'
  * own).
  */
 export function seoPlugin(env: Record<string, string | undefined> = process.env): Plugin {
-  const enabled = !!env.GITHUB_PAGES && env.VITE_TARGET !== 'android'
+  const enabled = isPagesBuild(env)
   const image = `${SITE_URL}${OG_IMAGE}`
   const text = { title: MESSAGES.en.app.name, description: MESSAGES.en.app.description }
   // Vite escapes the attributes of the tags it injects, as appTextPlugin's `escape` does.
@@ -328,6 +380,7 @@ export default defineConfig({
     themeColorsPlugin(),
     appTextPlugin(),
     seoPlugin(),
+    prerenderedWelcomePlugin(),
     webManifestPlugin(),
     // Not in the Android App: it shows the Privacy Page as an app screen and needs no web copy.
     ...(isAndroidApp ? [] : [privacyPagePlugin()]),
