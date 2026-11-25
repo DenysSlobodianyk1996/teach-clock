@@ -1,7 +1,10 @@
 /**
  * Set Time entry: an hour box and a minute box, each up to two digits.
- * Any digits can be typed; an impossible value is reported only when the Player submits.
- * Plain TypeScript, no Vue.
+ * A box is complete when no further digit could make a value in its Range: the hours after a first
+ * digit of 2-9 (kept as typed, `8`), the minutes after a first digit of 6-9 (kept as `0X`), either
+ * after two digits. A complete hour box hands over to the minutes; a complete box takes no more
+ * digits until it is cleared. Two-digit values stay as typed, impossible ones included (`13`, `00`):
+ * those are reported only when the Player submits. Plain TypeScript, no Vue.
  */
 import {
   clockTime,
@@ -34,12 +37,29 @@ export function selectBox(entry: TimeEntry, box: Box): TimeEntry {
   return { ...entry, selected: box }
 }
 
-/** Adds a digit to the selected box. A full hour box hands over to the minutes. */
+/** The largest first digit a second digit can still follow and stay in the box's Range. */
+const LAST_OPEN_DIGIT: Record<Box, number> = {
+  hour: Math.floor(HOUR_RANGE.to / 10),
+  minute: Math.floor(MINUTE_RANGE.to / 10),
+}
+
+/** Whether no further digit could make a value in the box's Range. */
+function isComplete(box: Box, value: string): boolean {
+  if (value.length >= MAX_DIGITS) return true
+  return value.length === 1 && Number(value) > LAST_OPEN_DIGIT[box]
+}
+
+/**
+ * Adds a digit to the selected box, unless it is complete. A lone minute digit that completes the
+ * box becomes 0X; a complete hour box hands over to the minutes.
+ */
 export function pressDigit(entry: TimeEntry, digit: number): TimeEntry {
   const box = entry.selected
-  if (entry[box].length >= MAX_DIGITS) return entry
-  const value = entry[box] + String(digit)
-  const selected = box === 'hour' && value.length === MAX_DIGITS ? 'minute' : box
+  if (isComplete(box, entry[box])) return entry
+  let value = entry[box] + String(digit)
+  const complete = isComplete(box, value)
+  if (complete && box === 'minute') value = value.padStart(MAX_DIGITS, '0')
+  const selected = complete && box === 'hour' ? 'minute' : box
   return { ...entry, [box]: value, selected }
 }
 

@@ -78,14 +78,61 @@ describe('SetTimeAnswer', () => {
 
   it('shows an error instead of submitting an impossible time, until the Player edits', async () => {
     open()
-    await tap('1', '3', '6', '0')
+    await tap('1', '3', '3', '0')
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('true')
     await submit().trigger('click')
     expect(wrapper.emitted('submit')).toBeUndefined()
-    expect(wrapper.get('[role="alert"]').text()).toContain(t('round.errors.hour'))
-    expect(wrapper.get('[role="alert"]').text()).toContain(t('round.errors.minute'))
+    expect(wrapper.get('[role="alert"]').text()).toBe(t('round.errors.hour'))
 
     await tap(t('round.clear'))
     expect(wrapper.get('[role="alert"]').text()).toBe('')
+  })
+
+  it('completes a box after one digit that no second digit could follow, on the pad', async () => {
+    open()
+    await tap('8')
+    expect(box(t('round.hours')).text()).toBe('8')
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('true')
+    await tap('7')
+    expect(box(t('round.minutes')).text()).toBe('07')
+    await tap('3')
+    expect(box(t('round.minutes')).text()).toBe('07')
+    expect(wrapper.emitted('submit')).toBeUndefined()
+
+    await tap(t('round.clear'), '4', '5')
+    expect(box(t('round.minutes')).text()).toBe('45')
+    await submit().trigger('click')
+    expect(wrapper.emitted('submit')).toEqual([[{ hour: 8, minute: 45 }]])
+  })
+
+  it('waits for a second digit after hour 0 or 1 and minute 0-5', async () => {
+    open()
+    await tap('1')
+    expect(box(t('round.hours')).attributes('aria-pressed')).toBe('true')
+    await tap('1')
+    expect(box(t('round.hours')).text()).toBe('11')
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('true')
+    await tap('3')
+    expect(box(t('round.minutes')).text()).toBe('3')
+  })
+
+  it('completes a box after one digit on a physical keyboard too', async () => {
+    open()
+    await press('9')
+    expect(box(t('round.hours')).text()).toBe('9')
+    expect(box(t('round.minutes')).attributes('aria-pressed')).toBe('true')
+    await press('6')
+    await press('2')
+    expect(box(t('round.minutes')).text()).toBe('06')
+    await press('ArrowLeft')
+    await press('5')
+    expect(box(t('round.hours')).text()).toBe('9')
+    await press('Delete')
+    await press('0')
+    await press('8')
+    expect(box(t('round.hours')).text()).toBe('08')
+    await press('Enter')
+    expect(wrapper.emitted('submit')).toEqual([[{ hour: 8, minute: 6 }]])
   })
 
   it('works with a physical keyboard', async () => {
