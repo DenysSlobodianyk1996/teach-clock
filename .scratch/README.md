@@ -33,8 +33,8 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [26-version-name](26-version-name/)                                     | fixes         | done        | no   | #81                      |
 | [27-privacy-version](27-privacy-version/)                               | feature       | in progress | no   | #82                      |
 | [28-name-required-six-languages](28-name-required-six-languages/)       | feature       | in progress | yes  | #85                      |
-| [29-quick-time-entry](29-quick-time-entry/)                             | fixes         | planned     | yes  | #89                      |
-| [30-link-preview](30-link-preview/)                                     | fixes         | planned     | no   | #91                      |
+| [29-quick-time-entry](29-quick-time-entry/)                             | fixes         | done        | yes  | #89 (plan), #90          |
+| [30-link-preview](30-link-preview/)                                     | fixes         | planned     | no   | #91 (plan)               |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 

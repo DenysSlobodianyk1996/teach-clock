@@ -42,14 +42,24 @@ test('a Set Time Teach Round teaches a wrong Answer and lists it under Wrong', a
   await expect(page.getByRole('button', { name: t('round.hours') })).toHaveText('12')
   await expect(page.getByRole('button', { name: t('teach.setCorrect') })).toBeHidden()
 
-  // A second wrong try opens the popup again; Set correct answer fills the boxes; the Player submits.
+  // A second wrong try, from the hour box, opens the popup again; Set correct answer fills the
+  // boxes with the minutes selected, even though the popup gives the focus back to the hours.
+  const hours = page.getByRole('button', { name: t('round.hours') })
+  const minutes = page.getByRole('button', { name: t('round.minutes') })
+  await hours.click()
   await page.keyboard.press('Enter')
   await expect(popup).toBeVisible()
   await setCorrect(page).click()
   await expect(popup).toBeHidden()
   const [hour, minute] = first.split(':') as [string, string]
-  await expect(page.getByRole('button', { name: t('round.hours') })).toHaveText(hour)
-  await expect(page.getByRole('button', { name: t('round.minutes') })).toHaveText(minute)
+  await expect(hours).toHaveText(hour)
+  await expect(minutes).toHaveText(minute)
+  await expect(minutes).toHaveAttribute('aria-pressed', 'true')
+  // Two digits retype the minutes and leave the hours.
+  await page.keyboard.type(minute)
+  await expect(hours).toHaveText(hour)
+  await expect(minutes).toHaveText(minute)
+  await expect(minutes).toBeFocused()
   await page.getByRole('button', { name: t('round.submit') }).click()
   await expect(page.getByRole('status')).toHaveText(t('teach.right'))
   await expect(page.getByText(t('round.progress', { n: 2, total: 10 }))).toBeVisible()

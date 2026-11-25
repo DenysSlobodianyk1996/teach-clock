@@ -503,17 +503,17 @@ test.describe('a 360 × 640 phone', () => {
     })
   }
 
-  test('setTime: both time-box errors show and Submit stays in view, the clock keeps its size', async ({
+  // A typed minute is always 00–59 (batch 29), so only the hour box can show an error.
+  test('setTime: the time-box error shows and Submit stays in view, the clock keeps its size', async ({
     page,
   }) => {
     await startRound(page, { game: 'setTime', mode: 'test', level: 15 })
     const submit = page.getByRole('button', { name: t('round.submit') })
     const before = await clockWidth(page, '.clock-side svg.clock')
-    await page.keyboard.type('9999')
+    await page.keyboard.type('1359')
     await page.keyboard.press('Enter')
-    for (const box of ['hour', 'minute'] as const)
-      await expect(page.getByText(t(`round.errors.${box}`))).toBeVisible()
-    await expectInView(page, submit, 'Submit with both errors')
+    await expect(page.getByText(t('round.errors.hour'))).toBeVisible()
+    await expectInView(page, submit, 'Submit with the error')
     expect(await clockWidth(page, '.clock-side svg.clock'), 'the clock keeps its size').toBe(before)
   })
 
