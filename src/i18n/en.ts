@@ -7,6 +7,7 @@ export default {
     description: 'A game that teaches children to read and set the time on a clock with hands.',
     clockShows: 'The clock shows {time}',
     clockDrag: 'Clock with the hands at {time}. Drag the hands.',
+    previewAlt: 'Teach Clock: a clock with hands and four games to learn to read and set the time',
   },
   header: {
     home: 'Home',

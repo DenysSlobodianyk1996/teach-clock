@@ -7,6 +7,8 @@ export default {
     description: 'Un juego que enseña a los niños a leer y poner la hora en un reloj de agujas.',
     clockShows: 'El reloj marca {time}',
     clockDrag: 'Reloj con las manecillas en {time}. Arrastra las manecillas.',
+    previewAlt:
+      'Aprende la hora: un reloj de agujas y cuatro juegos para aprender a leer y poner la hora',
   },
   header: {
     home: 'Inicio',

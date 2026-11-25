@@ -1,6 +1,6 @@
 # Play listing: English (default language, `en-US`)
 
-Paste each block into Play Console › Grow users › Store presence › Main store listing. English is the default language, shown to everyone whose language has no listing of its own; the translations are in the [`uk`](../uk/listing.md), [`de`](../de/listing.md), [`fr`](../fr/listing.md), [`it`](../it/listing.md) and [`es`](../es/listing.md) folders. The title starts with the Game Name, "Teach Clock". Feature graphic: `feature-graphic.png`; screenshots: `phone/`, `tablet-7/`, `tablet-10/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
+Paste each block into Play Console › Grow users › Store presence › Main store listing. English is the default language, shown to everyone whose language has no listing of its own; the translations are in the [`uk`](../uk/listing.md), [`de`](../de/listing.md), [`fr`](../fr/listing.md), [`it`](../it/listing.md) and [`es`](../es/listing.md) folders. The title starts with the Game Name, "Teach Clock". Feature graphic: `feature-graphic.png`, which is also the Web App's link preview image, `og-image.png` (batch 30), so redrawing it changes link previews in Slack, Telegram and elsewhere; screenshots: `phone/`, `tablet-7/`, `tablet-10/`. Counts are Unicode characters, as Play counts them (the em dash is one), checked against Play's limits 30 / 80 / 4000.
 
 Website field: `https://denysslobodianyk1996.github.io/teach-clock/`. The contact email goes in its own field, never in the text.
 

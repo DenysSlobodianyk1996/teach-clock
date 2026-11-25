@@ -7,6 +7,8 @@ export default {
     description: 'Un gioco che insegna ai bambini a leggere e impostare l’ora su un orologio.',
     clockShows: 'L’orologio segna {time}',
     clockDrag: 'Orologio con le lancette su {time}. Trascina le lancette.',
+    previewAlt:
+      "Impara l'ora: un orologio con le lancette e quattro giochi per imparare a leggere e regolare l'ora",
   },
   header: {
     home: 'Home',

@@ -215,6 +215,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DRY_RUN=0
 GUIDE="$ROOT/docs/android-release.md"
 CLOSED_TEST="$ROOT/docs/store/closed-test.md"
+# Must match SITE_URL in src/config.ts (the Web App's link previews, canonical link and sitemap).
 WEBSITE_URL="https://denysslobodianyk1996.github.io/teach-clock/"
 PRIVACY_URL="${WEBSITE_URL}privacy/"
 PACKAGE_ID=$(sed -n 's/^ *applicationId "\(.*\)"$/\1/p' "$ROOT/android/app/build.gradle")

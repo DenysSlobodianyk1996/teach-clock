@@ -27,13 +27,13 @@ export default defineConfig({
       name: 'desktop',
       use: { ...devices['Desktop Chrome'] },
       testIgnore:
-        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview|language-fit/,
+        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview|language-fit|link-preview/,
     },
     {
       name: 'phone',
       use: { ...devices['Pixel 7'] },
       testIgnore:
-        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview/,
+        /offline\.spec|privacy-reload\.spec|small-phone|no-app-scroll\.spec|phone-layout-768|system-bars|old-webview|link-preview/,
     },
     // An old system WebView, such as a Samsung S8's: an old Chromium from OLD_CHROMIUM on a Galaxy S8
     // screen. Skipped unless OLD_CHROMIUM is set (docs/android-checks.md).
@@ -70,6 +70,12 @@ export default defineConfig({
       name: 'offline',
       use: { ...devices['Pixel 7'], baseURL: `http://localhost:${offlinePort}` },
       testMatch: /offline\.spec|dragged-number\.spec|privacy-reload\.spec/,
+    },
+    {
+      // The GitHub Pages build's link preview tags, image and sitemap. The spec builds and serves
+      // that build itself (PW_PAGES_PORT), so it costs nothing when it does not run.
+      name: 'link-preview',
+      testMatch: /link-preview\.spec/,
     },
   ],
   webServer: [
