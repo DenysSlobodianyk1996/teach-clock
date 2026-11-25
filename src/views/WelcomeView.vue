@@ -5,10 +5,15 @@ import { useI18n } from 'vue-i18n'
 import { NAME_MAX_LENGTH, usePlayerStore } from '@/stores/player'
 import InfoButton from '@/components/InfoButton.vue'
 import InfoPopup from '@/components/InfoPopup.vue'
+import { GOOGLE_PLAY_LIVE, GOOGLE_PLAY_URL } from '@/config'
+import { isAndroidApp } from '@/platform'
 
 const { t } = useI18n()
 const router = useRouter()
 const player = usePlayerStore()
+
+/** The Play listing, once the Android App is in production; never inside that app (batch 31). */
+const showGooglePlay = GOOGLE_PLAY_LIVE && !isAndroidApp
 
 const draft = ref(player.name)
 /** On a phone the intro is behind the ⓘ, in an Info Popup. */
@@ -92,6 +97,9 @@ const numbers = Array.from({ length: 12 }, (_, i) => {
           </svg>
         </button>
       </div>
+      <a v-if="showGooglePlay" class="google-play" :href="GOOGLE_PLAY_URL">
+        {{ t('welcome.googlePlay') }}
+      </a>
     </form>
 
     <div class="confetti-layer" aria-hidden="true">
@@ -191,6 +199,18 @@ h1 {
 .intro {
   grid-column: 1;
   grid-row: 1;
+}
+/* As quiet as the Footer's links: Start stays the one call to action. */
+.google-play {
+  align-self: flex-start;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.google-play:hover {
+  color: var(--text);
 }
 .art {
   grid-column: 2;

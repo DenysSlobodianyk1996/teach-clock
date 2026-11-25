@@ -7,11 +7,11 @@ import type uk from './uk.ts'
 export default {
   app: {
     name: "Apprendre l'heure",
-    description: 'Un jeu qui apprend aux enfants à lire et à régler l’heure sur une horloge.',
+    description: 'Un jeu calme pour apprendre à lire l’heure et régler les aiguilles. Sans pub.',
     clockShows: 'L’horloge indique {time}',
     clockDrag: 'Horloge dont les aiguilles indiquent {time}. Fais glisser les aiguilles.',
     previewAlt:
-      "Apprendre l'heure : une horloge à aiguilles et quatre jeux pour apprendre à lire et régler l'heure",
+      "Apprendre l'heure : une horloge à aiguilles et quatre jeux pour apprendre à lire et régler l'heure",
   },
   header: {
     home: 'Accueil',
@@ -28,6 +28,7 @@ export default {
     namePlaceholder: 'Ton prénom',
     nameRequired: 'Écris ton prénom',
     start: 'Commencer',
+    googlePlay: 'Disponible sur Google Play',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
   info: { more: 'En savoir plus', moreAbout: 'En savoir plus\u00a0: {section}' },

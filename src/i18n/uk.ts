@@ -2,7 +2,11 @@
 export default {
   app: {
     name: 'Вчимо годинник',
-    description: 'Гра, яка вчить дітей читати й ставити час на годиннику зі стрілками.',
+    /**
+     * The page's description (search results, link previews, the install prompt): the Play listing's
+     * short description in docs/store/<lang>/listing.md, word for word (batch 31).
+     */
+    description: 'Гра, у якій діти вчаться читати годинник і ставити стрілки. Без реклами.',
     clockShows: 'Годинник показує {time}',
     clockDrag: 'Годинник зі стрілками на {time}. Перетягни стрілки.',
     /** The link preview image's alt text (og:image:alt): the store's feature graphic. */
@@ -26,6 +30,11 @@ export default {
     namePlaceholder: 'Твоє ім’я',
     nameRequired: 'Напиши ім’я, щоб почати',
     start: 'Почати',
+    /**
+     * The link to the Android App's Play listing under Start, in the Web App only, once the app is
+     * in production (GOOGLE_PLAY_LIVE). Google's own badge wording in each language.
+     */
+    googlePlay: 'Завантажте з Google Play',
   },
   /** The ⓘ by a heading on a phone, which opens its Info Popup. */
   info: { more: 'Докладніше', moreAbout: 'Докладніше: {section}' },

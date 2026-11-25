@@ -14,10 +14,16 @@ import { THEME_BG } from './themeColors'
 const escape = (text: string) =>
   text.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!)
 
-/** The whole page, with `css` (the app's styles for it) inlined: no script, no other request. */
-export async function renderPrivacyPage(css: string): Promise<string> {
+/**
+ * The whole page, with `css` (the app's styles for it) inlined: no script, no other request.
+ * `canonical` is its public address, given only by the GitHub Pages build (batch 31).
+ */
+export async function renderPrivacyPage(css: string, canonical?: string): Promise<string> {
   const en = MESSAGES.en
   const body = await renderToString(createSSRApp(PrivacyStaticPage).use(createAppI18n('en')))
+  const canonicalLink = canonical
+    ? `\n    <link rel="canonical" href="${escape(canonical)}" />`
+    : ''
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -27,7 +33,7 @@ export async function renderPrivacyPage(css: string): Promise<string> {
     <meta name="theme-color" content="${THEME_BG.light}" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="${THEME_BG.dark}" media="(prefers-color-scheme: dark)" />
     <title>${escape(en.privacy.title)} · ${escape(en.app.name)}</title>
-    <meta name="description" content="${escape(en.privacy.noData)}" />
+    <meta name="description" content="${escape(en.privacy.noData)}" />${canonicalLink}
     <link rel="icon" href="../favicon.ico" sizes="48x48" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" sizes="any" />
     <style>${css}</style>

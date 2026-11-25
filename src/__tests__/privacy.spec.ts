@@ -113,6 +113,18 @@ describe('the static privacy/index.html for Google Play, rendered from the app',
     expect(page.html).not.toContain('github.io')
   })
 
+  it('names its public address as canonical when it is given one, as on GitHub Pages', async () => {
+    const canonical = 'https://denysslobodianyk1996.github.io/teach-clock/privacy/'
+    const { html } = await buildPrivacyPage({
+      root: process.cwd(),
+      base: '/teach-clock/',
+      canonical,
+    })
+    const head = new JSDOM(html).window.document.head
+    expect(head.querySelector('link[rel="canonical"]')!.getAttribute('href')).toBe(canonical)
+    expect(doc.querySelector('link[rel="canonical"]')).toBeNull()
+  }, 60_000)
+
   it('finds its icons one folder up, where the app is', () => {
     const icons = [...doc.querySelectorAll('link[rel="icon"]')].map((l) => l.getAttribute('href'))
     expect(icons).toEqual(['../favicon.ico', '../favicon.svg'])

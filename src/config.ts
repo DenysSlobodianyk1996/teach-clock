@@ -20,3 +20,21 @@ export const OLDEST_CHROME = 87
  * must match.
  */
 export const SITE_URL = 'https://denysslobodianyk1996.github.io/teach-clock/'
+
+/**
+ * Google Search Console's HTML-tag token for the URL-prefix property `SITE_URL` (batch 31): the
+ * GitHub Pages build puts it in index.html as `<meta name="google-site-verification">`, and leaves
+ * the tag out while this is empty. Public by design: Google reads it from the page. Removing it
+ * unverifies the property.
+ */
+export const GOOGLE_SITE_VERIFICATION = 'jFybgwwGyr9yepRC53WaJmZYPZGWPFwLZD000UJpGIg'
+
+/** The Android App's Google Play listing: the app id in capacitor.config.ts (a test keeps them equal). */
+export const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=app.teachclockforkids'
+
+/**
+ * Whether the Android App is in production on Google Play (batch 31). Then Welcome in the Web App
+ * links the listing ("Get it on Google Play") and the GitHub Pages build's JSON-LD names the app.
+ * Turn it on with the first production release (docs/android-release.md, step 14).
+ */
+export const GOOGLE_PLAY_LIVE: boolean = false

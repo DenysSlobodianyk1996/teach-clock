@@ -88,6 +88,11 @@ describe.each(STORE_LANGUAGES.map((lang) => [lang, MESSAGES[lang].app.name] as c
       expect(listing['App name']!.text.startsWith(`${gameName} — `)).toBe(true)
     })
 
+    // The page's description in search results, link previews and the install prompt (batch 31).
+    it("is the game's description in its language, word for word", () => {
+      expect(MESSAGES[lang].app.description).toBe(listing['Short description']!.text)
+    })
+
     it('keeps everything for its Play listing in one folder, with plain filenames', () => {
       const testers = lang === 'en' || lang === 'uk' ? ['testers.md'] : []
       expect(readdirSync(`${store}${lang}`).sort()).toEqual([

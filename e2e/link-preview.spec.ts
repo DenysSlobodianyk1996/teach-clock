@@ -2,12 +2,13 @@ import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
 import process from 'node:process'
 import { expect, test } from '@playwright/test'
-import { tEn } from './i18n.ts'
+import { t, tEn } from './i18n.ts'
 
 /**
- * The Web App as GitHub Pages serves it: a fresh build with GITHUB_PAGES, at /teach-clock/. Only
- * that build has the link preview tags (vite.config.ts, seoPlugin), so this spec makes and serves
- * its own, in its own folder, instead of the shared servers in playwright.config.ts.
+ * The Web App as GitHub Pages serves it: a fresh build with GITHUB_PAGES, at /teach-clock/, with
+ * the 404.html deploy.yml copies from index.html. Only that build has the link preview tags and the
+ * prerendered Welcome (vite.config.ts, seoPlugin, prerenderedWelcomePlugin), so this spec makes and
+ * serves its own, in its own folder, instead of the shared servers in playwright.config.ts.
  */
 const port = Number(process.env.PW_PAGES_PORT ?? 4175)
 const site = `http://localhost:${port}/teach-clock/`
@@ -33,7 +34,7 @@ test.beforeAll(async () => {
   const env = { ...process.env, GITHUB_PAGES: '1' }
   const outDir = 'dist-pages'
   const child = spawn(
-    `npx vite build --outDir ${outDir} && npx vite preview --outDir ${outDir} --port ${port} --strictPort`,
+    `npx vite build --outDir ${outDir} && cp ${outDir}/index.html ${outDir}/404.html && npx vite preview --outDir ${outDir} --port ${port} --strictPort`,
     { shell: true, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] },
   )
   server = child
@@ -84,4 +85,60 @@ test('a link unfurler sees the preview image, with no JavaScript', async ({ requ
   expect(await sitemap.text()).toContain(
     '<loc>https://denysslobodianyk1996.github.io/teach-clock/privacy/</loc>',
   )
+})
+
+test('a search engine finds the JSON-LD, robots.txt, Search Console tag and canonicals', async ({
+  request,
+}) => {
+  const html = await (await request.get(site)).text()
+  expect(html).toContain('<script type="application/ld+json">')
+  expect(html).toMatch(/<meta name="google-site-verification" content="[\w-]+"/)
+
+  const robots = await request.get(`${site}robots.txt`)
+  expect(robots.status()).toBe(200)
+  expect(await robots.text()).toContain(
+    'Sitemap: https://denysslobodianyk1996.github.io/teach-clock/sitemap.xml',
+  )
+
+  const privacy = await (await request.get(`${site}privacy/`)).text()
+  expect(privacy).toContain(
+    '<link rel="canonical" href="https://denysslobodianyk1996.github.io/teach-clock/privacy/" />',
+  )
+})
+
+test.describe('the prerendered English Welcome', () => {
+  /** The page as it is before the app's JavaScript runs: index.html's own scripts only. */
+  async function withoutTheApp(page: import('@playwright/test').Page, path: string) {
+    await page.route('**/assets/*.js', (route) => route.abort())
+    await page.goto(`${site}${path}`)
+    return page.locator('[data-prerendered]')
+  }
+
+  test('a crawler reads it at the root with no JavaScript, under one h1', async ({ request }) => {
+    const html = await (await request.get(site)).text()
+    expect(html.match(/<h1[\s>]/g)).toHaveLength(1)
+    expect(html).toContain(tEn('welcome.intro'))
+  })
+
+  test('shows at the root before the app loads, in English', async ({ page }) => {
+    const welcome = await withoutTheApp(page, '')
+    await expect(welcome).toBeVisible()
+    await expect(welcome).toHaveAttribute('lang', 'en')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(tEn('welcome.title'))
+  })
+
+  for (const path of ['settings', 'privacy-policy', '404.html']) {
+    test(`never flashes up where the app opens another screen: ${path}`, async ({ page }) => {
+      const welcome = await withoutTheApp(page, path)
+      await expect(welcome).toBeAttached()
+      await expect(welcome).toBeHidden()
+    })
+  }
+
+  test("gives way to the app's Welcome in the Player's language, one h1", async ({ page }) => {
+    await page.goto(site)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t('welcome.title'))
+    await expect(page.locator('[data-prerendered]')).toHaveCount(0)
+    await expect(page.locator('h1')).toHaveCount(1)
+  })
 })
