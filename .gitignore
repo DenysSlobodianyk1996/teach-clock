@@ -21,3 +21,4 @@ dist-ssr/
 __screenshots__/
 *.timestamp-*-*.mjs
 dist-store/
+dist-pages/
