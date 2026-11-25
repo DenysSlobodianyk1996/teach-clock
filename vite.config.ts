@@ -217,7 +217,7 @@ export function seoPlugin(env: Record<string, string | undefined> = process.env)
   })
   return {
     name: 'teach-clock-seo',
-    apply: () => enabled,
+    apply: (_config, { command }) => enabled && command === 'build',
     transformIndexHtml: () => [
       meta('og:type', 'website'),
       meta('og:site_name', text.title),
@@ -233,6 +233,7 @@ export function seoPlugin(env: Record<string, string | undefined> = process.env)
       meta('twitter:title', text.title),
       meta('twitter:description', text.description),
       meta('twitter:image', image),
+      meta('twitter:image:alt', MESSAGES.en.app.previewAlt),
       { tag: 'link', attrs: { rel: 'canonical', href: SITE_URL }, injectTo: 'head' },
     ],
     async generateBundle() {

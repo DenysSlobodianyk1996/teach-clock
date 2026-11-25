@@ -1,4 +1,5 @@
 import { spawn, type ChildProcess } from 'node:child_process'
+import { createServer } from 'node:net'
 import process from 'node:process'
 import { expect, test } from '@playwright/test'
 import { tEn } from './i18n.ts'
@@ -11,16 +12,40 @@ import { tEn } from './i18n.ts'
 const port = Number(process.env.PW_PAGES_PORT ?? 4175)
 const site = `http://localhost:${port}/teach-clock/`
 let server: ChildProcess | undefined
+/** The build's and the preview server's output, shown when either fails. */
+let log = ''
+
+/** Whether something already listens on the port: a stale server would answer for this build. */
+function portTaken(): Promise<boolean> {
+  return new Promise((resolve) => {
+    const probe = createServer()
+    probe.once('error', () => resolve(true))
+    probe.once('listening', () => probe.close(() => resolve(false)))
+    probe.listen(port)
+  })
+}
 
 test.beforeAll(async () => {
   test.setTimeout(180_000)
+  if (await portTaken()) {
+    throw new Error(`Port ${port} is taken: stop that server or set PW_PAGES_PORT to a free port.`)
+  }
   const env = { ...process.env, GITHUB_PAGES: '1' }
   const outDir = 'dist-pages'
-  server = spawn(
+  const child = spawn(
     `npx vite build --outDir ${outDir} && npx vite preview --outDir ${outDir} --port ${port} --strictPort`,
-    { shell: true, env, detached: true, stdio: 'ignore' },
+    { shell: true, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] },
   )
-  await expect
+  server = child
+  child.stdout?.on('data', (chunk) => (log += chunk))
+  child.stderr?.on('data', (chunk) => (log += chunk))
+  // Settles only if the build or the preview server stops before the site is up.
+  const exited = new Promise<never>((_, reject) =>
+    child.once('exit', (code, signal) =>
+      reject(new Error(`The build or preview exited (${signal ?? code}) before serving:\n${log}`)),
+    ),
+  )
+  const up = expect
     .poll(
       () =>
         fetch(site).then(
@@ -30,11 +55,17 @@ test.beforeAll(async () => {
       { timeout: 170_000 },
     )
     .toBe(true)
+  await Promise.race([up, exited])
 })
 
 test.afterAll(() => {
-  // The whole group: the shell and the preview server it started.
-  if (server?.pid) process.kill(-server.pid)
+  // The whole group: the shell and the preview server it started. It is gone if it failed.
+  if (!server?.pid) return
+  try {
+    process.kill(-server.pid)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ESRCH') throw error
+  }
 })
 
 test('a link unfurler sees the preview image, with no JavaScript', async ({ request }) => {

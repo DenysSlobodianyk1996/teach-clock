@@ -70,6 +70,7 @@ describe('link previews and the sitemap', () => {
       expect(meta('og:image:width')).toBe('1024')
       expect(meta('og:image:height')).toBe('500')
       expect(meta('og:image:alt')).toBe(tEn('app.previewAlt'))
+      expect(meta('twitter:image:alt')).toBe(tEn('app.previewAlt'))
     })
 
     it('points the page and its canonical link at the public address', () => {

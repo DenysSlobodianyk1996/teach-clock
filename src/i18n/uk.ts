@@ -6,7 +6,8 @@ export default {
     clockShows: 'Годинник показує {time}',
     clockDrag: 'Годинник зі стрілками на {time}. Перетягни стрілки.',
     /** The link preview image's alt text (og:image:alt): the store's feature graphic. */
-    previewAlt: 'Вчимо годинник: годинник зі стрілками і чотири гри, щоб навчитися читати й ставити час',
+    previewAlt:
+      'Вчимо годинник: годинник зі стрілками і чотири гри, щоб навчитися читати й ставити час',
   },
   header: {
     home: 'Додому',
