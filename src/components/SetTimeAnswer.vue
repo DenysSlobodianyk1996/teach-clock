@@ -21,6 +21,7 @@ import {
  * Hour and minute boxes, the number pad and Submit. Mount a fresh one per Task (`:key`).
  * Emits only a possible Clock Time; an impossible one shows an error and waits for a fix.
  * `disabled` ignores every key and button; `fill(time)` puts a Clock Time in the boxes.
+ * A selected box shows its digits highlighted while the next digit would replace them.
  */
 const props = defineProps<{ disabled?: boolean }>()
 const emit = defineEmits<{ submit: [time: ClockTime] }>()
@@ -49,6 +50,11 @@ function shown(box: Box): string {
   if (box === 'minute' && value.length === 1 && entry.value.selected !== 'minute')
     return `0${value}`
   return value
+}
+
+/** Whether a box shows its digits highlighted: selected, and the next digit replaces them. */
+function marked(box: Box): boolean {
+  return entry.value.selected === box && entry.value.replace && entry.value[box] !== ''
 }
 
 /** Fills the boxes with a Clock Time ("Set correct answer"); the Player still submits. */
@@ -97,7 +103,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         <button
           type="button"
           class="timebox"
-          :class="[box, { focus: entry.selected === box }]"
+          :class="[box, { focus: entry.selected === box, replace: marked(box) }]"
           :data-box="box"
           :aria-label="t(box === 'hour' ? 'round.hours' : 'round.minutes')"
           :aria-describedby="rangeId(box)"
@@ -106,7 +112,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           @click="select(box)"
           @focus="select(box)"
         >
-          {{ shown(box) }}
+          <span class="digits">{{ shown(box) }}</span>
         </button>
         <span :id="rangeId(box)" class="range" :class="box">
           {{ t('round.range', BOX_RANGE[box]) }}
@@ -197,6 +203,14 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 }
 .timebox.focus {
   border-color: var(--accent);
+}
+/* Digits the next key replaces look selected, like selected text: the accent with its ink, on the
+   face's cream in both themes. */
+.timebox.replace .digits {
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 .timebox[aria-invalid='true'] {
   border-color: var(--bad);

@@ -138,3 +138,47 @@ test('one digit that no second digit could follow completes a box (#87)', async 
   // Nothing submitted on its own: still the first Task.
   await expect(page.getByText(t('round.progress', { n: 1, total: 10 }))).toBeVisible()
 })
+
+test('a selected box is retyped without Clear (#88)', async ({ page }) => {
+  await page.goto('/')
+  await page.getByLabel(t('welcome.nameLabel')).fill('Оля')
+  await page.getByRole('button', { name: t('welcome.start') }).click()
+  await page.getByRole('radio', { name: startingWith(t('games.setTime.name')) }).check()
+  await page.getByRole('radio', { name: startingWith(t('modes.test.name')) }).check()
+  await page.getByRole('button', { name: t('settings.play') }).click()
+
+  const pad = (d: string) => page.locator('.pad').getByRole('button', { name: d, exact: true })
+  const hours = page.getByRole('button', { name: t('round.hours') })
+  const minutes = page.getByRole('button', { name: t('round.minutes') })
+  const submit = page.getByRole('button', { name: t('round.submit') })
+  const replacing = /\breplace\b/
+  const enter830 = async () => {
+    await hours.click()
+    for (const d of '830') await pad(d).click()
+    await expect(hours).toHaveText('8')
+    await expect(minutes).toHaveText('30')
+  }
+
+  // With 8:30, tap the hours: 8 is highlighted and nothing is lost. 1 1 → 11:30.
+  await enter830()
+  await hours.click()
+  await expect(hours).toHaveClass(replacing)
+  await expect(hours).toHaveText('8')
+  await expect(submit).toBeEnabled()
+  await pad('1').click()
+  await pad('1').click()
+  await expect(hours).toHaveText('11')
+  await expect(minutes).toHaveText('30')
+
+  // With 8:30, tap the minutes: 4 5 → 8:45.
+  await enter830()
+  await minutes.click()
+  await expect(minutes).toHaveClass(replacing)
+  await pad('4').click()
+  await expect(minutes).not.toHaveClass(replacing)
+  await pad('5').click()
+  await expect(hours).toHaveText('8')
+  await expect(minutes).toHaveText('45')
+  // Nothing submitted on its own: still the first Task.
+  await expect(page.getByText(t('round.progress', { n: 1, total: 10 }))).toBeVisible()
+})

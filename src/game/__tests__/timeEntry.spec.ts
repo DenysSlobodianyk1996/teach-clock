@@ -17,31 +17,31 @@ function type(entry: TimeEntry, digits: string): TimeEntry {
 
 describe('time entry', () => {
   it('starts empty with the hour box selected', () => {
-    expect(EMPTY_ENTRY).toEqual({ hour: '', minute: '', selected: 'hour' })
+    expect(EMPTY_ENTRY).toMatchObject({ hour: '', minute: '', selected: 'hour' })
   })
 
   it('moves to the minutes after the second hour digit', () => {
     const entry = type(EMPTY_ENTRY, '10')
-    expect(entry).toEqual({ hour: '10', minute: '', selected: 'minute' })
-    expect(type(entry, '55')).toEqual({ hour: '10', minute: '55', selected: 'minute' })
+    expect(entry).toMatchObject({ hour: '10', minute: '', selected: 'minute' })
+    expect(type(entry, '55')).toMatchObject({ hour: '10', minute: '55', selected: 'minute' })
   })
 
   it('stays on the hour after 0 or 1, which a second digit can follow', () => {
-    expect(type(EMPTY_ENTRY, '1')).toEqual({ hour: '1', minute: '', selected: 'hour' })
-    expect(type(EMPTY_ENTRY, '0')).toEqual({ hour: '0', minute: '', selected: 'hour' })
-    expect(type(EMPTY_ENTRY, '11')).toEqual({ hour: '11', minute: '', selected: 'minute' })
-    expect(type(EMPTY_ENTRY, '08')).toEqual({ hour: '08', minute: '', selected: 'minute' })
+    expect(type(EMPTY_ENTRY, '1')).toMatchObject({ hour: '1', minute: '', selected: 'hour' })
+    expect(type(EMPTY_ENTRY, '0')).toMatchObject({ hour: '0', minute: '', selected: 'hour' })
+    expect(type(EMPTY_ENTRY, '11')).toMatchObject({ hour: '11', minute: '', selected: 'minute' })
+    expect(type(EMPTY_ENTRY, '08')).toMatchObject({ hour: '08', minute: '', selected: 'minute' })
   })
 
   it('moves to the minutes after one hour digit of 2-9, shown as typed', () => {
     for (const d of '23456789')
-      expect(type(EMPTY_ENTRY, d)).toEqual({ hour: d, minute: '', selected: 'minute' })
+      expect(type(EMPTY_ENTRY, d)).toMatchObject({ hour: d, minute: '', selected: 'minute' })
   })
 
   it('completes the minutes as 0X after one digit of 6-9, and keeps them selected', () => {
     const minutes = selectBox(EMPTY_ENTRY, 'minute')
     for (const d of '6789')
-      expect(type(minutes, d)).toEqual({ hour: '', minute: `0${d}`, selected: 'minute' })
+      expect(type(minutes, d)).toMatchObject({ hour: '', minute: `0${d}`, selected: 'minute' })
   })
 
   it('waits for a second minute digit after 0-5', () => {
@@ -51,27 +51,26 @@ describe('time entry', () => {
   })
 
   it('ignores further digits in a complete box while it stays selected', () => {
-    expect(type(EMPTY_ENTRY, '85')).toEqual({ hour: '8', minute: '5', selected: 'minute' })
-    expect(type(selectBox(type(EMPTY_ENTRY, '8'), 'hour'), '5').hour).toBe('8')
+    expect(type(EMPTY_ENTRY, '85')).toMatchObject({ hour: '8', minute: '5', selected: 'minute' })
     expect(type(selectBox(EMPTY_ENTRY, 'minute'), '73').minute).toBe('07')
   })
 
   it('takes digits again once the complete box is cleared', () => {
     const hour = clearBox(selectBox(type(EMPTY_ENTRY, '8'), 'hour'))
-    expect(type(hour, '11')).toEqual({ hour: '11', minute: '', selected: 'minute' })
+    expect(type(hour, '11')).toMatchObject({ hour: '11', minute: '', selected: 'minute' })
     const minute = clearBox(type(selectBox(EMPTY_ENTRY, 'minute'), '7'))
     expect(type(minute, '45').minute).toBe('45')
   })
 
   it('still hands over impossible two-digit hours, reported only on Submit', () => {
-    expect(type(EMPTY_ENTRY, '13')).toEqual({ hour: '13', minute: '', selected: 'minute' })
-    expect(type(EMPTY_ENTRY, '00')).toEqual({ hour: '00', minute: '', selected: 'minute' })
+    expect(type(EMPTY_ENTRY, '13')).toMatchObject({ hour: '13', minute: '', selected: 'minute' })
+    expect(type(EMPTY_ENTRY, '00')).toMatchObject({ hour: '00', minute: '', selected: 'minute' })
   })
 
   it('types into whichever box the Player selects', () => {
     const entry = type(selectBox(type(EMPTY_ENTRY, '1'), 'minute'), '55')
-    expect(entry).toEqual({ hour: '1', minute: '55', selected: 'minute' })
-    expect(type(selectBox(entry, 'hour'), '2').hour).toBe('12')
+    expect(entry).toMatchObject({ hour: '1', minute: '55', selected: 'minute' })
+    expect(type(selectBox(entry, 'hour'), '2').hour).toBe('2')
   })
 
   it('ignores a third digit in a full box', () => {
@@ -80,8 +79,8 @@ describe('time entry', () => {
 
   it('clears the whole selected box and leaves the other', () => {
     const entry = type(EMPTY_ENTRY, '0754')
-    expect(clearBox(entry)).toEqual({ hour: '07', minute: '', selected: 'minute' })
-    expect(clearBox(selectBox(entry, 'hour'))).toEqual({
+    expect(clearBox(entry)).toMatchObject({ hour: '07', minute: '', selected: 'minute' })
+    expect(clearBox(selectBox(entry, 'hour'))).toMatchObject({
       hour: '',
       minute: '54',
       selected: 'hour',
@@ -108,9 +107,56 @@ describe('time entry', () => {
       hour,
       minute,
       selected: 'minute',
+      replace: false,
     })
     expect(readEntry(entry('12', '60'))).toEqual({ errors: ['minute'] })
     expect(readEntry(entry('00', '99'))).toEqual({ errors: ['hour', 'minute'] })
+  })
+
+  it('selecting a box marks its value to be replaced, and loses nothing', () => {
+    const entry = type(EMPTY_ENTRY, '830')
+    const hours = selectBox(entry, 'hour')
+    expect(hours).toEqual({ hour: '8', minute: '30', selected: 'hour', replace: true })
+    expect(canSubmit(hours)).toBe(true)
+  })
+
+  it('retypes a selected box: the first digit replaces, later digits add (#88)', () => {
+    const entry = type(EMPTY_ENTRY, '830')
+    expect(type(selectBox(entry, 'hour'), '11')).toEqual({
+      hour: '11',
+      minute: '30',
+      selected: 'minute',
+      replace: true,
+    })
+    expect(type(selectBox(entry, 'minute'), '45')).toEqual({
+      hour: '8',
+      minute: '45',
+      selected: 'minute',
+      replace: false,
+    })
+  })
+
+  it('applies the complete-box rules to the retyped value', () => {
+    const entry = type(EMPTY_ENTRY, '1245')
+    expect(type(selectBox(entry, 'hour'), '9')).toMatchObject({ hour: '9', selected: 'minute' })
+    expect(type(selectBox(entry, 'hour'), '1')).toMatchObject({ hour: '1', selected: 'hour' })
+    expect(type(selectBox(entry, 'minute'), '73').minute).toBe('07')
+    expect(type(selectBox(entry, 'minute'), '3').minute).toBe('3')
+  })
+
+  it('hands over to the minutes ready to be replaced', () => {
+    const entry = selectBox(type(EMPTY_ENTRY, '830'), 'hour')
+    const handed = type(entry, '9')
+    expect(handed).toMatchObject({ hour: '9', minute: '30', selected: 'minute', replace: true })
+    expect(type(handed, '15').minute).toBe('15')
+  })
+
+  it('stops replacing after the first digit or Clear', () => {
+    const entry = selectBox(type(EMPTY_ENTRY, '830'), 'minute')
+    expect(pressDigit(entry, 4).replace).toBe(false)
+    const cleared = clearBox(entry)
+    expect(cleared).toMatchObject({ minute: '', replace: false })
+    expect(type(cleared, '45').minute).toBe('45')
   })
 
   it('reports an incomplete entry as missing boxes', () => {
@@ -126,7 +172,8 @@ describe('entryFor (Set correct answer)', () => {
     expect(readEntry(entry)).toEqual({ time: clockTime(7, 5) })
   })
 
-  it('selects the minutes, so a typed digit does not change the hour', () => {
-    expect(pressDigit(entryFor(clockTime(12, 30)), 4)).toMatchObject({ hour: '12', minute: '30' })
+  it('selects the minutes, so a typed digit replaces them and leaves the hour', () => {
+    expect(entryFor(clockTime(12, 30))).toMatchObject({ selected: 'minute', replace: true })
+    expect(pressDigit(entryFor(clockTime(12, 30)), 4)).toMatchObject({ hour: '12', minute: '4' })
   })
 })

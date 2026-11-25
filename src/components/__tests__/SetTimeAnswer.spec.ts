@@ -125,9 +125,6 @@ describe('SetTimeAnswer', () => {
     await press('2')
     expect(box(t('round.minutes')).text()).toBe('06')
     await press('ArrowLeft')
-    await press('5')
-    expect(box(t('round.hours')).text()).toBe('9')
-    await press('Delete')
     await press('0')
     await press('8')
     expect(box(t('round.hours')).text()).toBe('08')
@@ -162,6 +159,77 @@ describe('SetTimeAnswer', () => {
     ;(key.element as HTMLButtonElement).focus()
     key.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     expect(wrapper.emitted('submit')).toEqual([[{ hour: 7, minute: 3 }]])
+  })
+
+  it('retypes a tapped box without Clear (#88)', async () => {
+    open()
+    await tap('8', '3', '0')
+    await box(t('round.hours')).trigger('click')
+    expect(box(t('round.hours')).text()).toBe('8')
+    expect(submit().attributes('disabled')).toBeUndefined()
+    await tap('1', '1')
+    expect(box(t('round.hours')).text()).toBe('11')
+    expect(box(t('round.minutes')).text()).toBe('30')
+
+    await box(t('round.minutes')).trigger('click')
+    await tap('4', '5')
+    expect(box(t('round.minutes')).text()).toBe('45')
+    await submit().trigger('click')
+    expect(wrapper.emitted('submit')).toEqual([[{ hour: 11, minute: 45 }]])
+  })
+
+  it('retypes a box chosen with the arrows or Tab focus', async () => {
+    open()
+    await press('8')
+    await press('3')
+    await press('0')
+    await press('ArrowLeft')
+    await press('9')
+    expect(box(t('round.hours')).text()).toBe('9')
+    await press('ArrowRight')
+    await press('4')
+    await press('5')
+    expect(box(t('round.minutes')).text()).toBe('45')
+    await box(t('round.hours')).trigger('focus')
+    await press('7')
+    await press('Enter')
+    expect(wrapper.emitted('submit')).toEqual([[{ hour: 7, minute: 45 }]])
+  })
+
+  it('highlights the digits a selected box will replace, until a digit or Clear', async () => {
+    open()
+    const marked = (name: string) => box(name).classes().includes('replace')
+    await tap('8', '3', '0')
+    expect(marked(t('round.minutes'))).toBe(false)
+    await box(t('round.hours')).trigger('click')
+    expect(marked(t('round.hours'))).toBe(true)
+    expect(marked(t('round.minutes'))).toBe(false)
+    await tap('9')
+    expect(marked(t('round.hours'))).toBe(false)
+    // The hand-over selects the minutes, ready to be retyped.
+    expect(marked(t('round.minutes'))).toBe(true)
+    await tap(t('round.clear'))
+    expect(marked(t('round.minutes'))).toBe(false)
+    expect(box(t('round.minutes')).text()).toBe('')
+  })
+
+  it('highlights nothing in an empty box', async () => {
+    open()
+    await box(t('round.minutes')).trigger('click')
+    expect(box(t('round.minutes')).classes()).not.toContain('replace')
+  })
+
+  it('after Set correct answer, a typed digit replaces the minutes', async () => {
+    open()
+    ;(wrapper.vm as unknown as { fill(time: { hour: number; minute: number }): void }).fill({
+      hour: 4,
+      minute: 20,
+    })
+    await wrapper.vm.$nextTick()
+    expect(box(t('round.minutes')).classes()).toContain('replace')
+    await tap('1', '5')
+    expect(box(t('round.hours')).text()).toBe('4')
+    expect(box(t('round.minutes')).text()).toBe('15')
   })
 
   it('ignores the pad and Submit while disabled', async () => {
