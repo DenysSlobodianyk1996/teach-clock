@@ -63,7 +63,9 @@ describe('link previews and the sitemap', () => {
     })
 
     it('shows the feature graphic, at its size and with its alt text', () => {
-      expect(meta('og:image')).toBe('https://denysslobodianyk1996.github.io/teach-clock/og-image.png')
+      expect(meta('og:image')).toBe(
+        'https://denysslobodianyk1996.github.io/teach-clock/og-image.png',
+      )
       expect(meta('twitter:image')).toBe(meta('og:image'))
       expect(meta('og:image:width')).toBe('1024')
       expect(meta('og:image:height')).toBe('500')
