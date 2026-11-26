@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** approved (2026-11-05)
+**Status:** done (approved 2026-11-05)
 
 **Gate:** no application code (tickets 02–11) starts until the user explicitly approves this design for **all** features. Approval is recorded in this ticket.
 

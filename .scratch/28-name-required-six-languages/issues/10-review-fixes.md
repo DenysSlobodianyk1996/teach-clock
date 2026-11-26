@@ -13,6 +13,6 @@
 - [x] A space keeps the name error; a letter clears it
 - [x] The public Privacy Page's language links have a label covering all six languages, with no JavaScript
 - [x] `startRound` in `e2e/round.ts` waits for the Round, removing the race behind the flaky `e2e/system-bars.spec.ts:153`
-- [ ] The flaky test's fix is confirmed by running `e2e/system-bars.spec.ts` in its `small-phone` project
+- [x] The flaky test's fix is confirmed by running `e2e/system-bars.spec.ts` in its `small-phone` project (2026-11-26: 33 of 33 passed with `--repeat-each=3`)
 
 **Checked:** type-check, the CSS floor and Welcome unit tests, and the language menu and required name specs on the phone project. By the author's choice, the full suites were not rerun after these fixes.

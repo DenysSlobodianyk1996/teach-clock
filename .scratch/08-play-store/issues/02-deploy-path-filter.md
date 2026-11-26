@@ -9,4 +9,4 @@ Covers: P6
 **Status:** done
 
 - [x] `on.push.paths`: `src/**`, `public/**`, `index.html`, `vite.config.ts`, `package.json`, `package-lock.json`, `tsconfig*`, `env.d.ts`, `.github/workflows/deploy.yml`; `workflow_dispatch` kept
-- [ ] Checked: a docs-only push does not deploy; a `src/` push does (note the run links in the PR) (author: after merge to `main`)
+- [x] Checked: a docs-only push does not deploy; a `src/` push does (2026-11-26: docs-only merges such as #65 and #66 started no `deploy.yml` run; app merges such as #94 did)
