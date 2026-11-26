@@ -80,6 +80,25 @@ test('the Welcome clock shows', async ({ page }) => {
   expect(await width(page, '.welcome .clock')).toBeGreaterThanOrEqual(120)
 })
 
+// A Samsung S8 (batch 32): the clock kept its full column width in the shorter space left above the
+// heading, so it ran under the header and over the heading.
+test('the Welcome clock fits above the heading', async ({ page }) => {
+  await page.goto('/')
+  await waitFor(page, '.welcome .clock')
+  const box = await page.evaluate(() => {
+    const rect = (s: string) => document.querySelector(s)!.getBoundingClientRect()
+    const clock = rect('.welcome .clock')
+    return {
+      clockTop: Math.round(clock.top),
+      clockBottom: Math.round(clock.bottom),
+      mainTop: Math.round(rect('main').top),
+      headingTop: Math.round(rect('.welcome h1').top),
+    }
+  })
+  expect(box.clockTop).toBeGreaterThanOrEqual(box.mainTop)
+  expect(box.clockBottom).toBeLessThanOrEqual(box.headingTop)
+})
+
 test('a Set Time Round shows its clock', async ({ page }) => {
   await start(page)
   await tap(page, t('games.setTime.name'))

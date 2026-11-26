@@ -36,6 +36,7 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [29-quick-time-entry](29-quick-time-entry/)                             | fixes         | done        | yes  | #89 (plan), #90          |
 | [30-link-preview](30-link-preview/)                                     | fixes         | done        | no   | #91 (plan), #92          |
 | [31-search-visibility](31-search-visibility/)                           | feature       | in progress | no   | #93                      |
+| [32-welcome-clock-old-webview](32-welcome-clock-old-webview/)           | fixes         | in progress | no   | #94                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
