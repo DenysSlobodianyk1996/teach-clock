@@ -29,14 +29,14 @@ Local issue tracker. Each batch of work is one folder, worked through the main f
 | [22-old-webview](22-old-webview/)                                       | fixes         | done        | no   | #76                      |
 | [23-privacy-static-page](23-privacy-static-page/)                       | fixes         | done        | no   | #78                      |
 | [24-privacy-in-app](24-privacy-in-app/)                                 | fixes         | done        | no   | #79                      |
-| [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | in progress | no   | #80                      |
+| [25-no-app-scroll](25-no-app-scroll/)                                   | fixes         | done        | no   | #80                      |
 | [26-version-name](26-version-name/)                                     | fixes         | done        | no   | #81                      |
-| [27-privacy-version](27-privacy-version/)                               | feature       | in progress | no   | #82                      |
+| [27-privacy-version](27-privacy-version/)                               | feature       | done        | no   | #82                      |
 | [28-name-required-six-languages](28-name-required-six-languages/)       | feature       | in progress | yes  | #85                      |
 | [29-quick-time-entry](29-quick-time-entry/)                             | fixes         | done        | yes  | #89 (plan), #90          |
 | [30-link-preview](30-link-preview/)                                     | fixes         | done        | no   | #91 (plan), #92          |
-| [31-search-visibility](31-search-visibility/)                           | feature       | in progress | no   | #93                      |
-| [32-welcome-clock-old-webview](32-welcome-clock-old-webview/)           | fixes         | in progress | no   | #94                      |
+| [31-search-visibility](31-search-visibility/)                           | feature       | done        | no   | #93                      |
+| [32-welcome-clock-old-webview](32-welcome-clock-old-webview/)           | fixes         | done        | no   | #94                      |
 
 Kinds: first version, feature, fixes. Status: planned, in progress, done.
 
