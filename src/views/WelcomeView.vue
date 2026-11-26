@@ -324,10 +324,21 @@ h1 {
     container-type: size;
     align-items: center;
   }
-  /* Old Android WebViews lack container units; there the clock keeps its width above. */
   @supports (width: 1cqw) {
     .art .clock {
       width: min(100cqw, 100cqh);
+    }
+  }
+  /* Old Android WebViews lack container units (a Samsung S8, batch 32). Kept at the column's width,
+     the clock ran out of the shorter box, under the header and over the heading. Laid over the
+     box instead, the SVG's viewBox fits the face to the box's smaller side, as above. */
+  @supports not (width: 1cqw) {
+    .art .clock {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 }
